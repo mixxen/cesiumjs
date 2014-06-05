@@ -2657,7 +2657,7 @@ define('Core/Ellipsoid',[
 });
 
 /*global define*/
-define('Core/Extent',[
+define('Core/Rectangle',[
         './freezeObject',
         './defaultValue',
         './defined',
@@ -2678,15 +2678,17 @@ define('Core/Extent',[
     /**
      * A two dimensional region specified as longitude and latitude coordinates.
      *
-     * @alias Extent
+     * @alias Rectangle
      * @constructor
      *
      * @param {Number} [west=0.0] The westernmost longitude, in radians, in the range [-Pi, Pi].
      * @param {Number} [south=0.0] The southernmost latitude, in radians, in the range [-Pi/2, Pi/2].
      * @param {Number} [east=0.0] The easternmost longitude, in radians, in the range [-Pi, Pi].
      * @param {Number} [north=0.0] The northernmost latitude, in radians, in the range [-Pi/2, Pi/2].
+     *
+     * @see Packable
      */
-    var Extent = function(west, south, east, north) {
+    var Rectangle = function(west, south, east, north) {
         /**
          * The westernmost longitude in radians in the range [-Pi, Pi].
          *
@@ -2721,29 +2723,29 @@ define('Core/Extent',[
     };
 
     /**
-     * Creates an extent given the boundary longitude and latitude in degrees.
+     * Creates an rectangle given the boundary longitude and latitude in degrees.
      *
-     * @memberof Extent
+     * @memberof Rectangle
      *
      * @param {Number} [west=0.0] The westernmost longitude in degrees in the range [-180.0, 180.0].
      * @param {Number} [south=0.0] The southernmost latitude in degrees in the range [-90.0, 90.0].
      * @param {Number} [east=0.0] The easternmost longitude in degrees in the range [-180.0, 180.0].
      * @param {Number} [north=0.0] The northernmost latitude in degrees in the range [-90.0, 90.0].
-     * @param {Extent} [result] The object onto which to store the result, or undefined if a new instance should be created.
+     * @param {Rectangle} [result] The object onto which to store the result, or undefined if a new instance should be created.
      *
-     * @returns {Extent} The modified result parameter or a new Extent instance if none was provided.
+     * @returns {Rectangle} The modified result parameter or a new Rectangle instance if none was provided.
      *
      * @example
-     * var extent = Cesium.Extent.fromDegrees(0.0, 20.0, 10.0, 30.0);
+     * var rectangle = Cesium.Rectangle.fromDegrees(0.0, 20.0, 10.0, 30.0);
      */
-    Extent.fromDegrees = function(west, south, east, north, result) {
+    Rectangle.fromDegrees = function(west, south, east, north, result) {
         west = CesiumMath.toRadians(defaultValue(west, 0.0));
         south = CesiumMath.toRadians(defaultValue(south, 0.0));
         east = CesiumMath.toRadians(defaultValue(east, 0.0));
         north = CesiumMath.toRadians(defaultValue(north, 0.0));
 
         if (!defined(result)) {
-            return new Extent(west, south, east, north);
+            return new Rectangle(west, south, east, north);
         }
 
         result.west = west;
@@ -2755,14 +2757,14 @@ define('Core/Extent',[
     };
 
     /**
-     * Creates the smallest possible Extent that encloses all positions in the provided array.
-     * @memberof Extent
+     * Creates the smallest possible Rectangle that encloses all positions in the provided array.
+     * @memberof Rectangle
      *
      * @param {Array} cartographics The list of Cartographic instances.
-     * @param {Extent} [result] The object onto which to store the result, or undefined if a new instance should be created.
-     * @returns {Extent} The modified result parameter or a new Extent instance if none was provided.
+     * @param {Rectangle} [result] The object onto which to store the result, or undefined if a new instance should be created.
+     * @returns {Rectangle} The modified result parameter or a new Rectangle instance if none was provided.
      */
-    Extent.fromCartographicArray = function(cartographics, result) {
+    Rectangle.fromCartographicArray = function(cartographics, result) {
                 if (!defined(cartographics)) {
             throw new DeveloperError('cartographics is required.');
         }
@@ -2781,7 +2783,7 @@ define('Core/Extent',[
         }
 
         if (!defined(result)) {
-            return new Extent(minLon, minLat, maxLon, maxLat);
+            return new Rectangle(minLon, minLat, maxLon, maxLat);
         }
 
         result.west = minLon;
@@ -2792,66 +2794,122 @@ define('Core/Extent',[
     };
 
     /**
-     * Duplicates an Extent.
-     *
-     * @memberof Extent
-     *
-     * @param {Extent} extent The extent to clone.
-     * @param {Extent} [result] The object onto which to store the result, or undefined if a new instance should be created.
-     * @returns {Extent} The modified result parameter or a new Extent instance if none was provided. (Returns undefined if extent is undefined)
+     * The number of elements used to pack the object into an array.
+     * @Type {Number}
      */
-    Extent.clone = function(extent, result) {
-        if (!defined(extent)) {
-            return undefined;
+    Rectangle.packedLength = 4;
+
+    /**
+     * Stores the provided instance into the provided array.
+     * @memberof Rectangle
+     *
+     * @param {Rectangle} value The value to pack.
+     * @param {Array} array The array to pack into.
+     * @param {Number} [startingIndex=0] The index into the array at which to start packing the elements.
+     */
+    Rectangle.pack = function(value, array, startingIndex) {
+                if (!defined(value)) {
+            throw new DeveloperError('value is required');
         }
+
+        if (!defined(array)) {
+            throw new DeveloperError('array is required');
+        }
+        
+        startingIndex = defaultValue(startingIndex, 0);
+
+        array[startingIndex++] = value.west;
+        array[startingIndex++] = value.south;
+        array[startingIndex++] = value.east;
+        array[startingIndex] = value.north;
+    };
+
+    /**
+     * Retrieves an instance from a packed array.
+     * @memberof Rectangle
+     *
+     * @param {Array} array The packed array.
+     * @param {Number} [startingIndex=0] The starting index of the element to be unpacked.
+     * @param {Rectangle} [result] The object into which to store the result.
+     */
+    Rectangle.unpack = function(array, startingIndex, result) {
+                if (!defined(array)) {
+            throw new DeveloperError('array is required');
+        }
+        
+        startingIndex = defaultValue(startingIndex, 0);
 
         if (!defined(result)) {
-            return new Extent(extent.west, extent.south, extent.east, extent.north);
+            result = new Rectangle();
         }
-
-        result.west = extent.west;
-        result.south = extent.south;
-        result.east = extent.east;
-        result.north = extent.north;
+        result.west = array[startingIndex++];
+        result.south = array[startingIndex++];
+        result.east = array[startingIndex++];
+        result.north = array[startingIndex];
         return result;
     };
 
     /**
-     * Duplicates this Extent.
+     * Duplicates an Rectangle.
      *
-     * @memberof Extent
+     * @memberof Rectangle
      *
-     * @param {Extent} [result] The object onto which to store the result.
-     * @returns {Extent} The modified result parameter or a new Extent instance if none was provided.
+     * @param {Rectangle} rectangle The rectangle to clone.
+     * @param {Rectangle} [result] The object onto which to store the result, or undefined if a new instance should be created.
+     * @returns {Rectangle} The modified result parameter or a new Rectangle instance if none was provided. (Returns undefined if rectangle is undefined)
      */
-    Extent.prototype.clone = function(result) {
-        return Extent.clone(this, result);
+    Rectangle.clone = function(rectangle, result) {
+        if (!defined(rectangle)) {
+            return undefined;
+        }
+
+        if (!defined(result)) {
+            return new Rectangle(rectangle.west, rectangle.south, rectangle.east, rectangle.north);
+        }
+
+        result.west = rectangle.west;
+        result.south = rectangle.south;
+        result.east = rectangle.east;
+        result.north = rectangle.north;
+        return result;
     };
 
     /**
-     * Compares the provided Extent with this Extent componentwise and returns
+     * Duplicates this Rectangle.
+     *
+     * @memberof Rectangle
+     *
+     * @param {Rectangle} [result] The object onto which to store the result.
+     * @returns {Rectangle} The modified result parameter or a new Rectangle instance if none was provided.
+     */
+    Rectangle.prototype.clone = function(result) {
+        return Rectangle.clone(this, result);
+    };
+
+    /**
+     * Compares the provided Rectangle with this Rectangle componentwise and returns
      * <code>true</code> if they are equal, <code>false</code> otherwise.
-     * @memberof Extent
+     * @memberof Rectangle
      *
-     * @param {Extent} [other] The Extent to compare.
-     * @returns {Boolean} <code>true</code> if the Extents are equal, <code>false</code> otherwise.
+     * @param {Rectangle} [other] The Rectangle to compare.
+     * @returns {Boolean} <code>true</code> if the Rectangles are equal, <code>false</code> otherwise.
      */
-    Extent.prototype.equals = function(other) {
-        return Extent.equals(this, other);
+    Rectangle.prototype.equals = function(other) {
+        return Rectangle.equals(this, other);
     };
 
     /**
-     * Compares the provided extents and returns <code>true</code> if they are equal,
+     * Compares the provided rectangles and returns <code>true</code> if they are equal,
      * <code>false</code> otherwise.
      *
-     * @memberof Extent
+     * @memberof Rectangle
      *
-     * @param {Extent} [left] The first Extent.
-     * @param {Extent} [right] The second Extent.
+     * @param {Rectangle} [left] The first Rectangle.
+     * @param {Rectangle} [right] The second Rectangle.
      *
      * @returns {Boolean} <code>true</code> if left and right are equal; otherwise <code>false</code>.
      */
-    Extent.equals = function(left, right) {
+    Rectangle.equals = function(left, right) {
         return (left === right) ||
                ((defined(left)) &&
                 (defined(right)) &&
@@ -2862,16 +2920,16 @@ define('Core/Extent',[
     };
 
     /**
-     * Compares the provided Extent with this Extent componentwise and returns
+     * Compares the provided Rectangle with this Rectangle componentwise and returns
      * <code>true</code> if they are within the provided epsilon,
      * <code>false</code> otherwise.
-     * @memberof Extent
+     * @memberof Rectangle
      *
-     * @param {Extent} [other] The Extent to compare.
+     * @param {Rectangle} [other] The Rectangle to compare.
      * @param {Number} epsilon The epsilon to use for equality testing.
-     * @returns {Boolean} <code>true</code> if the Extents are within the provided epsilon, <code>false</code> otherwise.
+     * @returns {Boolean} <code>true</code> if the Rectangles are within the provided epsilon, <code>false</code> otherwise.
      */
-    Extent.prototype.equalsEpsilon = function(other, epsilon) {
+    Rectangle.prototype.equalsEpsilon = function(other, epsilon) {
                 if (typeof epsilon !== 'number') {
             throw new DeveloperError('epsilon is required and must be a number.');
         }
@@ -2884,21 +2942,21 @@ define('Core/Extent',[
     };
 
     /**
-     * Checks an Extent's properties and throws if they are not in valid ranges.
+     * Checks an Rectangle's properties and throws if they are not in valid ranges.
      *
-     * @param {Extent} extent The extent to validate
+     * @param {Rectangle} rectangle The rectangle to validate
      *
      * @exception {DeveloperError} <code>north</code> must be in the interval [<code>-Pi/2</code>, <code>Pi/2</code>].
      * @exception {DeveloperError} <code>south</code> must be in the interval [<code>-Pi/2</code>, <code>Pi/2</code>].
      * @exception {DeveloperError} <code>east</code> must be in the interval [<code>-Pi</code>, <code>Pi</code>].
      * @exception {DeveloperError} <code>west</code> must be in the interval [<code>-Pi</code>, <code>Pi</code>].
      */
-    Extent.validate = function(extent) {
-                if (!defined(extent)) {
-            throw new DeveloperError('extent is required');
+    Rectangle.validate = function(rectangle) {
+                if (!defined(rectangle)) {
+            throw new DeveloperError('rectangle is required');
         }
 
-        var north = extent.north;
+        var north = rectangle.north;
         if (typeof north !== 'number') {
             throw new DeveloperError('north is required to be a number.');
         }
@@ -2907,7 +2965,7 @@ define('Core/Extent',[
             throw new DeveloperError('north must be in the interval [-Pi/2, Pi/2].');
         }
 
-        var south = extent.south;
+        var south = rectangle.south;
         if (typeof south !== 'number') {
             throw new DeveloperError('south is required to be a number.');
         }
@@ -2916,7 +2974,7 @@ define('Core/Extent',[
             throw new DeveloperError('south must be in the interval [-Pi/2, Pi/2].');
         }
 
-        var west = extent.west;
+        var west = rectangle.west;
         if (typeof west !== 'number') {
             throw new DeveloperError('west is required to be a number.');
         }
@@ -2925,7 +2983,7 @@ define('Core/Extent',[
             throw new DeveloperError('west must be in the interval [-Pi, Pi].');
         }
 
-        var east = extent.east;
+        var east = rectangle.east;
         if (typeof east !== 'number') {
             throw new DeveloperError('east is required to be a number.');
         }
@@ -2936,138 +2994,138 @@ define('Core/Extent',[
             };
 
     /**
-     * Computes the southwest corner of an extent.
-     * @memberof Extent
+     * Computes the southwest corner of an rectangle.
+     * @memberof Rectangle
      *
-     * @param {Extent} extent The extent for which to find the corner
+     * @param {Rectangle} rectangle The rectangle for which to find the corner
      * @param {Cartographic} [result] The object onto which to store the result.
      * @returns {Cartographic} The modified result parameter or a new Cartographic instance if none was provided.
      */
-    Extent.getSouthwest = function(extent, result) {
-                if (!defined(extent)) {
-            throw new DeveloperError('extent is required');
+    Rectangle.getSouthwest = function(rectangle, result) {
+                if (!defined(rectangle)) {
+            throw new DeveloperError('rectangle is required');
         }
         
         if (!defined(result)) {
-            return new Cartographic(extent.west, extent.south);
+            return new Cartographic(rectangle.west, rectangle.south);
         }
-        result.longitude = extent.west;
-        result.latitude = extent.south;
+        result.longitude = rectangle.west;
+        result.latitude = rectangle.south;
         result.height = 0.0;
         return result;
     };
 
     /**
-     * Computes the northwest corner of an extent.
-     * @memberof Extent
+     * Computes the northwest corner of an rectangle.
+     * @memberof Rectangle
      *
-     * @param {Extent} extent The extent for which to find the corner
+     * @param {Rectangle} rectangle The rectangle for which to find the corner
      * @param {Cartographic} [result] The object onto which to store the result.
      * @returns {Cartographic} The modified result parameter or a new Cartographic instance if none was provided.
      */
-    Extent.getNorthwest = function(extent, result) {
-                if (!defined(extent)) {
-            throw new DeveloperError('extent is required');
+    Rectangle.getNorthwest = function(rectangle, result) {
+                if (!defined(rectangle)) {
+            throw new DeveloperError('rectangle is required');
         }
         
         if (!defined(result)) {
-            return new Cartographic(extent.west, extent.north);
+            return new Cartographic(rectangle.west, rectangle.north);
         }
-        result.longitude = extent.west;
-        result.latitude = extent.north;
+        result.longitude = rectangle.west;
+        result.latitude = rectangle.north;
         result.height = 0.0;
         return result;
     };
 
     /**
-     * Computes the northeast corner of an extent.
-     * @memberof Extent
+     * Computes the northeast corner of an rectangle.
+     * @memberof Rectangle
      *
-     * @param {Extent} extent The extent for which to find the corner
+     * @param {Rectangle} rectangle The rectangle for which to find the corner
      * @param {Cartographic} [result] The object onto which to store the result.
      * @returns {Cartographic} The modified result parameter or a new Cartographic instance if none was provided.
      */
-    Extent.getNortheast = function(extent, result) {
-                if (!defined(extent)) {
-            throw new DeveloperError('extent is required');
+    Rectangle.getNortheast = function(rectangle, result) {
+                if (!defined(rectangle)) {
+            throw new DeveloperError('rectangle is required');
         }
         
         if (!defined(result)) {
-            return new Cartographic(extent.east, extent.north);
+            return new Cartographic(rectangle.east, rectangle.north);
         }
-        result.longitude = extent.east;
-        result.latitude = extent.north;
+        result.longitude = rectangle.east;
+        result.latitude = rectangle.north;
         result.height = 0.0;
         return result;
     };
 
     /**
-     * Computes the southeast corner of an extent.
-     * @memberof Extent
+     * Computes the southeast corner of an rectangle.
+     * @memberof Rectangle
      *
-     * @param {Extent} extent The extent for which to find the corner
+     * @param {Rectangle} rectangle The rectangle for which to find the corner
      * @param {Cartographic} [result] The object onto which to store the result.
      * @returns {Cartographic} The modified result parameter or a new Cartographic instance if none was provided.
      */
-    Extent.getSoutheast = function(extent, result) {
-                if (!defined(extent)) {
-            throw new DeveloperError('extent is required');
+    Rectangle.getSoutheast = function(rectangle, result) {
+                if (!defined(rectangle)) {
+            throw new DeveloperError('rectangle is required');
         }
         
         if (!defined(result)) {
-            return new Cartographic(extent.east, extent.south);
+            return new Cartographic(rectangle.east, rectangle.south);
         }
-        result.longitude = extent.east;
-        result.latitude = extent.south;
+        result.longitude = rectangle.east;
+        result.latitude = rectangle.south;
         result.height = 0.0;
         return result;
     };
 
     /**
-     * Computes the center of an extent.
-     * @memberof Extent
+     * Computes the center of an rectangle.
+     * @memberof Rectangle
      *
-     * @param {Extent} extent The extent for which to find the center
+     * @param {Rectangle} rectangle The rectangle for which to find the center
      * @param {Cartographic} [result] The object onto which to store the result.
      * @returns {Cartographic} The modified result parameter or a new Cartographic instance if none was provided.
      */
-    Extent.getCenter = function(extent, result) {
-                if (!defined(extent)) {
-            throw new DeveloperError('extent is required');
+    Rectangle.getCenter = function(rectangle, result) {
+                if (!defined(rectangle)) {
+            throw new DeveloperError('rectangle is required');
         }
         
         if (!defined(result)) {
-            return new Cartographic((extent.west + extent.east) * 0.5, (extent.south + extent.north) * 0.5);
+            return new Cartographic((rectangle.west + rectangle.east) * 0.5, (rectangle.south + rectangle.north) * 0.5);
         }
-        result.longitude = (extent.west + extent.east) * 0.5;
-        result.latitude = (extent.south + extent.north) * 0.5;
+        result.longitude = (rectangle.west + rectangle.east) * 0.5;
+        result.latitude = (rectangle.south + rectangle.north) * 0.5;
         result.height = 0.0;
         return result;
     };
 
     /**
-     * Computes the intersection of two extents
-     * @memberof Extent
+     * Computes the intersection of two rectangles
+     * @memberof Rectangle
      *
-     * @param {Extent} extent On extent to find an intersection
-     * @param otherExtent Another extent to find an intersection
-     * @param {Extent} [result] The object onto which to store the result.
-     * @returns {Extent} The modified result parameter or a new Extent instance if none was provided.
+     * @param {Rectangle} rectangle On rectangle to find an intersection
+     * @param otherRectangle Another rectangle to find an intersection
+     * @param {Rectangle} [result] The object onto which to store the result.
+     * @returns {Rectangle} The modified result parameter or a new Rectangle instance if none was provided.
      */
-    Extent.intersectWith = function(extent, otherExtent, result) {
-                if (!defined(extent)) {
-            throw new DeveloperError('extent is required');
+    Rectangle.intersectWith = function(rectangle, otherRectangle, result) {
+                if (!defined(rectangle)) {
+            throw new DeveloperError('rectangle is required');
         }
-        if (!defined(otherExtent)) {
-            throw new DeveloperError('otherExtent is required.');
+        if (!defined(otherRectangle)) {
+            throw new DeveloperError('otherRectangle is required.');
         }
         
-        var west = Math.max(extent.west, otherExtent.west);
-        var south = Math.max(extent.south, otherExtent.south);
-        var east = Math.min(extent.east, otherExtent.east);
-        var north = Math.min(extent.north, otherExtent.north);
+        var west = Math.max(rectangle.west, otherRectangle.west);
+        var south = Math.max(rectangle.south, otherRectangle.south);
+        var east = Math.min(rectangle.east, otherRectangle.east);
+        var north = Math.min(rectangle.north, otherRectangle.north);
         if (!defined(result)) {
-            return new Extent(west, south, east, north);
+            return new Rectangle(west, south, east, north);
         }
         result.west = west;
         result.south = south;
@@ -3077,59 +3135,59 @@ define('Core/Extent',[
     };
 
     /**
-     * Returns true if the cartographic is on or inside the extent, false otherwise.
-     * @memberof Extent
+     * Returns true if the cartographic is on or inside the rectangle, false otherwise.
+     * @memberof Rectangle
      *
-     * @param {Extent} extent The extent
+     * @param {Rectangle} rectangle The rectangle
      * @param {Cartographic} cartographic The cartographic to test.
-     * @returns {Boolean} true if the provided cartographic is inside the extent, false otherwise.
+     * @returns {Boolean} true if the provided cartographic is inside the rectangle, false otherwise.
      */
-    Extent.contains = function(extent, cartographic) {
-                if (!defined(extent)) {
-            throw new DeveloperError('extent is required');
+    Rectangle.contains = function(rectangle, cartographic) {
+                if (!defined(rectangle)) {
+            throw new DeveloperError('rectangle is required');
         }
         if (!defined(cartographic)) {
             throw new DeveloperError('cartographic is required.');
         }
         
-        return cartographic.longitude >= extent.west &&
-               cartographic.longitude <= extent.east &&
-               cartographic.latitude >= extent.south &&
-               cartographic.latitude <= extent.north;
+        return cartographic.longitude >= rectangle.west &&
+               cartographic.longitude <= rectangle.east &&
+               cartographic.latitude >= rectangle.south &&
+               cartographic.latitude <= rectangle.north;
     };
 
     /**
-     * Determines if the extent is empty, i.e., if <code>west >= east</code>
+     * Determines if the rectangle is empty, i.e., if <code>west >= east</code>
      * or <code>south >= north</code>.
      *
-     * @memberof Extent
+     * @memberof Rectangle
      *
-     * @param {Extent} extent The extent
-     * @returns {Boolean} True if the extent is empty; otherwise, false.
+     * @param {Rectangle} rectangle The rectangle
+     * @returns {Boolean} True if the rectangle is empty; otherwise, false.
      */
-    Extent.isEmpty = function(extent) {
-                if (!defined(extent)) {
-            throw new DeveloperError('extent is required');
+    Rectangle.isEmpty = function(rectangle) {
+                if (!defined(rectangle)) {
+            throw new DeveloperError('rectangle is required');
         }
         
-        return extent.west >= extent.east || extent.south >= extent.north;
+        return rectangle.west >= rectangle.east || rectangle.south >= rectangle.north;
     };
 
     var subsampleLlaScratch = new Cartographic();
     /**
-     * Samples an extent so that it includes a list of Cartesian points suitable for passing to
+     * Samples an rectangle so that it includes a list of Cartesian points suitable for passing to
      * {@link BoundingSphere#fromPoints}.  Sampling is necessary to account
-     * for extents that cover the poles or cross the equator.
+     * for rectangles that cover the poles or cross the equator.
      *
-     * @param {Extent} extent The extent to subsample.
+     * @param {Rectangle} rectangle The rectangle to subsample.
      * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid to use.
-     * @param {Number} [surfaceHeight=0.0] The height of the extent above the ellipsoid.
+     * @param {Number} [surfaceHeight=0.0] The height of the rectangle above the ellipsoid.
      * @param {Array} [result] The array of Cartesians onto which to store the result.
      * @returns {Array} The modified result parameter or a new Array of Cartesians instances if none was provided.
      */
-    Extent.subsample = function(extent, ellipsoid, surfaceHeight, result) {
-                if (!defined(extent)) {
-            throw new DeveloperError('extent is required');
+    Rectangle.subsample = function(rectangle, ellipsoid, surfaceHeight, result) {
+                if (!defined(rectangle)) {
+            throw new DeveloperError('rectangle is required');
         }
         
         ellipsoid = defaultValue(ellipsoid, Ellipsoid.WGS84);
@@ -3140,10 +3198,10 @@ define('Core/Extent',[
         }
         var length = 0;
 
-        var north = extent.north;
-        var south = extent.south;
-        var east = extent.east;
-        var west = extent.west;
+        var north = rectangle.north;
+        var south = rectangle.south;
+        var east = rectangle.east;
+        var west = rectangle.west;
 
         var lla = subsampleLlaScratch;
         lla.height = surfaceHeight;
@@ -3195,13 +3253,13 @@ define('Core/Extent',[
     };
 
     /**
-     * The largest possible extent.
-     * @memberof Extent
-     * @type Extent
+     * The largest possible rectangle.
+     * @memberof Rectangle
+     * @type Rectangle
     */
-    Extent.MAX_VALUE = freezeObject(new Extent(-Math.PI, -CesiumMath.PI_OVER_TWO, Math.PI, CesiumMath.PI_OVER_TWO));
+    Rectangle.MAX_VALUE = freezeObject(new Rectangle(-Math.PI, -CesiumMath.PI_OVER_TWO, Math.PI, CesiumMath.PI_OVER_TWO));
 
-    return Extent;
+    return Rectangle;
 });
 
 /*global define*/
@@ -3539,6 +3597,31 @@ define('Core/Cartesian4',[
         result.y = y;
         result.z = z;
         result.w = w;
+        return result;
+    };
+
+    /**
+     * Creates a Cartesian4 instance from a {@link Color}. <code>red</code>, <code>green</code>, <code>blue</code>,
+     * and <code>alpha</code> map to <code>x</code>, <code>y</code>, <code>z</code>, and <code>w</code>, respectively.
+     * @memberof Cartesian4
+     *
+     * @param {Color} color The source color.
+     * @param {Cartesian4} [result] The object onto which to store the result.
+     * @returns {Cartesian4} The modified result parameter or a new Cartesian4 instance if one was not provided.
+     */
+    Cartesian4.fromColor = function(color, result) {
+                if (!defined(color)) {
+            throw new DeveloperError('color is required');
+        }
+        
+        if (!defined(result)) {
+            return new Cartesian4(color.red, color.green, color.blue, color.alpha);
+        }
+
+        result.x = color.red;
+        result.y = color.green;
+        result.z = color.blue;
+        result.w = color.alpha;
         return result;
     };
 
@@ -4832,6 +4915,46 @@ define('Core/Matrix3',[
         return result;
     };
 
+    var scratchColumn = new Cartesian3();
+
+    /**
+     * Extracts the non-uniform scale assuming the matrix is an affine transformation.
+     * @memberof Matrix3
+     *
+     * @param {Matrix3} matrix The matrix.
+     * @param {Cartesian3} [result] The object onto which to store the result.
+     * @returns {Cartesian3} The modified result parameter or a new Cartesian3 instance if one was not provided.
+     */
+    Matrix3.getScale = function(matrix, result) {
+                if (!defined(matrix)) {
+            throw new DeveloperError('matrix is required.');
+        }
+        
+        if (!defined(result)) {
+            result = new Cartesian3();
+        }
+
+        result.x = Cartesian3.magnitude(Cartesian3.fromElements(matrix[0], matrix[1], matrix[2], scratchColumn));
+        result.y = Cartesian3.magnitude(Cartesian3.fromElements(matrix[3], matrix[4], matrix[5], scratchColumn));
+        result.z = Cartesian3.magnitude(Cartesian3.fromElements(matrix[6], matrix[7], matrix[8], scratchColumn));
+        return result;
+    };
+
+    var scratchScale = new Cartesian3();
+
+    /**
+     * Computes the maximum scale assuming the matrix is an affine transformation.
+     * The maximum scale is the maximum length of the column vectors.
+     * @memberof Matrix3
+     *
+     * @param {Matrix3} matrix The matrix.
+     * @returns {Number} The maximum scale.
+     */
+    Matrix3.getMaximumScale = function(matrix) {
+        Matrix3.getScale(matrix, scratchScale);
+        return Cartesian3.getMaximumComponent(scratchScale);
+    };
+
     /**
      * Computes the product of two matrices.
      * @memberof Matrix3
@@ -5258,11 +5381,22 @@ define('Core/Matrix3',[
             throw new DeveloperError('matrix is not invertible');
         }
 
-        var m = new Matrix3(m22 * m33 - m23 * m32, m13 * m32 - m12 * m33, m12 * m23 - m13 * m22,
-                            m23 * m31 - m21 * m33, m11 * m33 - m13 * m31, m13 * m21 - m11 * m23,
-                            m21 * m32 - m22 * m31, m12 * m31 - m11 * m32, m11 * m22 - m12 * m21);
+        if (!defined(result)) {
+            result = new Matrix3();
+        }
+
+        result[0] = m22 * m33 - m23 * m32;
+        result[1] = m23 * m31 - m21 * m33;
+        result[2] = m21 * m32 - m22 * m31;
+        result[3] = m13 * m32 - m12 * m33;
+        result[4] = m11 * m33 - m13 * m31;
+        result[5] = m12 * m31 - m11 * m32;
+        result[6] = m12 * m23 - m13 * m22;
+        result[7] = m13 * m21 - m11 * m23;
+        result[8] = m11 * m22 - m12 * m21;
+
        var scale = 1.0 / determinant;
-       return Matrix3.multiplyByScalar(m, scale, result);
+       return Matrix3.multiplyByScalar(result, scale, result);
     };
 
     /**
@@ -5560,6 +5694,7 @@ define('Core/Matrix4',[
      * @see Matrix4.computeViewportTransformation
      * @see Matrix2
      * @see Matrix3
+     * @see Packable
      */
     var Matrix4 = function(column0Row0, column1Row0, column2Row0, column3Row0,
                            column0Row1, column1Row1, column2Row1, column3Row1,
@@ -5581,6 +5716,87 @@ define('Core/Matrix4',[
         this[13] = defaultValue(column3Row1, 0.0);
         this[14] = defaultValue(column3Row2, 0.0);
         this[15] = defaultValue(column3Row3, 0.0);
+    };
+
+    /**
+     * The number of elements used to pack the object into an array.
+     * @Type {Number}
+     */
+    Matrix4.packedLength = 16;
+
+    /**
+     * Stores the provided instance into the provided array.
+     * @memberof Matrix4
+     *
+     * @param {Matrix4} value The value to pack.
+     * @param {Array} array The array to pack into.
+     * @param {Number} [startingIndex=0] The index into the array at which to start packing the elements.
+     */
+    Matrix4.pack = function(value, array, startingIndex) {
+                if (!defined(value)) {
+            throw new DeveloperError('value is required');
+        }
+
+        if (!defined(array)) {
+            throw new DeveloperError('array is required');
+        }
+        
+        startingIndex = defaultValue(startingIndex, 0);
+
+        array[startingIndex++] = value[0];
+        array[startingIndex++] = value[1];
+        array[startingIndex++] = value[2];
+        array[startingIndex++] = value[3];
+        array[startingIndex++] = value[4];
+        array[startingIndex++] = value[5];
+        array[startingIndex++] = value[6];
+        array[startingIndex++] = value[7];
+        array[startingIndex++] = value[8];
+        array[startingIndex++] = value[9];
+        array[startingIndex++] = value[10];
+        array[startingIndex++] = value[11];
+        array[startingIndex++] = value[12];
+        array[startingIndex++] = value[13];
+        array[startingIndex++] = value[14];
+        array[startingIndex] = value[15];
+    };
+
+    /**
+     * Retrieves an instance from a packed array.
+     * @memberof Matrix4
+     *
+     * @param {Array} array The packed array.
+     * @param {Number} [startingIndex=0] The starting index of the element to be unpacked.
+     * @param {Matrix4} [result] The object into which to store the result.
+     */
+    Matrix4.unpack = function(array, startingIndex, result) {
+                if (!defined(array)) {
+            throw new DeveloperError('array is required');
+        }
+        
+        startingIndex = defaultValue(startingIndex, 0);
+
+        if (!defined(result)) {
+            result = new Matrix4();
+        }
+
+        result[0] = array[startingIndex++];
+        result[1] = array[startingIndex++];
+        result[2] = array[startingIndex++];
+        result[3] = array[startingIndex++];
+        result[4] = array[startingIndex++];
+        result[5] = array[startingIndex++];
+        result[6] = array[startingIndex++];
+        result[7] = array[startingIndex++];
+        result[8] = array[startingIndex++];
+        result[9] = array[startingIndex++];
+        result[10] = array[startingIndex++];
+        result[11] = array[startingIndex++];
+        result[12] = array[startingIndex++];
+        result[13] = array[startingIndex++];
+        result[14] = array[startingIndex++];
+        result[15] = array[startingIndex];
+        return result;
     };
 
     /**
@@ -5644,35 +5860,7 @@ define('Core/Matrix4',[
      * var v2 = [0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 2.0, 3.0, 3.0, 3.0, 3.0, 4.0, 4.0, 4.0, 4.0];
      * var m2 = Cesium.Matrix4.fromArray(v2, 2);
      */
-    Matrix4.fromArray = function(array, startingIndex, result) {
-                if (!defined(array)) {
-            throw new DeveloperError('array is required');
-        }
-        
-        startingIndex = defaultValue(startingIndex, 0);
-
-        if (!defined(result)) {
-            result = new Matrix4();
-        }
-
-        result[0] = array[startingIndex];
-        result[1] = array[startingIndex + 1];
-        result[2] = array[startingIndex + 2];
-        result[3] = array[startingIndex + 3];
-        result[4] = array[startingIndex + 4];
-        result[5] = array[startingIndex + 5];
-        result[6] = array[startingIndex + 6];
-        result[7] = array[startingIndex + 7];
-        result[8] = array[startingIndex + 8];
-        result[9] = array[startingIndex + 9];
-        result[10] = array[startingIndex + 10];
-        result[11] = array[startingIndex + 11];
-        result[12] = array[startingIndex + 12];
-        result[13] = array[startingIndex + 13];
-        result[14] = array[startingIndex + 14];
-        result[15] = array[startingIndex + 15];
-        return result;
-    };
+    Matrix4.fromArray = Matrix4.unpack;
 
     /**
      * Computes a Matrix4 instance from a column-major order array.
@@ -6679,6 +6867,47 @@ define('Core/Matrix4',[
         return result;
     };
 
+    var scratchColumn = new Cartesian3();
+
+    /**
+     * Extracts the non-uniform scale assuming the matrix is an affine transformation.
+     * @memberof Matrix4
+     *
+     * @param {Matrix4} matrix The matrix.
+     * @param {Cartesian3} [result] The object onto which to store the result.
+     * @returns {Cartesian3} The modified result parameter or a new Cartesian3 instance if one was not provided.
+     */
+    Matrix4.getScale = function(matrix, result) {
+                if (!defined(matrix)) {
+            throw new DeveloperError('matrix is required.');
+        }
+        
+        if (!defined(result)) {
+            result = new Cartesian3();
+        }
+
+        result.x = Cartesian3.magnitude(Cartesian3.fromElements(matrix[0], matrix[1], matrix[2], scratchColumn));
+        result.y = Cartesian3.magnitude(Cartesian3.fromElements(matrix[4], matrix[5], matrix[6], scratchColumn));
+        result.z = Cartesian3.magnitude(Cartesian3.fromElements(matrix[8], matrix[9], matrix[10], scratchColumn));
+        return result;
+    };
+
+    var scratchScale = new Cartesian3();
+
+    /**
+     * Computes the maximum scale assuming the matrix is an affine transformation.
+     * The maximum scale is the maximum length of the column vectors in the upper-left
+     * 3x3 matrix.
+     * @memberof Matrix4
+     *
+     * @param {Matrix4} matrix The matrix.
+     * @returns {Number} The maximum scale.
+     */
+    Matrix4.getMaximumScale = function(matrix) {
+        Matrix4.getScale(matrix, scratchScale);
+        return Cartesian3.getMaximumComponent(scratchScale);
+    };
+
     /**
      * Computes the product of two matrices.
      * @memberof Matrix4
@@ -6883,7 +7112,7 @@ define('Core/Matrix4',[
      *
      * @returns {Matrix4} The modified result parameter or a new Matrix4 instance if one was not provided.
      *
-     * @see Matrix4#fromTranslation
+     * @see Matrix4.fromTranslation
      *
      * @example
      * // Instead of Matrix4.multiply(m, Cesium.Matrix4.fromTranslation(position), m);
@@ -6946,8 +7175,8 @@ define('Core/Matrix4',[
      *
      * @returns {Matrix4} The modified result parameter or a new Matrix4 instance if one was not provided.
      *
-     * @see Matrix4#fromUniformScale
-     * @see Matrix4#multiplyByScale
+     * @see Matrix4.fromUniformScale
+     * @see Matrix4.multiplyByScale
      *
      * @example
      * // Instead of Matrix4.multiply(m, Cesium.Matrix4.fromUniformScale(scale), m);
@@ -6977,8 +7206,8 @@ define('Core/Matrix4',[
      *
      * @returns {Matrix4} The modified result parameter or a new Matrix4 instance if one was not provided.
      *
-     * @see Matrix4#fromScale
-     * @see Matrix4#multiplyByUniformScale
+     * @see Matrix4.fromScale
+     * @see Matrix4.multiplyByUniformScale
      *
      * @example
      * // Instead of Matrix4.multiply(m, Cesium.Matrix4.fromScale(scale), m);
@@ -7897,7 +8126,7 @@ define('Core/BoundingSphere',[
         './defined',
         './DeveloperError',
         './Ellipsoid',
-        './Extent',
+        './Rectangle',
         './GeographicProjection',
         './Intersect',
         './Interval',
@@ -7909,7 +8138,7 @@ define('Core/BoundingSphere',[
         defined,
         DeveloperError,
         Ellipsoid,
-        Extent,
+        Rectangle,
         GeographicProjection,
         Intersect,
         Interval,
@@ -8105,44 +8334,44 @@ define('Core/BoundingSphere',[
     };
 
     var defaultProjection = new GeographicProjection();
-    var fromExtent2DLowerLeft = new Cartesian3();
-    var fromExtent2DUpperRight = new Cartesian3();
-    var fromExtent2DSouthwest = new Cartographic();
-    var fromExtent2DNortheast = new Cartographic();
+    var fromRectangle2DLowerLeft = new Cartesian3();
+    var fromRectangle2DUpperRight = new Cartesian3();
+    var fromRectangle2DSouthwest = new Cartographic();
+    var fromRectangle2DNortheast = new Cartographic();
 
     /**
-     * Computes a bounding sphere from an extent projected in 2D.
+     * Computes a bounding sphere from an rectangle projected in 2D.
      *
      * @memberof BoundingSphere
      *
-     * @param {Extent} extent The extent around which to create a bounding sphere.
-     * @param {Object} [projection=GeographicProjection] The projection used to project the extent into 2D.
+     * @param {Rectangle} rectangle The rectangle around which to create a bounding sphere.
+     * @param {Object} [projection=GeographicProjection] The projection used to project the rectangle into 2D.
      * @param {BoundingSphere} [result] The object onto which to store the result.
      * @returns {BoundingSphere} The modified result parameter or a new BoundingSphere instance if none was provided.
      */
-    BoundingSphere.fromExtent2D = function(extent, projection, result) {
-        return BoundingSphere.fromExtentWithHeights2D(extent, projection, 0.0, 0.0, result);
+    BoundingSphere.fromRectangle2D = function(rectangle, projection, result) {
+        return BoundingSphere.fromRectangleWithHeights2D(rectangle, projection, 0.0, 0.0, result);
     };
 
     /**
-     * Computes a bounding sphere from an extent projected in 2D.  The bounding sphere accounts for the
-     * object's minimum and maximum heights over the extent.
+     * Computes a bounding sphere from an rectangle projected in 2D.  The bounding sphere accounts for the
+     * object's minimum and maximum heights over the rectangle.
      *
      * @memberof BoundingSphere
      *
-     * @param {Extent} extent The extent around which to create a bounding sphere.
-     * @param {Object} [projection=GeographicProjection] The projection used to project the extent into 2D.
-     * @param {Number} [minimumHeight=0.0] The minimum height over the extent.
-     * @param {Number} [maximumHeight=0.0] The maximum height over the extent.
+     * @param {Rectangle} rectangle The rectangle around which to create a bounding sphere.
+     * @param {Object} [projection=GeographicProjection] The projection used to project the rectangle into 2D.
+     * @param {Number} [minimumHeight=0.0] The minimum height over the rectangle.
+     * @param {Number} [maximumHeight=0.0] The maximum height over the rectangle.
      * @param {BoundingSphere} [result] The object onto which to store the result.
      * @returns {BoundingSphere} The modified result parameter or a new BoundingSphere instance if none was provided.
      */
-    BoundingSphere.fromExtentWithHeights2D = function(extent, projection, minimumHeight, maximumHeight, result) {
+    BoundingSphere.fromRectangleWithHeights2D = function(rectangle, projection, minimumHeight, maximumHeight, result) {
         if (!defined(result)) {
             result = new BoundingSphere();
         }
 
-        if (!defined(extent)) {
+        if (!defined(rectangle)) {
             result.center = Cartesian3.clone(Cartesian3.ZERO, result.center);
             result.radius = 0.0;
             return result;
@@ -8150,13 +8379,13 @@ define('Core/BoundingSphere',[
 
         projection = defaultValue(projection, defaultProjection);
 
-        Extent.getSouthwest(extent, fromExtent2DSouthwest);
-        fromExtent2DSouthwest.height = minimumHeight;
-        Extent.getNortheast(extent, fromExtent2DNortheast);
-        fromExtent2DNortheast.height = maximumHeight;
+        Rectangle.getSouthwest(rectangle, fromRectangle2DSouthwest);
+        fromRectangle2DSouthwest.height = minimumHeight;
+        Rectangle.getNortheast(rectangle, fromRectangle2DNortheast);
+        fromRectangle2DNortheast.height = maximumHeight;
 
-        var lowerLeft = projection.project(fromExtent2DSouthwest, fromExtent2DLowerLeft);
-        var upperRight = projection.project(fromExtent2DNortheast, fromExtent2DUpperRight);
+        var lowerLeft = projection.project(fromRectangle2DSouthwest, fromRectangle2DLowerLeft);
+        var upperRight = projection.project(fromRectangle2DNortheast, fromRectangle2DUpperRight);
 
         var width = upperRight.x - lowerLeft.x;
         var height = upperRight.y - lowerLeft.y;
@@ -8170,26 +8399,26 @@ define('Core/BoundingSphere',[
         return result;
     };
 
-    var fromExtent3DScratch = [];
+    var fromRectangle3DScratch = [];
 
     /**
-     * Computes a bounding sphere from an extent in 3D. The bounding sphere is created using a subsample of points
-     * on the ellipsoid and contained in the extent. It may not be accurate for all extents on all types of ellipsoids.
+     * Computes a bounding sphere from an rectangle in 3D. The bounding sphere is created using a subsample of points
+     * on the ellipsoid and contained in the rectangle. It may not be accurate for all rectangles on all types of ellipsoids.
      * @memberof BoundingSphere
      *
-     * @param {Extent} extent The valid extent used to create a bounding sphere.
-     * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid used to determine positions of the extent.
+     * @param {Rectangle} rectangle The valid rectangle used to create a bounding sphere.
+     * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid used to determine positions of the rectangle.
      * @param {Number} [surfaceHeight=0.0] The height above the surface of the ellipsoid.
      * @param {BoundingSphere} [result] The object onto which to store the result.
      * @returns {BoundingSphere} The modified result parameter or a new BoundingSphere instance if none was provided.
      */
-    BoundingSphere.fromExtent3D = function(extent, ellipsoid, surfaceHeight, result) {
+    BoundingSphere.fromRectangle3D = function(rectangle, ellipsoid, surfaceHeight, result) {
         ellipsoid = defaultValue(ellipsoid, Ellipsoid.WGS84);
         surfaceHeight = defaultValue(surfaceHeight, 0.0);
 
         var positions;
-        if (defined(extent)) {
-            positions = Extent.subsample(extent, ellipsoid, surfaceHeight, fromExtent3DScratch);
+        if (defined(rectangle)) {
+            positions = Rectangle.subsample(rectangle, ellipsoid, surfaceHeight, fromRectangle3DScratch);
         }
 
         return BoundingSphere.fromPoints(positions, result);
@@ -8385,8 +8614,8 @@ define('Core/BoundingSphere',[
      *
      * @memberof BoundingSphere
      *
-     * @param {Number} [corner] The minimum height over the extent.
-     * @param {Number} [oppositeCorner] The maximum height over the extent.
+     * @param {Number} [corner] The minimum height over the rectangle.
+     * @param {Number} [oppositeCorner] The maximum height over the rectangle.
      * @param {BoundingSphere} [result] The object onto which to store the result.
      *
      * @returns {BoundingSphere} The modified result parameter or a new BoundingSphere instance if none was provided.
@@ -8622,8 +8851,6 @@ define('Core/BoundingSphere',[
         return Intersect.INSIDE;
     };
 
-    var columnScratch = new Cartesian3();
-
     /**
      * Applies a 4x4 affine transformation matrix to a bounding sphere.
      * @memberof BoundingSphere
@@ -8647,9 +8874,7 @@ define('Core/BoundingSphere',[
         }
 
         result.center = Matrix4.multiplyByPoint(transform, sphere.center, result.center);
-        result.radius = Math.max(Cartesian3.magnitude(Matrix4.getColumn(transform, 0, columnScratch)),
-                Cartesian3.magnitude(Matrix4.getColumn(transform, 1, columnScratch)),
-                Cartesian3.magnitude(Matrix4.getColumn(transform, 2, columnScratch))) * sphere.radius;
+        result.radius = Matrix4.getMaximumScale(transform) * sphere.radius;
 
         return result;
     };
@@ -8934,7 +9159,7 @@ define('Core/EllipsoidalOccluder',[
         './DeveloperError',
         './Cartesian3',
         './BoundingSphere',
-        './Extent'
+        './Rectangle'
     ], function(
         defaultValue,
         defined,
@@ -8942,7 +9167,7 @@ define('Core/EllipsoidalOccluder',[
         DeveloperError,
         Cartesian3,
         BoundingSphere,
-        Extent) {
+        Rectangle) {
     "use strict";
 
     /**
@@ -9157,23 +9382,23 @@ define('Core/EllipsoidalOccluder',[
     var subsampleScratch = [];
 
     /**
-     * Computes a point that can be used for horizon culling of an extent.  If the point is below
-     * the horizon, the ellipsoid-conforming extent is guaranteed to be below the horizon as well.
+     * Computes a point that can be used for horizon culling of an rectangle.  If the point is below
+     * the horizon, the ellipsoid-conforming rectangle is guaranteed to be below the horizon as well.
      * The returned point is expressed in the ellipsoid-scaled space and is suitable for use with
      * {@link EllipsoidalOccluder#isScaledSpacePointVisible}.
      *
-     * @param {Extent} extent The extent for which to compute the horizon culling point.
-     * @param {Ellipsoid} ellipsoid The ellipsoid on which the extent is defined.  This may be different from
+     * @param {Rectangle} rectangle The rectangle for which to compute the horizon culling point.
+     * @param {Ellipsoid} ellipsoid The ellipsoid on which the rectangle is defined.  This may be different from
      *                    the ellipsoid used by this instance for occlusion testing.
      * @param {Cartesian3} [result] The instance on which to store the result instead of allocating a new instance.
      * @returns {Cartesian3} The computed horizon culling point, expressed in the ellipsoid-scaled space.
      */
-    EllipsoidalOccluder.prototype.computeHorizonCullingPointFromExtent = function(extent, ellipsoid, result) {
-                if (!defined(extent)) {
-            throw new DeveloperError('extent is required.');
+    EllipsoidalOccluder.prototype.computeHorizonCullingPointFromRectangle = function(rectangle, ellipsoid, result) {
+                if (!defined(rectangle)) {
+            throw new DeveloperError('rectangle is required.');
         }
         
-        var positions = Extent.subsample(extent, ellipsoid, 0.0, subsampleScratch);
+        var positions = Rectangle.subsample(rectangle, ellipsoid, 0.0, subsampleScratch);
         var bs = BoundingSphere.fromPoints(positions);
 
         // If the bounding sphere center is too close to the center of the occluder, it doesn't make
@@ -9226,435 +9451,6 @@ define('Core/EllipsoidalOccluder',[
     return EllipsoidalOccluder;
 });
 
-/*global define*/
-define('Core/Fullscreen',[
-        './defined',
-        './defineProperties'
-    ], function(
-        defined,
-        defineProperties) {
-    "use strict";
-
-    var _supportsFullscreen;
-    var _names = {
-        requestFullscreen : undefined,
-        exitFullscreen : undefined,
-        fullscreenEnabled : undefined,
-        fullscreenElement : undefined,
-        fullscreenchange : undefined,
-        fullscreenerror : undefined
-    };
-
-    /**
-     * Browser-independent functions for working with the standard fullscreen API.
-     *
-     * @exports Fullscreen
-     *
-     * @see <a href='http://dvcs.w3.org/hg/fullscreen/raw-file/tip/Overview.html'>W3C Fullscreen Living Specification</a>
-     */
-    var Fullscreen = {};
-
-    defineProperties(Fullscreen, {
-        /**
-         * The element that is currently fullscreen, if any.  To simply check if the
-         * browser is in fullscreen mode or not, use {@link Fullscreen#fullscreen}.
-         * @memberof Fullscreen
-         * @type {Object}
-         */
-        element: {
-            get : function() {
-                if (!Fullscreen.supportsFullscreen()) {
-                    return undefined;
-                }
-
-                return document[_names.fullscreenElement];
-            }
-        },
-
-        /**
-         * The name of the event on the document that is fired when fullscreen is
-         * entered or exited.  This event name is intended for use with addEventListener.
-         * In your event handler, to determine if the browser is in fullscreen mode or not,
-         * use {@link Fullscreen#fullscreen}.
-         * @memberof Fullscreen
-         * @type {String}
-         */
-        changeEventName : {
-            get : function() {
-                if (!Fullscreen.supportsFullscreen()) {
-                    return undefined;
-                }
-
-                return _names.fullscreenchange;
-            }
-        },
-
-        /**
-         * The name of the event that is fired when a fullscreen error
-         * occurs.  This event name is intended for use with addEventListener.
-         * @memberof Fullscreen
-         * @type {String}
-         */
-        errorEventName : {
-            get : function() {
-                if (!Fullscreen.supportsFullscreen()) {
-                    return undefined;
-                }
-
-                return _names.fullscreenerror;
-            }
-        },
-
-        /**
-         * Determine whether the browser will allow an element to be made fullscreen, or not.
-         * For example, by default, iframes cannot go fullscreen unless the containing page
-         * adds an "allowfullscreen" attribute (or prefixed equivalent).
-         * @memberof Fullscreen
-         * @type {Boolean}
-         */
-        enabled : {
-            get : function() {
-                if (!Fullscreen.supportsFullscreen()) {
-                    return undefined;
-                }
-
-                return document[_names.fullscreenEnabled];
-            }
-        },
-
-        /**
-         * Determines if the browser is currently in fullscreen mode.
-         * @memberof Fullsreen
-         * @type {Boolean}
-         */
-        fullscreen : {
-            get : function() {
-                if (!Fullscreen.supportsFullscreen()) {
-                    return undefined;
-                }
-
-                return Fullscreen.element !== null;
-            }
-        }
-    });
-
-    /**
-     * Detects whether the browser supports the standard fullscreen API.
-     *
-     * @returns <code>true</code> if the browser supports the standard fullscreen API,
-     * <code>false</code> otherwise.
-     */
-    Fullscreen.supportsFullscreen = function() {
-        if (defined(_supportsFullscreen)) {
-            return _supportsFullscreen;
-        }
-
-        _supportsFullscreen = false;
-
-        var body = document.body;
-        if (typeof body.requestFullscreen === 'function') {
-            // go with the unprefixed, standard set of names
-            _names.requestFullscreen = 'requestFullscreen';
-            _names.exitFullscreen = 'exitFullscreen';
-            _names.fullscreenEnabled = 'fullscreenEnabled';
-            _names.fullscreenElement = 'fullscreenElement';
-            _names.fullscreenchange = 'fullscreenchange';
-            _names.fullscreenerror = 'fullscreenerror';
-            _supportsFullscreen = true;
-            return _supportsFullscreen;
-        }
-
-        //check for the correct combination of prefix plus the various names that browsers use
-        var prefixes = ['webkit', 'moz', 'o', 'ms', 'khtml'];
-        var name;
-        for ( var i = 0, len = prefixes.length; i < len; ++i) {
-            var prefix = prefixes[i];
-
-            // casing of Fullscreen differs across browsers
-            name = prefix + 'RequestFullscreen';
-            if (typeof body[name] === 'function') {
-                _names.requestFullscreen = name;
-                _supportsFullscreen = true;
-            } else {
-                name = prefix + 'RequestFullScreen';
-                if (typeof body[name] === 'function') {
-                    _names.requestFullscreen = name;
-                    _supportsFullscreen = true;
-                }
-            }
-
-            // disagreement about whether it's "exit" as per spec, or "cancel"
-            name = prefix + 'ExitFullscreen';
-            if (typeof document[name] === 'function') {
-                _names.exitFullscreen = name;
-            } else {
-                name = prefix + 'CancelFullScreen';
-                if (typeof document[name] === 'function') {
-                    _names.exitFullscreen = name;
-                }
-            }
-
-            // casing of Fullscreen differs across browsers
-            name = prefix + 'FullscreenEnabled';
-            if (defined(document[name])) {
-                _names.fullscreenEnabled = name;
-            } else {
-                name = prefix + 'FullScreenEnabled';
-                if (defined(document[name])) {
-                    _names.fullscreenEnabled = name;
-                }
-            }
-
-            // casing of Fullscreen differs across browsers
-            name = prefix + 'FullscreenElement';
-            if (defined(document[name])) {
-                _names.fullscreenElement = name;
-            } else {
-                name = prefix + 'FullScreenElement';
-                if (defined(document[name])) {
-                    _names.fullscreenElement = name;
-                }
-            }
-
-            // thankfully, event names are all lowercase per spec
-            name = prefix + 'fullscreenchange';
-            // event names do not have 'on' in the front, but the property on the document does
-            if (defined(document['on' + name])) {
-                //except on IE
-                if (prefix === 'ms') {
-                    name = 'MSFullscreenChange';
-                }
-                _names.fullscreenchange = name;
-            }
-
-            name = prefix + 'fullscreenerror';
-            if (defined(document['on' + name])) {
-                //except on IE
-                if (prefix === 'ms') {
-                    name = 'MSFullscreenError';
-                }
-                _names.fullscreenerror = name;
-            }
-        }
-
-        return _supportsFullscreen;
-    };
-
-    /**
-     * Asynchronously requests the browser to enter fullscreen mode on the given element.
-     * If fullscreen mode is not supported by the browser, does nothing.
-     *
-     * @param {Object} element The HTML element which will be placed into fullscreen mode.
-     *
-     * @example
-     * // Put the entire page into fullscreen.
-     * Cesium.Fullscreen.requestFullscreen(document.body)
-     *
-     * // Place only the Cesium canvas into fullscreen.
-     * Cesium.Fullscreen.requestFullscreen(scene.canvas)
-     */
-    Fullscreen.requestFullscreen = function(element) {
-        if (!Fullscreen.supportsFullscreen()) {
-            return;
-        }
-
-        element[_names.requestFullscreen]();
-    };
-
-    /**
-     * Asynchronously exits fullscreen mode.  If the browser is not currently
-     * in fullscreen, or if fullscreen mode is not supported by the browser, does nothing.
-     */
-    Fullscreen.exitFullscreen = function() {
-        if (!Fullscreen.supportsFullscreen()) {
-            return;
-        }
-
-        document[_names.exitFullscreen]();
-    };
-
-    return Fullscreen;
-});
-/*global define*/
-define('Core/FeatureDetection',[
-        './defined',
-        './Fullscreen'
-    ], function(
-        defined,
-        Fullscreen) {
-    "use strict";
-
-    function extractVersion(versionString) {
-        var parts = versionString.split('.');
-        for ( var i = 0, len = parts.length; i < len; ++i) {
-            parts[i] = parseInt(parts[i], 10);
-        }
-        return parts;
-    }
-
-    var isChromeResult;
-    var chromeVersionResult;
-    function isChrome() {
-        if (!defined(isChromeResult)) {
-            var fields = (/ Chrome\/([\.0-9]+)/).exec(navigator.userAgent);
-            if (fields === null) {
-                isChromeResult = false;
-            } else {
-                isChromeResult = true;
-                chromeVersionResult = extractVersion(fields[1]);
-            }
-        }
-
-        return isChromeResult;
-    }
-
-    function chromeVersion() {
-        return isChrome() && chromeVersionResult;
-    }
-
-    var isSafariResult;
-    var safariVersionResult;
-    function isSafari() {
-        if (!defined(isSafariResult)) {
-            // Chrome contains Safari in the user agent too
-            if (isChrome() || !(/ Safari\/[\.0-9]+/).test(navigator.userAgent)) {
-                isSafariResult = false;
-            } else {
-                var fields = (/ Version\/([\.0-9]+)/).exec(navigator.userAgent);
-                if (fields === null) {
-                    isSafariResult = false;
-                } else {
-                    isSafariResult = true;
-                    safariVersionResult = extractVersion(fields[1]);
-                }
-            }
-        }
-
-        return isSafariResult;
-    }
-
-    function safariVersion() {
-        return isSafari() && safariVersionResult;
-    }
-
-    var isWebkitResult;
-    var webkitVersionResult;
-    function isWebkit() {
-        if (!defined(isWebkitResult)) {
-            var fields = (/ AppleWebKit\/([\.0-9]+)(\+?)/).exec(navigator.userAgent);
-            if (fields === null) {
-                isWebkitResult = false;
-            } else {
-                isWebkitResult = true;
-                webkitVersionResult = extractVersion(fields[1]);
-                webkitVersionResult.isNightly = !!fields[2];
-            }
-        }
-
-        return isWebkitResult;
-    }
-
-    function webkitVersion() {
-        return isWebkit() && webkitVersionResult;
-    }
-
-    var isInternetExplorerResult;
-    var internetExplorerVersionResult;
-    function isInternetExplorer() {
-        if (!defined(isInternetExplorerResult)) {
-            var fields;
-            if (navigator.appName === 'Microsoft Internet Explorer') {
-                fields = /MSIE ([0-9]{1,}[\.0-9]{0,})/.exec(navigator.userAgent);
-                if (fields !== null) {
-                    isInternetExplorerResult = true;
-                    internetExplorerVersionResult = extractVersion(fields[1]);
-                }
-            } else if (navigator.appName === 'Netscape') {
-                fields = /Trident\/.*rv:([0-9]{1,}[\.0-9]{0,})/.exec(navigator.userAgent);
-                if (fields !== null) {
-                    isInternetExplorerResult = true;
-                    internetExplorerVersionResult = extractVersion(fields[1]);
-                }
-            } else {
-                isInternetExplorerResult = false;
-            }
-        }
-        return isInternetExplorerResult;
-    }
-
-    function internetExplorerVersion() {
-        return isInternetExplorer() && internetExplorerVersionResult;
-    }
-
-    /**
-     * A set of functions to detect whether the current browser supports
-     * various features.
-     *
-     * @exports FeatureDetection
-     */
-    var FeatureDetection = {
-        isChrome : isChrome,
-        chromeVersion : chromeVersion,
-        isSafari : isSafari,
-        safariVersion : safariVersion,
-        isWebkit : isWebkit,
-        webkitVersion : webkitVersion,
-        isInternetExplorer : isInternetExplorer,
-        internetExplorerVersion : internetExplorerVersion
-    };
-
-    /**
-     * Detects whether the current browser supports the full screen standard.
-     *
-     * @returns true if the browser supports the full screen standard, false if not.
-     *
-     * @see Fullscreen
-     * @see <a href='http://dvcs.w3.org/hg/fullscreen/raw-file/tip/Overview.html'>W3C Fullscreen Living Specification</a>
-     */
-    FeatureDetection.supportsFullscreen = function() {
-        return Fullscreen.supportsFullscreen();
-    };
-
-    /**
-     * Detects whether the current browser supports typed arrays.
-     *
-     * @returns true if the browser supports typed arrays, false if not.
-     *
-     * @see <a href='http://www.khronos.org/registry/typedarray/specs/latest/'>Typed Array Specification</a>
-     */
-    FeatureDetection.supportsTypedArrays = function() {
-        return typeof ArrayBuffer !== 'undefined';
-    };
-
-    var supportsTransferringArrayBuffersResult;
-
-    /**
-     * Detects whether the current browser can transfer an ArrayBuffer
-     * to / from a web worker.
-     *
-     * @returns true if the browser can transfer ArrayBuffers; otherwise, false.
-     */
-    FeatureDetection.supportsTransferringArrayBuffers = function() {
-        if (!defined(supportsTransferringArrayBuffersResult)) {
-            if (!FeatureDetection.supportsTypedArrays()) {
-                supportsTransferringArrayBuffersResult = false;
-                return;
-            }
-
-            var arrayBuffer = new ArrayBuffer(1);
-            try {
-                /*global postMessage*/
-                postMessage({ value : arrayBuffer }, [arrayBuffer]);
-                supportsTransferringArrayBuffersResult = true;
-            } catch(e) {
-                supportsTransferringArrayBuffersResult = false;
-            }
-        }
-        return supportsTransferringArrayBuffersResult;
-    };
-
-    return FeatureDetection;
-});
 /*global define*/
 define('Core/HeightmapTessellator',[
         './defaultValue',
@@ -9712,11 +9508,11 @@ define('Core/HeightmapTessellator',[
      * @param {Number} description.width The width of the heightmap, in height samples.
      * @param {Number} description.height The height of the heightmap, in height samples.
      * @param {Number} description.skirtHeight The height of skirts to drape at the edges of the heightmap.
-     * @param {Extent} description.nativeExtent An extent in the native coordinates of the heightmap's projection.  For
+     * @param {Rectangle} description.nativeRectangle An rectangle in the native coordinates of the heightmap's projection.  For
      *                 a heightmap with a geographic projection, this is degrees.  For the web mercator
      *                 projection, this is meters.
-     * @param {Extent} [description.extent] The extent covered by the heightmap, in geodetic coordinates with north, south, east and
-     *                 west properties in radians.  Either extent or nativeExtent must be provided.  If both
+     * @param {Rectangle} [description.rectangle] The rectangle covered by the heightmap, in geodetic coordinates with north, south, east and
+     *                 west properties in radians.  Either rectangle or nativeRectangle must be provided.  If both
      *                 are provided, they're assumed to be consistent.
      * @param {Boolean} [description.isGeographic=true] True if the heightmap uses a {@link GeographicProjection}, or false if it uses
      *                  a {@link WebMercatorProjection}.
@@ -9756,7 +9552,7 @@ define('Core/HeightmapTessellator',[
      *     width : width,
      *     height : height,
      *     skirtHeight : 0.0,
-     *     nativeExtent : {
+     *     nativeRectangle : {
      *         west : 10.0,
      *         east : 20.0,
      *         south : 30.0,
@@ -9774,8 +9570,8 @@ define('Core/HeightmapTessellator',[
         if (!defined(description.vertices)) {
             throw new DeveloperError('description.vertices is required.');
         }
-        if (!defined(description.nativeExtent)) {
-            throw new DeveloperError('description.nativeExtent is required.');
+        if (!defined(description.nativeRectangle)) {
+            throw new DeveloperError('description.nativeRectangle is required.');
         }
         if (!defined(description.skirtHeight)) {
             throw new DeveloperError('description.skirtHeight is required.');
@@ -9803,33 +9599,33 @@ define('Core/HeightmapTessellator',[
         var isGeographic = defaultValue(description.isGeographic, true);
         var ellipsoid = defaultValue(description.ellipsoid, Ellipsoid.WGS84);
 
-        var oneOverCentralBodySemimajorAxis = 1.0 / ellipsoid.maximumRadius;
+        var oneOverGlobeSemimajorAxis = 1.0 / ellipsoid.maximumRadius;
 
-        var nativeExtent = description.nativeExtent;
+        var nativeRectangle = description.nativeRectangle;
 
         var geographicWest;
         var geographicSouth;
         var geographicEast;
         var geographicNorth;
 
-        var extent = description.extent;
-        if (!defined(extent)) {
+        var rectangle = description.rectangle;
+        if (!defined(rectangle)) {
             if (isGeographic) {
-                geographicWest = toRadians(nativeExtent.west);
-                geographicSouth = toRadians(nativeExtent.south);
-                geographicEast = toRadians(nativeExtent.east);
-                geographicNorth = toRadians(nativeExtent.north);
+                geographicWest = toRadians(nativeRectangle.west);
+                geographicSouth = toRadians(nativeRectangle.south);
+                geographicEast = toRadians(nativeRectangle.east);
+                geographicNorth = toRadians(nativeRectangle.north);
             } else {
-                geographicWest = nativeExtent.west * oneOverCentralBodySemimajorAxis;
-                geographicSouth = piOverTwo - (2.0 * atan(exp(-nativeExtent.south * oneOverCentralBodySemimajorAxis)));
-                geographicEast = nativeExtent.east * oneOverCentralBodySemimajorAxis;
-                geographicNorth = piOverTwo - (2.0 * atan(exp(-nativeExtent.north * oneOverCentralBodySemimajorAxis)));
+                geographicWest = nativeRectangle.west * oneOverGlobeSemimajorAxis;
+                geographicSouth = piOverTwo - (2.0 * atan(exp(-nativeRectangle.south * oneOverGlobeSemimajorAxis)));
+                geographicEast = nativeRectangle.east * oneOverGlobeSemimajorAxis;
+                geographicNorth = piOverTwo - (2.0 * atan(exp(-nativeRectangle.north * oneOverGlobeSemimajorAxis)));
             }
         } else {
-            geographicWest = extent.west;
-            geographicSouth = extent.south;
-            geographicEast = extent.east;
-            geographicNorth = extent.north;
+            geographicWest = rectangle.west;
+            geographicSouth = rectangle.south;
+            geographicEast = rectangle.east;
+            geographicNorth = rectangle.north;
         }
 
         var relativeToCenter = defaultValue(description.relativeToCenter, Cartesian3.ZERO);
@@ -9842,8 +9638,8 @@ define('Core/HeightmapTessellator',[
         var elementMultiplier = defaultValue(structure.elementMultiplier, HeightmapTessellator.DEFAULT_STRUCTURE.elementMultiplier);
         var isBigEndian = defaultValue(structure.isBigEndian, HeightmapTessellator.DEFAULT_STRUCTURE.isBigEndian);
 
-        var granularityX = (nativeExtent.east - nativeExtent.west) / (width - 1);
-        var granularityY = (nativeExtent.north - nativeExtent.south) / (height - 1);
+        var granularityX = (nativeRectangle.east - nativeRectangle.west) / (width - 1);
+        var granularityY = (nativeRectangle.north - nativeRectangle.south) / (height - 1);
 
         var radiiSquared = ellipsoid.radiiSquared;
         var radiiSquaredX = radiiSquared.x;
@@ -9876,10 +9672,10 @@ define('Core/HeightmapTessellator',[
                 row = height - 1;
             }
 
-            var latitude = nativeExtent.north - granularityY * row;
+            var latitude = nativeRectangle.north - granularityY * row;
 
             if (!isGeographic) {
-                latitude = piOverTwo - (2.0 * atan(exp(-latitude * oneOverCentralBodySemimajorAxis)));
+                latitude = piOverTwo - (2.0 * atan(exp(-latitude * oneOverGlobeSemimajorAxis)));
             } else {
                 latitude = toRadians(latitude);
             }
@@ -9899,10 +9695,10 @@ define('Core/HeightmapTessellator',[
                     col = width - 1;
                 }
 
-                var longitude = nativeExtent.west + granularityX * col;
+                var longitude = nativeRectangle.west + granularityX * col;
 
                 if (!isGeographic) {
-                    longitude = longitude * oneOverCentralBodySemimajorAxis;
+                    longitude = longitude * oneOverGlobeSemimajorAxis;
                 } else {
                     longitude = toRadians(longitude);
                 }
@@ -9972,12 +9768,52 @@ define('Core/HeightmapTessellator',[
 });
 
 /*global define*/
+define('Core/formatError',[
+        './defined'
+    ], function(
+        defined) {
+    "use strict";
+
+    /**
+     * Formats an error object into a String.  If available, uses name, message, and stack
+     * properties, otherwise, falls back on toString().
+     *
+     * @exports formatError
+     *
+     * @param {Object} object The item to find in the array.
+     *
+     * @returns {String} A string containing the formatted error.
+     */
+    var formatError = function(object) {
+        var result;
+
+        var name = object.name;
+        var message = object.message;
+        if (defined(name) && defined(message)) {
+            result = name + ': ' + message;
+        } else {
+            result = object.toString();
+        }
+
+        var stack = object.stack;
+        if (defined(stack)) {
+            result += '\n' + stack;
+        }
+
+        return result;
+    };
+
+    return formatError;
+});
+/*global define*/
 define('Workers/createTaskProcessorWorker',[
         '../Core/defaultValue',
-        '../Core/defined'
+        '../Core/defined',
+        '../Core/formatError'
     ], function(
         defaultValue,
-        defined) {
+        defined,
+        formatError) {
     "use strict";
 
     /**
@@ -10026,11 +9862,24 @@ define('Workers/createTaskProcessorWorker',[
             try {
                 responseMessage.result = workerFunction(data.parameters, transferableObjects);
             } catch (e) {
-                responseMessage.error = e;
+                if (e instanceof Error) {
+                    // Errors can't be posted in a message, copy the properties
+                    responseMessage.error = {
+                        name : e.name,
+                        message : e.message,
+                        stack : e.stack
+                    };
+                } else {
+                    responseMessage.error = e;
+                }
             }
 
             if (!defined(postMessage)) {
                 postMessage = defaultValue(self.webkitPostMessage, self.postMessage);
+            }
+
+            if (!data.canTransferArrayBuffer) {
+                transferableObjects.length = 0;
             }
 
             try {
@@ -10039,7 +9888,7 @@ define('Workers/createTaskProcessorWorker',[
                 // something went wrong trying to post the message, post a simpler
                 // error that we can be sure will be cloneable
                 responseMessage.result = undefined;
-                responseMessage.error = 'postMessage failed with error: ' + e + '\n  with responseMessage: ' + JSON.stringify(responseMessage);
+                responseMessage.error = 'postMessage failed with error: ' + formatError(e) + '\n  with responseMessage: ' + JSON.stringify(responseMessage);
                 postMessage(responseMessage);
             }
         };
@@ -10052,16 +9901,14 @@ define('Workers/createVerticesFromHeightmap',[
         '../Core/BoundingSphere',
         '../Core/Ellipsoid',
         '../Core/EllipsoidalOccluder',
-        '../Core/Extent',
-        '../Core/FeatureDetection',
+        '../Core/Rectangle',
         '../Core/HeightmapTessellator',
         './createTaskProcessorWorker'
     ], function(
         BoundingSphere,
         Ellipsoid,
         EllipsoidalOccluder,
-        Extent,
-        FeatureDetection,
+        Rectangle,
         HeightmapTessellator,
         createTaskProcessorWorker) {
     "use strict";
@@ -10078,13 +9925,10 @@ define('Workers/createVerticesFromHeightmap',[
         }
 
         var vertices = new Float32Array(arrayWidth * arrayHeight * numberOfAttributes);
-
-        if (FeatureDetection.supportsTransferringArrayBuffers()) {
-            transferableObjects.push(vertices.buffer);
-        }
+        transferableObjects.push(vertices.buffer);
 
         parameters.ellipsoid = Ellipsoid.clone(parameters.ellipsoid);
-        parameters.extent = Extent.clone(parameters.extent);
+        parameters.rectangle = Rectangle.clone(parameters.rectangle);
 
         parameters.vertices = vertices;
 

@@ -10,6 +10,7 @@ uniform vec4 color;\n\
 uniform float cellAlpha;\n\
 uniform vec2 lineCount;\n\
 uniform vec2 lineThickness;\n\
+uniform vec2 lineOffset;\n\
 \n\
 czm_material czm_getMaterial(czm_materialInput materialInput)\n\
 {\n\
@@ -17,9 +18,9 @@ czm_material czm_getMaterial(czm_materialInput materialInput)\n\
 \n\
     vec2 st = materialInput.st;\n\
 \n\
-    float scaledWidth = fract(lineCount.s * st.s);\n\
+    float scaledWidth = fract(lineCount.s * st.s - lineOffset.s);\n\
     scaledWidth = abs(scaledWidth - floor(scaledWidth + 0.5));\n\
-    float scaledHeight = fract(lineCount.t * st.t);\n\
+    float scaledHeight = fract(lineCount.t * st.t - lineOffset.t);\n\
     scaledHeight = abs(scaledHeight - floor(scaledHeight + 0.5));\n\
 \n\
     float value;\n\

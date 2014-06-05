@@ -2657,7 +2657,7 @@ define('Core/Ellipsoid',[
 });
 
 /*global define*/
-define('Core/Extent',[
+define('Core/Rectangle',[
         './freezeObject',
         './defaultValue',
         './defined',
@@ -2678,15 +2678,17 @@ define('Core/Extent',[
     /**
      * A two dimensional region specified as longitude and latitude coordinates.
      *
-     * @alias Extent
+     * @alias Rectangle
      * @constructor
      *
      * @param {Number} [west=0.0] The westernmost longitude, in radians, in the range [-Pi, Pi].
      * @param {Number} [south=0.0] The southernmost latitude, in radians, in the range [-Pi/2, Pi/2].
      * @param {Number} [east=0.0] The easternmost longitude, in radians, in the range [-Pi, Pi].
      * @param {Number} [north=0.0] The northernmost latitude, in radians, in the range [-Pi/2, Pi/2].
+     *
+     * @see Packable
      */
-    var Extent = function(west, south, east, north) {
+    var Rectangle = function(west, south, east, north) {
         /**
          * The westernmost longitude in radians in the range [-Pi, Pi].
          *
@@ -2721,29 +2723,29 @@ define('Core/Extent',[
     };
 
     /**
-     * Creates an extent given the boundary longitude and latitude in degrees.
+     * Creates an rectangle given the boundary longitude and latitude in degrees.
      *
-     * @memberof Extent
+     * @memberof Rectangle
      *
      * @param {Number} [west=0.0] The westernmost longitude in degrees in the range [-180.0, 180.0].
      * @param {Number} [south=0.0] The southernmost latitude in degrees in the range [-90.0, 90.0].
      * @param {Number} [east=0.0] The easternmost longitude in degrees in the range [-180.0, 180.0].
      * @param {Number} [north=0.0] The northernmost latitude in degrees in the range [-90.0, 90.0].
-     * @param {Extent} [result] The object onto which to store the result, or undefined if a new instance should be created.
+     * @param {Rectangle} [result] The object onto which to store the result, or undefined if a new instance should be created.
      *
-     * @returns {Extent} The modified result parameter or a new Extent instance if none was provided.
+     * @returns {Rectangle} The modified result parameter or a new Rectangle instance if none was provided.
      *
      * @example
-     * var extent = Cesium.Extent.fromDegrees(0.0, 20.0, 10.0, 30.0);
+     * var rectangle = Cesium.Rectangle.fromDegrees(0.0, 20.0, 10.0, 30.0);
      */
-    Extent.fromDegrees = function(west, south, east, north, result) {
+    Rectangle.fromDegrees = function(west, south, east, north, result) {
         west = CesiumMath.toRadians(defaultValue(west, 0.0));
         south = CesiumMath.toRadians(defaultValue(south, 0.0));
         east = CesiumMath.toRadians(defaultValue(east, 0.0));
         north = CesiumMath.toRadians(defaultValue(north, 0.0));
 
         if (!defined(result)) {
-            return new Extent(west, south, east, north);
+            return new Rectangle(west, south, east, north);
         }
 
         result.west = west;
@@ -2755,14 +2757,14 @@ define('Core/Extent',[
     };
 
     /**
-     * Creates the smallest possible Extent that encloses all positions in the provided array.
-     * @memberof Extent
+     * Creates the smallest possible Rectangle that encloses all positions in the provided array.
+     * @memberof Rectangle
      *
      * @param {Array} cartographics The list of Cartographic instances.
-     * @param {Extent} [result] The object onto which to store the result, or undefined if a new instance should be created.
-     * @returns {Extent} The modified result parameter or a new Extent instance if none was provided.
+     * @param {Rectangle} [result] The object onto which to store the result, or undefined if a new instance should be created.
+     * @returns {Rectangle} The modified result parameter or a new Rectangle instance if none was provided.
      */
-    Extent.fromCartographicArray = function(cartographics, result) {
+    Rectangle.fromCartographicArray = function(cartographics, result) {
                 if (!defined(cartographics)) {
             throw new DeveloperError('cartographics is required.');
         }
@@ -2781,7 +2783,7 @@ define('Core/Extent',[
         }
 
         if (!defined(result)) {
-            return new Extent(minLon, minLat, maxLon, maxLat);
+            return new Rectangle(minLon, minLat, maxLon, maxLat);
         }
 
         result.west = minLon;
@@ -2792,66 +2794,122 @@ define('Core/Extent',[
     };
 
     /**
-     * Duplicates an Extent.
-     *
-     * @memberof Extent
-     *
-     * @param {Extent} extent The extent to clone.
-     * @param {Extent} [result] The object onto which to store the result, or undefined if a new instance should be created.
-     * @returns {Extent} The modified result parameter or a new Extent instance if none was provided. (Returns undefined if extent is undefined)
+     * The number of elements used to pack the object into an array.
+     * @Type {Number}
      */
-    Extent.clone = function(extent, result) {
-        if (!defined(extent)) {
-            return undefined;
+    Rectangle.packedLength = 4;
+
+    /**
+     * Stores the provided instance into the provided array.
+     * @memberof Rectangle
+     *
+     * @param {Rectangle} value The value to pack.
+     * @param {Array} array The array to pack into.
+     * @param {Number} [startingIndex=0] The index into the array at which to start packing the elements.
+     */
+    Rectangle.pack = function(value, array, startingIndex) {
+                if (!defined(value)) {
+            throw new DeveloperError('value is required');
         }
+
+        if (!defined(array)) {
+            throw new DeveloperError('array is required');
+        }
+        
+        startingIndex = defaultValue(startingIndex, 0);
+
+        array[startingIndex++] = value.west;
+        array[startingIndex++] = value.south;
+        array[startingIndex++] = value.east;
+        array[startingIndex] = value.north;
+    };
+
+    /**
+     * Retrieves an instance from a packed array.
+     * @memberof Rectangle
+     *
+     * @param {Array} array The packed array.
+     * @param {Number} [startingIndex=0] The starting index of the element to be unpacked.
+     * @param {Rectangle} [result] The object into which to store the result.
+     */
+    Rectangle.unpack = function(array, startingIndex, result) {
+                if (!defined(array)) {
+            throw new DeveloperError('array is required');
+        }
+        
+        startingIndex = defaultValue(startingIndex, 0);
 
         if (!defined(result)) {
-            return new Extent(extent.west, extent.south, extent.east, extent.north);
+            result = new Rectangle();
         }
-
-        result.west = extent.west;
-        result.south = extent.south;
-        result.east = extent.east;
-        result.north = extent.north;
+        result.west = array[startingIndex++];
+        result.south = array[startingIndex++];
+        result.east = array[startingIndex++];
+        result.north = array[startingIndex];
         return result;
     };
 
     /**
-     * Duplicates this Extent.
+     * Duplicates an Rectangle.
      *
-     * @memberof Extent
+     * @memberof Rectangle
      *
-     * @param {Extent} [result] The object onto which to store the result.
-     * @returns {Extent} The modified result parameter or a new Extent instance if none was provided.
+     * @param {Rectangle} rectangle The rectangle to clone.
+     * @param {Rectangle} [result] The object onto which to store the result, or undefined if a new instance should be created.
+     * @returns {Rectangle} The modified result parameter or a new Rectangle instance if none was provided. (Returns undefined if rectangle is undefined)
      */
-    Extent.prototype.clone = function(result) {
-        return Extent.clone(this, result);
+    Rectangle.clone = function(rectangle, result) {
+        if (!defined(rectangle)) {
+            return undefined;
+        }
+
+        if (!defined(result)) {
+            return new Rectangle(rectangle.west, rectangle.south, rectangle.east, rectangle.north);
+        }
+
+        result.west = rectangle.west;
+        result.south = rectangle.south;
+        result.east = rectangle.east;
+        result.north = rectangle.north;
+        return result;
     };
 
     /**
-     * Compares the provided Extent with this Extent componentwise and returns
+     * Duplicates this Rectangle.
+     *
+     * @memberof Rectangle
+     *
+     * @param {Rectangle} [result] The object onto which to store the result.
+     * @returns {Rectangle} The modified result parameter or a new Rectangle instance if none was provided.
+     */
+    Rectangle.prototype.clone = function(result) {
+        return Rectangle.clone(this, result);
+    };
+
+    /**
+     * Compares the provided Rectangle with this Rectangle componentwise and returns
      * <code>true</code> if they are equal, <code>false</code> otherwise.
-     * @memberof Extent
+     * @memberof Rectangle
      *
-     * @param {Extent} [other] The Extent to compare.
-     * @returns {Boolean} <code>true</code> if the Extents are equal, <code>false</code> otherwise.
+     * @param {Rectangle} [other] The Rectangle to compare.
+     * @returns {Boolean} <code>true</code> if the Rectangles are equal, <code>false</code> otherwise.
      */
-    Extent.prototype.equals = function(other) {
-        return Extent.equals(this, other);
+    Rectangle.prototype.equals = function(other) {
+        return Rectangle.equals(this, other);
     };
 
     /**
-     * Compares the provided extents and returns <code>true</code> if they are equal,
+     * Compares the provided rectangles and returns <code>true</code> if they are equal,
      * <code>false</code> otherwise.
      *
-     * @memberof Extent
+     * @memberof Rectangle
      *
-     * @param {Extent} [left] The first Extent.
-     * @param {Extent} [right] The second Extent.
+     * @param {Rectangle} [left] The first Rectangle.
+     * @param {Rectangle} [right] The second Rectangle.
      *
      * @returns {Boolean} <code>true</code> if left and right are equal; otherwise <code>false</code>.
      */
-    Extent.equals = function(left, right) {
+    Rectangle.equals = function(left, right) {
         return (left === right) ||
                ((defined(left)) &&
                 (defined(right)) &&
@@ -2862,16 +2920,16 @@ define('Core/Extent',[
     };
 
     /**
-     * Compares the provided Extent with this Extent componentwise and returns
+     * Compares the provided Rectangle with this Rectangle componentwise and returns
      * <code>true</code> if they are within the provided epsilon,
      * <code>false</code> otherwise.
-     * @memberof Extent
+     * @memberof Rectangle
      *
-     * @param {Extent} [other] The Extent to compare.
+     * @param {Rectangle} [other] The Rectangle to compare.
      * @param {Number} epsilon The epsilon to use for equality testing.
-     * @returns {Boolean} <code>true</code> if the Extents are within the provided epsilon, <code>false</code> otherwise.
+     * @returns {Boolean} <code>true</code> if the Rectangles are within the provided epsilon, <code>false</code> otherwise.
      */
-    Extent.prototype.equalsEpsilon = function(other, epsilon) {
+    Rectangle.prototype.equalsEpsilon = function(other, epsilon) {
                 if (typeof epsilon !== 'number') {
             throw new DeveloperError('epsilon is required and must be a number.');
         }
@@ -2884,21 +2942,21 @@ define('Core/Extent',[
     };
 
     /**
-     * Checks an Extent's properties and throws if they are not in valid ranges.
+     * Checks an Rectangle's properties and throws if they are not in valid ranges.
      *
-     * @param {Extent} extent The extent to validate
+     * @param {Rectangle} rectangle The rectangle to validate
      *
      * @exception {DeveloperError} <code>north</code> must be in the interval [<code>-Pi/2</code>, <code>Pi/2</code>].
      * @exception {DeveloperError} <code>south</code> must be in the interval [<code>-Pi/2</code>, <code>Pi/2</code>].
      * @exception {DeveloperError} <code>east</code> must be in the interval [<code>-Pi</code>, <code>Pi</code>].
      * @exception {DeveloperError} <code>west</code> must be in the interval [<code>-Pi</code>, <code>Pi</code>].
      */
-    Extent.validate = function(extent) {
-                if (!defined(extent)) {
-            throw new DeveloperError('extent is required');
+    Rectangle.validate = function(rectangle) {
+                if (!defined(rectangle)) {
+            throw new DeveloperError('rectangle is required');
         }
 
-        var north = extent.north;
+        var north = rectangle.north;
         if (typeof north !== 'number') {
             throw new DeveloperError('north is required to be a number.');
         }
@@ -2907,7 +2965,7 @@ define('Core/Extent',[
             throw new DeveloperError('north must be in the interval [-Pi/2, Pi/2].');
         }
 
-        var south = extent.south;
+        var south = rectangle.south;
         if (typeof south !== 'number') {
             throw new DeveloperError('south is required to be a number.');
         }
@@ -2916,7 +2974,7 @@ define('Core/Extent',[
             throw new DeveloperError('south must be in the interval [-Pi/2, Pi/2].');
         }
 
-        var west = extent.west;
+        var west = rectangle.west;
         if (typeof west !== 'number') {
             throw new DeveloperError('west is required to be a number.');
         }
@@ -2925,7 +2983,7 @@ define('Core/Extent',[
             throw new DeveloperError('west must be in the interval [-Pi, Pi].');
         }
 
-        var east = extent.east;
+        var east = rectangle.east;
         if (typeof east !== 'number') {
             throw new DeveloperError('east is required to be a number.');
         }
@@ -2936,138 +2994,138 @@ define('Core/Extent',[
             };
 
     /**
-     * Computes the southwest corner of an extent.
-     * @memberof Extent
+     * Computes the southwest corner of an rectangle.
+     * @memberof Rectangle
      *
-     * @param {Extent} extent The extent for which to find the corner
+     * @param {Rectangle} rectangle The rectangle for which to find the corner
      * @param {Cartographic} [result] The object onto which to store the result.
      * @returns {Cartographic} The modified result parameter or a new Cartographic instance if none was provided.
      */
-    Extent.getSouthwest = function(extent, result) {
-                if (!defined(extent)) {
-            throw new DeveloperError('extent is required');
+    Rectangle.getSouthwest = function(rectangle, result) {
+                if (!defined(rectangle)) {
+            throw new DeveloperError('rectangle is required');
         }
         
         if (!defined(result)) {
-            return new Cartographic(extent.west, extent.south);
+            return new Cartographic(rectangle.west, rectangle.south);
         }
-        result.longitude = extent.west;
-        result.latitude = extent.south;
+        result.longitude = rectangle.west;
+        result.latitude = rectangle.south;
         result.height = 0.0;
         return result;
     };
 
     /**
-     * Computes the northwest corner of an extent.
-     * @memberof Extent
+     * Computes the northwest corner of an rectangle.
+     * @memberof Rectangle
      *
-     * @param {Extent} extent The extent for which to find the corner
+     * @param {Rectangle} rectangle The rectangle for which to find the corner
      * @param {Cartographic} [result] The object onto which to store the result.
      * @returns {Cartographic} The modified result parameter or a new Cartographic instance if none was provided.
      */
-    Extent.getNorthwest = function(extent, result) {
-                if (!defined(extent)) {
-            throw new DeveloperError('extent is required');
+    Rectangle.getNorthwest = function(rectangle, result) {
+                if (!defined(rectangle)) {
+            throw new DeveloperError('rectangle is required');
         }
         
         if (!defined(result)) {
-            return new Cartographic(extent.west, extent.north);
+            return new Cartographic(rectangle.west, rectangle.north);
         }
-        result.longitude = extent.west;
-        result.latitude = extent.north;
+        result.longitude = rectangle.west;
+        result.latitude = rectangle.north;
         result.height = 0.0;
         return result;
     };
 
     /**
-     * Computes the northeast corner of an extent.
-     * @memberof Extent
+     * Computes the northeast corner of an rectangle.
+     * @memberof Rectangle
      *
-     * @param {Extent} extent The extent for which to find the corner
+     * @param {Rectangle} rectangle The rectangle for which to find the corner
      * @param {Cartographic} [result] The object onto which to store the result.
      * @returns {Cartographic} The modified result parameter or a new Cartographic instance if none was provided.
      */
-    Extent.getNortheast = function(extent, result) {
-                if (!defined(extent)) {
-            throw new DeveloperError('extent is required');
+    Rectangle.getNortheast = function(rectangle, result) {
+                if (!defined(rectangle)) {
+            throw new DeveloperError('rectangle is required');
         }
         
         if (!defined(result)) {
-            return new Cartographic(extent.east, extent.north);
+            return new Cartographic(rectangle.east, rectangle.north);
         }
-        result.longitude = extent.east;
-        result.latitude = extent.north;
+        result.longitude = rectangle.east;
+        result.latitude = rectangle.north;
         result.height = 0.0;
         return result;
     };
 
     /**
-     * Computes the southeast corner of an extent.
-     * @memberof Extent
+     * Computes the southeast corner of an rectangle.
+     * @memberof Rectangle
      *
-     * @param {Extent} extent The extent for which to find the corner
+     * @param {Rectangle} rectangle The rectangle for which to find the corner
      * @param {Cartographic} [result] The object onto which to store the result.
      * @returns {Cartographic} The modified result parameter or a new Cartographic instance if none was provided.
      */
-    Extent.getSoutheast = function(extent, result) {
-                if (!defined(extent)) {
-            throw new DeveloperError('extent is required');
+    Rectangle.getSoutheast = function(rectangle, result) {
+                if (!defined(rectangle)) {
+            throw new DeveloperError('rectangle is required');
         }
         
         if (!defined(result)) {
-            return new Cartographic(extent.east, extent.south);
+            return new Cartographic(rectangle.east, rectangle.south);
         }
-        result.longitude = extent.east;
-        result.latitude = extent.south;
+        result.longitude = rectangle.east;
+        result.latitude = rectangle.south;
         result.height = 0.0;
         return result;
     };
 
     /**
-     * Computes the center of an extent.
-     * @memberof Extent
+     * Computes the center of an rectangle.
+     * @memberof Rectangle
      *
-     * @param {Extent} extent The extent for which to find the center
+     * @param {Rectangle} rectangle The rectangle for which to find the center
      * @param {Cartographic} [result] The object onto which to store the result.
      * @returns {Cartographic} The modified result parameter or a new Cartographic instance if none was provided.
      */
-    Extent.getCenter = function(extent, result) {
-                if (!defined(extent)) {
-            throw new DeveloperError('extent is required');
+    Rectangle.getCenter = function(rectangle, result) {
+                if (!defined(rectangle)) {
+            throw new DeveloperError('rectangle is required');
         }
         
         if (!defined(result)) {
-            return new Cartographic((extent.west + extent.east) * 0.5, (extent.south + extent.north) * 0.5);
+            return new Cartographic((rectangle.west + rectangle.east) * 0.5, (rectangle.south + rectangle.north) * 0.5);
         }
-        result.longitude = (extent.west + extent.east) * 0.5;
-        result.latitude = (extent.south + extent.north) * 0.5;
+        result.longitude = (rectangle.west + rectangle.east) * 0.5;
+        result.latitude = (rectangle.south + rectangle.north) * 0.5;
         result.height = 0.0;
         return result;
     };
 
     /**
-     * Computes the intersection of two extents
-     * @memberof Extent
+     * Computes the intersection of two rectangles
+     * @memberof Rectangle
      *
-     * @param {Extent} extent On extent to find an intersection
-     * @param otherExtent Another extent to find an intersection
-     * @param {Extent} [result] The object onto which to store the result.
-     * @returns {Extent} The modified result parameter or a new Extent instance if none was provided.
+     * @param {Rectangle} rectangle On rectangle to find an intersection
+     * @param otherRectangle Another rectangle to find an intersection
+     * @param {Rectangle} [result] The object onto which to store the result.
+     * @returns {Rectangle} The modified result parameter or a new Rectangle instance if none was provided.
      */
-    Extent.intersectWith = function(extent, otherExtent, result) {
-                if (!defined(extent)) {
-            throw new DeveloperError('extent is required');
+    Rectangle.intersectWith = function(rectangle, otherRectangle, result) {
+                if (!defined(rectangle)) {
+            throw new DeveloperError('rectangle is required');
         }
-        if (!defined(otherExtent)) {
-            throw new DeveloperError('otherExtent is required.');
+        if (!defined(otherRectangle)) {
+            throw new DeveloperError('otherRectangle is required.');
         }
         
-        var west = Math.max(extent.west, otherExtent.west);
-        var south = Math.max(extent.south, otherExtent.south);
-        var east = Math.min(extent.east, otherExtent.east);
-        var north = Math.min(extent.north, otherExtent.north);
+        var west = Math.max(rectangle.west, otherRectangle.west);
+        var south = Math.max(rectangle.south, otherRectangle.south);
+        var east = Math.min(rectangle.east, otherRectangle.east);
+        var north = Math.min(rectangle.north, otherRectangle.north);
         if (!defined(result)) {
-            return new Extent(west, south, east, north);
+            return new Rectangle(west, south, east, north);
         }
         result.west = west;
         result.south = south;
@@ -3077,59 +3135,59 @@ define('Core/Extent',[
     };
 
     /**
-     * Returns true if the cartographic is on or inside the extent, false otherwise.
-     * @memberof Extent
+     * Returns true if the cartographic is on or inside the rectangle, false otherwise.
+     * @memberof Rectangle
      *
-     * @param {Extent} extent The extent
+     * @param {Rectangle} rectangle The rectangle
      * @param {Cartographic} cartographic The cartographic to test.
-     * @returns {Boolean} true if the provided cartographic is inside the extent, false otherwise.
+     * @returns {Boolean} true if the provided cartographic is inside the rectangle, false otherwise.
      */
-    Extent.contains = function(extent, cartographic) {
-                if (!defined(extent)) {
-            throw new DeveloperError('extent is required');
+    Rectangle.contains = function(rectangle, cartographic) {
+                if (!defined(rectangle)) {
+            throw new DeveloperError('rectangle is required');
         }
         if (!defined(cartographic)) {
             throw new DeveloperError('cartographic is required.');
         }
         
-        return cartographic.longitude >= extent.west &&
-               cartographic.longitude <= extent.east &&
-               cartographic.latitude >= extent.south &&
-               cartographic.latitude <= extent.north;
+        return cartographic.longitude >= rectangle.west &&
+               cartographic.longitude <= rectangle.east &&
+               cartographic.latitude >= rectangle.south &&
+               cartographic.latitude <= rectangle.north;
     };
 
     /**
-     * Determines if the extent is empty, i.e., if <code>west >= east</code>
+     * Determines if the rectangle is empty, i.e., if <code>west >= east</code>
      * or <code>south >= north</code>.
      *
-     * @memberof Extent
+     * @memberof Rectangle
      *
-     * @param {Extent} extent The extent
-     * @returns {Boolean} True if the extent is empty; otherwise, false.
+     * @param {Rectangle} rectangle The rectangle
+     * @returns {Boolean} True if the rectangle is empty; otherwise, false.
      */
-    Extent.isEmpty = function(extent) {
-                if (!defined(extent)) {
-            throw new DeveloperError('extent is required');
+    Rectangle.isEmpty = function(rectangle) {
+                if (!defined(rectangle)) {
+            throw new DeveloperError('rectangle is required');
         }
         
-        return extent.west >= extent.east || extent.south >= extent.north;
+        return rectangle.west >= rectangle.east || rectangle.south >= rectangle.north;
     };
 
     var subsampleLlaScratch = new Cartographic();
     /**
-     * Samples an extent so that it includes a list of Cartesian points suitable for passing to
+     * Samples an rectangle so that it includes a list of Cartesian points suitable for passing to
      * {@link BoundingSphere#fromPoints}.  Sampling is necessary to account
-     * for extents that cover the poles or cross the equator.
+     * for rectangles that cover the poles or cross the equator.
      *
-     * @param {Extent} extent The extent to subsample.
+     * @param {Rectangle} rectangle The rectangle to subsample.
      * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid to use.
-     * @param {Number} [surfaceHeight=0.0] The height of the extent above the ellipsoid.
+     * @param {Number} [surfaceHeight=0.0] The height of the rectangle above the ellipsoid.
      * @param {Array} [result] The array of Cartesians onto which to store the result.
      * @returns {Array} The modified result parameter or a new Array of Cartesians instances if none was provided.
      */
-    Extent.subsample = function(extent, ellipsoid, surfaceHeight, result) {
-                if (!defined(extent)) {
-            throw new DeveloperError('extent is required');
+    Rectangle.subsample = function(rectangle, ellipsoid, surfaceHeight, result) {
+                if (!defined(rectangle)) {
+            throw new DeveloperError('rectangle is required');
         }
         
         ellipsoid = defaultValue(ellipsoid, Ellipsoid.WGS84);
@@ -3140,10 +3198,10 @@ define('Core/Extent',[
         }
         var length = 0;
 
-        var north = extent.north;
-        var south = extent.south;
-        var east = extent.east;
-        var west = extent.west;
+        var north = rectangle.north;
+        var south = rectangle.south;
+        var east = rectangle.east;
+        var west = rectangle.west;
 
         var lla = subsampleLlaScratch;
         lla.height = surfaceHeight;
@@ -3195,13 +3253,13 @@ define('Core/Extent',[
     };
 
     /**
-     * The largest possible extent.
-     * @memberof Extent
-     * @type Extent
+     * The largest possible rectangle.
+     * @memberof Rectangle
+     * @type Rectangle
     */
-    Extent.MAX_VALUE = freezeObject(new Extent(-Math.PI, -CesiumMath.PI_OVER_TWO, Math.PI, CesiumMath.PI_OVER_TWO));
+    Rectangle.MAX_VALUE = freezeObject(new Rectangle(-Math.PI, -CesiumMath.PI_OVER_TWO, Math.PI, CesiumMath.PI_OVER_TWO));
 
-    return Extent;
+    return Rectangle;
 });
 
 /*global define*/
@@ -3539,6 +3597,31 @@ define('Core/Cartesian4',[
         result.y = y;
         result.z = z;
         result.w = w;
+        return result;
+    };
+
+    /**
+     * Creates a Cartesian4 instance from a {@link Color}. <code>red</code>, <code>green</code>, <code>blue</code>,
+     * and <code>alpha</code> map to <code>x</code>, <code>y</code>, <code>z</code>, and <code>w</code>, respectively.
+     * @memberof Cartesian4
+     *
+     * @param {Color} color The source color.
+     * @param {Cartesian4} [result] The object onto which to store the result.
+     * @returns {Cartesian4} The modified result parameter or a new Cartesian4 instance if one was not provided.
+     */
+    Cartesian4.fromColor = function(color, result) {
+                if (!defined(color)) {
+            throw new DeveloperError('color is required');
+        }
+        
+        if (!defined(result)) {
+            return new Cartesian4(color.red, color.green, color.blue, color.alpha);
+        }
+
+        result.x = color.red;
+        result.y = color.green;
+        result.z = color.blue;
+        result.w = color.alpha;
         return result;
     };
 
@@ -4832,6 +4915,46 @@ define('Core/Matrix3',[
         return result;
     };
 
+    var scratchColumn = new Cartesian3();
+
+    /**
+     * Extracts the non-uniform scale assuming the matrix is an affine transformation.
+     * @memberof Matrix3
+     *
+     * @param {Matrix3} matrix The matrix.
+     * @param {Cartesian3} [result] The object onto which to store the result.
+     * @returns {Cartesian3} The modified result parameter or a new Cartesian3 instance if one was not provided.
+     */
+    Matrix3.getScale = function(matrix, result) {
+                if (!defined(matrix)) {
+            throw new DeveloperError('matrix is required.');
+        }
+        
+        if (!defined(result)) {
+            result = new Cartesian3();
+        }
+
+        result.x = Cartesian3.magnitude(Cartesian3.fromElements(matrix[0], matrix[1], matrix[2], scratchColumn));
+        result.y = Cartesian3.magnitude(Cartesian3.fromElements(matrix[3], matrix[4], matrix[5], scratchColumn));
+        result.z = Cartesian3.magnitude(Cartesian3.fromElements(matrix[6], matrix[7], matrix[8], scratchColumn));
+        return result;
+    };
+
+    var scratchScale = new Cartesian3();
+
+    /**
+     * Computes the maximum scale assuming the matrix is an affine transformation.
+     * The maximum scale is the maximum length of the column vectors.
+     * @memberof Matrix3
+     *
+     * @param {Matrix3} matrix The matrix.
+     * @returns {Number} The maximum scale.
+     */
+    Matrix3.getMaximumScale = function(matrix) {
+        Matrix3.getScale(matrix, scratchScale);
+        return Cartesian3.getMaximumComponent(scratchScale);
+    };
+
     /**
      * Computes the product of two matrices.
      * @memberof Matrix3
@@ -5258,11 +5381,22 @@ define('Core/Matrix3',[
             throw new DeveloperError('matrix is not invertible');
         }
 
-        var m = new Matrix3(m22 * m33 - m23 * m32, m13 * m32 - m12 * m33, m12 * m23 - m13 * m22,
-                            m23 * m31 - m21 * m33, m11 * m33 - m13 * m31, m13 * m21 - m11 * m23,
-                            m21 * m32 - m22 * m31, m12 * m31 - m11 * m32, m11 * m22 - m12 * m21);
+        if (!defined(result)) {
+            result = new Matrix3();
+        }
+
+        result[0] = m22 * m33 - m23 * m32;
+        result[1] = m23 * m31 - m21 * m33;
+        result[2] = m21 * m32 - m22 * m31;
+        result[3] = m13 * m32 - m12 * m33;
+        result[4] = m11 * m33 - m13 * m31;
+        result[5] = m12 * m31 - m11 * m32;
+        result[6] = m12 * m23 - m13 * m22;
+        result[7] = m13 * m21 - m11 * m23;
+        result[8] = m11 * m22 - m12 * m21;
+
        var scale = 1.0 / determinant;
-       return Matrix3.multiplyByScalar(m, scale, result);
+       return Matrix3.multiplyByScalar(result, scale, result);
     };
 
     /**
@@ -5560,6 +5694,7 @@ define('Core/Matrix4',[
      * @see Matrix4.computeViewportTransformation
      * @see Matrix2
      * @see Matrix3
+     * @see Packable
      */
     var Matrix4 = function(column0Row0, column1Row0, column2Row0, column3Row0,
                            column0Row1, column1Row1, column2Row1, column3Row1,
@@ -5581,6 +5716,87 @@ define('Core/Matrix4',[
         this[13] = defaultValue(column3Row1, 0.0);
         this[14] = defaultValue(column3Row2, 0.0);
         this[15] = defaultValue(column3Row3, 0.0);
+    };
+
+    /**
+     * The number of elements used to pack the object into an array.
+     * @Type {Number}
+     */
+    Matrix4.packedLength = 16;
+
+    /**
+     * Stores the provided instance into the provided array.
+     * @memberof Matrix4
+     *
+     * @param {Matrix4} value The value to pack.
+     * @param {Array} array The array to pack into.
+     * @param {Number} [startingIndex=0] The index into the array at which to start packing the elements.
+     */
+    Matrix4.pack = function(value, array, startingIndex) {
+                if (!defined(value)) {
+            throw new DeveloperError('value is required');
+        }
+
+        if (!defined(array)) {
+            throw new DeveloperError('array is required');
+        }
+        
+        startingIndex = defaultValue(startingIndex, 0);
+
+        array[startingIndex++] = value[0];
+        array[startingIndex++] = value[1];
+        array[startingIndex++] = value[2];
+        array[startingIndex++] = value[3];
+        array[startingIndex++] = value[4];
+        array[startingIndex++] = value[5];
+        array[startingIndex++] = value[6];
+        array[startingIndex++] = value[7];
+        array[startingIndex++] = value[8];
+        array[startingIndex++] = value[9];
+        array[startingIndex++] = value[10];
+        array[startingIndex++] = value[11];
+        array[startingIndex++] = value[12];
+        array[startingIndex++] = value[13];
+        array[startingIndex++] = value[14];
+        array[startingIndex] = value[15];
+    };
+
+    /**
+     * Retrieves an instance from a packed array.
+     * @memberof Matrix4
+     *
+     * @param {Array} array The packed array.
+     * @param {Number} [startingIndex=0] The starting index of the element to be unpacked.
+     * @param {Matrix4} [result] The object into which to store the result.
+     */
+    Matrix4.unpack = function(array, startingIndex, result) {
+                if (!defined(array)) {
+            throw new DeveloperError('array is required');
+        }
+        
+        startingIndex = defaultValue(startingIndex, 0);
+
+        if (!defined(result)) {
+            result = new Matrix4();
+        }
+
+        result[0] = array[startingIndex++];
+        result[1] = array[startingIndex++];
+        result[2] = array[startingIndex++];
+        result[3] = array[startingIndex++];
+        result[4] = array[startingIndex++];
+        result[5] = array[startingIndex++];
+        result[6] = array[startingIndex++];
+        result[7] = array[startingIndex++];
+        result[8] = array[startingIndex++];
+        result[9] = array[startingIndex++];
+        result[10] = array[startingIndex++];
+        result[11] = array[startingIndex++];
+        result[12] = array[startingIndex++];
+        result[13] = array[startingIndex++];
+        result[14] = array[startingIndex++];
+        result[15] = array[startingIndex];
+        return result;
     };
 
     /**
@@ -5644,35 +5860,7 @@ define('Core/Matrix4',[
      * var v2 = [0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 2.0, 3.0, 3.0, 3.0, 3.0, 4.0, 4.0, 4.0, 4.0];
      * var m2 = Cesium.Matrix4.fromArray(v2, 2);
      */
-    Matrix4.fromArray = function(array, startingIndex, result) {
-                if (!defined(array)) {
-            throw new DeveloperError('array is required');
-        }
-        
-        startingIndex = defaultValue(startingIndex, 0);
-
-        if (!defined(result)) {
-            result = new Matrix4();
-        }
-
-        result[0] = array[startingIndex];
-        result[1] = array[startingIndex + 1];
-        result[2] = array[startingIndex + 2];
-        result[3] = array[startingIndex + 3];
-        result[4] = array[startingIndex + 4];
-        result[5] = array[startingIndex + 5];
-        result[6] = array[startingIndex + 6];
-        result[7] = array[startingIndex + 7];
-        result[8] = array[startingIndex + 8];
-        result[9] = array[startingIndex + 9];
-        result[10] = array[startingIndex + 10];
-        result[11] = array[startingIndex + 11];
-        result[12] = array[startingIndex + 12];
-        result[13] = array[startingIndex + 13];
-        result[14] = array[startingIndex + 14];
-        result[15] = array[startingIndex + 15];
-        return result;
-    };
+    Matrix4.fromArray = Matrix4.unpack;
 
     /**
      * Computes a Matrix4 instance from a column-major order array.
@@ -6679,6 +6867,47 @@ define('Core/Matrix4',[
         return result;
     };
 
+    var scratchColumn = new Cartesian3();
+
+    /**
+     * Extracts the non-uniform scale assuming the matrix is an affine transformation.
+     * @memberof Matrix4
+     *
+     * @param {Matrix4} matrix The matrix.
+     * @param {Cartesian3} [result] The object onto which to store the result.
+     * @returns {Cartesian3} The modified result parameter or a new Cartesian3 instance if one was not provided.
+     */
+    Matrix4.getScale = function(matrix, result) {
+                if (!defined(matrix)) {
+            throw new DeveloperError('matrix is required.');
+        }
+        
+        if (!defined(result)) {
+            result = new Cartesian3();
+        }
+
+        result.x = Cartesian3.magnitude(Cartesian3.fromElements(matrix[0], matrix[1], matrix[2], scratchColumn));
+        result.y = Cartesian3.magnitude(Cartesian3.fromElements(matrix[4], matrix[5], matrix[6], scratchColumn));
+        result.z = Cartesian3.magnitude(Cartesian3.fromElements(matrix[8], matrix[9], matrix[10], scratchColumn));
+        return result;
+    };
+
+    var scratchScale = new Cartesian3();
+
+    /**
+     * Computes the maximum scale assuming the matrix is an affine transformation.
+     * The maximum scale is the maximum length of the column vectors in the upper-left
+     * 3x3 matrix.
+     * @memberof Matrix4
+     *
+     * @param {Matrix4} matrix The matrix.
+     * @returns {Number} The maximum scale.
+     */
+    Matrix4.getMaximumScale = function(matrix) {
+        Matrix4.getScale(matrix, scratchScale);
+        return Cartesian3.getMaximumComponent(scratchScale);
+    };
+
     /**
      * Computes the product of two matrices.
      * @memberof Matrix4
@@ -6883,7 +7112,7 @@ define('Core/Matrix4',[
      *
      * @returns {Matrix4} The modified result parameter or a new Matrix4 instance if one was not provided.
      *
-     * @see Matrix4#fromTranslation
+     * @see Matrix4.fromTranslation
      *
      * @example
      * // Instead of Matrix4.multiply(m, Cesium.Matrix4.fromTranslation(position), m);
@@ -6946,8 +7175,8 @@ define('Core/Matrix4',[
      *
      * @returns {Matrix4} The modified result parameter or a new Matrix4 instance if one was not provided.
      *
-     * @see Matrix4#fromUniformScale
-     * @see Matrix4#multiplyByScale
+     * @see Matrix4.fromUniformScale
+     * @see Matrix4.multiplyByScale
      *
      * @example
      * // Instead of Matrix4.multiply(m, Cesium.Matrix4.fromUniformScale(scale), m);
@@ -6977,8 +7206,8 @@ define('Core/Matrix4',[
      *
      * @returns {Matrix4} The modified result parameter or a new Matrix4 instance if one was not provided.
      *
-     * @see Matrix4#fromScale
-     * @see Matrix4#multiplyByUniformScale
+     * @see Matrix4.fromScale
+     * @see Matrix4.multiplyByUniformScale
      *
      * @example
      * // Instead of Matrix4.multiply(m, Cesium.Matrix4.fromScale(scale), m);
@@ -7897,7 +8126,7 @@ define('Core/BoundingSphere',[
         './defined',
         './DeveloperError',
         './Ellipsoid',
-        './Extent',
+        './Rectangle',
         './GeographicProjection',
         './Intersect',
         './Interval',
@@ -7909,7 +8138,7 @@ define('Core/BoundingSphere',[
         defined,
         DeveloperError,
         Ellipsoid,
-        Extent,
+        Rectangle,
         GeographicProjection,
         Intersect,
         Interval,
@@ -8105,44 +8334,44 @@ define('Core/BoundingSphere',[
     };
 
     var defaultProjection = new GeographicProjection();
-    var fromExtent2DLowerLeft = new Cartesian3();
-    var fromExtent2DUpperRight = new Cartesian3();
-    var fromExtent2DSouthwest = new Cartographic();
-    var fromExtent2DNortheast = new Cartographic();
+    var fromRectangle2DLowerLeft = new Cartesian3();
+    var fromRectangle2DUpperRight = new Cartesian3();
+    var fromRectangle2DSouthwest = new Cartographic();
+    var fromRectangle2DNortheast = new Cartographic();
 
     /**
-     * Computes a bounding sphere from an extent projected in 2D.
+     * Computes a bounding sphere from an rectangle projected in 2D.
      *
      * @memberof BoundingSphere
      *
-     * @param {Extent} extent The extent around which to create a bounding sphere.
-     * @param {Object} [projection=GeographicProjection] The projection used to project the extent into 2D.
+     * @param {Rectangle} rectangle The rectangle around which to create a bounding sphere.
+     * @param {Object} [projection=GeographicProjection] The projection used to project the rectangle into 2D.
      * @param {BoundingSphere} [result] The object onto which to store the result.
      * @returns {BoundingSphere} The modified result parameter or a new BoundingSphere instance if none was provided.
      */
-    BoundingSphere.fromExtent2D = function(extent, projection, result) {
-        return BoundingSphere.fromExtentWithHeights2D(extent, projection, 0.0, 0.0, result);
+    BoundingSphere.fromRectangle2D = function(rectangle, projection, result) {
+        return BoundingSphere.fromRectangleWithHeights2D(rectangle, projection, 0.0, 0.0, result);
     };
 
     /**
-     * Computes a bounding sphere from an extent projected in 2D.  The bounding sphere accounts for the
-     * object's minimum and maximum heights over the extent.
+     * Computes a bounding sphere from an rectangle projected in 2D.  The bounding sphere accounts for the
+     * object's minimum and maximum heights over the rectangle.
      *
      * @memberof BoundingSphere
      *
-     * @param {Extent} extent The extent around which to create a bounding sphere.
-     * @param {Object} [projection=GeographicProjection] The projection used to project the extent into 2D.
-     * @param {Number} [minimumHeight=0.0] The minimum height over the extent.
-     * @param {Number} [maximumHeight=0.0] The maximum height over the extent.
+     * @param {Rectangle} rectangle The rectangle around which to create a bounding sphere.
+     * @param {Object} [projection=GeographicProjection] The projection used to project the rectangle into 2D.
+     * @param {Number} [minimumHeight=0.0] The minimum height over the rectangle.
+     * @param {Number} [maximumHeight=0.0] The maximum height over the rectangle.
      * @param {BoundingSphere} [result] The object onto which to store the result.
      * @returns {BoundingSphere} The modified result parameter or a new BoundingSphere instance if none was provided.
      */
-    BoundingSphere.fromExtentWithHeights2D = function(extent, projection, minimumHeight, maximumHeight, result) {
+    BoundingSphere.fromRectangleWithHeights2D = function(rectangle, projection, minimumHeight, maximumHeight, result) {
         if (!defined(result)) {
             result = new BoundingSphere();
         }
 
-        if (!defined(extent)) {
+        if (!defined(rectangle)) {
             result.center = Cartesian3.clone(Cartesian3.ZERO, result.center);
             result.radius = 0.0;
             return result;
@@ -8150,13 +8379,13 @@ define('Core/BoundingSphere',[
 
         projection = defaultValue(projection, defaultProjection);
 
-        Extent.getSouthwest(extent, fromExtent2DSouthwest);
-        fromExtent2DSouthwest.height = minimumHeight;
-        Extent.getNortheast(extent, fromExtent2DNortheast);
-        fromExtent2DNortheast.height = maximumHeight;
+        Rectangle.getSouthwest(rectangle, fromRectangle2DSouthwest);
+        fromRectangle2DSouthwest.height = minimumHeight;
+        Rectangle.getNortheast(rectangle, fromRectangle2DNortheast);
+        fromRectangle2DNortheast.height = maximumHeight;
 
-        var lowerLeft = projection.project(fromExtent2DSouthwest, fromExtent2DLowerLeft);
-        var upperRight = projection.project(fromExtent2DNortheast, fromExtent2DUpperRight);
+        var lowerLeft = projection.project(fromRectangle2DSouthwest, fromRectangle2DLowerLeft);
+        var upperRight = projection.project(fromRectangle2DNortheast, fromRectangle2DUpperRight);
 
         var width = upperRight.x - lowerLeft.x;
         var height = upperRight.y - lowerLeft.y;
@@ -8170,26 +8399,26 @@ define('Core/BoundingSphere',[
         return result;
     };
 
-    var fromExtent3DScratch = [];
+    var fromRectangle3DScratch = [];
 
     /**
-     * Computes a bounding sphere from an extent in 3D. The bounding sphere is created using a subsample of points
-     * on the ellipsoid and contained in the extent. It may not be accurate for all extents on all types of ellipsoids.
+     * Computes a bounding sphere from an rectangle in 3D. The bounding sphere is created using a subsample of points
+     * on the ellipsoid and contained in the rectangle. It may not be accurate for all rectangles on all types of ellipsoids.
      * @memberof BoundingSphere
      *
-     * @param {Extent} extent The valid extent used to create a bounding sphere.
-     * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid used to determine positions of the extent.
+     * @param {Rectangle} rectangle The valid rectangle used to create a bounding sphere.
+     * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid used to determine positions of the rectangle.
      * @param {Number} [surfaceHeight=0.0] The height above the surface of the ellipsoid.
      * @param {BoundingSphere} [result] The object onto which to store the result.
      * @returns {BoundingSphere} The modified result parameter or a new BoundingSphere instance if none was provided.
      */
-    BoundingSphere.fromExtent3D = function(extent, ellipsoid, surfaceHeight, result) {
+    BoundingSphere.fromRectangle3D = function(rectangle, ellipsoid, surfaceHeight, result) {
         ellipsoid = defaultValue(ellipsoid, Ellipsoid.WGS84);
         surfaceHeight = defaultValue(surfaceHeight, 0.0);
 
         var positions;
-        if (defined(extent)) {
-            positions = Extent.subsample(extent, ellipsoid, surfaceHeight, fromExtent3DScratch);
+        if (defined(rectangle)) {
+            positions = Rectangle.subsample(rectangle, ellipsoid, surfaceHeight, fromRectangle3DScratch);
         }
 
         return BoundingSphere.fromPoints(positions, result);
@@ -8385,8 +8614,8 @@ define('Core/BoundingSphere',[
      *
      * @memberof BoundingSphere
      *
-     * @param {Number} [corner] The minimum height over the extent.
-     * @param {Number} [oppositeCorner] The maximum height over the extent.
+     * @param {Number} [corner] The minimum height over the rectangle.
+     * @param {Number} [oppositeCorner] The maximum height over the rectangle.
      * @param {BoundingSphere} [result] The object onto which to store the result.
      *
      * @returns {BoundingSphere} The modified result parameter or a new BoundingSphere instance if none was provided.
@@ -8622,8 +8851,6 @@ define('Core/BoundingSphere',[
         return Intersect.INSIDE;
     };
 
-    var columnScratch = new Cartesian3();
-
     /**
      * Applies a 4x4 affine transformation matrix to a bounding sphere.
      * @memberof BoundingSphere
@@ -8647,9 +8874,7 @@ define('Core/BoundingSphere',[
         }
 
         result.center = Matrix4.multiplyByPoint(transform, sphere.center, result.center);
-        result.radius = Math.max(Cartesian3.magnitude(Matrix4.getColumn(transform, 0, columnScratch)),
-                Cartesian3.magnitude(Matrix4.getColumn(transform, 1, columnScratch)),
-                Cartesian3.magnitude(Matrix4.getColumn(transform, 2, columnScratch))) * sphere.radius;
+        result.radius = Matrix4.getMaximumScale(transform) * sphere.radius;
 
         return result;
     };
@@ -9889,7 +10114,7 @@ define('Core/FeatureDetection',[
 
     function extractVersion(versionString) {
         var parts = versionString.split('.');
-        for ( var i = 0, len = parts.length; i < len; ++i) {
+        for (var i = 0, len = parts.length; i < len; ++i) {
             parts[i] = parseInt(parts[i], 10);
         }
         return parts;
@@ -10027,33 +10252,6 @@ define('Core/FeatureDetection',[
      */
     FeatureDetection.supportsTypedArrays = function() {
         return typeof ArrayBuffer !== 'undefined';
-    };
-
-    var supportsTransferringArrayBuffersResult;
-
-    /**
-     * Detects whether the current browser can transfer an ArrayBuffer
-     * to / from a web worker.
-     *
-     * @returns true if the browser can transfer ArrayBuffers; otherwise, false.
-     */
-    FeatureDetection.supportsTransferringArrayBuffers = function() {
-        if (!defined(supportsTransferringArrayBuffersResult)) {
-            if (!FeatureDetection.supportsTypedArrays()) {
-                supportsTransferringArrayBuffersResult = false;
-                return;
-            }
-
-            var arrayBuffer = new ArrayBuffer(1);
-            try {
-                /*global postMessage*/
-                postMessage({ value : arrayBuffer }, [arrayBuffer]);
-                supportsTransferringArrayBuffersResult = true;
-            } catch(e) {
-                supportsTransferringArrayBuffersResult = false;
-            }
-        }
-        return supportsTransferringArrayBuffersResult;
     };
 
     return FeatureDetection;
@@ -11828,7 +12026,7 @@ define('Core/Geometry',[
      * @demo <a href="http://cesiumjs.org/Cesium/Apps/Sandcastle/index.html?src=Geometry%20and%20Appearances.html">Geometry and Appearances Demo</a>
      *
      * @see PolygonGeometry
-     * @see ExtentGeometry
+     * @see RectangleGeometry
      * @see EllipseGeometry
      * @see CircleGeometry
      * @see WallGeometry
@@ -17181,2544 +17379,21 @@ define('Core/CircleGeometry',[
     return CircleGeometry;
 });
 /*global define*/
-define('Core/Color',[
-        './defaultValue',
-        './defined',
-        './freezeObject',
-        './DeveloperError',
-        './FeatureDetection',
-        './Math'
-    ], function(
-        defaultValue,
-        defined,
-        freezeObject,
-        DeveloperError,
-        FeatureDetection,
-        CesiumMath) {
-    "use strict";
-
-    function hue2rgb(m1, m2, h) {
-        if (h < 0) {
-            h += 1;
-        }
-        if (h > 1) {
-            h -= 1;
-        }
-        if (h * 6 < 1) {
-            return m1 + (m2 - m1) * 6 * h;
-        }
-        if (h * 2 < 1) {
-            return m2;
-        }
-        if (h * 3 < 2) {
-            return m1 + (m2 - m1) * (2 / 3 - h) * 6;
-        }
-        return m1;
-    }
-
-    /**
-     * A color, specified using red, green, blue, and alpha values,
-     * which range from <code>0</code> (no intensity) to <code>1.0</code> (full intensity).
-     * @param {Number} [red=1.0] The red component.
-     * @param {Number} [green=1.0] The green component.
-     * @param {Number} [blue=1.0] The blue component.
-     * @param {Number} [alpha=1.0] The alpha component.
-     *
-     * @constructor
-     * @alias Color
-     *
-     * @see Packable
-     */
-    var Color = function(red, green, blue, alpha) {
-        /**
-         * The red component.
-         * @type {Number}
-         * @default 1.0
-         */
-        this.red = defaultValue(red, 1.0);
-        /**
-         * The green component.
-         * @type {Number}
-         * @default 1.0
-         */
-        this.green = defaultValue(green, 1.0);
-        /**
-         * The blue component.
-         * @type {Number}
-         * @default 1.0
-         */
-        this.blue = defaultValue(blue, 1.0);
-        /**
-         * The alpha component.
-         * @type {Number}
-         * @default 1.0
-         */
-        this.alpha = defaultValue(alpha, 1.0);
-    };
-
-    /**
-     * Creates a new Color specified using red, green, blue, and alpha values
-     * that are in the range of 0 to 255, converting them internally to a range of 0.0 to 1.0.
-     * @memberof Color
-     *
-     * @param {Number} [red=255] The red component.
-     * @param {Number} [green=255] The green component.
-     * @param {Number} [blue=255] The blue component.
-     * @param {Number} [alpha=255] The alpha component.
-     * @returns {Color} A new color instance.
-     */
-    Color.fromBytes = function(red, green, blue, alpha) {
-        red = Color.byteToFloat(defaultValue(red, 255.0));
-        green = Color.byteToFloat(defaultValue(green, 255.0));
-        blue = Color.byteToFloat(defaultValue(blue, 255.0));
-        alpha = Color.byteToFloat(defaultValue(alpha, 255.0));
-        return new Color(red, green, blue, alpha);
-    };
-
-    var scratchArrayBuffer;
-    var scratchUint32Array;
-    var scratchUint8Array;
-    if (FeatureDetection.supportsTypedArrays()) {
-        scratchArrayBuffer = new ArrayBuffer(4);
-        scratchUint32Array = new Uint32Array(scratchArrayBuffer);
-        scratchUint8Array = new Uint8Array(scratchArrayBuffer);
-    }
-
-    /**
-     * Creates a new Color from a single numeric unsigned 32-bit RGBA value, using the endianness
-     * of the system.
-     *
-     * @memberof Color
-     *
-     * @param {Number} rgba A single numeric unsigned 32-bit RGBA value.
-     * @returns {Color} A new color instance.
-     *
-     * @example
-     * var color = Cesium.Color.fromRgba(0x67ADDFFF);
-     *
-     * @see Color#toRgba
-     */
-    Color.fromRgba = function(rgba) {
-        // scratchUint32Array and scratchUint8Array share an underlying array buffer
-        scratchUint32Array[0] = rgba;
-        return Color.fromBytes(scratchUint8Array[0], scratchUint8Array[1], scratchUint8Array[2], scratchUint8Array[3]);
-    };
-
-    /**
-     * Creates a Color instance from hue, saturation, and lightness.
-     * @memberof Color
-     *
-     * @param {Number} [hue=0] The hue angle 0...1
-     * @param {Number} [saturation=0] The saturation value 0...1
-     * @param {Number} [lightness=0] The lightness value 0...1
-     * @param {Number} [alpha=1.0] The alpha component 0...1
-     * @returns {Color} The color object.
-     *
-     * @see <a href="http://www.w3.org/TR/css3-color/#hsl-color">CSS color values</a>
-     */
-    Color.fromHsl = function(hue, saturation, lightness, alpha) {
-        hue = defaultValue(hue, 0.0) % 1.0;
-        saturation = defaultValue(saturation, 0.0);
-        lightness = defaultValue(lightness, 0.0);
-        alpha = defaultValue(alpha, 1.0);
-
-        var red = lightness;
-        var green = lightness;
-        var blue = lightness;
-
-        if (saturation !== 0) {
-            var m2;
-            if (lightness < 0.5) {
-                m2 = lightness * (1 + saturation);
-            } else {
-                m2 = lightness + saturation - lightness * saturation;
-            }
-
-            var m1 = 2.0 * lightness - m2;
-            red = hue2rgb(m1, m2, hue + 1 / 3);
-            green = hue2rgb(m1, m2, hue);
-            blue = hue2rgb(m1, m2, hue - 1 / 3);
-        }
-
-        return new Color(red, green, blue, alpha);
-    };
-
-    /**
-     * Creates a random color using the provided options. For reproducible random colors, you should
-     * call {@link CesiumMath#setRandomNumberSeed} once at the beginning of your application.
-     * @memberof Color
-     *
-     * @param {Object} [options] Object containing the options.
-     * @param {Number} [options.red] If specified, the red component to use instead of a randomized value.
-     * @param {Number} [options.minimumRed=0.0] The maximum red value to generate if none was specified.
-     * @param {Number} [options.maximumRed=1.0] The minimum red value to generate if none was specified.
-     * @param {Number} [options.green] If specified, the green component to use instead of a randomized value.
-     * @param {Number} [options.minimumGreen=0.0] The maximum green value to generate if none was specified.
-     * @param {Number} [options.maximumGreen=1.0] The minimum green value to generate if none was specified.
-     * @param {Number} [options.blue] If specified, the blue component to use instead of a randomized value.
-     * @param {Number} [options.minimumBlue=0.0] The maximum blue value to generate if none was specified.
-     * @param {Number} [options.maximumBlue=1.0] The minimum blue value to generate if none was specified.
-     * @param {Number} [options.alpha] If specified, the alpha component to use instead of a randomized value.
-     * @param {Number} [options.minimumAlpha=0.0] The maximum alpha value to generate if none was specified.
-     * @param {Number} [options.maximumAlpha=1.0] The minimum alpha value to generate if none was specified.
-     * @param {Color} [result] The object to store the result in, if undefined a new instance will be created.
-     *
-     * @returns {Color} The modified result parameter or a new instance if result was undefined.
-     *
-     * @exception {DeveloperError} minimumRed must be less than or equal to maximumRed.
-     * @exception {DeveloperError} minimumGreen must be less than or equal to maximumGreen.
-     * @exception {DeveloperError} minimumBlue must be less than or equal to maximumBlue.
-     * @exception {DeveloperError} minimumAlpha must be less than or equal to maximumAlpha.
-     *
-     * @example
-     * //Create a completely random color
-     * var color = Cesium.Color.fromRandom();
-     *
-     * //Create a random shade of yellow.
-     * var color = Cesium.Color.fromRandom({
-     *     red : 1.0,
-     *     green : 1.0,
-     *     alpha : 1.0
-     * });
-     *
-     * //Create a random bright color.
-     * var color = Cesium.Color.fromRandom({
-     *     minimumRed : 0.75,
-     *     minimumGreen : 0.75,
-     *     minimumBlue : 0.75,
-     *     alpha : 1.0
-     * });
-     */
-    Color.fromRandom = function(options, result) {
-        options = defaultValue(options, defaultValue.EMPTY_OBJECT);
-
-        var red = options.red;
-        if (!defined(red)) {
-            var minimumRed = defaultValue(options.minimumRed, 0);
-            var maximumRed = defaultValue(options.maximumRed, 1.0);
-
-                        if (minimumRed > maximumRed) {
-                throw new DeveloperError("minimumRed must be less than or equal to maximumRed");
-            }
-            
-            red = minimumRed + (CesiumMath.nextRandomNumber() * (maximumRed - minimumRed));
-        }
-
-        var green = options.green;
-        if (!defined(green)) {
-            var minimumGreen = defaultValue(options.minimumGreen, 0);
-            var maximumGreen = defaultValue(options.maximumGreen, 1.0);
-
-                        if (minimumGreen > maximumGreen) {
-                throw new DeveloperError("minimumGreen must be less than or equal to maximumGreen");
-            }
-            
-            green = minimumGreen + (CesiumMath.nextRandomNumber() * (maximumGreen - minimumGreen));
-        }
-
-        var blue = options.blue;
-        if (!defined(blue)) {
-            var minimumBlue = defaultValue(options.minimumBlue, 0);
-            var maximumBlue = defaultValue(options.maximumBlue, 1.0);
-
-                        if (minimumBlue > maximumBlue) {
-                throw new DeveloperError("minimumBlue must be less than or equal to maximumBlue");
-            }
-            
-            blue = minimumBlue + (CesiumMath.nextRandomNumber() * (maximumBlue - minimumBlue));
-        }
-
-        var alpha = options.alpha;
-        if (!defined(alpha)) {
-            var minimumAlpha = defaultValue(options.minimumAlpha, 0);
-            var maximumAlpha = defaultValue(options.maximumAlpha, 1.0);
-
-                        if (minimumAlpha > maximumAlpha) {
-                throw new DeveloperError("minimumAlpha must be less than or equal to maximumAlpha");
-            }
-            
-            alpha = minimumAlpha + (CesiumMath.nextRandomNumber() * (maximumAlpha - minimumAlpha));
-        }
-
-        if (!defined(result)) {
-            return new Color(red, green, blue, alpha);
-        }
-
-        result.red = red;
-        result.green = green;
-        result.blue = blue;
-        result.alpha = alpha;
-        return result;
-    };
-
-    //#rgb
-    var rgbMatcher = /^#([0-9a-f])([0-9a-f])([0-9a-f])$/i;
-    //#rrggbb
-    var rrggbbMatcher = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i;
-    //rgb(), rgba(), or rgb%()
-    var rgbParenthesesMatcher = /^rgba?\(\s*([0-9.]+%?)\s*,\s*([0-9.]+%?)\s*,\s*([0-9.]+%?)(?:\s*,\s*([0-9.]+))?\s*\)$/i;
-    //hsl(), hsla(), or hsl%()
-    var hslParenthesesMatcher = /^hsla?\(\s*([0-9.]+)\s*,\s*([0-9.]+%)\s*,\s*([0-9.]+%)(?:\s*,\s*([0-9.]+))?\s*\)$/i;
-
-    /**
-     * Creates a Color instance from a CSS color value.
-     * @memberof Color
-     *
-     * @param {String} color The CSS color value in #rgb, #rrggbb, rgb(), rgba(), hsl(), or hsla() format.
-     * @returns {Color} The color object, or undefined if the string was not a valid CSS color.
-     *
-     * @example
-     * var cesiumBlue = Cesium.Color.fromCssColorString('#67ADDF');
-     * var green = Cesium.Color.fromCssColorString('green');
-     *
-     * @see <a href="http://www.w3.org/TR/css3-color">CSS color values</a>
-     */
-    Color.fromCssColorString = function(color) {
-                if (!defined(color)) {
-            throw new DeveloperError('color is required');
-        }
-        
-        var namedColor = Color[color.toUpperCase()];
-        if (defined(namedColor)) {
-            return Color.clone(namedColor);
-        }
-
-        var matches = rgbMatcher.exec(color);
-        if (matches !== null) {
-            return new Color(parseInt(matches[1], 16) / 15.0,
-                             parseInt(matches[2], 16) / 15.0,
-                             parseInt(matches[3], 16) / 15.0);
-        }
-
-        matches = rrggbbMatcher.exec(color);
-        if (matches !== null) {
-            return new Color(parseInt(matches[1], 16) / 255.0,
-                             parseInt(matches[2], 16) / 255.0,
-                             parseInt(matches[3], 16) / 255.0);
-        }
-
-        matches = rgbParenthesesMatcher.exec(color);
-        if (matches !== null) {
-            return new Color(parseFloat(matches[1]) / ('%' === matches[1].substr(-1) ? 100.0 : 255.0),
-                             parseFloat(matches[2]) / ('%' === matches[2].substr(-1) ? 100.0 : 255.0),
-                             parseFloat(matches[3]) / ('%' === matches[3].substr(-1) ? 100.0 : 255.0),
-                             parseFloat(defaultValue(matches[4], '1.0')));
-        }
-
-        matches = hslParenthesesMatcher.exec(color);
-        if (matches !== null) {
-            return Color.fromHsl(parseFloat(matches[1]) / 360.0,
-                                 parseFloat(matches[2]) / 100.0,
-                                 parseFloat(matches[3]) / 100.0,
-                                 parseFloat(defaultValue(matches[4], '1.0')));
-        }
-
-        return undefined;
-    };
-
-    /**
-     * The number of elements used to pack the object into an array.
-     * @Type {Number}
-     */
-    Color.packedLength = 4;
-
-    /**
-     * Stores the provided instance into the provided array.
-     * @memberof Color
-     *
-     * @param {Color} value The value to pack.
-     * @param {Array} array The array to pack into.
-     * @param {Number} [startingIndex=0] The index into the array at which to start packing the elements.
-     */
-    Color.pack = function(value, array, startingIndex) {
-                if (!defined(value)) {
-            throw new DeveloperError('value is required');
-        }
-        if (!defined(array)) {
-            throw new DeveloperError('array is required');
-        }
-        
-        startingIndex = defaultValue(startingIndex, 0);
-        array[startingIndex++] = value.red;
-        array[startingIndex++] = value.green;
-        array[startingIndex++] = value.blue;
-        array[startingIndex] = value.alpha;
-    };
-
-    /**
-     * Retrieves an instance from a packed array.
-     * @memberof Color
-     *
-     * @param {Array} array The packed array.
-     * @param {Number} [startingIndex=0] The starting index of the element to be unpacked.
-     * @param {Color} [result] The object into which to store the result.
-     */
-    Color.unpack = function(array, startingIndex, result) {
-                if (!defined(array)) {
-            throw new DeveloperError('array is required');
-        }
-        
-        startingIndex = defaultValue(startingIndex, 0);
-        if (!defined(result)) {
-            result = new Color();
-        }
-        result.red = array[startingIndex++];
-        result.green = array[startingIndex++];
-        result.blue = array[startingIndex++];
-        result.alpha = array[startingIndex];
-        return result;
-    };
-
-    /**
-     * Converts a 'byte' color component in the range of 0 to 255 into
-     * a 'float' color component in the range of 0 to 1.0.
-     * @memberof Color
-     *
-     * @param {Number} number The number to be converted.
-     * @returns {number} The converted number.
-     */
-    Color.byteToFloat = function(number) {
-        return number / 255.0;
-    };
-
-    /**
-     * Converts a 'float' color component in the range of 0 to 1.0 into
-     * a 'byte' color component in the range of 0 to 255.
-     * @memberof Color
-     *
-     * @param {Number} number The number to be converted.
-     * @returns {number} The converted number.
-     */
-    Color.floatToByte = function(number) {
-        return number === 1.0 ? 255.0 : (number * 256.0) | 0;
-    };
-
-    /**
-     * Duplicates a Color.
-     * @memberof Color
-     *
-     * @param {Color} color The Color to duplicate.
-     * @param {Color} [result] The object to store the result in, if undefined a new instance will be created.
-     * @returns {Color} The modified result parameter or a new instance if result was undefined. (Returns undefined if color is undefined)
-     */
-    Color.clone = function(color, result) {
-        if (!defined(color)) {
-            return undefined;
-        }
-        if (!defined(result)) {
-            return new Color(color.red, color.green, color.blue, color.alpha);
-        }
-        result.red = color.red;
-        result.green = color.green;
-        result.blue = color.blue;
-        result.alpha = color.alpha;
-        return result;
-    };
-
-    /**
-     * Returns true if the first Color equals the second color.
-     * @memberof Color
-     *
-     * @param {Color} left The first Color to compare for equality.
-     * @param {Color} right The second Color to compare for equality.
-     * @returns {Boolean} <code>true</code> if the Colors are equal; otherwise, <code>false</code>.
-     */
-    Color.equals = function(left, right) {
-        return (left === right) || //
-               (defined(left) && //
-                defined(right) && //
-                left.red === right.red && //
-                left.green === right.green && //
-                left.blue === right.blue && //
-                left.alpha === right.alpha);
-    };
-
-    /**
-     * Returns a duplicate of a Color instance.
-     * @memberof Color
-     *
-     * @param {Color} [result] The object to store the result in, if undefined a new instance will be created.
-     * @returns {Color} The modified result parameter or a new instance if result was undefined.
-     */
-    Color.prototype.clone = function(result) {
-        return Color.clone(this, result);
-    };
-
-    /**
-     * Returns true if this Color equals other.
-     * @memberof Color
-     *
-     * @param {Color} other The Color to compare for equality.
-     * @returns {Boolean} <code>true</code> if the Colors are equal; otherwise, <code>false</code>.
-     */
-    Color.prototype.equals = function(other) {
-        return Color.equals(this, other);
-    };
-
-    /**
-     * Returns <code>true</code> if this Color equals other componentwise within the specified epsilon.
-     * @memberof Color
-     *
-     * @param {Color} other The Color to compare for equality.
-     * @param {Number} [epsilon=0.0] The epsilon to use for equality testing.
-     * @returns {Boolean} <code>true</code> if the Colors are equal within the specified epsilon; otherwise, <code>false</code>.
-     */
-    Color.prototype.equalsEpsilon = function(other, epsilon) {
-        return (this === other) || //
-               ((defined(other)) && //
-                (Math.abs(this.red - other.red) <= epsilon) && //
-                (Math.abs(this.green - other.green) <= epsilon) && //
-                (Math.abs(this.blue - other.blue) <= epsilon) && //
-                (Math.abs(this.alpha - other.alpha) <= epsilon));
-    };
-
-    /**
-     * Creates a string representing this Color in the format '(red, green, blue, alpha)'.
-     * @memberof Color
-     *
-     * @returns {String} A string representing this Color in the format '(red, green, blue, alpha)'.
-     */
-    Color.prototype.toString = function() {
-        return '(' + this.red + ', ' + this.green + ', ' + this.blue + ', ' + this.alpha + ')';
-    };
-
-    /**
-     * Creates a string containing the CSS color value for this color.
-     * @memberof Color
-     *
-     * @returns {String} The CSS equivalent of this color.
-     * @see <a href="http://www.w3.org/TR/css3-color/#rgba-color">CSS RGB or RGBA color values</a>
-     */
-    Color.prototype.toCssColorString = function() {
-        var red = Color.floatToByte(this.red);
-        var green = Color.floatToByte(this.green);
-        var blue = Color.floatToByte(this.blue);
-        if (this.alpha === 1) {
-            return 'rgb(' + red + ',' + green + ',' + blue + ')';
-        }
-        return 'rgba(' + red + ',' + green + ',' + blue + ',' + this.alpha + ')';
-    };
-
-    /**
-     * Converts this color to an array of red, green, blue, and alpha values
-     * that are in the range of 0 to 255.
-     * @memberof Color
-     *
-     * @param {Array} [result] The array to store the result in, if undefined a new instance will be created.
-     * @returns {Array} The modified result parameter or a new instance if result was undefined.
-     */
-    Color.prototype.toBytes = function(result) {
-        var red = Color.floatToByte(this.red);
-        var green = Color.floatToByte(this.green);
-        var blue = Color.floatToByte(this.blue);
-        var alpha = Color.floatToByte(this.alpha);
-
-        if (!defined(result)) {
-            return [red, green, blue, alpha];
-        }
-        result[0] = red;
-        result[1] = green;
-        result[2] = blue;
-        result[3] = alpha;
-        return result;
-    };
-
-    /**
-     * Converts this color to a single numeric unsigned 32-bit RGBA value, using the endianness
-     * of the system.
-     *
-     * @memberof Color
-     *
-     * @returns {Number} A single numeric unsigned 32-bit RGBA value.
-     *
-     * @example
-     * var rgba = Cesium.Color.BLUE.toRgba();
-     *
-     * @see Color.fromRgba
-     */
-    Color.prototype.toRgba = function() {
-        // scratchUint32Array and scratchUint8Array share an underlying array buffer
-        scratchUint8Array[0] = Color.floatToByte(this.red);
-        scratchUint8Array[1] = Color.floatToByte(this.green);
-        scratchUint8Array[2] = Color.floatToByte(this.blue);
-        scratchUint8Array[3] = Color.floatToByte(this.alpha);
-        return scratchUint32Array[0];
-    };
-
-    /**
-     * An immutable Color instance initialized to CSS color #F0F8FF
-     * <span class="colorSwath" style="background: #F0F8FF;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.ALICEBLUE = freezeObject(Color.fromCssColorString('#F0F8FF'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FAEBD7
-     * <span class="colorSwath" style="background: #FAEBD7;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.ANTIQUEWHITE = freezeObject(Color.fromCssColorString('#FAEBD7'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #00FFFF
-     * <span class="colorSwath" style="background: #00FFFF;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.AQUA = freezeObject(Color.fromCssColorString('#00FFFF'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #7FFFD4
-     * <span class="colorSwath" style="background: #7FFFD4;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.AQUAMARINE = freezeObject(Color.fromCssColorString('#7FFFD4'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #F0FFFF
-     * <span class="colorSwath" style="background: #F0FFFF;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.AZURE = freezeObject(Color.fromCssColorString('#F0FFFF'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #F5F5DC
-     * <span class="colorSwath" style="background: #F5F5DC;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.BEIGE = freezeObject(Color.fromCssColorString('#F5F5DC'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFE4C4
-     * <span class="colorSwath" style="background: #FFE4C4;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.BISQUE = freezeObject(Color.fromCssColorString('#FFE4C4'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #000000
-     * <span class="colorSwath" style="background: #000000;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.BLACK = freezeObject(Color.fromCssColorString('#000000'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFEBCD
-     * <span class="colorSwath" style="background: #FFEBCD;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.BLANCHEDALMOND = freezeObject(Color.fromCssColorString('#FFEBCD'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #0000FF
-     * <span class="colorSwath" style="background: #0000FF;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.BLUE = freezeObject(Color.fromCssColorString('#0000FF'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #8A2BE2
-     * <span class="colorSwath" style="background: #8A2BE2;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.BLUEVIOLET = freezeObject(Color.fromCssColorString('#8A2BE2'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #A52A2A
-     * <span class="colorSwath" style="background: #A52A2A;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.BROWN = freezeObject(Color.fromCssColorString('#A52A2A'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #DEB887
-     * <span class="colorSwath" style="background: #DEB887;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.BURLYWOOD = freezeObject(Color.fromCssColorString('#DEB887'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #5F9EA0
-     * <span class="colorSwath" style="background: #5F9EA0;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.CADETBLUE = freezeObject(Color.fromCssColorString('#5F9EA0'));
-    /**
-     * An immutable Color instance initialized to CSS color #7FFF00
-     * <span class="colorSwath" style="background: #7FFF00;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.CHARTREUSE = freezeObject(Color.fromCssColorString('#7FFF00'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #D2691E
-     * <span class="colorSwath" style="background: #D2691E;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.CHOCOLATE = freezeObject(Color.fromCssColorString('#D2691E'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FF7F50
-     * <span class="colorSwath" style="background: #FF7F50;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.CORAL = freezeObject(Color.fromCssColorString('#FF7F50'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #6495ED
-     * <span class="colorSwath" style="background: #6495ED;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.CORNFLOWERBLUE = freezeObject(Color.fromCssColorString('#6495ED'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFF8DC
-     * <span class="colorSwath" style="background: #FFF8DC;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.CORNSILK = freezeObject(Color.fromCssColorString('#FFF8DC'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #DC143C
-     * <span class="colorSwath" style="background: #DC143C;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.CRIMSON = freezeObject(Color.fromCssColorString('#DC143C'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #00FFFF
-     * <span class="colorSwath" style="background: #00FFFF;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.CYAN = freezeObject(Color.fromCssColorString('#00FFFF'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #00008B
-     * <span class="colorSwath" style="background: #00008B;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKBLUE = freezeObject(Color.fromCssColorString('#00008B'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #008B8B
-     * <span class="colorSwath" style="background: #008B8B;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKCYAN = freezeObject(Color.fromCssColorString('#008B8B'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #B8860B
-     * <span class="colorSwath" style="background: #B8860B;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKGOLDENROD = freezeObject(Color.fromCssColorString('#B8860B'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #A9A9A9
-     * <span class="colorSwath" style="background: #A9A9A9;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKGRAY = freezeObject(Color.fromCssColorString('#A9A9A9'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #006400
-     * <span class="colorSwath" style="background: #006400;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKGREEN = freezeObject(Color.fromCssColorString('#006400'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #A9A9A9
-     * <span class="colorSwath" style="background: #A9A9A9;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKGREY = Color.DARKGRAY;
-
-    /**
-     * An immutable Color instance initialized to CSS color #BDB76B
-     * <span class="colorSwath" style="background: #BDB76B;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKKHAKI = freezeObject(Color.fromCssColorString('#BDB76B'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #8B008B
-     * <span class="colorSwath" style="background: #8B008B;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKMAGENTA = freezeObject(Color.fromCssColorString('#8B008B'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #556B2F
-     * <span class="colorSwath" style="background: #556B2F;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKOLIVEGREEN = freezeObject(Color.fromCssColorString('#556B2F'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FF8C00
-     * <span class="colorSwath" style="background: #FF8C00;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKORANGE = freezeObject(Color.fromCssColorString('#FF8C00'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #9932CC
-     * <span class="colorSwath" style="background: #9932CC;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKORCHID = freezeObject(Color.fromCssColorString('#9932CC'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #8B0000
-     * <span class="colorSwath" style="background: #8B0000;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKRED = freezeObject(Color.fromCssColorString('#8B0000'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #E9967A
-     * <span class="colorSwath" style="background: #E9967A;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKSALMON = freezeObject(Color.fromCssColorString('#E9967A'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #8FBC8F
-     * <span class="colorSwath" style="background: #8FBC8F;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKSEAGREEN = freezeObject(Color.fromCssColorString('#8FBC8F'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #483D8B
-     * <span class="colorSwath" style="background: #483D8B;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKSLATEBLUE = freezeObject(Color.fromCssColorString('#483D8B'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #2F4F4F
-     * <span class="colorSwath" style="background: #2F4F4F;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKSLATEGRAY = freezeObject(Color.fromCssColorString('#2F4F4F'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #2F4F4F
-     * <span class="colorSwath" style="background: #2F4F4F;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKSLATEGREY = Color.DARKSLATEGRAY;
-
-    /**
-     * An immutable Color instance initialized to CSS color #00CED1
-     * <span class="colorSwath" style="background: #00CED1;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKTURQUOISE = freezeObject(Color.fromCssColorString('#00CED1'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #9400D3
-     * <span class="colorSwath" style="background: #9400D3;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKVIOLET = freezeObject(Color.fromCssColorString('#9400D3'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FF1493
-     * <span class="colorSwath" style="background: #FF1493;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DEEPPINK = freezeObject(Color.fromCssColorString('#FF1493'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #00BFFF
-     * <span class="colorSwath" style="background: #00BFFF;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DEEPSKYBLUE = freezeObject(Color.fromCssColorString('#00BFFF'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #696969
-     * <span class="colorSwath" style="background: #696969;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DIMGRAY = freezeObject(Color.fromCssColorString('#696969'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #696969
-     * <span class="colorSwath" style="background: #696969;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DIMGREY = Color.DIMGRAY;
-
-    /**
-     * An immutable Color instance initialized to CSS color #1E90FF
-     * <span class="colorSwath" style="background: #1E90FF;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DODGERBLUE = freezeObject(Color.fromCssColorString('#1E90FF'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #B22222
-     * <span class="colorSwath" style="background: #B22222;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.FIREBRICK = freezeObject(Color.fromCssColorString('#B22222'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFFAF0
-     * <span class="colorSwath" style="background: #FFFAF0;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.FLORALWHITE = freezeObject(Color.fromCssColorString('#FFFAF0'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #228B22
-     * <span class="colorSwath" style="background: #228B22;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.FORESTGREEN = freezeObject(Color.fromCssColorString('#228B22'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FF00FF
-     * <span class="colorSwath" style="background: #FF00FF;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.FUSCHIA = freezeObject(Color.fromCssColorString('#FF00FF'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #DCDCDC
-     * <span class="colorSwath" style="background: #DCDCDC;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.GAINSBORO = freezeObject(Color.fromCssColorString('#DCDCDC'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #F8F8FF
-     * <span class="colorSwath" style="background: #F8F8FF;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.GHOSTWHITE = freezeObject(Color.fromCssColorString('#F8F8FF'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFD700
-     * <span class="colorSwath" style="background: #FFD700;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.GOLD = freezeObject(Color.fromCssColorString('#FFD700'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #DAA520
-     * <span class="colorSwath" style="background: #DAA520;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.GOLDENROD = freezeObject(Color.fromCssColorString('#DAA520'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #808080
-     * <span class="colorSwath" style="background: #808080;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.GRAY = freezeObject(Color.fromCssColorString('#808080'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #008000
-     * <span class="colorSwath" style="background: #008000;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.GREEN = freezeObject(Color.fromCssColorString('#008000'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #ADFF2F
-     * <span class="colorSwath" style="background: #ADFF2F;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.GREENYELLOW = freezeObject(Color.fromCssColorString('#ADFF2F'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #808080
-     * <span class="colorSwath" style="background: #808080;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.GREY = Color.GRAY;
-
-    /**
-     * An immutable Color instance initialized to CSS color #F0FFF0
-     * <span class="colorSwath" style="background: #F0FFF0;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.HONEYDEW = freezeObject(Color.fromCssColorString('#F0FFF0'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FF69B4
-     * <span class="colorSwath" style="background: #FF69B4;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.HOTPINK = freezeObject(Color.fromCssColorString('#FF69B4'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #CD5C5C
-     * <span class="colorSwath" style="background: #CD5C5C;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.INDIANRED = freezeObject(Color.fromCssColorString('#CD5C5C'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #4B0082
-     * <span class="colorSwath" style="background: #4B0082;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.INDIGO = freezeObject(Color.fromCssColorString('#4B0082'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFFFF0
-     * <span class="colorSwath" style="background: #FFFFF0;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.IVORY = freezeObject(Color.fromCssColorString('#FFFFF0'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #F0E68C
-     * <span class="colorSwath" style="background: #F0E68C;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.KHAKI = freezeObject(Color.fromCssColorString('#F0E68C'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #E6E6FA
-     * <span class="colorSwath" style="background: #E6E6FA;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LAVENDER = freezeObject(Color.fromCssColorString('#E6E6FA'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFF0F5
-     * <span class="colorSwath" style="background: #FFF0F5;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LAVENDAR_BLUSH = freezeObject(Color.fromCssColorString('#FFF0F5'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #7CFC00
-     * <span class="colorSwath" style="background: #7CFC00;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LAWNGREEN = freezeObject(Color.fromCssColorString('#7CFC00'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFFACD
-     * <span class="colorSwath" style="background: #FFFACD;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LEMONCHIFFON = freezeObject(Color.fromCssColorString('#FFFACD'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #ADD8E6
-     * <span class="colorSwath" style="background: #ADD8E6;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LIGHTBLUE = freezeObject(Color.fromCssColorString('#ADD8E6'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #F08080
-     * <span class="colorSwath" style="background: #F08080;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LIGHTCORAL = freezeObject(Color.fromCssColorString('#F08080'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #E0FFFF
-     * <span class="colorSwath" style="background: #E0FFFF;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LIGHTCYAN = freezeObject(Color.fromCssColorString('#E0FFFF'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FAFAD2
-     * <span class="colorSwath" style="background: #FAFAD2;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LIGHTGOLDENRODYELLOW = freezeObject(Color.fromCssColorString('#FAFAD2'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #D3D3D3
-     * <span class="colorSwath" style="background: #D3D3D3;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LIGHTGRAY = freezeObject(Color.fromCssColorString('#D3D3D3'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #90EE90
-     * <span class="colorSwath" style="background: #90EE90;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LIGHTGREEN = freezeObject(Color.fromCssColorString('#90EE90'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #D3D3D3
-     * <span class="colorSwath" style="background: #D3D3D3;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LIGHTGREY = Color.LIGHTGRAY;
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFB6C1
-     * <span class="colorSwath" style="background: #FFB6C1;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LIGHTPINK = freezeObject(Color.fromCssColorString('#FFB6C1'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #20B2AA
-     * <span class="colorSwath" style="background: #20B2AA;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LIGHTSEAGREEN = freezeObject(Color.fromCssColorString('#20B2AA'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #87CEFA
-     * <span class="colorSwath" style="background: #87CEFA;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LIGHTSKYBLUE = freezeObject(Color.fromCssColorString('#87CEFA'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #778899
-     * <span class="colorSwath" style="background: #778899;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LIGHTSLATEGRAY = freezeObject(Color.fromCssColorString('#778899'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #778899
-     * <span class="colorSwath" style="background: #778899;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LIGHTSLATEGREY = Color.LIGHTSLATEGRAY;
-
-    /**
-     * An immutable Color instance initialized to CSS color #B0C4DE
-     * <span class="colorSwath" style="background: #B0C4DE;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LIGHTSTEELBLUE = freezeObject(Color.fromCssColorString('#B0C4DE'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFFFE0
-     * <span class="colorSwath" style="background: #FFFFE0;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LIGHTYELLOW = freezeObject(Color.fromCssColorString('#FFFFE0'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #00FF00
-     * <span class="colorSwath" style="background: #00FF00;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LIME = freezeObject(Color.fromCssColorString('#00FF00'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #32CD32
-     * <span class="colorSwath" style="background: #32CD32;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LIMEGREEN = freezeObject(Color.fromCssColorString('#32CD32'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FAF0E6
-     * <span class="colorSwath" style="background: #FAF0E6;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LINEN = freezeObject(Color.fromCssColorString('#FAF0E6'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FF00FF
-     * <span class="colorSwath" style="background: #FF00FF;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.MAGENTA = freezeObject(Color.fromCssColorString('#FF00FF'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #800000
-     * <span class="colorSwath" style="background: #800000;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.MAROON = freezeObject(Color.fromCssColorString('#800000'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #66CDAA
-     * <span class="colorSwath" style="background: #66CDAA;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.MEDIUMAQUAMARINE = freezeObject(Color.fromCssColorString('#66CDAA'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #0000CD
-     * <span class="colorSwath" style="background: #0000CD;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.MEDIUMBLUE = freezeObject(Color.fromCssColorString('#0000CD'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #BA55D3
-     * <span class="colorSwath" style="background: #BA55D3;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.MEDIUMORCHID = freezeObject(Color.fromCssColorString('#BA55D3'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #9370DB
-     * <span class="colorSwath" style="background: #9370DB;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.MEDIUMPURPLE = freezeObject(Color.fromCssColorString('#9370DB'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #3CB371
-     * <span class="colorSwath" style="background: #3CB371;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.MEDIUMSEAGREEN = freezeObject(Color.fromCssColorString('#3CB371'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #7B68EE
-     * <span class="colorSwath" style="background: #7B68EE;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.MEDIUMSLATEBLUE = freezeObject(Color.fromCssColorString('#7B68EE'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #00FA9A
-     * <span class="colorSwath" style="background: #00FA9A;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.MEDIUMSPRINGGREEN = freezeObject(Color.fromCssColorString('#00FA9A'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #48D1CC
-     * <span class="colorSwath" style="background: #48D1CC;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.MEDIUMTURQUOISE = freezeObject(Color.fromCssColorString('#48D1CC'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #C71585
-     * <span class="colorSwath" style="background: #C71585;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.MEDIUMVIOLETRED = freezeObject(Color.fromCssColorString('#C71585'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #191970
-     * <span class="colorSwath" style="background: #191970;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.MIDNIGHTBLUE = freezeObject(Color.fromCssColorString('#191970'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #F5FFFA
-     * <span class="colorSwath" style="background: #F5FFFA;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.MINTCREAM = freezeObject(Color.fromCssColorString('#F5FFFA'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFE4E1
-     * <span class="colorSwath" style="background: #FFE4E1;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.MISTYROSE = freezeObject(Color.fromCssColorString('#FFE4E1'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFE4B5
-     * <span class="colorSwath" style="background: #FFE4B5;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.MOCCASIN = freezeObject(Color.fromCssColorString('#FFE4B5'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFDEAD
-     * <span class="colorSwath" style="background: #FFDEAD;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.NAVAJOWHITE = freezeObject(Color.fromCssColorString('#FFDEAD'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #000080
-     * <span class="colorSwath" style="background: #000080;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.NAVY = freezeObject(Color.fromCssColorString('#000080'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FDF5E6
-     * <span class="colorSwath" style="background: #FDF5E6;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.OLDLACE = freezeObject(Color.fromCssColorString('#FDF5E6'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #808000
-     * <span class="colorSwath" style="background: #808000;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.OLIVE = freezeObject(Color.fromCssColorString('#808000'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #6B8E23
-     * <span class="colorSwath" style="background: #6B8E23;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.OLIVEDRAB = freezeObject(Color.fromCssColorString('#6B8E23'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFA500
-     * <span class="colorSwath" style="background: #FFA500;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.ORANGE = freezeObject(Color.fromCssColorString('#FFA500'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FF4500
-     * <span class="colorSwath" style="background: #FF4500;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.ORANGERED = freezeObject(Color.fromCssColorString('#FF4500'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #DA70D6
-     * <span class="colorSwath" style="background: #DA70D6;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.ORCHID = freezeObject(Color.fromCssColorString('#DA70D6'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #EEE8AA
-     * <span class="colorSwath" style="background: #EEE8AA;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.PALEGOLDENROD = freezeObject(Color.fromCssColorString('#EEE8AA'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #98FB98
-     * <span class="colorSwath" style="background: #98FB98;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.PALEGREEN = freezeObject(Color.fromCssColorString('#98FB98'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #AFEEEE
-     * <span class="colorSwath" style="background: #AFEEEE;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.PALETURQUOISE = freezeObject(Color.fromCssColorString('#AFEEEE'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #DB7093
-     * <span class="colorSwath" style="background: #DB7093;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.PALEVIOLETRED = freezeObject(Color.fromCssColorString('#DB7093'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFEFD5
-     * <span class="colorSwath" style="background: #FFEFD5;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.PAPAYAWHIP = freezeObject(Color.fromCssColorString('#FFEFD5'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFDAB9
-     * <span class="colorSwath" style="background: #FFDAB9;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.PEACHPUFF = freezeObject(Color.fromCssColorString('#FFDAB9'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #CD853F
-     * <span class="colorSwath" style="background: #CD853F;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.PERU = freezeObject(Color.fromCssColorString('#CD853F'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFC0CB
-     * <span class="colorSwath" style="background: #FFC0CB;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.PINK = freezeObject(Color.fromCssColorString('#FFC0CB'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #DDA0DD
-     * <span class="colorSwath" style="background: #DDA0DD;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.PLUM = freezeObject(Color.fromCssColorString('#DDA0DD'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #B0E0E6
-     * <span class="colorSwath" style="background: #B0E0E6;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.POWDERBLUE = freezeObject(Color.fromCssColorString('#B0E0E6'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #800080
-     * <span class="colorSwath" style="background: #800080;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.PURPLE = freezeObject(Color.fromCssColorString('#800080'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FF0000
-     * <span class="colorSwath" style="background: #FF0000;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.RED = freezeObject(Color.fromCssColorString('#FF0000'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #BC8F8F
-     * <span class="colorSwath" style="background: #BC8F8F;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.ROSYBROWN = freezeObject(Color.fromCssColorString('#BC8F8F'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #4169E1
-     * <span class="colorSwath" style="background: #4169E1;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.ROYALBLUE = freezeObject(Color.fromCssColorString('#4169E1'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #8B4513
-     * <span class="colorSwath" style="background: #8B4513;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.SADDLEBROWN = freezeObject(Color.fromCssColorString('#8B4513'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FA8072
-     * <span class="colorSwath" style="background: #FA8072;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.SALMON = freezeObject(Color.fromCssColorString('#FA8072'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #F4A460
-     * <span class="colorSwath" style="background: #F4A460;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.SANDYBROWN = freezeObject(Color.fromCssColorString('#F4A460'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #2E8B57
-     * <span class="colorSwath" style="background: #2E8B57;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.SEAGREEN = freezeObject(Color.fromCssColorString('#2E8B57'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFF5EE
-     * <span class="colorSwath" style="background: #FFF5EE;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.SEASHELL = freezeObject(Color.fromCssColorString('#FFF5EE'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #A0522D
-     * <span class="colorSwath" style="background: #A0522D;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.SIENNA = freezeObject(Color.fromCssColorString('#A0522D'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #C0C0C0
-     * <span class="colorSwath" style="background: #C0C0C0;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.SILVER = freezeObject(Color.fromCssColorString('#C0C0C0'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #87CEEB
-     * <span class="colorSwath" style="background: #87CEEB;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.SKYBLUE = freezeObject(Color.fromCssColorString('#87CEEB'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #6A5ACD
-     * <span class="colorSwath" style="background: #6A5ACD;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.SLATEBLUE = freezeObject(Color.fromCssColorString('#6A5ACD'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #708090
-     * <span class="colorSwath" style="background: #708090;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.SLATEGRAY = freezeObject(Color.fromCssColorString('#708090'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #708090
-     * <span class="colorSwath" style="background: #708090;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.SLATEGREY = Color.SLATEGRAY;
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFFAFA
-     * <span class="colorSwath" style="background: #FFFAFA;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.SNOW = freezeObject(Color.fromCssColorString('#FFFAFA'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #00FF7F
-     * <span class="colorSwath" style="background: #00FF7F;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.SPRINGGREEN = freezeObject(Color.fromCssColorString('#00FF7F'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #4682B4
-     * <span class="colorSwath" style="background: #4682B4;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.STEELBLUE = freezeObject(Color.fromCssColorString('#4682B4'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #D2B48C
-     * <span class="colorSwath" style="background: #D2B48C;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.TAN = freezeObject(Color.fromCssColorString('#D2B48C'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #008080
-     * <span class="colorSwath" style="background: #008080;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.TEAL = freezeObject(Color.fromCssColorString('#008080'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #D8BFD8
-     * <span class="colorSwath" style="background: #D8BFD8;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.THISTLE = freezeObject(Color.fromCssColorString('#D8BFD8'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FF6347
-     * <span class="colorSwath" style="background: #FF6347;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.TOMATO = freezeObject(Color.fromCssColorString('#FF6347'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #40E0D0
-     * <span class="colorSwath" style="background: #40E0D0;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.TURQUOISE = freezeObject(Color.fromCssColorString('#40E0D0'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #EE82EE
-     * <span class="colorSwath" style="background: #EE82EE;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.VIOLET = freezeObject(Color.fromCssColorString('#EE82EE'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #F5DEB3
-     * <span class="colorSwath" style="background: #F5DEB3;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.WHEAT = freezeObject(Color.fromCssColorString('#F5DEB3'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFFFFF
-     * <span class="colorSwath" style="background: #FFFFFF;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.WHITE = freezeObject(Color.fromCssColorString('#FFFFFF'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #F5F5F5
-     * <span class="colorSwath" style="background: #F5F5F5;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.WHITESMOKE = freezeObject(Color.fromCssColorString('#F5F5F5'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFFF00
-     * <span class="colorSwath" style="background: #FFFF00;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.YELLOW = freezeObject(Color.fromCssColorString('#FFFF00'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #9ACD32
-     * <span class="colorSwath" style="background: #9ACD32;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.YELLOWGREEN = freezeObject(Color.fromCssColorString('#9ACD32'));
-
-    return Color;
-});
-
-/*global define*/
-define('Scene/PrimitivePipeline',[
-        '../Core/defined',
-        '../Core/defaultValue',
-        '../Core/Color',
-        '../Core/ComponentDatatype',
-        '../Core/DeveloperError',
-        '../Core/FeatureDetection',
-        '../Core/Geometry',
-        '../Core/GeometryAttribute',
-        '../Core/GeometryPipeline',
-        '../Core/Matrix4'
-    ], function(
-        defined,
-        defaultValue,
-        Color,
-        ComponentDatatype,
-        DeveloperError,
-        FeatureDetection,
-        Geometry,
-        GeometryAttribute,
-        GeometryPipeline,
-        Matrix4) {
-    "use strict";
-
-    // Bail out if the browser doesn't support typed arrays, to prevent the setup function
-    // from failing, since we won't be able to create a WebGL context anyway.
-    if (!FeatureDetection.supportsTypedArrays()) {
-        return {};
-    }
-
-    function transformToWorldCoordinates(instances, primitiveModelMatrix, allow3DOnly) {
-        var toWorld = !allow3DOnly;
-        var length = instances.length;
-        var i;
-
-        if (!toWorld && (length > 1)) {
-            var modelMatrix = instances[0].modelMatrix;
-
-            for (i = 1; i < length; ++i) {
-                if (!Matrix4.equals(modelMatrix, instances[i].modelMatrix)) {
-                    toWorld = true;
-                    break;
-                }
-            }
-        }
-
-        if (toWorld) {
-            for (i = 0; i < length; ++i) {
-                GeometryPipeline.transformToWorldCoordinates(instances[i]);
-            }
-        } else {
-            // Leave geometry in local coordinate system; auto update model-matrix.
-            Matrix4.clone(instances[0].modelMatrix, primitiveModelMatrix);
-        }
-    }
-
-    function addPickColorAttribute(instances, pickIds) {
-        var length = instances.length;
-
-        for (var i = 0; i < length; ++i) {
-            var instance = instances[i];
-            var geometry = instance.geometry;
-            var attributes = geometry.attributes;
-            var positionAttr = attributes.position;
-            var numberOfComponents = 4 * (positionAttr.values.length / positionAttr.componentsPerAttribute);
-
-            attributes.pickColor = new GeometryAttribute({
-                componentDatatype : ComponentDatatype.UNSIGNED_BYTE,
-                componentsPerAttribute : 4,
-                normalize : true,
-                values : new Uint8Array(numberOfComponents)
-            });
-
-            var pickColor = pickIds[i];
-            var red = Color.floatToByte(pickColor.red);
-            var green = Color.floatToByte(pickColor.green);
-            var blue = Color.floatToByte(pickColor.blue);
-            var alpha = Color.floatToByte(pickColor.alpha);
-            var values = attributes.pickColor.values;
-
-            for (var j = 0; j < numberOfComponents; j += 4) {
-                values[j] = red;
-                values[j + 1] = green;
-                values[j + 2] = blue;
-                values[j + 3] = alpha;
-            }
-        }
-    }
-
-    function getCommonPerInstanceAttributeNames(instances) {
-        var length = instances.length;
-
-        var attributesInAllInstances = [];
-        var attributes0 = instances[0].attributes;
-        var name;
-
-        for (name in attributes0) {
-            if (attributes0.hasOwnProperty(name)) {
-                var attribute = attributes0[name];
-                var inAllInstances = true;
-
-                // Does this same attribute exist in all instances?
-                for (var i = 1; i < length; ++i) {
-                    var otherAttribute = instances[i].attributes[name];
-
-                    if (!defined(otherAttribute) ||
-                        (attribute.componentDatatype.value !== otherAttribute.componentDatatype.value) ||
-                        (attribute.componentsPerAttribute !== otherAttribute.componentsPerAttribute) ||
-                        (attribute.normalize !== otherAttribute.normalize)) {
-
-                        inAllInstances = false;
-                        break;
-                    }
-                }
-
-                if (inAllInstances) {
-                    attributesInAllInstances.push(name);
-                }
-            }
-        }
-
-        return attributesInAllInstances;
-    }
-
-    function addPerInstanceAttributes(instances, names) {
-        var length = instances.length;
-        for (var i = 0; i < length; ++i) {
-            var instance = instances[i];
-            var instanceAttributes = instance.attributes;
-            var geometry = instance.geometry;
-            var numberOfVertices = Geometry.computeNumberOfVertices(geometry);
-
-            var namesLength = names.length;
-            for (var j = 0; j < namesLength; ++j) {
-                var name = names[j];
-                var attribute = instanceAttributes[name];
-                var componentDatatype = attribute.componentDatatype;
-                var value = attribute.value;
-                var componentsPerAttribute = value.length;
-
-                var buffer = ComponentDatatype.createTypedArray(componentDatatype, numberOfVertices * componentsPerAttribute);
-                for (var k = 0; k < numberOfVertices; ++k) {
-                    buffer.set(value, k * componentsPerAttribute);
-                }
-
-                geometry.attributes[name] = new GeometryAttribute({
-                    componentDatatype : componentDatatype,
-                    componentsPerAttribute : componentsPerAttribute,
-                    normalize : attribute.normalize,
-                    values : buffer
-                });
-            }
-        }
-    }
-
-    function geometryPipeline(parameters) {
-        var instances = parameters.instances;
-        var pickIds = parameters.pickIds;
-        var projection = parameters.projection;
-        var uintIndexSupport = parameters.elementIndexUintSupported;
-        var allow3DOnly = parameters.allow3DOnly;
-        var allowPicking = parameters.allowPicking;
-        var vertexCacheOptimize = parameters.vertexCacheOptimize;
-        var modelMatrix = parameters.modelMatrix;
-
-        var i;
-        var length = instances.length;
-        var primitiveType = instances[0].geometry.primitiveType;
-
-                for (i = 1; i < length; ++i) {
-            if (instances[i].geometry.primitiveType !== primitiveType) {
-                throw new DeveloperError('All instance geometries must have the same primitiveType.');
-            }
-        }
-        
-        // Unify to world coordinates before combining.
-        transformToWorldCoordinates(instances, modelMatrix, allow3DOnly);
-
-        // Clip to IDL
-        if (!allow3DOnly) {
-            for (i = 0; i < length; ++i) {
-                GeometryPipeline.wrapLongitude(instances[i].geometry);
-            }
-        }
-
-        // Add pickColor attribute for picking individual instances
-        if (allowPicking) {
-            addPickColorAttribute(instances, pickIds);
-        }
-
-        // add attributes to the geometry for each per-instance attribute
-        var perInstanceAttributeNames = getCommonPerInstanceAttributeNames(instances);
-        addPerInstanceAttributes(instances, perInstanceAttributeNames);
-
-        // Optimize for vertex shader caches
-        if (vertexCacheOptimize) {
-            for (i = 0; i < length; ++i) {
-                GeometryPipeline.reorderForPostVertexCache(instances[i].geometry);
-                GeometryPipeline.reorderForPreVertexCache(instances[i].geometry);
-            }
-        }
-
-        // Combine into single geometry for better rendering performance.
-        var geometry = GeometryPipeline.combine(instances);
-
-        // Split positions for GPU RTE
-        var attributes = geometry.attributes;
-        var name;
-        if (!allow3DOnly) {
-            for (name in attributes) {
-                if (attributes.hasOwnProperty(name) && attributes[name].componentDatatype.value === ComponentDatatype.DOUBLE.value) {
-                    var name3D = name + '3D';
-                    var name2D = name + '2D';
-
-                    // Compute 2D positions
-                    GeometryPipeline.projectTo2D(geometry, name, name3D, name2D, projection);
-
-                    GeometryPipeline.encodeAttribute(geometry, name3D, name3D + 'High', name3D + 'Low');
-                    GeometryPipeline.encodeAttribute(geometry, name2D, name2D + 'High', name2D + 'Low');
-                }
-            }
-        } else {
-            for (name in attributes) {
-                if (attributes.hasOwnProperty(name) && attributes[name].componentDatatype.value === ComponentDatatype.DOUBLE.value) {
-                    GeometryPipeline.encodeAttribute(geometry, name, name + '3DHigh', name + '3DLow');
-                }
-            }
-        }
-
-        if (!uintIndexSupport) {
-            // Break into multiple geometries to fit within unsigned short indices if needed
-            return GeometryPipeline.fitToUnsignedShortIndices(geometry);
-        }
-
-        // Unsigned int indices are supported.  No need to break into multiple geometries.
-        return [geometry];
-    }
-
-    function createPerInstanceVAAttributes(geometry, attributeLocations, names) {
-        var vaAttributes = [];
-        var attributes = geometry.attributes;
-
-        var length = names.length;
-        for (var i = 0; i < length; ++i) {
-            var name = names[i];
-            var attribute = attributes[name];
-
-            var componentDatatype = attribute.componentDatatype;
-            if (componentDatatype.value === ComponentDatatype.DOUBLE.value) {
-                componentDatatype = ComponentDatatype.FLOAT;
-            }
-
-            var typedArray = ComponentDatatype.createTypedArray(componentDatatype, attribute.values);
-            vaAttributes.push({
-                index : attributeLocations[name],
-                componentDatatype : componentDatatype,
-                componentsPerAttribute : attribute.componentsPerAttribute,
-                normalize : attribute.normalize,
-                values : typedArray
-            });
-
-            delete attributes[name];
-        }
-
-        return vaAttributes;
-    }
-
-    function computePerInstanceAttributeLocations(instances, vertexArrays, attributeLocations) {
-        var indices = [];
-
-        var names = getCommonPerInstanceAttributeNames(instances);
-        var length = instances.length;
-        var offsets = {};
-        var vaIndices = {};
-
-        for (var i = 0; i < length; ++i) {
-            var instance = instances[i];
-            var numberOfVertices = Geometry.computeNumberOfVertices(instance.geometry);
-
-            var namesLength = names.length;
-            for (var j = 0; j < namesLength; ++j) {
-                var name = names[j];
-                var index = attributeLocations[name];
-
-                var tempVertexCount = numberOfVertices;
-                while (tempVertexCount > 0) {
-                    var vaIndex = defaultValue(vaIndices[name], 0);
-                    var va = vertexArrays[vaIndex];
-                    var vaLength = va.length;
-
-                    var attribute;
-                    for (var k = 0; k < vaLength; ++k) {
-                        attribute = va[k];
-                        if (attribute.index === index) {
-                            break;
-                        }
-                    }
-
-                    if (!defined(indices[i])) {
-                        indices[i] = {};
-                    }
-
-                    if (!defined(indices[i][name])) {
-                        indices[i][name] = {
-                            dirty : false,
-                            value : instance.attributes[name].value,
-                            indices : []
-                        };
-                    }
-
-                    var size = attribute.values.length / attribute.componentsPerAttribute;
-                    var offset = defaultValue(offsets[name], 0);
-
-                    var count;
-                    if (offset + tempVertexCount < size) {
-                        count = tempVertexCount;
-                        indices[i][name].indices.push({
-                            attribute : attribute,
-                            offset : offset,
-                            count : count
-                        });
-                        offsets[name] = offset + tempVertexCount;
-                    } else {
-                        count = size - offset;
-                        indices[i][name].indices.push({
-                            attribute : attribute,
-                            offset : offset,
-                            count : count
-                        });
-                        offsets[name] = 0;
-                        vaIndices[name] = vaIndex + 1;
-                    }
-
-                    tempVertexCount -= count;
-                }
-            }
-        }
-
-        return indices;
-    }
-
-    /**
-     * @private
-     */
-    var PrimitivePipeline = {};
-
-    /**
-     * @private
-     */
-    PrimitivePipeline.combineGeometry = function(parameters) {
-        var clonedParameters = {
-            instances : parameters.instances,
-            pickIds : parameters.pickIds,
-            ellipsoid : parameters.ellipsoid,
-            projection : parameters.projection,
-            elementIndexUintSupported : parameters.elementIndexUintSupported,
-            allow3DOnly : parameters.allow3DOnly,
-            allowPicking : parameters.allowPicking,
-            vertexCacheOptimize : parameters.vertexCacheOptimize,
-            modelMatrix : Matrix4.clone(parameters.modelMatrix)
-        };
-        var geometries = geometryPipeline(clonedParameters);
-        var attributeLocations = GeometryPipeline.createAttributeLocations(geometries[0]);
-
-        var instances = clonedParameters.instances;
-        var perInstanceAttributeNames = getCommonPerInstanceAttributeNames(instances);
-
-        var perInstanceAttributes = [];
-        var length = geometries.length;
-        for (var i = 0; i < length; ++i) {
-            var geometry = geometries[i];
-            perInstanceAttributes.push(createPerInstanceVAAttributes(geometry, attributeLocations, perInstanceAttributeNames));
-        }
-
-        var indices = computePerInstanceAttributeLocations(instances, perInstanceAttributes, attributeLocations);
-
-        return {
-            geometries : geometries,
-            modelMatrix : clonedParameters.modelMatrix,
-            attributeLocations : attributeLocations,
-            vaAttributes : perInstanceAttributes,
-            vaAttributeLocations : indices
-        };
-    };
-
-    /*
-     * The below functions are needed when transferring typed arrays to/from web
-     * workers. This is a workaround for:
-     *
-     * https://bugzilla.mozilla.org/show_bug.cgi?id=841904
-     */
-
-    function stupefyTypedArray(typedArray) {
-        if (defined(typedArray.constructor.name)) {
-            return {
-                type : typedArray.constructor.name,
-                buffer : typedArray.buffer
-            };
-        } else {
-            return typedArray;
-        }
-    }
-
-    var typedArrayMap = {
-        Int8Array : Int8Array,
-        Uint8Array : Uint8Array,
-        Int16Array : Int16Array,
-        Uint16Array : Uint16Array,
-        Int32Array : Int32Array,
-        Uint32Array : Uint32Array,
-        Float32Array : Float32Array,
-        Float64Array : Float64Array
-    };
-
-    function unStupefyTypedArray(typedArray) {
-        if (defined(typedArray.type)) {
-            return new typedArrayMap[typedArray.type](typedArray.buffer);
-        } else {
-            return typedArray;
-        }
-    }
-
-    /**
-     * @private
-     */
-    PrimitivePipeline.transferGeometry = function(geometry, transferableObjects) {
-        var typedArray;
-        var attributes = geometry.attributes;
-        for (var name in attributes) {
-            if (attributes.hasOwnProperty(name) &&
-                    defined(attributes[name]) &&
-                    defined(attributes[name].values)) {
-                typedArray = attributes[name].values;
-
-                if (FeatureDetection.supportsTransferringArrayBuffers() && transferableObjects.indexOf(attributes[name].values.buffer) < 0) {
-                    transferableObjects.push(typedArray.buffer);
-                }
-
-                if (!defined(typedArray.type)) {
-                    attributes[name].values = stupefyTypedArray(typedArray);
-                }
-            }
-        }
-
-        if (defined(geometry.indices)) {
-            typedArray = geometry.indices;
-
-            if (FeatureDetection.supportsTransferringArrayBuffers()) {
-                transferableObjects.push(typedArray.buffer);
-            }
-
-            if (!defined(typedArray.type)) {
-                geometry.indices = stupefyTypedArray(geometry.indices);
-            }
-        }
-    };
-
-    /**
-     * @private
-     */
-    PrimitivePipeline.transferGeometries = function(geometries, transferableObjects) {
-        var length = geometries.length;
-        for (var i = 0; i < length; ++i) {
-            PrimitivePipeline.transferGeometry(geometries[i], transferableObjects);
-        }
-    };
-
-    /**
-     * @private
-     */
-    PrimitivePipeline.transferPerInstanceAttributes = function(perInstanceAttributes, transferableObjects) {
-        var length = perInstanceAttributes.length;
-        for (var i = 0; i < length; ++i) {
-            var vaAttributes = perInstanceAttributes[i];
-            var vaLength = vaAttributes.length;
-            for (var j = 0; j < vaLength; ++j) {
-                var typedArray = vaAttributes[j].values;
-                if (FeatureDetection.supportsTransferringArrayBuffers()) {
-                    transferableObjects.push(typedArray.buffer);
-                }
-                vaAttributes[j].values = stupefyTypedArray(typedArray);
-            }
-        }
-    };
-
-    /**
-     * @private
-     */
-    PrimitivePipeline.transferInstances = function(instances, transferableObjects) {
-        var length = instances.length;
-        for (var i = 0; i < length; ++i) {
-            var instance = instances[i];
-            PrimitivePipeline.transferGeometry(instance.geometry, transferableObjects);
-        }
-    };
-
-    /**
-     * @private
-     */
-    PrimitivePipeline.receiveGeometry = function(geometry) {
-        var attributes = geometry.attributes;
-        for (var name in attributes) {
-            if (attributes.hasOwnProperty(name) &&
-                    defined(attributes[name]) &&
-                    defined(attributes[name].values)) {
-                attributes[name].values = unStupefyTypedArray(attributes[name].values);
-            }
-        }
-
-        if (defined(geometry.indices)) {
-            geometry.indices = unStupefyTypedArray(geometry.indices);
-        }
-    };
-
-    /**
-     * @private
-     */
-    PrimitivePipeline.receiveGeometries = function(geometries) {
-        var length = geometries.length;
-        for (var i = 0; i < length; ++i) {
-            PrimitivePipeline.receiveGeometry(geometries[i]);
-        }
-    };
-
-    /**
-     * @private
-     */
-    PrimitivePipeline.receivePerInstanceAttributes = function(perInstanceAttributes) {
-        var length = perInstanceAttributes.length;
-        for (var i = 0; i < length; ++i) {
-            var vaAttributes = perInstanceAttributes[i];
-            var vaLength = vaAttributes.length;
-            for (var j = 0; j < vaLength; ++j) {
-                vaAttributes[j].values = unStupefyTypedArray(vaAttributes[j].values);
-            }
-        }
-    };
-
-    /**
-     * @private
-     */
-    PrimitivePipeline.receiveInstances = function(instances) {
-        var length = instances.length;
-        for (var i = 0; i < length; ++i) {
-            var instance = instances[i];
-            PrimitivePipeline.receiveGeometry(instance.geometry);
-        }
-    };
-
-    return PrimitivePipeline;
-});
-
-/*global define*/
-define('Workers/createTaskProcessorWorker',[
-        '../Core/defaultValue',
-        '../Core/defined'
-    ], function(
-        defaultValue,
-        defined) {
-    "use strict";
-
-    /**
-     * Creates an adapter function to allow a calculation function to operate as a Web Worker,
-     * paired with TaskProcessor, to receive tasks and return results.
-     *
-     * @exports createTaskProcessorWorker
-     *
-     * @param {Function} workerFunction A function that takes as input two arguments:
-     * a parameters object, and an array into which transferable result objects can be pushed,
-     * and returns as output a result object.
-     * @returns {Function} An adapter function that handles the interaction with TaskProcessor,
-     * specifically, task ID management and posting a response message containing the result.
-     *
-     * @example
-     * function doCalculation(parameters, transferableObjects) {
-     *   // calculate some result using the inputs in parameters
-     *   return result;
-     * }
-     *
-     * return Cesium.createTaskProcessorWorker(doCalculation);
-     * // the resulting function is compatible with TaskProcessor
-     *
-     * @see TaskProcessor
-     * @see <a href='http://www.w3.org/TR/workers/'>Web Workers</a>
-     * @see <a href='http://www.w3.org/TR/html5/common-dom-interfaces.html#transferable-objects'>Transferable objects</a>
-     */
-    var createTaskProcessorWorker = function(workerFunction) {
-        var postMessage;
-        var transferableObjects = [];
-        var responseMessage = {
-            id : undefined,
-            result : undefined,
-            error : undefined
-        };
-
-        return function(event) {
-            /*global self*/
-            var data = event.data;
-
-            transferableObjects.length = 0;
-            responseMessage.id = data.id;
-            responseMessage.error = undefined;
-            responseMessage.result = undefined;
-
-            try {
-                responseMessage.result = workerFunction(data.parameters, transferableObjects);
-            } catch (e) {
-                responseMessage.error = e;
-            }
-
-            if (!defined(postMessage)) {
-                postMessage = defaultValue(self.webkitPostMessage, self.postMessage);
-            }
-
-            try {
-                postMessage(responseMessage, transferableObjects);
-            } catch (e) {
-                // something went wrong trying to post the message, post a simpler
-                // error that we can be sure will be cloneable
-                responseMessage.result = undefined;
-                responseMessage.error = 'postMessage failed with error: ' + e + '\n  with responseMessage: ' + JSON.stringify(responseMessage);
-                postMessage(responseMessage);
-            }
-        };
-    };
-
-    return createTaskProcessorWorker;
-});
-/*global define*/
-define('Workers/createCircleGeometry',[
-        '../Core/Cartesian3',
+define('Workers/createCircleGeometry',['../Core/Cartesian3',
         '../Core/CircleGeometry',
-        '../Core/Ellipsoid',
-        '../Scene/PrimitivePipeline',
-        './createTaskProcessorWorker'
+        '../Core/Ellipsoid'
     ], function(
         Cartesian3,
         CircleGeometry,
-        Ellipsoid,
-        PrimitivePipeline,
-        createTaskProcessorWorker) {
+        Ellipsoid) {
     "use strict";
 
-    function createCircleGeometry(parameters, transferableObjects) {
-        var circleGeometry = parameters.geometry;
+    function createCircleGeometry(circleGeometry) {
         circleGeometry._ellipseGeometry._center = Cartesian3.clone(circleGeometry._ellipseGeometry._center);
         circleGeometry._ellipseGeometry._ellipsoid = Ellipsoid.clone(circleGeometry._ellipseGeometry._ellipsoid);
-
-        var geometry = CircleGeometry.createGeometry(circleGeometry);
-        PrimitivePipeline.transferGeometry(geometry, transferableObjects);
-
-        return {
-            geometry : geometry,
-            index : parameters.index
-        };
+        return CircleGeometry.createGeometry(circleGeometry);
     }
 
-    return createTaskProcessorWorker(createCircleGeometry);
+    return createCircleGeometry;
 });
 }());

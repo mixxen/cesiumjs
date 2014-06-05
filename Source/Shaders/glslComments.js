@@ -270,7 +270,7 @@
  * to cut it off sooner because it grows exponentially with increasing latitude.
  * The logic behind this particular cutoff value, which is the one used by
  * Google Maps, Bing Maps, and Esri, is that it makes the projection
- * square.  That is, the extent is equal in the X and Y directions.
+ * square.  That is, the rectangle is equal in the X and Y directions.
  *
  * The constant value is computed as follows:
  *   czm_pi * 0.5 - (2.0 * atan(exp(-czm_pi)))
@@ -593,18 +593,18 @@
  * bool b2 = czm_isEmpty(czm_raySegment(1.0, 1.0)); // false, contains 1.0.
  */
 /**
- * Computes the fraction of a Web Wercator extent at which a given geodetic latitude is located.
+ * Computes the fraction of a Web Wercator rectangle at which a given geodetic latitude is located.
  *
  * @name czm_latitudeToWebMercatorFraction
  * @glslFunction
  *
  * @param {float} The geodetic latitude, in radians.
- * @param {float} The low portion of the Web Mercator coordinate of the southern boundary of the extent.
- * @param {float} The high portion of the Web Mercator coordinate of the southern boundary of the extent.
- * @param {float} The total height of the extent in Web Mercator coordinates.
+ * @param {float} The low portion of the Web Mercator coordinate of the southern boundary of the rectangle.
+ * @param {float} The high portion of the Web Mercator coordinate of the southern boundary of the rectangle.
+ * @param {float} The total height of the rectangle in Web Mercator coordinates.
  *
- * @returns {float} The fraction of the extent at which the latitude occurs.  If the latitude is the southern
- *          boundary of the extent, the return value will be zero.  If it is the northern boundary, the return
+ * @returns {float} The fraction of the rectangle at which the latitude occurs.  If the latitude is the southern
+ *          boundary of the rectangle, the return value will be zero.  If it is the northern boundary, the return
  *          value will be 1.0.  Latitudes in between are mapped according to the Web Mercator projection.
  */
 /**

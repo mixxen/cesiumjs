@@ -2657,7 +2657,7 @@ define('Core/Ellipsoid',[
 });
 
 /*global define*/
-define('Core/Extent',[
+define('Core/Rectangle',[
         './freezeObject',
         './defaultValue',
         './defined',
@@ -2678,15 +2678,17 @@ define('Core/Extent',[
     /**
      * A two dimensional region specified as longitude and latitude coordinates.
      *
-     * @alias Extent
+     * @alias Rectangle
      * @constructor
      *
      * @param {Number} [west=0.0] The westernmost longitude, in radians, in the range [-Pi, Pi].
      * @param {Number} [south=0.0] The southernmost latitude, in radians, in the range [-Pi/2, Pi/2].
      * @param {Number} [east=0.0] The easternmost longitude, in radians, in the range [-Pi, Pi].
      * @param {Number} [north=0.0] The northernmost latitude, in radians, in the range [-Pi/2, Pi/2].
+     *
+     * @see Packable
      */
-    var Extent = function(west, south, east, north) {
+    var Rectangle = function(west, south, east, north) {
         /**
          * The westernmost longitude in radians in the range [-Pi, Pi].
          *
@@ -2721,29 +2723,29 @@ define('Core/Extent',[
     };
 
     /**
-     * Creates an extent given the boundary longitude and latitude in degrees.
+     * Creates an rectangle given the boundary longitude and latitude in degrees.
      *
-     * @memberof Extent
+     * @memberof Rectangle
      *
      * @param {Number} [west=0.0] The westernmost longitude in degrees in the range [-180.0, 180.0].
      * @param {Number} [south=0.0] The southernmost latitude in degrees in the range [-90.0, 90.0].
      * @param {Number} [east=0.0] The easternmost longitude in degrees in the range [-180.0, 180.0].
      * @param {Number} [north=0.0] The northernmost latitude in degrees in the range [-90.0, 90.0].
-     * @param {Extent} [result] The object onto which to store the result, or undefined if a new instance should be created.
+     * @param {Rectangle} [result] The object onto which to store the result, or undefined if a new instance should be created.
      *
-     * @returns {Extent} The modified result parameter or a new Extent instance if none was provided.
+     * @returns {Rectangle} The modified result parameter or a new Rectangle instance if none was provided.
      *
      * @example
-     * var extent = Cesium.Extent.fromDegrees(0.0, 20.0, 10.0, 30.0);
+     * var rectangle = Cesium.Rectangle.fromDegrees(0.0, 20.0, 10.0, 30.0);
      */
-    Extent.fromDegrees = function(west, south, east, north, result) {
+    Rectangle.fromDegrees = function(west, south, east, north, result) {
         west = CesiumMath.toRadians(defaultValue(west, 0.0));
         south = CesiumMath.toRadians(defaultValue(south, 0.0));
         east = CesiumMath.toRadians(defaultValue(east, 0.0));
         north = CesiumMath.toRadians(defaultValue(north, 0.0));
 
         if (!defined(result)) {
-            return new Extent(west, south, east, north);
+            return new Rectangle(west, south, east, north);
         }
 
         result.west = west;
@@ -2755,14 +2757,14 @@ define('Core/Extent',[
     };
 
     /**
-     * Creates the smallest possible Extent that encloses all positions in the provided array.
-     * @memberof Extent
+     * Creates the smallest possible Rectangle that encloses all positions in the provided array.
+     * @memberof Rectangle
      *
      * @param {Array} cartographics The list of Cartographic instances.
-     * @param {Extent} [result] The object onto which to store the result, or undefined if a new instance should be created.
-     * @returns {Extent} The modified result parameter or a new Extent instance if none was provided.
+     * @param {Rectangle} [result] The object onto which to store the result, or undefined if a new instance should be created.
+     * @returns {Rectangle} The modified result parameter or a new Rectangle instance if none was provided.
      */
-    Extent.fromCartographicArray = function(cartographics, result) {
+    Rectangle.fromCartographicArray = function(cartographics, result) {
                 if (!defined(cartographics)) {
             throw new DeveloperError('cartographics is required.');
         }
@@ -2781,7 +2783,7 @@ define('Core/Extent',[
         }
 
         if (!defined(result)) {
-            return new Extent(minLon, minLat, maxLon, maxLat);
+            return new Rectangle(minLon, minLat, maxLon, maxLat);
         }
 
         result.west = minLon;
@@ -2792,66 +2794,122 @@ define('Core/Extent',[
     };
 
     /**
-     * Duplicates an Extent.
-     *
-     * @memberof Extent
-     *
-     * @param {Extent} extent The extent to clone.
-     * @param {Extent} [result] The object onto which to store the result, or undefined if a new instance should be created.
-     * @returns {Extent} The modified result parameter or a new Extent instance if none was provided. (Returns undefined if extent is undefined)
+     * The number of elements used to pack the object into an array.
+     * @Type {Number}
      */
-    Extent.clone = function(extent, result) {
-        if (!defined(extent)) {
-            return undefined;
+    Rectangle.packedLength = 4;
+
+    /**
+     * Stores the provided instance into the provided array.
+     * @memberof Rectangle
+     *
+     * @param {Rectangle} value The value to pack.
+     * @param {Array} array The array to pack into.
+     * @param {Number} [startingIndex=0] The index into the array at which to start packing the elements.
+     */
+    Rectangle.pack = function(value, array, startingIndex) {
+                if (!defined(value)) {
+            throw new DeveloperError('value is required');
         }
+
+        if (!defined(array)) {
+            throw new DeveloperError('array is required');
+        }
+        
+        startingIndex = defaultValue(startingIndex, 0);
+
+        array[startingIndex++] = value.west;
+        array[startingIndex++] = value.south;
+        array[startingIndex++] = value.east;
+        array[startingIndex] = value.north;
+    };
+
+    /**
+     * Retrieves an instance from a packed array.
+     * @memberof Rectangle
+     *
+     * @param {Array} array The packed array.
+     * @param {Number} [startingIndex=0] The starting index of the element to be unpacked.
+     * @param {Rectangle} [result] The object into which to store the result.
+     */
+    Rectangle.unpack = function(array, startingIndex, result) {
+                if (!defined(array)) {
+            throw new DeveloperError('array is required');
+        }
+        
+        startingIndex = defaultValue(startingIndex, 0);
 
         if (!defined(result)) {
-            return new Extent(extent.west, extent.south, extent.east, extent.north);
+            result = new Rectangle();
         }
-
-        result.west = extent.west;
-        result.south = extent.south;
-        result.east = extent.east;
-        result.north = extent.north;
+        result.west = array[startingIndex++];
+        result.south = array[startingIndex++];
+        result.east = array[startingIndex++];
+        result.north = array[startingIndex];
         return result;
     };
 
     /**
-     * Duplicates this Extent.
+     * Duplicates an Rectangle.
      *
-     * @memberof Extent
+     * @memberof Rectangle
      *
-     * @param {Extent} [result] The object onto which to store the result.
-     * @returns {Extent} The modified result parameter or a new Extent instance if none was provided.
+     * @param {Rectangle} rectangle The rectangle to clone.
+     * @param {Rectangle} [result] The object onto which to store the result, or undefined if a new instance should be created.
+     * @returns {Rectangle} The modified result parameter or a new Rectangle instance if none was provided. (Returns undefined if rectangle is undefined)
      */
-    Extent.prototype.clone = function(result) {
-        return Extent.clone(this, result);
+    Rectangle.clone = function(rectangle, result) {
+        if (!defined(rectangle)) {
+            return undefined;
+        }
+
+        if (!defined(result)) {
+            return new Rectangle(rectangle.west, rectangle.south, rectangle.east, rectangle.north);
+        }
+
+        result.west = rectangle.west;
+        result.south = rectangle.south;
+        result.east = rectangle.east;
+        result.north = rectangle.north;
+        return result;
     };
 
     /**
-     * Compares the provided Extent with this Extent componentwise and returns
+     * Duplicates this Rectangle.
+     *
+     * @memberof Rectangle
+     *
+     * @param {Rectangle} [result] The object onto which to store the result.
+     * @returns {Rectangle} The modified result parameter or a new Rectangle instance if none was provided.
+     */
+    Rectangle.prototype.clone = function(result) {
+        return Rectangle.clone(this, result);
+    };
+
+    /**
+     * Compares the provided Rectangle with this Rectangle componentwise and returns
      * <code>true</code> if they are equal, <code>false</code> otherwise.
-     * @memberof Extent
+     * @memberof Rectangle
      *
-     * @param {Extent} [other] The Extent to compare.
-     * @returns {Boolean} <code>true</code> if the Extents are equal, <code>false</code> otherwise.
+     * @param {Rectangle} [other] The Rectangle to compare.
+     * @returns {Boolean} <code>true</code> if the Rectangles are equal, <code>false</code> otherwise.
      */
-    Extent.prototype.equals = function(other) {
-        return Extent.equals(this, other);
+    Rectangle.prototype.equals = function(other) {
+        return Rectangle.equals(this, other);
     };
 
     /**
-     * Compares the provided extents and returns <code>true</code> if they are equal,
+     * Compares the provided rectangles and returns <code>true</code> if they are equal,
      * <code>false</code> otherwise.
      *
-     * @memberof Extent
+     * @memberof Rectangle
      *
-     * @param {Extent} [left] The first Extent.
-     * @param {Extent} [right] The second Extent.
+     * @param {Rectangle} [left] The first Rectangle.
+     * @param {Rectangle} [right] The second Rectangle.
      *
      * @returns {Boolean} <code>true</code> if left and right are equal; otherwise <code>false</code>.
      */
-    Extent.equals = function(left, right) {
+    Rectangle.equals = function(left, right) {
         return (left === right) ||
                ((defined(left)) &&
                 (defined(right)) &&
@@ -2862,16 +2920,16 @@ define('Core/Extent',[
     };
 
     /**
-     * Compares the provided Extent with this Extent componentwise and returns
+     * Compares the provided Rectangle with this Rectangle componentwise and returns
      * <code>true</code> if they are within the provided epsilon,
      * <code>false</code> otherwise.
-     * @memberof Extent
+     * @memberof Rectangle
      *
-     * @param {Extent} [other] The Extent to compare.
+     * @param {Rectangle} [other] The Rectangle to compare.
      * @param {Number} epsilon The epsilon to use for equality testing.
-     * @returns {Boolean} <code>true</code> if the Extents are within the provided epsilon, <code>false</code> otherwise.
+     * @returns {Boolean} <code>true</code> if the Rectangles are within the provided epsilon, <code>false</code> otherwise.
      */
-    Extent.prototype.equalsEpsilon = function(other, epsilon) {
+    Rectangle.prototype.equalsEpsilon = function(other, epsilon) {
                 if (typeof epsilon !== 'number') {
             throw new DeveloperError('epsilon is required and must be a number.');
         }
@@ -2884,21 +2942,21 @@ define('Core/Extent',[
     };
 
     /**
-     * Checks an Extent's properties and throws if they are not in valid ranges.
+     * Checks an Rectangle's properties and throws if they are not in valid ranges.
      *
-     * @param {Extent} extent The extent to validate
+     * @param {Rectangle} rectangle The rectangle to validate
      *
      * @exception {DeveloperError} <code>north</code> must be in the interval [<code>-Pi/2</code>, <code>Pi/2</code>].
      * @exception {DeveloperError} <code>south</code> must be in the interval [<code>-Pi/2</code>, <code>Pi/2</code>].
      * @exception {DeveloperError} <code>east</code> must be in the interval [<code>-Pi</code>, <code>Pi</code>].
      * @exception {DeveloperError} <code>west</code> must be in the interval [<code>-Pi</code>, <code>Pi</code>].
      */
-    Extent.validate = function(extent) {
-                if (!defined(extent)) {
-            throw new DeveloperError('extent is required');
+    Rectangle.validate = function(rectangle) {
+                if (!defined(rectangle)) {
+            throw new DeveloperError('rectangle is required');
         }
 
-        var north = extent.north;
+        var north = rectangle.north;
         if (typeof north !== 'number') {
             throw new DeveloperError('north is required to be a number.');
         }
@@ -2907,7 +2965,7 @@ define('Core/Extent',[
             throw new DeveloperError('north must be in the interval [-Pi/2, Pi/2].');
         }
 
-        var south = extent.south;
+        var south = rectangle.south;
         if (typeof south !== 'number') {
             throw new DeveloperError('south is required to be a number.');
         }
@@ -2916,7 +2974,7 @@ define('Core/Extent',[
             throw new DeveloperError('south must be in the interval [-Pi/2, Pi/2].');
         }
 
-        var west = extent.west;
+        var west = rectangle.west;
         if (typeof west !== 'number') {
             throw new DeveloperError('west is required to be a number.');
         }
@@ -2925,7 +2983,7 @@ define('Core/Extent',[
             throw new DeveloperError('west must be in the interval [-Pi, Pi].');
         }
 
-        var east = extent.east;
+        var east = rectangle.east;
         if (typeof east !== 'number') {
             throw new DeveloperError('east is required to be a number.');
         }
@@ -2936,138 +2994,138 @@ define('Core/Extent',[
             };
 
     /**
-     * Computes the southwest corner of an extent.
-     * @memberof Extent
+     * Computes the southwest corner of an rectangle.
+     * @memberof Rectangle
      *
-     * @param {Extent} extent The extent for which to find the corner
+     * @param {Rectangle} rectangle The rectangle for which to find the corner
      * @param {Cartographic} [result] The object onto which to store the result.
      * @returns {Cartographic} The modified result parameter or a new Cartographic instance if none was provided.
      */
-    Extent.getSouthwest = function(extent, result) {
-                if (!defined(extent)) {
-            throw new DeveloperError('extent is required');
+    Rectangle.getSouthwest = function(rectangle, result) {
+                if (!defined(rectangle)) {
+            throw new DeveloperError('rectangle is required');
         }
         
         if (!defined(result)) {
-            return new Cartographic(extent.west, extent.south);
+            return new Cartographic(rectangle.west, rectangle.south);
         }
-        result.longitude = extent.west;
-        result.latitude = extent.south;
+        result.longitude = rectangle.west;
+        result.latitude = rectangle.south;
         result.height = 0.0;
         return result;
     };
 
     /**
-     * Computes the northwest corner of an extent.
-     * @memberof Extent
+     * Computes the northwest corner of an rectangle.
+     * @memberof Rectangle
      *
-     * @param {Extent} extent The extent for which to find the corner
+     * @param {Rectangle} rectangle The rectangle for which to find the corner
      * @param {Cartographic} [result] The object onto which to store the result.
      * @returns {Cartographic} The modified result parameter or a new Cartographic instance if none was provided.
      */
-    Extent.getNorthwest = function(extent, result) {
-                if (!defined(extent)) {
-            throw new DeveloperError('extent is required');
+    Rectangle.getNorthwest = function(rectangle, result) {
+                if (!defined(rectangle)) {
+            throw new DeveloperError('rectangle is required');
         }
         
         if (!defined(result)) {
-            return new Cartographic(extent.west, extent.north);
+            return new Cartographic(rectangle.west, rectangle.north);
         }
-        result.longitude = extent.west;
-        result.latitude = extent.north;
+        result.longitude = rectangle.west;
+        result.latitude = rectangle.north;
         result.height = 0.0;
         return result;
     };
 
     /**
-     * Computes the northeast corner of an extent.
-     * @memberof Extent
+     * Computes the northeast corner of an rectangle.
+     * @memberof Rectangle
      *
-     * @param {Extent} extent The extent for which to find the corner
+     * @param {Rectangle} rectangle The rectangle for which to find the corner
      * @param {Cartographic} [result] The object onto which to store the result.
      * @returns {Cartographic} The modified result parameter or a new Cartographic instance if none was provided.
      */
-    Extent.getNortheast = function(extent, result) {
-                if (!defined(extent)) {
-            throw new DeveloperError('extent is required');
+    Rectangle.getNortheast = function(rectangle, result) {
+                if (!defined(rectangle)) {
+            throw new DeveloperError('rectangle is required');
         }
         
         if (!defined(result)) {
-            return new Cartographic(extent.east, extent.north);
+            return new Cartographic(rectangle.east, rectangle.north);
         }
-        result.longitude = extent.east;
-        result.latitude = extent.north;
+        result.longitude = rectangle.east;
+        result.latitude = rectangle.north;
         result.height = 0.0;
         return result;
     };
 
     /**
-     * Computes the southeast corner of an extent.
-     * @memberof Extent
+     * Computes the southeast corner of an rectangle.
+     * @memberof Rectangle
      *
-     * @param {Extent} extent The extent for which to find the corner
+     * @param {Rectangle} rectangle The rectangle for which to find the corner
      * @param {Cartographic} [result] The object onto which to store the result.
      * @returns {Cartographic} The modified result parameter or a new Cartographic instance if none was provided.
      */
-    Extent.getSoutheast = function(extent, result) {
-                if (!defined(extent)) {
-            throw new DeveloperError('extent is required');
+    Rectangle.getSoutheast = function(rectangle, result) {
+                if (!defined(rectangle)) {
+            throw new DeveloperError('rectangle is required');
         }
         
         if (!defined(result)) {
-            return new Cartographic(extent.east, extent.south);
+            return new Cartographic(rectangle.east, rectangle.south);
         }
-        result.longitude = extent.east;
-        result.latitude = extent.south;
+        result.longitude = rectangle.east;
+        result.latitude = rectangle.south;
         result.height = 0.0;
         return result;
     };
 
     /**
-     * Computes the center of an extent.
-     * @memberof Extent
+     * Computes the center of an rectangle.
+     * @memberof Rectangle
      *
-     * @param {Extent} extent The extent for which to find the center
+     * @param {Rectangle} rectangle The rectangle for which to find the center
      * @param {Cartographic} [result] The object onto which to store the result.
      * @returns {Cartographic} The modified result parameter or a new Cartographic instance if none was provided.
      */
-    Extent.getCenter = function(extent, result) {
-                if (!defined(extent)) {
-            throw new DeveloperError('extent is required');
+    Rectangle.getCenter = function(rectangle, result) {
+                if (!defined(rectangle)) {
+            throw new DeveloperError('rectangle is required');
         }
         
         if (!defined(result)) {
-            return new Cartographic((extent.west + extent.east) * 0.5, (extent.south + extent.north) * 0.5);
+            return new Cartographic((rectangle.west + rectangle.east) * 0.5, (rectangle.south + rectangle.north) * 0.5);
         }
-        result.longitude = (extent.west + extent.east) * 0.5;
-        result.latitude = (extent.south + extent.north) * 0.5;
+        result.longitude = (rectangle.west + rectangle.east) * 0.5;
+        result.latitude = (rectangle.south + rectangle.north) * 0.5;
         result.height = 0.0;
         return result;
     };
 
     /**
-     * Computes the intersection of two extents
-     * @memberof Extent
+     * Computes the intersection of two rectangles
+     * @memberof Rectangle
      *
-     * @param {Extent} extent On extent to find an intersection
-     * @param otherExtent Another extent to find an intersection
-     * @param {Extent} [result] The object onto which to store the result.
-     * @returns {Extent} The modified result parameter or a new Extent instance if none was provided.
+     * @param {Rectangle} rectangle On rectangle to find an intersection
+     * @param otherRectangle Another rectangle to find an intersection
+     * @param {Rectangle} [result] The object onto which to store the result.
+     * @returns {Rectangle} The modified result parameter or a new Rectangle instance if none was provided.
      */
-    Extent.intersectWith = function(extent, otherExtent, result) {
-                if (!defined(extent)) {
-            throw new DeveloperError('extent is required');
+    Rectangle.intersectWith = function(rectangle, otherRectangle, result) {
+                if (!defined(rectangle)) {
+            throw new DeveloperError('rectangle is required');
         }
-        if (!defined(otherExtent)) {
-            throw new DeveloperError('otherExtent is required.');
+        if (!defined(otherRectangle)) {
+            throw new DeveloperError('otherRectangle is required.');
         }
         
-        var west = Math.max(extent.west, otherExtent.west);
-        var south = Math.max(extent.south, otherExtent.south);
-        var east = Math.min(extent.east, otherExtent.east);
-        var north = Math.min(extent.north, otherExtent.north);
+        var west = Math.max(rectangle.west, otherRectangle.west);
+        var south = Math.max(rectangle.south, otherRectangle.south);
+        var east = Math.min(rectangle.east, otherRectangle.east);
+        var north = Math.min(rectangle.north, otherRectangle.north);
         if (!defined(result)) {
-            return new Extent(west, south, east, north);
+            return new Rectangle(west, south, east, north);
         }
         result.west = west;
         result.south = south;
@@ -3077,59 +3135,59 @@ define('Core/Extent',[
     };
 
     /**
-     * Returns true if the cartographic is on or inside the extent, false otherwise.
-     * @memberof Extent
+     * Returns true if the cartographic is on or inside the rectangle, false otherwise.
+     * @memberof Rectangle
      *
-     * @param {Extent} extent The extent
+     * @param {Rectangle} rectangle The rectangle
      * @param {Cartographic} cartographic The cartographic to test.
-     * @returns {Boolean} true if the provided cartographic is inside the extent, false otherwise.
+     * @returns {Boolean} true if the provided cartographic is inside the rectangle, false otherwise.
      */
-    Extent.contains = function(extent, cartographic) {
-                if (!defined(extent)) {
-            throw new DeveloperError('extent is required');
+    Rectangle.contains = function(rectangle, cartographic) {
+                if (!defined(rectangle)) {
+            throw new DeveloperError('rectangle is required');
         }
         if (!defined(cartographic)) {
             throw new DeveloperError('cartographic is required.');
         }
         
-        return cartographic.longitude >= extent.west &&
-               cartographic.longitude <= extent.east &&
-               cartographic.latitude >= extent.south &&
-               cartographic.latitude <= extent.north;
+        return cartographic.longitude >= rectangle.west &&
+               cartographic.longitude <= rectangle.east &&
+               cartographic.latitude >= rectangle.south &&
+               cartographic.latitude <= rectangle.north;
     };
 
     /**
-     * Determines if the extent is empty, i.e., if <code>west >= east</code>
+     * Determines if the rectangle is empty, i.e., if <code>west >= east</code>
      * or <code>south >= north</code>.
      *
-     * @memberof Extent
+     * @memberof Rectangle
      *
-     * @param {Extent} extent The extent
-     * @returns {Boolean} True if the extent is empty; otherwise, false.
+     * @param {Rectangle} rectangle The rectangle
+     * @returns {Boolean} True if the rectangle is empty; otherwise, false.
      */
-    Extent.isEmpty = function(extent) {
-                if (!defined(extent)) {
-            throw new DeveloperError('extent is required');
+    Rectangle.isEmpty = function(rectangle) {
+                if (!defined(rectangle)) {
+            throw new DeveloperError('rectangle is required');
         }
         
-        return extent.west >= extent.east || extent.south >= extent.north;
+        return rectangle.west >= rectangle.east || rectangle.south >= rectangle.north;
     };
 
     var subsampleLlaScratch = new Cartographic();
     /**
-     * Samples an extent so that it includes a list of Cartesian points suitable for passing to
+     * Samples an rectangle so that it includes a list of Cartesian points suitable for passing to
      * {@link BoundingSphere#fromPoints}.  Sampling is necessary to account
-     * for extents that cover the poles or cross the equator.
+     * for rectangles that cover the poles or cross the equator.
      *
-     * @param {Extent} extent The extent to subsample.
+     * @param {Rectangle} rectangle The rectangle to subsample.
      * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid to use.
-     * @param {Number} [surfaceHeight=0.0] The height of the extent above the ellipsoid.
+     * @param {Number} [surfaceHeight=0.0] The height of the rectangle above the ellipsoid.
      * @param {Array} [result] The array of Cartesians onto which to store the result.
      * @returns {Array} The modified result parameter or a new Array of Cartesians instances if none was provided.
      */
-    Extent.subsample = function(extent, ellipsoid, surfaceHeight, result) {
-                if (!defined(extent)) {
-            throw new DeveloperError('extent is required');
+    Rectangle.subsample = function(rectangle, ellipsoid, surfaceHeight, result) {
+                if (!defined(rectangle)) {
+            throw new DeveloperError('rectangle is required');
         }
         
         ellipsoid = defaultValue(ellipsoid, Ellipsoid.WGS84);
@@ -3140,10 +3198,10 @@ define('Core/Extent',[
         }
         var length = 0;
 
-        var north = extent.north;
-        var south = extent.south;
-        var east = extent.east;
-        var west = extent.west;
+        var north = rectangle.north;
+        var south = rectangle.south;
+        var east = rectangle.east;
+        var west = rectangle.west;
 
         var lla = subsampleLlaScratch;
         lla.height = surfaceHeight;
@@ -3195,13 +3253,13 @@ define('Core/Extent',[
     };
 
     /**
-     * The largest possible extent.
-     * @memberof Extent
-     * @type Extent
+     * The largest possible rectangle.
+     * @memberof Rectangle
+     * @type Rectangle
     */
-    Extent.MAX_VALUE = freezeObject(new Extent(-Math.PI, -CesiumMath.PI_OVER_TWO, Math.PI, CesiumMath.PI_OVER_TWO));
+    Rectangle.MAX_VALUE = freezeObject(new Rectangle(-Math.PI, -CesiumMath.PI_OVER_TWO, Math.PI, CesiumMath.PI_OVER_TWO));
 
-    return Extent;
+    return Rectangle;
 });
 
 /*global define*/
@@ -3539,6 +3597,31 @@ define('Core/Cartesian4',[
         result.y = y;
         result.z = z;
         result.w = w;
+        return result;
+    };
+
+    /**
+     * Creates a Cartesian4 instance from a {@link Color}. <code>red</code>, <code>green</code>, <code>blue</code>,
+     * and <code>alpha</code> map to <code>x</code>, <code>y</code>, <code>z</code>, and <code>w</code>, respectively.
+     * @memberof Cartesian4
+     *
+     * @param {Color} color The source color.
+     * @param {Cartesian4} [result] The object onto which to store the result.
+     * @returns {Cartesian4} The modified result parameter or a new Cartesian4 instance if one was not provided.
+     */
+    Cartesian4.fromColor = function(color, result) {
+                if (!defined(color)) {
+            throw new DeveloperError('color is required');
+        }
+        
+        if (!defined(result)) {
+            return new Cartesian4(color.red, color.green, color.blue, color.alpha);
+        }
+
+        result.x = color.red;
+        result.y = color.green;
+        result.z = color.blue;
+        result.w = color.alpha;
         return result;
     };
 
@@ -4832,6 +4915,46 @@ define('Core/Matrix3',[
         return result;
     };
 
+    var scratchColumn = new Cartesian3();
+
+    /**
+     * Extracts the non-uniform scale assuming the matrix is an affine transformation.
+     * @memberof Matrix3
+     *
+     * @param {Matrix3} matrix The matrix.
+     * @param {Cartesian3} [result] The object onto which to store the result.
+     * @returns {Cartesian3} The modified result parameter or a new Cartesian3 instance if one was not provided.
+     */
+    Matrix3.getScale = function(matrix, result) {
+                if (!defined(matrix)) {
+            throw new DeveloperError('matrix is required.');
+        }
+        
+        if (!defined(result)) {
+            result = new Cartesian3();
+        }
+
+        result.x = Cartesian3.magnitude(Cartesian3.fromElements(matrix[0], matrix[1], matrix[2], scratchColumn));
+        result.y = Cartesian3.magnitude(Cartesian3.fromElements(matrix[3], matrix[4], matrix[5], scratchColumn));
+        result.z = Cartesian3.magnitude(Cartesian3.fromElements(matrix[6], matrix[7], matrix[8], scratchColumn));
+        return result;
+    };
+
+    var scratchScale = new Cartesian3();
+
+    /**
+     * Computes the maximum scale assuming the matrix is an affine transformation.
+     * The maximum scale is the maximum length of the column vectors.
+     * @memberof Matrix3
+     *
+     * @param {Matrix3} matrix The matrix.
+     * @returns {Number} The maximum scale.
+     */
+    Matrix3.getMaximumScale = function(matrix) {
+        Matrix3.getScale(matrix, scratchScale);
+        return Cartesian3.getMaximumComponent(scratchScale);
+    };
+
     /**
      * Computes the product of two matrices.
      * @memberof Matrix3
@@ -5258,11 +5381,22 @@ define('Core/Matrix3',[
             throw new DeveloperError('matrix is not invertible');
         }
 
-        var m = new Matrix3(m22 * m33 - m23 * m32, m13 * m32 - m12 * m33, m12 * m23 - m13 * m22,
-                            m23 * m31 - m21 * m33, m11 * m33 - m13 * m31, m13 * m21 - m11 * m23,
-                            m21 * m32 - m22 * m31, m12 * m31 - m11 * m32, m11 * m22 - m12 * m21);
+        if (!defined(result)) {
+            result = new Matrix3();
+        }
+
+        result[0] = m22 * m33 - m23 * m32;
+        result[1] = m23 * m31 - m21 * m33;
+        result[2] = m21 * m32 - m22 * m31;
+        result[3] = m13 * m32 - m12 * m33;
+        result[4] = m11 * m33 - m13 * m31;
+        result[5] = m12 * m31 - m11 * m32;
+        result[6] = m12 * m23 - m13 * m22;
+        result[7] = m13 * m21 - m11 * m23;
+        result[8] = m11 * m22 - m12 * m21;
+
        var scale = 1.0 / determinant;
-       return Matrix3.multiplyByScalar(m, scale, result);
+       return Matrix3.multiplyByScalar(result, scale, result);
     };
 
     /**
@@ -5560,6 +5694,7 @@ define('Core/Matrix4',[
      * @see Matrix4.computeViewportTransformation
      * @see Matrix2
      * @see Matrix3
+     * @see Packable
      */
     var Matrix4 = function(column0Row0, column1Row0, column2Row0, column3Row0,
                            column0Row1, column1Row1, column2Row1, column3Row1,
@@ -5581,6 +5716,87 @@ define('Core/Matrix4',[
         this[13] = defaultValue(column3Row1, 0.0);
         this[14] = defaultValue(column3Row2, 0.0);
         this[15] = defaultValue(column3Row3, 0.0);
+    };
+
+    /**
+     * The number of elements used to pack the object into an array.
+     * @Type {Number}
+     */
+    Matrix4.packedLength = 16;
+
+    /**
+     * Stores the provided instance into the provided array.
+     * @memberof Matrix4
+     *
+     * @param {Matrix4} value The value to pack.
+     * @param {Array} array The array to pack into.
+     * @param {Number} [startingIndex=0] The index into the array at which to start packing the elements.
+     */
+    Matrix4.pack = function(value, array, startingIndex) {
+                if (!defined(value)) {
+            throw new DeveloperError('value is required');
+        }
+
+        if (!defined(array)) {
+            throw new DeveloperError('array is required');
+        }
+        
+        startingIndex = defaultValue(startingIndex, 0);
+
+        array[startingIndex++] = value[0];
+        array[startingIndex++] = value[1];
+        array[startingIndex++] = value[2];
+        array[startingIndex++] = value[3];
+        array[startingIndex++] = value[4];
+        array[startingIndex++] = value[5];
+        array[startingIndex++] = value[6];
+        array[startingIndex++] = value[7];
+        array[startingIndex++] = value[8];
+        array[startingIndex++] = value[9];
+        array[startingIndex++] = value[10];
+        array[startingIndex++] = value[11];
+        array[startingIndex++] = value[12];
+        array[startingIndex++] = value[13];
+        array[startingIndex++] = value[14];
+        array[startingIndex] = value[15];
+    };
+
+    /**
+     * Retrieves an instance from a packed array.
+     * @memberof Matrix4
+     *
+     * @param {Array} array The packed array.
+     * @param {Number} [startingIndex=0] The starting index of the element to be unpacked.
+     * @param {Matrix4} [result] The object into which to store the result.
+     */
+    Matrix4.unpack = function(array, startingIndex, result) {
+                if (!defined(array)) {
+            throw new DeveloperError('array is required');
+        }
+        
+        startingIndex = defaultValue(startingIndex, 0);
+
+        if (!defined(result)) {
+            result = new Matrix4();
+        }
+
+        result[0] = array[startingIndex++];
+        result[1] = array[startingIndex++];
+        result[2] = array[startingIndex++];
+        result[3] = array[startingIndex++];
+        result[4] = array[startingIndex++];
+        result[5] = array[startingIndex++];
+        result[6] = array[startingIndex++];
+        result[7] = array[startingIndex++];
+        result[8] = array[startingIndex++];
+        result[9] = array[startingIndex++];
+        result[10] = array[startingIndex++];
+        result[11] = array[startingIndex++];
+        result[12] = array[startingIndex++];
+        result[13] = array[startingIndex++];
+        result[14] = array[startingIndex++];
+        result[15] = array[startingIndex];
+        return result;
     };
 
     /**
@@ -5644,35 +5860,7 @@ define('Core/Matrix4',[
      * var v2 = [0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 2.0, 3.0, 3.0, 3.0, 3.0, 4.0, 4.0, 4.0, 4.0];
      * var m2 = Cesium.Matrix4.fromArray(v2, 2);
      */
-    Matrix4.fromArray = function(array, startingIndex, result) {
-                if (!defined(array)) {
-            throw new DeveloperError('array is required');
-        }
-        
-        startingIndex = defaultValue(startingIndex, 0);
-
-        if (!defined(result)) {
-            result = new Matrix4();
-        }
-
-        result[0] = array[startingIndex];
-        result[1] = array[startingIndex + 1];
-        result[2] = array[startingIndex + 2];
-        result[3] = array[startingIndex + 3];
-        result[4] = array[startingIndex + 4];
-        result[5] = array[startingIndex + 5];
-        result[6] = array[startingIndex + 6];
-        result[7] = array[startingIndex + 7];
-        result[8] = array[startingIndex + 8];
-        result[9] = array[startingIndex + 9];
-        result[10] = array[startingIndex + 10];
-        result[11] = array[startingIndex + 11];
-        result[12] = array[startingIndex + 12];
-        result[13] = array[startingIndex + 13];
-        result[14] = array[startingIndex + 14];
-        result[15] = array[startingIndex + 15];
-        return result;
-    };
+    Matrix4.fromArray = Matrix4.unpack;
 
     /**
      * Computes a Matrix4 instance from a column-major order array.
@@ -6679,6 +6867,47 @@ define('Core/Matrix4',[
         return result;
     };
 
+    var scratchColumn = new Cartesian3();
+
+    /**
+     * Extracts the non-uniform scale assuming the matrix is an affine transformation.
+     * @memberof Matrix4
+     *
+     * @param {Matrix4} matrix The matrix.
+     * @param {Cartesian3} [result] The object onto which to store the result.
+     * @returns {Cartesian3} The modified result parameter or a new Cartesian3 instance if one was not provided.
+     */
+    Matrix4.getScale = function(matrix, result) {
+                if (!defined(matrix)) {
+            throw new DeveloperError('matrix is required.');
+        }
+        
+        if (!defined(result)) {
+            result = new Cartesian3();
+        }
+
+        result.x = Cartesian3.magnitude(Cartesian3.fromElements(matrix[0], matrix[1], matrix[2], scratchColumn));
+        result.y = Cartesian3.magnitude(Cartesian3.fromElements(matrix[4], matrix[5], matrix[6], scratchColumn));
+        result.z = Cartesian3.magnitude(Cartesian3.fromElements(matrix[8], matrix[9], matrix[10], scratchColumn));
+        return result;
+    };
+
+    var scratchScale = new Cartesian3();
+
+    /**
+     * Computes the maximum scale assuming the matrix is an affine transformation.
+     * The maximum scale is the maximum length of the column vectors in the upper-left
+     * 3x3 matrix.
+     * @memberof Matrix4
+     *
+     * @param {Matrix4} matrix The matrix.
+     * @returns {Number} The maximum scale.
+     */
+    Matrix4.getMaximumScale = function(matrix) {
+        Matrix4.getScale(matrix, scratchScale);
+        return Cartesian3.getMaximumComponent(scratchScale);
+    };
+
     /**
      * Computes the product of two matrices.
      * @memberof Matrix4
@@ -6883,7 +7112,7 @@ define('Core/Matrix4',[
      *
      * @returns {Matrix4} The modified result parameter or a new Matrix4 instance if one was not provided.
      *
-     * @see Matrix4#fromTranslation
+     * @see Matrix4.fromTranslation
      *
      * @example
      * // Instead of Matrix4.multiply(m, Cesium.Matrix4.fromTranslation(position), m);
@@ -6946,8 +7175,8 @@ define('Core/Matrix4',[
      *
      * @returns {Matrix4} The modified result parameter or a new Matrix4 instance if one was not provided.
      *
-     * @see Matrix4#fromUniformScale
-     * @see Matrix4#multiplyByScale
+     * @see Matrix4.fromUniformScale
+     * @see Matrix4.multiplyByScale
      *
      * @example
      * // Instead of Matrix4.multiply(m, Cesium.Matrix4.fromUniformScale(scale), m);
@@ -6977,8 +7206,8 @@ define('Core/Matrix4',[
      *
      * @returns {Matrix4} The modified result parameter or a new Matrix4 instance if one was not provided.
      *
-     * @see Matrix4#fromScale
-     * @see Matrix4#multiplyByUniformScale
+     * @see Matrix4.fromScale
+     * @see Matrix4.multiplyByUniformScale
      *
      * @example
      * // Instead of Matrix4.multiply(m, Cesium.Matrix4.fromScale(scale), m);
@@ -7897,7 +8126,7 @@ define('Core/BoundingSphere',[
         './defined',
         './DeveloperError',
         './Ellipsoid',
-        './Extent',
+        './Rectangle',
         './GeographicProjection',
         './Intersect',
         './Interval',
@@ -7909,7 +8138,7 @@ define('Core/BoundingSphere',[
         defined,
         DeveloperError,
         Ellipsoid,
-        Extent,
+        Rectangle,
         GeographicProjection,
         Intersect,
         Interval,
@@ -8105,44 +8334,44 @@ define('Core/BoundingSphere',[
     };
 
     var defaultProjection = new GeographicProjection();
-    var fromExtent2DLowerLeft = new Cartesian3();
-    var fromExtent2DUpperRight = new Cartesian3();
-    var fromExtent2DSouthwest = new Cartographic();
-    var fromExtent2DNortheast = new Cartographic();
+    var fromRectangle2DLowerLeft = new Cartesian3();
+    var fromRectangle2DUpperRight = new Cartesian3();
+    var fromRectangle2DSouthwest = new Cartographic();
+    var fromRectangle2DNortheast = new Cartographic();
 
     /**
-     * Computes a bounding sphere from an extent projected in 2D.
+     * Computes a bounding sphere from an rectangle projected in 2D.
      *
      * @memberof BoundingSphere
      *
-     * @param {Extent} extent The extent around which to create a bounding sphere.
-     * @param {Object} [projection=GeographicProjection] The projection used to project the extent into 2D.
+     * @param {Rectangle} rectangle The rectangle around which to create a bounding sphere.
+     * @param {Object} [projection=GeographicProjection] The projection used to project the rectangle into 2D.
      * @param {BoundingSphere} [result] The object onto which to store the result.
      * @returns {BoundingSphere} The modified result parameter or a new BoundingSphere instance if none was provided.
      */
-    BoundingSphere.fromExtent2D = function(extent, projection, result) {
-        return BoundingSphere.fromExtentWithHeights2D(extent, projection, 0.0, 0.0, result);
+    BoundingSphere.fromRectangle2D = function(rectangle, projection, result) {
+        return BoundingSphere.fromRectangleWithHeights2D(rectangle, projection, 0.0, 0.0, result);
     };
 
     /**
-     * Computes a bounding sphere from an extent projected in 2D.  The bounding sphere accounts for the
-     * object's minimum and maximum heights over the extent.
+     * Computes a bounding sphere from an rectangle projected in 2D.  The bounding sphere accounts for the
+     * object's minimum and maximum heights over the rectangle.
      *
      * @memberof BoundingSphere
      *
-     * @param {Extent} extent The extent around which to create a bounding sphere.
-     * @param {Object} [projection=GeographicProjection] The projection used to project the extent into 2D.
-     * @param {Number} [minimumHeight=0.0] The minimum height over the extent.
-     * @param {Number} [maximumHeight=0.0] The maximum height over the extent.
+     * @param {Rectangle} rectangle The rectangle around which to create a bounding sphere.
+     * @param {Object} [projection=GeographicProjection] The projection used to project the rectangle into 2D.
+     * @param {Number} [minimumHeight=0.0] The minimum height over the rectangle.
+     * @param {Number} [maximumHeight=0.0] The maximum height over the rectangle.
      * @param {BoundingSphere} [result] The object onto which to store the result.
      * @returns {BoundingSphere} The modified result parameter or a new BoundingSphere instance if none was provided.
      */
-    BoundingSphere.fromExtentWithHeights2D = function(extent, projection, minimumHeight, maximumHeight, result) {
+    BoundingSphere.fromRectangleWithHeights2D = function(rectangle, projection, minimumHeight, maximumHeight, result) {
         if (!defined(result)) {
             result = new BoundingSphere();
         }
 
-        if (!defined(extent)) {
+        if (!defined(rectangle)) {
             result.center = Cartesian3.clone(Cartesian3.ZERO, result.center);
             result.radius = 0.0;
             return result;
@@ -8150,13 +8379,13 @@ define('Core/BoundingSphere',[
 
         projection = defaultValue(projection, defaultProjection);
 
-        Extent.getSouthwest(extent, fromExtent2DSouthwest);
-        fromExtent2DSouthwest.height = minimumHeight;
-        Extent.getNortheast(extent, fromExtent2DNortheast);
-        fromExtent2DNortheast.height = maximumHeight;
+        Rectangle.getSouthwest(rectangle, fromRectangle2DSouthwest);
+        fromRectangle2DSouthwest.height = minimumHeight;
+        Rectangle.getNortheast(rectangle, fromRectangle2DNortheast);
+        fromRectangle2DNortheast.height = maximumHeight;
 
-        var lowerLeft = projection.project(fromExtent2DSouthwest, fromExtent2DLowerLeft);
-        var upperRight = projection.project(fromExtent2DNortheast, fromExtent2DUpperRight);
+        var lowerLeft = projection.project(fromRectangle2DSouthwest, fromRectangle2DLowerLeft);
+        var upperRight = projection.project(fromRectangle2DNortheast, fromRectangle2DUpperRight);
 
         var width = upperRight.x - lowerLeft.x;
         var height = upperRight.y - lowerLeft.y;
@@ -8170,26 +8399,26 @@ define('Core/BoundingSphere',[
         return result;
     };
 
-    var fromExtent3DScratch = [];
+    var fromRectangle3DScratch = [];
 
     /**
-     * Computes a bounding sphere from an extent in 3D. The bounding sphere is created using a subsample of points
-     * on the ellipsoid and contained in the extent. It may not be accurate for all extents on all types of ellipsoids.
+     * Computes a bounding sphere from an rectangle in 3D. The bounding sphere is created using a subsample of points
+     * on the ellipsoid and contained in the rectangle. It may not be accurate for all rectangles on all types of ellipsoids.
      * @memberof BoundingSphere
      *
-     * @param {Extent} extent The valid extent used to create a bounding sphere.
-     * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid used to determine positions of the extent.
+     * @param {Rectangle} rectangle The valid rectangle used to create a bounding sphere.
+     * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid used to determine positions of the rectangle.
      * @param {Number} [surfaceHeight=0.0] The height above the surface of the ellipsoid.
      * @param {BoundingSphere} [result] The object onto which to store the result.
      * @returns {BoundingSphere} The modified result parameter or a new BoundingSphere instance if none was provided.
      */
-    BoundingSphere.fromExtent3D = function(extent, ellipsoid, surfaceHeight, result) {
+    BoundingSphere.fromRectangle3D = function(rectangle, ellipsoid, surfaceHeight, result) {
         ellipsoid = defaultValue(ellipsoid, Ellipsoid.WGS84);
         surfaceHeight = defaultValue(surfaceHeight, 0.0);
 
         var positions;
-        if (defined(extent)) {
-            positions = Extent.subsample(extent, ellipsoid, surfaceHeight, fromExtent3DScratch);
+        if (defined(rectangle)) {
+            positions = Rectangle.subsample(rectangle, ellipsoid, surfaceHeight, fromRectangle3DScratch);
         }
 
         return BoundingSphere.fromPoints(positions, result);
@@ -8385,8 +8614,8 @@ define('Core/BoundingSphere',[
      *
      * @memberof BoundingSphere
      *
-     * @param {Number} [corner] The minimum height over the extent.
-     * @param {Number} [oppositeCorner] The maximum height over the extent.
+     * @param {Number} [corner] The minimum height over the rectangle.
+     * @param {Number} [oppositeCorner] The maximum height over the rectangle.
      * @param {BoundingSphere} [result] The object onto which to store the result.
      *
      * @returns {BoundingSphere} The modified result parameter or a new BoundingSphere instance if none was provided.
@@ -8622,8 +8851,6 @@ define('Core/BoundingSphere',[
         return Intersect.INSIDE;
     };
 
-    var columnScratch = new Cartesian3();
-
     /**
      * Applies a 4x4 affine transformation matrix to a bounding sphere.
      * @memberof BoundingSphere
@@ -8647,9 +8874,7 @@ define('Core/BoundingSphere',[
         }
 
         result.center = Matrix4.multiplyByPoint(transform, sphere.center, result.center);
-        result.radius = Math.max(Cartesian3.magnitude(Matrix4.getColumn(transform, 0, columnScratch)),
-                Cartesian3.magnitude(Matrix4.getColumn(transform, 1, columnScratch)),
-                Cartesian3.magnitude(Matrix4.getColumn(transform, 2, columnScratch))) * sphere.radius;
+        result.radius = Matrix4.getMaximumScale(transform) * sphere.radius;
 
         return result;
     };
@@ -9186,7 +9411,7 @@ define('Core/FeatureDetection',[
 
     function extractVersion(versionString) {
         var parts = versionString.split('.');
-        for ( var i = 0, len = parts.length; i < len; ++i) {
+        for (var i = 0, len = parts.length; i < len; ++i) {
             parts[i] = parseInt(parts[i], 10);
         }
         return parts;
@@ -9324,33 +9549,6 @@ define('Core/FeatureDetection',[
      */
     FeatureDetection.supportsTypedArrays = function() {
         return typeof ArrayBuffer !== 'undefined';
-    };
-
-    var supportsTransferringArrayBuffersResult;
-
-    /**
-     * Detects whether the current browser can transfer an ArrayBuffer
-     * to / from a web worker.
-     *
-     * @returns true if the browser can transfer ArrayBuffers; otherwise, false.
-     */
-    FeatureDetection.supportsTransferringArrayBuffers = function() {
-        if (!defined(supportsTransferringArrayBuffersResult)) {
-            if (!FeatureDetection.supportsTypedArrays()) {
-                supportsTransferringArrayBuffersResult = false;
-                return;
-            }
-
-            var arrayBuffer = new ArrayBuffer(1);
-            try {
-                /*global postMessage*/
-                postMessage({ value : arrayBuffer }, [arrayBuffer]);
-                supportsTransferringArrayBuffersResult = true;
-            } catch(e) {
-                supportsTransferringArrayBuffersResult = false;
-            }
-        }
-        return supportsTransferringArrayBuffersResult;
     };
 
     return FeatureDetection;
@@ -11125,7 +11323,7 @@ define('Core/Geometry',[
      * @demo <a href="http://cesiumjs.org/Cesium/Apps/Sandcastle/index.html?src=Geometry%20and%20Appearances.html">Geometry and Appearances Demo</a>
      *
      * @see PolygonGeometry
-     * @see ExtentGeometry
+     * @see RectangleGeometry
      * @see EllipseGeometry
      * @see CircleGeometry
      * @see WallGeometry
@@ -11910,7077 +12108,21 @@ define('Core/CircleOutlineGeometry',[
     return CircleOutlineGeometry;
 });
 /*global define*/
-define('Core/Color',[
-        './defaultValue',
-        './defined',
-        './freezeObject',
-        './DeveloperError',
-        './FeatureDetection',
-        './Math'
-    ], function(
-        defaultValue,
-        defined,
-        freezeObject,
-        DeveloperError,
-        FeatureDetection,
-        CesiumMath) {
-    "use strict";
-
-    function hue2rgb(m1, m2, h) {
-        if (h < 0) {
-            h += 1;
-        }
-        if (h > 1) {
-            h -= 1;
-        }
-        if (h * 6 < 1) {
-            return m1 + (m2 - m1) * 6 * h;
-        }
-        if (h * 2 < 1) {
-            return m2;
-        }
-        if (h * 3 < 2) {
-            return m1 + (m2 - m1) * (2 / 3 - h) * 6;
-        }
-        return m1;
-    }
-
-    /**
-     * A color, specified using red, green, blue, and alpha values,
-     * which range from <code>0</code> (no intensity) to <code>1.0</code> (full intensity).
-     * @param {Number} [red=1.0] The red component.
-     * @param {Number} [green=1.0] The green component.
-     * @param {Number} [blue=1.0] The blue component.
-     * @param {Number} [alpha=1.0] The alpha component.
-     *
-     * @constructor
-     * @alias Color
-     *
-     * @see Packable
-     */
-    var Color = function(red, green, blue, alpha) {
-        /**
-         * The red component.
-         * @type {Number}
-         * @default 1.0
-         */
-        this.red = defaultValue(red, 1.0);
-        /**
-         * The green component.
-         * @type {Number}
-         * @default 1.0
-         */
-        this.green = defaultValue(green, 1.0);
-        /**
-         * The blue component.
-         * @type {Number}
-         * @default 1.0
-         */
-        this.blue = defaultValue(blue, 1.0);
-        /**
-         * The alpha component.
-         * @type {Number}
-         * @default 1.0
-         */
-        this.alpha = defaultValue(alpha, 1.0);
-    };
-
-    /**
-     * Creates a new Color specified using red, green, blue, and alpha values
-     * that are in the range of 0 to 255, converting them internally to a range of 0.0 to 1.0.
-     * @memberof Color
-     *
-     * @param {Number} [red=255] The red component.
-     * @param {Number} [green=255] The green component.
-     * @param {Number} [blue=255] The blue component.
-     * @param {Number} [alpha=255] The alpha component.
-     * @returns {Color} A new color instance.
-     */
-    Color.fromBytes = function(red, green, blue, alpha) {
-        red = Color.byteToFloat(defaultValue(red, 255.0));
-        green = Color.byteToFloat(defaultValue(green, 255.0));
-        blue = Color.byteToFloat(defaultValue(blue, 255.0));
-        alpha = Color.byteToFloat(defaultValue(alpha, 255.0));
-        return new Color(red, green, blue, alpha);
-    };
-
-    var scratchArrayBuffer;
-    var scratchUint32Array;
-    var scratchUint8Array;
-    if (FeatureDetection.supportsTypedArrays()) {
-        scratchArrayBuffer = new ArrayBuffer(4);
-        scratchUint32Array = new Uint32Array(scratchArrayBuffer);
-        scratchUint8Array = new Uint8Array(scratchArrayBuffer);
-    }
-
-    /**
-     * Creates a new Color from a single numeric unsigned 32-bit RGBA value, using the endianness
-     * of the system.
-     *
-     * @memberof Color
-     *
-     * @param {Number} rgba A single numeric unsigned 32-bit RGBA value.
-     * @returns {Color} A new color instance.
-     *
-     * @example
-     * var color = Cesium.Color.fromRgba(0x67ADDFFF);
-     *
-     * @see Color#toRgba
-     */
-    Color.fromRgba = function(rgba) {
-        // scratchUint32Array and scratchUint8Array share an underlying array buffer
-        scratchUint32Array[0] = rgba;
-        return Color.fromBytes(scratchUint8Array[0], scratchUint8Array[1], scratchUint8Array[2], scratchUint8Array[3]);
-    };
-
-    /**
-     * Creates a Color instance from hue, saturation, and lightness.
-     * @memberof Color
-     *
-     * @param {Number} [hue=0] The hue angle 0...1
-     * @param {Number} [saturation=0] The saturation value 0...1
-     * @param {Number} [lightness=0] The lightness value 0...1
-     * @param {Number} [alpha=1.0] The alpha component 0...1
-     * @returns {Color} The color object.
-     *
-     * @see <a href="http://www.w3.org/TR/css3-color/#hsl-color">CSS color values</a>
-     */
-    Color.fromHsl = function(hue, saturation, lightness, alpha) {
-        hue = defaultValue(hue, 0.0) % 1.0;
-        saturation = defaultValue(saturation, 0.0);
-        lightness = defaultValue(lightness, 0.0);
-        alpha = defaultValue(alpha, 1.0);
-
-        var red = lightness;
-        var green = lightness;
-        var blue = lightness;
-
-        if (saturation !== 0) {
-            var m2;
-            if (lightness < 0.5) {
-                m2 = lightness * (1 + saturation);
-            } else {
-                m2 = lightness + saturation - lightness * saturation;
-            }
-
-            var m1 = 2.0 * lightness - m2;
-            red = hue2rgb(m1, m2, hue + 1 / 3);
-            green = hue2rgb(m1, m2, hue);
-            blue = hue2rgb(m1, m2, hue - 1 / 3);
-        }
-
-        return new Color(red, green, blue, alpha);
-    };
-
-    /**
-     * Creates a random color using the provided options. For reproducible random colors, you should
-     * call {@link CesiumMath#setRandomNumberSeed} once at the beginning of your application.
-     * @memberof Color
-     *
-     * @param {Object} [options] Object containing the options.
-     * @param {Number} [options.red] If specified, the red component to use instead of a randomized value.
-     * @param {Number} [options.minimumRed=0.0] The maximum red value to generate if none was specified.
-     * @param {Number} [options.maximumRed=1.0] The minimum red value to generate if none was specified.
-     * @param {Number} [options.green] If specified, the green component to use instead of a randomized value.
-     * @param {Number} [options.minimumGreen=0.0] The maximum green value to generate if none was specified.
-     * @param {Number} [options.maximumGreen=1.0] The minimum green value to generate if none was specified.
-     * @param {Number} [options.blue] If specified, the blue component to use instead of a randomized value.
-     * @param {Number} [options.minimumBlue=0.0] The maximum blue value to generate if none was specified.
-     * @param {Number} [options.maximumBlue=1.0] The minimum blue value to generate if none was specified.
-     * @param {Number} [options.alpha] If specified, the alpha component to use instead of a randomized value.
-     * @param {Number} [options.minimumAlpha=0.0] The maximum alpha value to generate if none was specified.
-     * @param {Number} [options.maximumAlpha=1.0] The minimum alpha value to generate if none was specified.
-     * @param {Color} [result] The object to store the result in, if undefined a new instance will be created.
-     *
-     * @returns {Color} The modified result parameter or a new instance if result was undefined.
-     *
-     * @exception {DeveloperError} minimumRed must be less than or equal to maximumRed.
-     * @exception {DeveloperError} minimumGreen must be less than or equal to maximumGreen.
-     * @exception {DeveloperError} minimumBlue must be less than or equal to maximumBlue.
-     * @exception {DeveloperError} minimumAlpha must be less than or equal to maximumAlpha.
-     *
-     * @example
-     * //Create a completely random color
-     * var color = Cesium.Color.fromRandom();
-     *
-     * //Create a random shade of yellow.
-     * var color = Cesium.Color.fromRandom({
-     *     red : 1.0,
-     *     green : 1.0,
-     *     alpha : 1.0
-     * });
-     *
-     * //Create a random bright color.
-     * var color = Cesium.Color.fromRandom({
-     *     minimumRed : 0.75,
-     *     minimumGreen : 0.75,
-     *     minimumBlue : 0.75,
-     *     alpha : 1.0
-     * });
-     */
-    Color.fromRandom = function(options, result) {
-        options = defaultValue(options, defaultValue.EMPTY_OBJECT);
-
-        var red = options.red;
-        if (!defined(red)) {
-            var minimumRed = defaultValue(options.minimumRed, 0);
-            var maximumRed = defaultValue(options.maximumRed, 1.0);
-
-                        if (minimumRed > maximumRed) {
-                throw new DeveloperError("minimumRed must be less than or equal to maximumRed");
-            }
-            
-            red = minimumRed + (CesiumMath.nextRandomNumber() * (maximumRed - minimumRed));
-        }
-
-        var green = options.green;
-        if (!defined(green)) {
-            var minimumGreen = defaultValue(options.minimumGreen, 0);
-            var maximumGreen = defaultValue(options.maximumGreen, 1.0);
-
-                        if (minimumGreen > maximumGreen) {
-                throw new DeveloperError("minimumGreen must be less than or equal to maximumGreen");
-            }
-            
-            green = minimumGreen + (CesiumMath.nextRandomNumber() * (maximumGreen - minimumGreen));
-        }
-
-        var blue = options.blue;
-        if (!defined(blue)) {
-            var minimumBlue = defaultValue(options.minimumBlue, 0);
-            var maximumBlue = defaultValue(options.maximumBlue, 1.0);
-
-                        if (minimumBlue > maximumBlue) {
-                throw new DeveloperError("minimumBlue must be less than or equal to maximumBlue");
-            }
-            
-            blue = minimumBlue + (CesiumMath.nextRandomNumber() * (maximumBlue - minimumBlue));
-        }
-
-        var alpha = options.alpha;
-        if (!defined(alpha)) {
-            var minimumAlpha = defaultValue(options.minimumAlpha, 0);
-            var maximumAlpha = defaultValue(options.maximumAlpha, 1.0);
-
-                        if (minimumAlpha > maximumAlpha) {
-                throw new DeveloperError("minimumAlpha must be less than or equal to maximumAlpha");
-            }
-            
-            alpha = minimumAlpha + (CesiumMath.nextRandomNumber() * (maximumAlpha - minimumAlpha));
-        }
-
-        if (!defined(result)) {
-            return new Color(red, green, blue, alpha);
-        }
-
-        result.red = red;
-        result.green = green;
-        result.blue = blue;
-        result.alpha = alpha;
-        return result;
-    };
-
-    //#rgb
-    var rgbMatcher = /^#([0-9a-f])([0-9a-f])([0-9a-f])$/i;
-    //#rrggbb
-    var rrggbbMatcher = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i;
-    //rgb(), rgba(), or rgb%()
-    var rgbParenthesesMatcher = /^rgba?\(\s*([0-9.]+%?)\s*,\s*([0-9.]+%?)\s*,\s*([0-9.]+%?)(?:\s*,\s*([0-9.]+))?\s*\)$/i;
-    //hsl(), hsla(), or hsl%()
-    var hslParenthesesMatcher = /^hsla?\(\s*([0-9.]+)\s*,\s*([0-9.]+%)\s*,\s*([0-9.]+%)(?:\s*,\s*([0-9.]+))?\s*\)$/i;
-
-    /**
-     * Creates a Color instance from a CSS color value.
-     * @memberof Color
-     *
-     * @param {String} color The CSS color value in #rgb, #rrggbb, rgb(), rgba(), hsl(), or hsla() format.
-     * @returns {Color} The color object, or undefined if the string was not a valid CSS color.
-     *
-     * @example
-     * var cesiumBlue = Cesium.Color.fromCssColorString('#67ADDF');
-     * var green = Cesium.Color.fromCssColorString('green');
-     *
-     * @see <a href="http://www.w3.org/TR/css3-color">CSS color values</a>
-     */
-    Color.fromCssColorString = function(color) {
-                if (!defined(color)) {
-            throw new DeveloperError('color is required');
-        }
-        
-        var namedColor = Color[color.toUpperCase()];
-        if (defined(namedColor)) {
-            return Color.clone(namedColor);
-        }
-
-        var matches = rgbMatcher.exec(color);
-        if (matches !== null) {
-            return new Color(parseInt(matches[1], 16) / 15.0,
-                             parseInt(matches[2], 16) / 15.0,
-                             parseInt(matches[3], 16) / 15.0);
-        }
-
-        matches = rrggbbMatcher.exec(color);
-        if (matches !== null) {
-            return new Color(parseInt(matches[1], 16) / 255.0,
-                             parseInt(matches[2], 16) / 255.0,
-                             parseInt(matches[3], 16) / 255.0);
-        }
-
-        matches = rgbParenthesesMatcher.exec(color);
-        if (matches !== null) {
-            return new Color(parseFloat(matches[1]) / ('%' === matches[1].substr(-1) ? 100.0 : 255.0),
-                             parseFloat(matches[2]) / ('%' === matches[2].substr(-1) ? 100.0 : 255.0),
-                             parseFloat(matches[3]) / ('%' === matches[3].substr(-1) ? 100.0 : 255.0),
-                             parseFloat(defaultValue(matches[4], '1.0')));
-        }
-
-        matches = hslParenthesesMatcher.exec(color);
-        if (matches !== null) {
-            return Color.fromHsl(parseFloat(matches[1]) / 360.0,
-                                 parseFloat(matches[2]) / 100.0,
-                                 parseFloat(matches[3]) / 100.0,
-                                 parseFloat(defaultValue(matches[4], '1.0')));
-        }
-
-        return undefined;
-    };
-
-    /**
-     * The number of elements used to pack the object into an array.
-     * @Type {Number}
-     */
-    Color.packedLength = 4;
-
-    /**
-     * Stores the provided instance into the provided array.
-     * @memberof Color
-     *
-     * @param {Color} value The value to pack.
-     * @param {Array} array The array to pack into.
-     * @param {Number} [startingIndex=0] The index into the array at which to start packing the elements.
-     */
-    Color.pack = function(value, array, startingIndex) {
-                if (!defined(value)) {
-            throw new DeveloperError('value is required');
-        }
-        if (!defined(array)) {
-            throw new DeveloperError('array is required');
-        }
-        
-        startingIndex = defaultValue(startingIndex, 0);
-        array[startingIndex++] = value.red;
-        array[startingIndex++] = value.green;
-        array[startingIndex++] = value.blue;
-        array[startingIndex] = value.alpha;
-    };
-
-    /**
-     * Retrieves an instance from a packed array.
-     * @memberof Color
-     *
-     * @param {Array} array The packed array.
-     * @param {Number} [startingIndex=0] The starting index of the element to be unpacked.
-     * @param {Color} [result] The object into which to store the result.
-     */
-    Color.unpack = function(array, startingIndex, result) {
-                if (!defined(array)) {
-            throw new DeveloperError('array is required');
-        }
-        
-        startingIndex = defaultValue(startingIndex, 0);
-        if (!defined(result)) {
-            result = new Color();
-        }
-        result.red = array[startingIndex++];
-        result.green = array[startingIndex++];
-        result.blue = array[startingIndex++];
-        result.alpha = array[startingIndex];
-        return result;
-    };
-
-    /**
-     * Converts a 'byte' color component in the range of 0 to 255 into
-     * a 'float' color component in the range of 0 to 1.0.
-     * @memberof Color
-     *
-     * @param {Number} number The number to be converted.
-     * @returns {number} The converted number.
-     */
-    Color.byteToFloat = function(number) {
-        return number / 255.0;
-    };
-
-    /**
-     * Converts a 'float' color component in the range of 0 to 1.0 into
-     * a 'byte' color component in the range of 0 to 255.
-     * @memberof Color
-     *
-     * @param {Number} number The number to be converted.
-     * @returns {number} The converted number.
-     */
-    Color.floatToByte = function(number) {
-        return number === 1.0 ? 255.0 : (number * 256.0) | 0;
-    };
-
-    /**
-     * Duplicates a Color.
-     * @memberof Color
-     *
-     * @param {Color} color The Color to duplicate.
-     * @param {Color} [result] The object to store the result in, if undefined a new instance will be created.
-     * @returns {Color} The modified result parameter or a new instance if result was undefined. (Returns undefined if color is undefined)
-     */
-    Color.clone = function(color, result) {
-        if (!defined(color)) {
-            return undefined;
-        }
-        if (!defined(result)) {
-            return new Color(color.red, color.green, color.blue, color.alpha);
-        }
-        result.red = color.red;
-        result.green = color.green;
-        result.blue = color.blue;
-        result.alpha = color.alpha;
-        return result;
-    };
-
-    /**
-     * Returns true if the first Color equals the second color.
-     * @memberof Color
-     *
-     * @param {Color} left The first Color to compare for equality.
-     * @param {Color} right The second Color to compare for equality.
-     * @returns {Boolean} <code>true</code> if the Colors are equal; otherwise, <code>false</code>.
-     */
-    Color.equals = function(left, right) {
-        return (left === right) || //
-               (defined(left) && //
-                defined(right) && //
-                left.red === right.red && //
-                left.green === right.green && //
-                left.blue === right.blue && //
-                left.alpha === right.alpha);
-    };
-
-    /**
-     * Returns a duplicate of a Color instance.
-     * @memberof Color
-     *
-     * @param {Color} [result] The object to store the result in, if undefined a new instance will be created.
-     * @returns {Color} The modified result parameter or a new instance if result was undefined.
-     */
-    Color.prototype.clone = function(result) {
-        return Color.clone(this, result);
-    };
-
-    /**
-     * Returns true if this Color equals other.
-     * @memberof Color
-     *
-     * @param {Color} other The Color to compare for equality.
-     * @returns {Boolean} <code>true</code> if the Colors are equal; otherwise, <code>false</code>.
-     */
-    Color.prototype.equals = function(other) {
-        return Color.equals(this, other);
-    };
-
-    /**
-     * Returns <code>true</code> if this Color equals other componentwise within the specified epsilon.
-     * @memberof Color
-     *
-     * @param {Color} other The Color to compare for equality.
-     * @param {Number} [epsilon=0.0] The epsilon to use for equality testing.
-     * @returns {Boolean} <code>true</code> if the Colors are equal within the specified epsilon; otherwise, <code>false</code>.
-     */
-    Color.prototype.equalsEpsilon = function(other, epsilon) {
-        return (this === other) || //
-               ((defined(other)) && //
-                (Math.abs(this.red - other.red) <= epsilon) && //
-                (Math.abs(this.green - other.green) <= epsilon) && //
-                (Math.abs(this.blue - other.blue) <= epsilon) && //
-                (Math.abs(this.alpha - other.alpha) <= epsilon));
-    };
-
-    /**
-     * Creates a string representing this Color in the format '(red, green, blue, alpha)'.
-     * @memberof Color
-     *
-     * @returns {String} A string representing this Color in the format '(red, green, blue, alpha)'.
-     */
-    Color.prototype.toString = function() {
-        return '(' + this.red + ', ' + this.green + ', ' + this.blue + ', ' + this.alpha + ')';
-    };
-
-    /**
-     * Creates a string containing the CSS color value for this color.
-     * @memberof Color
-     *
-     * @returns {String} The CSS equivalent of this color.
-     * @see <a href="http://www.w3.org/TR/css3-color/#rgba-color">CSS RGB or RGBA color values</a>
-     */
-    Color.prototype.toCssColorString = function() {
-        var red = Color.floatToByte(this.red);
-        var green = Color.floatToByte(this.green);
-        var blue = Color.floatToByte(this.blue);
-        if (this.alpha === 1) {
-            return 'rgb(' + red + ',' + green + ',' + blue + ')';
-        }
-        return 'rgba(' + red + ',' + green + ',' + blue + ',' + this.alpha + ')';
-    };
-
-    /**
-     * Converts this color to an array of red, green, blue, and alpha values
-     * that are in the range of 0 to 255.
-     * @memberof Color
-     *
-     * @param {Array} [result] The array to store the result in, if undefined a new instance will be created.
-     * @returns {Array} The modified result parameter or a new instance if result was undefined.
-     */
-    Color.prototype.toBytes = function(result) {
-        var red = Color.floatToByte(this.red);
-        var green = Color.floatToByte(this.green);
-        var blue = Color.floatToByte(this.blue);
-        var alpha = Color.floatToByte(this.alpha);
-
-        if (!defined(result)) {
-            return [red, green, blue, alpha];
-        }
-        result[0] = red;
-        result[1] = green;
-        result[2] = blue;
-        result[3] = alpha;
-        return result;
-    };
-
-    /**
-     * Converts this color to a single numeric unsigned 32-bit RGBA value, using the endianness
-     * of the system.
-     *
-     * @memberof Color
-     *
-     * @returns {Number} A single numeric unsigned 32-bit RGBA value.
-     *
-     * @example
-     * var rgba = Cesium.Color.BLUE.toRgba();
-     *
-     * @see Color.fromRgba
-     */
-    Color.prototype.toRgba = function() {
-        // scratchUint32Array and scratchUint8Array share an underlying array buffer
-        scratchUint8Array[0] = Color.floatToByte(this.red);
-        scratchUint8Array[1] = Color.floatToByte(this.green);
-        scratchUint8Array[2] = Color.floatToByte(this.blue);
-        scratchUint8Array[3] = Color.floatToByte(this.alpha);
-        return scratchUint32Array[0];
-    };
-
-    /**
-     * An immutable Color instance initialized to CSS color #F0F8FF
-     * <span class="colorSwath" style="background: #F0F8FF;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.ALICEBLUE = freezeObject(Color.fromCssColorString('#F0F8FF'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FAEBD7
-     * <span class="colorSwath" style="background: #FAEBD7;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.ANTIQUEWHITE = freezeObject(Color.fromCssColorString('#FAEBD7'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #00FFFF
-     * <span class="colorSwath" style="background: #00FFFF;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.AQUA = freezeObject(Color.fromCssColorString('#00FFFF'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #7FFFD4
-     * <span class="colorSwath" style="background: #7FFFD4;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.AQUAMARINE = freezeObject(Color.fromCssColorString('#7FFFD4'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #F0FFFF
-     * <span class="colorSwath" style="background: #F0FFFF;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.AZURE = freezeObject(Color.fromCssColorString('#F0FFFF'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #F5F5DC
-     * <span class="colorSwath" style="background: #F5F5DC;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.BEIGE = freezeObject(Color.fromCssColorString('#F5F5DC'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFE4C4
-     * <span class="colorSwath" style="background: #FFE4C4;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.BISQUE = freezeObject(Color.fromCssColorString('#FFE4C4'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #000000
-     * <span class="colorSwath" style="background: #000000;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.BLACK = freezeObject(Color.fromCssColorString('#000000'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFEBCD
-     * <span class="colorSwath" style="background: #FFEBCD;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.BLANCHEDALMOND = freezeObject(Color.fromCssColorString('#FFEBCD'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #0000FF
-     * <span class="colorSwath" style="background: #0000FF;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.BLUE = freezeObject(Color.fromCssColorString('#0000FF'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #8A2BE2
-     * <span class="colorSwath" style="background: #8A2BE2;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.BLUEVIOLET = freezeObject(Color.fromCssColorString('#8A2BE2'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #A52A2A
-     * <span class="colorSwath" style="background: #A52A2A;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.BROWN = freezeObject(Color.fromCssColorString('#A52A2A'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #DEB887
-     * <span class="colorSwath" style="background: #DEB887;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.BURLYWOOD = freezeObject(Color.fromCssColorString('#DEB887'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #5F9EA0
-     * <span class="colorSwath" style="background: #5F9EA0;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.CADETBLUE = freezeObject(Color.fromCssColorString('#5F9EA0'));
-    /**
-     * An immutable Color instance initialized to CSS color #7FFF00
-     * <span class="colorSwath" style="background: #7FFF00;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.CHARTREUSE = freezeObject(Color.fromCssColorString('#7FFF00'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #D2691E
-     * <span class="colorSwath" style="background: #D2691E;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.CHOCOLATE = freezeObject(Color.fromCssColorString('#D2691E'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FF7F50
-     * <span class="colorSwath" style="background: #FF7F50;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.CORAL = freezeObject(Color.fromCssColorString('#FF7F50'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #6495ED
-     * <span class="colorSwath" style="background: #6495ED;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.CORNFLOWERBLUE = freezeObject(Color.fromCssColorString('#6495ED'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFF8DC
-     * <span class="colorSwath" style="background: #FFF8DC;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.CORNSILK = freezeObject(Color.fromCssColorString('#FFF8DC'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #DC143C
-     * <span class="colorSwath" style="background: #DC143C;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.CRIMSON = freezeObject(Color.fromCssColorString('#DC143C'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #00FFFF
-     * <span class="colorSwath" style="background: #00FFFF;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.CYAN = freezeObject(Color.fromCssColorString('#00FFFF'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #00008B
-     * <span class="colorSwath" style="background: #00008B;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKBLUE = freezeObject(Color.fromCssColorString('#00008B'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #008B8B
-     * <span class="colorSwath" style="background: #008B8B;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKCYAN = freezeObject(Color.fromCssColorString('#008B8B'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #B8860B
-     * <span class="colorSwath" style="background: #B8860B;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKGOLDENROD = freezeObject(Color.fromCssColorString('#B8860B'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #A9A9A9
-     * <span class="colorSwath" style="background: #A9A9A9;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKGRAY = freezeObject(Color.fromCssColorString('#A9A9A9'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #006400
-     * <span class="colorSwath" style="background: #006400;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKGREEN = freezeObject(Color.fromCssColorString('#006400'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #A9A9A9
-     * <span class="colorSwath" style="background: #A9A9A9;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKGREY = Color.DARKGRAY;
-
-    /**
-     * An immutable Color instance initialized to CSS color #BDB76B
-     * <span class="colorSwath" style="background: #BDB76B;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKKHAKI = freezeObject(Color.fromCssColorString('#BDB76B'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #8B008B
-     * <span class="colorSwath" style="background: #8B008B;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKMAGENTA = freezeObject(Color.fromCssColorString('#8B008B'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #556B2F
-     * <span class="colorSwath" style="background: #556B2F;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKOLIVEGREEN = freezeObject(Color.fromCssColorString('#556B2F'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FF8C00
-     * <span class="colorSwath" style="background: #FF8C00;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKORANGE = freezeObject(Color.fromCssColorString('#FF8C00'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #9932CC
-     * <span class="colorSwath" style="background: #9932CC;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKORCHID = freezeObject(Color.fromCssColorString('#9932CC'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #8B0000
-     * <span class="colorSwath" style="background: #8B0000;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKRED = freezeObject(Color.fromCssColorString('#8B0000'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #E9967A
-     * <span class="colorSwath" style="background: #E9967A;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKSALMON = freezeObject(Color.fromCssColorString('#E9967A'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #8FBC8F
-     * <span class="colorSwath" style="background: #8FBC8F;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKSEAGREEN = freezeObject(Color.fromCssColorString('#8FBC8F'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #483D8B
-     * <span class="colorSwath" style="background: #483D8B;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKSLATEBLUE = freezeObject(Color.fromCssColorString('#483D8B'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #2F4F4F
-     * <span class="colorSwath" style="background: #2F4F4F;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKSLATEGRAY = freezeObject(Color.fromCssColorString('#2F4F4F'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #2F4F4F
-     * <span class="colorSwath" style="background: #2F4F4F;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKSLATEGREY = Color.DARKSLATEGRAY;
-
-    /**
-     * An immutable Color instance initialized to CSS color #00CED1
-     * <span class="colorSwath" style="background: #00CED1;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKTURQUOISE = freezeObject(Color.fromCssColorString('#00CED1'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #9400D3
-     * <span class="colorSwath" style="background: #9400D3;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DARKVIOLET = freezeObject(Color.fromCssColorString('#9400D3'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FF1493
-     * <span class="colorSwath" style="background: #FF1493;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DEEPPINK = freezeObject(Color.fromCssColorString('#FF1493'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #00BFFF
-     * <span class="colorSwath" style="background: #00BFFF;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DEEPSKYBLUE = freezeObject(Color.fromCssColorString('#00BFFF'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #696969
-     * <span class="colorSwath" style="background: #696969;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DIMGRAY = freezeObject(Color.fromCssColorString('#696969'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #696969
-     * <span class="colorSwath" style="background: #696969;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DIMGREY = Color.DIMGRAY;
-
-    /**
-     * An immutable Color instance initialized to CSS color #1E90FF
-     * <span class="colorSwath" style="background: #1E90FF;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.DODGERBLUE = freezeObject(Color.fromCssColorString('#1E90FF'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #B22222
-     * <span class="colorSwath" style="background: #B22222;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.FIREBRICK = freezeObject(Color.fromCssColorString('#B22222'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFFAF0
-     * <span class="colorSwath" style="background: #FFFAF0;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.FLORALWHITE = freezeObject(Color.fromCssColorString('#FFFAF0'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #228B22
-     * <span class="colorSwath" style="background: #228B22;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.FORESTGREEN = freezeObject(Color.fromCssColorString('#228B22'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FF00FF
-     * <span class="colorSwath" style="background: #FF00FF;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.FUSCHIA = freezeObject(Color.fromCssColorString('#FF00FF'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #DCDCDC
-     * <span class="colorSwath" style="background: #DCDCDC;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.GAINSBORO = freezeObject(Color.fromCssColorString('#DCDCDC'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #F8F8FF
-     * <span class="colorSwath" style="background: #F8F8FF;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.GHOSTWHITE = freezeObject(Color.fromCssColorString('#F8F8FF'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFD700
-     * <span class="colorSwath" style="background: #FFD700;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.GOLD = freezeObject(Color.fromCssColorString('#FFD700'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #DAA520
-     * <span class="colorSwath" style="background: #DAA520;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.GOLDENROD = freezeObject(Color.fromCssColorString('#DAA520'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #808080
-     * <span class="colorSwath" style="background: #808080;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.GRAY = freezeObject(Color.fromCssColorString('#808080'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #008000
-     * <span class="colorSwath" style="background: #008000;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.GREEN = freezeObject(Color.fromCssColorString('#008000'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #ADFF2F
-     * <span class="colorSwath" style="background: #ADFF2F;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.GREENYELLOW = freezeObject(Color.fromCssColorString('#ADFF2F'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #808080
-     * <span class="colorSwath" style="background: #808080;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.GREY = Color.GRAY;
-
-    /**
-     * An immutable Color instance initialized to CSS color #F0FFF0
-     * <span class="colorSwath" style="background: #F0FFF0;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.HONEYDEW = freezeObject(Color.fromCssColorString('#F0FFF0'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FF69B4
-     * <span class="colorSwath" style="background: #FF69B4;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.HOTPINK = freezeObject(Color.fromCssColorString('#FF69B4'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #CD5C5C
-     * <span class="colorSwath" style="background: #CD5C5C;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.INDIANRED = freezeObject(Color.fromCssColorString('#CD5C5C'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #4B0082
-     * <span class="colorSwath" style="background: #4B0082;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.INDIGO = freezeObject(Color.fromCssColorString('#4B0082'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFFFF0
-     * <span class="colorSwath" style="background: #FFFFF0;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.IVORY = freezeObject(Color.fromCssColorString('#FFFFF0'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #F0E68C
-     * <span class="colorSwath" style="background: #F0E68C;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.KHAKI = freezeObject(Color.fromCssColorString('#F0E68C'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #E6E6FA
-     * <span class="colorSwath" style="background: #E6E6FA;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LAVENDER = freezeObject(Color.fromCssColorString('#E6E6FA'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFF0F5
-     * <span class="colorSwath" style="background: #FFF0F5;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LAVENDAR_BLUSH = freezeObject(Color.fromCssColorString('#FFF0F5'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #7CFC00
-     * <span class="colorSwath" style="background: #7CFC00;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LAWNGREEN = freezeObject(Color.fromCssColorString('#7CFC00'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFFACD
-     * <span class="colorSwath" style="background: #FFFACD;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LEMONCHIFFON = freezeObject(Color.fromCssColorString('#FFFACD'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #ADD8E6
-     * <span class="colorSwath" style="background: #ADD8E6;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LIGHTBLUE = freezeObject(Color.fromCssColorString('#ADD8E6'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #F08080
-     * <span class="colorSwath" style="background: #F08080;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LIGHTCORAL = freezeObject(Color.fromCssColorString('#F08080'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #E0FFFF
-     * <span class="colorSwath" style="background: #E0FFFF;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LIGHTCYAN = freezeObject(Color.fromCssColorString('#E0FFFF'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FAFAD2
-     * <span class="colorSwath" style="background: #FAFAD2;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LIGHTGOLDENRODYELLOW = freezeObject(Color.fromCssColorString('#FAFAD2'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #D3D3D3
-     * <span class="colorSwath" style="background: #D3D3D3;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LIGHTGRAY = freezeObject(Color.fromCssColorString('#D3D3D3'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #90EE90
-     * <span class="colorSwath" style="background: #90EE90;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LIGHTGREEN = freezeObject(Color.fromCssColorString('#90EE90'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #D3D3D3
-     * <span class="colorSwath" style="background: #D3D3D3;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LIGHTGREY = Color.LIGHTGRAY;
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFB6C1
-     * <span class="colorSwath" style="background: #FFB6C1;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LIGHTPINK = freezeObject(Color.fromCssColorString('#FFB6C1'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #20B2AA
-     * <span class="colorSwath" style="background: #20B2AA;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LIGHTSEAGREEN = freezeObject(Color.fromCssColorString('#20B2AA'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #87CEFA
-     * <span class="colorSwath" style="background: #87CEFA;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LIGHTSKYBLUE = freezeObject(Color.fromCssColorString('#87CEFA'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #778899
-     * <span class="colorSwath" style="background: #778899;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LIGHTSLATEGRAY = freezeObject(Color.fromCssColorString('#778899'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #778899
-     * <span class="colorSwath" style="background: #778899;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LIGHTSLATEGREY = Color.LIGHTSLATEGRAY;
-
-    /**
-     * An immutable Color instance initialized to CSS color #B0C4DE
-     * <span class="colorSwath" style="background: #B0C4DE;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LIGHTSTEELBLUE = freezeObject(Color.fromCssColorString('#B0C4DE'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFFFE0
-     * <span class="colorSwath" style="background: #FFFFE0;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LIGHTYELLOW = freezeObject(Color.fromCssColorString('#FFFFE0'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #00FF00
-     * <span class="colorSwath" style="background: #00FF00;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LIME = freezeObject(Color.fromCssColorString('#00FF00'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #32CD32
-     * <span class="colorSwath" style="background: #32CD32;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LIMEGREEN = freezeObject(Color.fromCssColorString('#32CD32'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FAF0E6
-     * <span class="colorSwath" style="background: #FAF0E6;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.LINEN = freezeObject(Color.fromCssColorString('#FAF0E6'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FF00FF
-     * <span class="colorSwath" style="background: #FF00FF;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.MAGENTA = freezeObject(Color.fromCssColorString('#FF00FF'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #800000
-     * <span class="colorSwath" style="background: #800000;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.MAROON = freezeObject(Color.fromCssColorString('#800000'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #66CDAA
-     * <span class="colorSwath" style="background: #66CDAA;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.MEDIUMAQUAMARINE = freezeObject(Color.fromCssColorString('#66CDAA'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #0000CD
-     * <span class="colorSwath" style="background: #0000CD;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.MEDIUMBLUE = freezeObject(Color.fromCssColorString('#0000CD'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #BA55D3
-     * <span class="colorSwath" style="background: #BA55D3;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.MEDIUMORCHID = freezeObject(Color.fromCssColorString('#BA55D3'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #9370DB
-     * <span class="colorSwath" style="background: #9370DB;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.MEDIUMPURPLE = freezeObject(Color.fromCssColorString('#9370DB'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #3CB371
-     * <span class="colorSwath" style="background: #3CB371;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.MEDIUMSEAGREEN = freezeObject(Color.fromCssColorString('#3CB371'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #7B68EE
-     * <span class="colorSwath" style="background: #7B68EE;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.MEDIUMSLATEBLUE = freezeObject(Color.fromCssColorString('#7B68EE'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #00FA9A
-     * <span class="colorSwath" style="background: #00FA9A;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.MEDIUMSPRINGGREEN = freezeObject(Color.fromCssColorString('#00FA9A'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #48D1CC
-     * <span class="colorSwath" style="background: #48D1CC;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.MEDIUMTURQUOISE = freezeObject(Color.fromCssColorString('#48D1CC'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #C71585
-     * <span class="colorSwath" style="background: #C71585;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.MEDIUMVIOLETRED = freezeObject(Color.fromCssColorString('#C71585'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #191970
-     * <span class="colorSwath" style="background: #191970;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.MIDNIGHTBLUE = freezeObject(Color.fromCssColorString('#191970'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #F5FFFA
-     * <span class="colorSwath" style="background: #F5FFFA;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.MINTCREAM = freezeObject(Color.fromCssColorString('#F5FFFA'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFE4E1
-     * <span class="colorSwath" style="background: #FFE4E1;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.MISTYROSE = freezeObject(Color.fromCssColorString('#FFE4E1'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFE4B5
-     * <span class="colorSwath" style="background: #FFE4B5;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.MOCCASIN = freezeObject(Color.fromCssColorString('#FFE4B5'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFDEAD
-     * <span class="colorSwath" style="background: #FFDEAD;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.NAVAJOWHITE = freezeObject(Color.fromCssColorString('#FFDEAD'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #000080
-     * <span class="colorSwath" style="background: #000080;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.NAVY = freezeObject(Color.fromCssColorString('#000080'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FDF5E6
-     * <span class="colorSwath" style="background: #FDF5E6;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.OLDLACE = freezeObject(Color.fromCssColorString('#FDF5E6'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #808000
-     * <span class="colorSwath" style="background: #808000;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.OLIVE = freezeObject(Color.fromCssColorString('#808000'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #6B8E23
-     * <span class="colorSwath" style="background: #6B8E23;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.OLIVEDRAB = freezeObject(Color.fromCssColorString('#6B8E23'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFA500
-     * <span class="colorSwath" style="background: #FFA500;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.ORANGE = freezeObject(Color.fromCssColorString('#FFA500'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FF4500
-     * <span class="colorSwath" style="background: #FF4500;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.ORANGERED = freezeObject(Color.fromCssColorString('#FF4500'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #DA70D6
-     * <span class="colorSwath" style="background: #DA70D6;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.ORCHID = freezeObject(Color.fromCssColorString('#DA70D6'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #EEE8AA
-     * <span class="colorSwath" style="background: #EEE8AA;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.PALEGOLDENROD = freezeObject(Color.fromCssColorString('#EEE8AA'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #98FB98
-     * <span class="colorSwath" style="background: #98FB98;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.PALEGREEN = freezeObject(Color.fromCssColorString('#98FB98'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #AFEEEE
-     * <span class="colorSwath" style="background: #AFEEEE;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.PALETURQUOISE = freezeObject(Color.fromCssColorString('#AFEEEE'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #DB7093
-     * <span class="colorSwath" style="background: #DB7093;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.PALEVIOLETRED = freezeObject(Color.fromCssColorString('#DB7093'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFEFD5
-     * <span class="colorSwath" style="background: #FFEFD5;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.PAPAYAWHIP = freezeObject(Color.fromCssColorString('#FFEFD5'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFDAB9
-     * <span class="colorSwath" style="background: #FFDAB9;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.PEACHPUFF = freezeObject(Color.fromCssColorString('#FFDAB9'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #CD853F
-     * <span class="colorSwath" style="background: #CD853F;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.PERU = freezeObject(Color.fromCssColorString('#CD853F'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFC0CB
-     * <span class="colorSwath" style="background: #FFC0CB;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.PINK = freezeObject(Color.fromCssColorString('#FFC0CB'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #DDA0DD
-     * <span class="colorSwath" style="background: #DDA0DD;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.PLUM = freezeObject(Color.fromCssColorString('#DDA0DD'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #B0E0E6
-     * <span class="colorSwath" style="background: #B0E0E6;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.POWDERBLUE = freezeObject(Color.fromCssColorString('#B0E0E6'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #800080
-     * <span class="colorSwath" style="background: #800080;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.PURPLE = freezeObject(Color.fromCssColorString('#800080'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FF0000
-     * <span class="colorSwath" style="background: #FF0000;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.RED = freezeObject(Color.fromCssColorString('#FF0000'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #BC8F8F
-     * <span class="colorSwath" style="background: #BC8F8F;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.ROSYBROWN = freezeObject(Color.fromCssColorString('#BC8F8F'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #4169E1
-     * <span class="colorSwath" style="background: #4169E1;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.ROYALBLUE = freezeObject(Color.fromCssColorString('#4169E1'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #8B4513
-     * <span class="colorSwath" style="background: #8B4513;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.SADDLEBROWN = freezeObject(Color.fromCssColorString('#8B4513'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FA8072
-     * <span class="colorSwath" style="background: #FA8072;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.SALMON = freezeObject(Color.fromCssColorString('#FA8072'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #F4A460
-     * <span class="colorSwath" style="background: #F4A460;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.SANDYBROWN = freezeObject(Color.fromCssColorString('#F4A460'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #2E8B57
-     * <span class="colorSwath" style="background: #2E8B57;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.SEAGREEN = freezeObject(Color.fromCssColorString('#2E8B57'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFF5EE
-     * <span class="colorSwath" style="background: #FFF5EE;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.SEASHELL = freezeObject(Color.fromCssColorString('#FFF5EE'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #A0522D
-     * <span class="colorSwath" style="background: #A0522D;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.SIENNA = freezeObject(Color.fromCssColorString('#A0522D'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #C0C0C0
-     * <span class="colorSwath" style="background: #C0C0C0;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.SILVER = freezeObject(Color.fromCssColorString('#C0C0C0'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #87CEEB
-     * <span class="colorSwath" style="background: #87CEEB;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.SKYBLUE = freezeObject(Color.fromCssColorString('#87CEEB'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #6A5ACD
-     * <span class="colorSwath" style="background: #6A5ACD;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.SLATEBLUE = freezeObject(Color.fromCssColorString('#6A5ACD'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #708090
-     * <span class="colorSwath" style="background: #708090;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.SLATEGRAY = freezeObject(Color.fromCssColorString('#708090'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #708090
-     * <span class="colorSwath" style="background: #708090;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.SLATEGREY = Color.SLATEGRAY;
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFFAFA
-     * <span class="colorSwath" style="background: #FFFAFA;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.SNOW = freezeObject(Color.fromCssColorString('#FFFAFA'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #00FF7F
-     * <span class="colorSwath" style="background: #00FF7F;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.SPRINGGREEN = freezeObject(Color.fromCssColorString('#00FF7F'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #4682B4
-     * <span class="colorSwath" style="background: #4682B4;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.STEELBLUE = freezeObject(Color.fromCssColorString('#4682B4'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #D2B48C
-     * <span class="colorSwath" style="background: #D2B48C;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.TAN = freezeObject(Color.fromCssColorString('#D2B48C'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #008080
-     * <span class="colorSwath" style="background: #008080;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.TEAL = freezeObject(Color.fromCssColorString('#008080'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #D8BFD8
-     * <span class="colorSwath" style="background: #D8BFD8;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.THISTLE = freezeObject(Color.fromCssColorString('#D8BFD8'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FF6347
-     * <span class="colorSwath" style="background: #FF6347;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.TOMATO = freezeObject(Color.fromCssColorString('#FF6347'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #40E0D0
-     * <span class="colorSwath" style="background: #40E0D0;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.TURQUOISE = freezeObject(Color.fromCssColorString('#40E0D0'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #EE82EE
-     * <span class="colorSwath" style="background: #EE82EE;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.VIOLET = freezeObject(Color.fromCssColorString('#EE82EE'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #F5DEB3
-     * <span class="colorSwath" style="background: #F5DEB3;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.WHEAT = freezeObject(Color.fromCssColorString('#F5DEB3'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFFFFF
-     * <span class="colorSwath" style="background: #FFFFFF;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.WHITE = freezeObject(Color.fromCssColorString('#FFFFFF'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #F5F5F5
-     * <span class="colorSwath" style="background: #F5F5F5;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.WHITESMOKE = freezeObject(Color.fromCssColorString('#F5F5F5'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #FFFF00
-     * <span class="colorSwath" style="background: #FFFF00;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.YELLOW = freezeObject(Color.fromCssColorString('#FFFF00'));
-
-    /**
-     * An immutable Color instance initialized to CSS color #9ACD32
-     * <span class="colorSwath" style="background: #9ACD32;"></span>
-     *
-     * @constant
-     * @type {Color}
-     */
-    Color.YELLOWGREEN = freezeObject(Color.fromCssColorString('#9ACD32'));
-
-    return Color;
-});
-
-/*global define*/
-define('Core/Cartesian2',[
-        './defaultValue',
-        './defined',
-        './DeveloperError',
-        './freezeObject'
-    ], function(
-        defaultValue,
-        defined,
-        DeveloperError,
-        freezeObject) {
-    "use strict";
-
-    /**
-     * A 2D Cartesian point.
-     * @alias Cartesian2
-     * @constructor
-     *
-     * @param {Number} [x=0.0] The X component.
-     * @param {Number} [y=0.0] The Y component.
-     *
-     * @see Packable
-     * @see Cartesian3
-     * @see Cartesian4
-     */
-    var Cartesian2 = function(x, y) {
-        /**
-         * The Y component.
-         * @type {Number}
-         * @default 0.0
-         */
-        this.x = defaultValue(x, 0.0);
-
-        /**
-         * The X component.
-         * @type {Number}
-         * @default 0.0
-         */
-        this.y = defaultValue(y, 0.0);
-    };
-
-    /**
-     * Creates a Cartesian2 instance from x and y coordinates.
-     * @memberof Cartesian2
-     *
-     * @param {Number} x The x coordinate.
-     * @param {Number} y The y coordinate.
-     * @param {Cartesian2} [result] The object onto which to store the result.
-     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
-     */
-    Cartesian2.fromElements = function(x, y, result) {
-        if (!defined(result)) {
-            return new Cartesian2(x, y);
-        }
-
-        result.x = x;
-        result.y = y;
-        return result;
-    };
-
-    /**
-     * Duplicates a Cartesian2 instance.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} cartesian The Cartesian to duplicate.
-     * @param {Cartesian2} [result] The object onto which to store the result.
-     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided. (Returns undefined if cartesian is undefined)
-     */
-    Cartesian2.clone = function(cartesian, result) {
-        if (!defined(cartesian)) {
-            return undefined;
-        }
-
-        if (!defined(result)) {
-            return new Cartesian2(cartesian.x, cartesian.y);
-        }
-
-        result.x = cartesian.x;
-        result.y = cartesian.y;
-        return result;
-    };
-
-    /**
-     * Creates a Cartesian2 instance from an existing Cartesian3.  This simply takes the
-     * x and y properties of the Cartesian3 and drops z.
-     * @memberof Cartesian2
-     * @function
-     *
-     * @param {Cartesian3} cartesian The Cartesian3 instance to create a Cartesian2 instance from.
-     * @param {Cartesian2} [result] The object onto which to store the result.
-     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
-     */
-    Cartesian2.fromCartesian3 = Cartesian2.clone;
-
-    /**
-     * Creates a Cartesian2 instance from an existing Cartesian4.  This simply takes the
-     * x and y properties of the Cartesian4 and drops z and w.
-     * @function
-     *
-     * @param {Cartesian4} cartesian The Cartesian4 instance to create a Cartesian2 instance from.
-     * @param {Cartesian2} [result] The object onto which to store the result.
-     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
-     */
-    Cartesian2.fromCartesian4 = Cartesian2.clone;
-
-    /**
-     * The number of elements used to pack the object into an array.
-     * @Type {Number}
-     */
-    Cartesian2.packedLength = 2;
-
-    /**
-     * Stores the provided instance into the provided array.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} value The value to pack.
-     * @param {Array} array The array to pack into.
-     * @param {Number} [startingIndex=0] The index into the array at which to start packing the elements.
-     */
-    Cartesian2.pack = function(value, array, startingIndex) {
-                if (!defined(value)) {
-            throw new DeveloperError('value is required');
-        }
-
-        if (!defined(array)) {
-            throw new DeveloperError('array is required');
-        }
-        
-        startingIndex = defaultValue(startingIndex, 0);
-
-        array[startingIndex++] = value.x;
-        array[startingIndex] = value.y;
-    };
-
-    /**
-     * Retrieves an instance from a packed array.
-     * @memberof Cartesian2
-     *
-     * @param {Array} array The packed array.
-     * @param {Number} [startingIndex=0] The starting index of the element to be unpacked.
-     * @param {Cartesian2} [result] The object into which to store the result.
-     */
-    Cartesian2.unpack = function(array, startingIndex, result) {
-                if (!defined(array)) {
-            throw new DeveloperError('array is required');
-        }
-        
-        startingIndex = defaultValue(startingIndex, 0);
-
-        if (!defined(result)) {
-            result = new Cartesian2();
-        }
-        result.x = array[startingIndex++];
-        result.y = array[startingIndex];
-        return result;
-    };
-
-    /**
-     * Creates a Cartesian2 from two consecutive elements in an array.
-     * @memberof Cartesian2
-     *
-     * @param {Array} array The array whose two consecutive elements correspond to the x and y components, respectively.
-     * @param {Number} [startingIndex=0] The offset into the array of the first element, which corresponds to the x component.
-     * @param {Cartesian2} [result] The object onto which to store the result.
-     *
-     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
-     *
-     * @example
-     * // Create a Cartesian2 with (1.0, 2.0)
-     * var v = [1.0, 2.0];
-     * var p = Cesium.Cartesian2.fromArray(v);
-     *
-     * // Create a Cartesian2 with (1.0, 2.0) using an offset into an array
-     * var v2 = [0.0, 0.0, 1.0, 2.0];
-     * var p2 = Cesium.Cartesian2.fromArray(v2, 2);
-     */
-    Cartesian2.fromArray = Cartesian2.unpack;
-
-    /**
-     * Computes the value of the maximum component for the supplied Cartesian.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} The cartesian to use.
-     * @returns {Number} The value of the maximum component.
-     */
-    Cartesian2.getMaximumComponent = function(cartesian) {
-                if (!defined(cartesian)) {
-            throw new DeveloperError('cartesian is required');
-        }
-        
-        return Math.max(cartesian.x, cartesian.y);
-    };
-
-    /**
-     * Computes the value of the minimum component for the supplied Cartesian.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} The cartesian to use.
-     * @returns {Number} The value of the minimum component.
-     */
-    Cartesian2.getMinimumComponent = function(cartesian) {
-                if (!defined(cartesian)) {
-            throw new DeveloperError('cartesian is required');
-        }
-        
-        return Math.min(cartesian.x, cartesian.y);
-    };
-
-    /**
-     * Compares two Cartesians and computes a Cartesian which contains the minimum components of the supplied Cartesians.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} first A cartesian to compare.
-     * @param {Cartesian2} second A cartesian to compare.
-     * @param {Cartesian2} [result] The object into which to store the result.
-     * @returns {Cartesian2} A cartesian with the minimum components.
-     */
-    Cartesian2.getMinimumByComponent = function(first, second, result) {
-                if (!defined(first)) {
-            throw new DeveloperError('first is required.');
-        }
-        if (!defined(second)) {
-            throw new DeveloperError('second is required.');
-        }
-        
-        if (!defined(result)) {
-            result = new Cartesian2();
-        }
-
-        result.x = Math.min(first.x, second.x);
-        result.y = Math.min(first.y, second.y);
-
-        return result;
-    };
-
-    /**
-     * Compares two Cartesians and computes a Cartesian which contains the maximum components of the supplied Cartesians.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} first A cartesian to compare.
-     * @param {Cartesian2} second A cartesian to compare.
-     * @param {Cartesian2} [result] The object into which to store the result.
-     * @returns {Cartesian2} A cartesian with the maximum components.
-     */
-    Cartesian2.getMaximumByComponent = function(first, second, result) {
-                if (!defined(first)) {
-            throw new DeveloperError('first is required.');
-        }
-        if (!defined(second)) {
-            throw new DeveloperError('second is required.');
-        }
-        
-        if (!defined(result)) {
-            result = new Cartesian2();
-        }
-
-        result.x = Math.max(first.x, second.x);
-        result.y = Math.max(first.y, second.y);
-        return result;
-    };
-
-    /**
-     * Computes the provided Cartesian's squared magnitude.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} cartesian The Cartesian instance whose squared magnitude is to be computed.
-     * @returns {Number} The squared magnitude.
-     */
-    Cartesian2.magnitudeSquared = function(cartesian) {
-                if (!defined(cartesian)) {
-            throw new DeveloperError('cartesian is required');
-        }
-        
-        return cartesian.x * cartesian.x + cartesian.y * cartesian.y;
-    };
-
-    /**
-     * Computes the Cartesian's magnitude (length).
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} cartesian The Cartesian instance whose magnitude is to be computed.
-     * @returns {Number} The magnitude.
-     */
-    Cartesian2.magnitude = function(cartesian) {
-        return Math.sqrt(Cartesian2.magnitudeSquared(cartesian));
-    };
-
-    var distanceScratch = new Cartesian2();
-
-    /**
-     * Computes the distance between two points
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} left The first point to compute the distance from.
-     * @param {Cartesian2} right The second point to compute the distance to.
-     *
-     * @returns {Number} The distance between two points.
-     *
-     * @example
-     * // Returns 1.0
-     * var d = Cesium.Cartesian2.distance(new Cesium.Cartesian2(1.0, 0.0), new Cesium.Cartesian2(2.0, 0.0));
-     */
-    Cartesian2.distance = function(left, right) {
-                if (!defined(left) || !defined(right)) {
-            throw new DeveloperError('left and right are required.');
-        }
-        
-        Cartesian2.subtract(left, right, distanceScratch);
-        return Cartesian2.magnitude(distanceScratch);
-    };
-
-    /**
-     * Computes the normalized form of the supplied Cartesian.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} cartesian The Cartesian to be normalized.
-     * @param {Cartesian2} [result] The object onto which to store the result.
-     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
-     */
-    Cartesian2.normalize = function(cartesian, result) {
-                if (!defined(cartesian)) {
-            throw new DeveloperError('cartesian is required');
-        }
-        
-        var magnitude = Cartesian2.magnitude(cartesian);
-        if (!defined(result)) {
-            return new Cartesian2(cartesian.x / magnitude, cartesian.y / magnitude);
-        }
-        result.x = cartesian.x / magnitude;
-        result.y = cartesian.y / magnitude;
-        return result;
-    };
-
-    /**
-     * Computes the dot (scalar) product of two Cartesians.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} left The first Cartesian.
-     * @param {Cartesian2} right The second Cartesian.
-     * @returns {Number} The dot product.
-     */
-    Cartesian2.dot = function(left, right) {
-                if (!defined(left)) {
-            throw new DeveloperError('left is required');
-        }
-        if (!defined(right)) {
-            throw new DeveloperError('right is required');
-        }
-        
-        return left.x * right.x + left.y * right.y;
-    };
-
-    /**
-     * Computes the componentwise product of two Cartesians.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} left The first Cartesian.
-     * @param {Cartesian2} right The second Cartesian.
-     * @param {Cartesian2} [result] The object onto which to store the result.
-     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
-     */
-    Cartesian2.multiplyComponents = function(left, right, result) {
-                if (!defined(left)) {
-            throw new DeveloperError('left is required');
-        }
-        if (!defined(right)) {
-            throw new DeveloperError('right is required');
-        }
-        
-        if (!defined(result)) {
-            return new Cartesian2(left.x * right.x, left.y * right.y);
-        }
-        result.x = left.x * right.x;
-        result.y = left.y * right.y;
-        return result;
-    };
-
-    /**
-     * Computes the componentwise sum of two Cartesians.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} left The first Cartesian.
-     * @param {Cartesian2} right The second Cartesian.
-     * @param {Cartesian2} [result] The object onto which to store the result.
-     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
-     */
-    Cartesian2.add = function(left, right, result) {
-                if (!defined(left)) {
-            throw new DeveloperError('left is required');
-        }
-        if (!defined(right)) {
-            throw new DeveloperError('right is required');
-        }
-        
-        if (!defined(result)) {
-            return new Cartesian2(left.x + right.x, left.y + right.y);
-        }
-        result.x = left.x + right.x;
-        result.y = left.y + right.y;
-        return result;
-    };
-
-    /**
-     * Computes the componentwise difference of two Cartesians.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} left The first Cartesian.
-     * @param {Cartesian2} right The second Cartesian.
-     * @param {Cartesian2} [result] The object onto which to store the result.
-     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
-     */
-    Cartesian2.subtract = function(left, right, result) {
-                if (!defined(left)) {
-            throw new DeveloperError('left is required');
-        }
-        if (!defined(right)) {
-            throw new DeveloperError('right is required');
-        }
-        
-        if (!defined(result)) {
-            return new Cartesian2(left.x - right.x, left.y - right.y);
-        }
-        result.x = left.x - right.x;
-        result.y = left.y - right.y;
-        return result;
-    };
-
-    /**
-     * Multiplies the provided Cartesian componentwise by the provided scalar.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} cartesian The Cartesian to be scaled.
-     * @param {Number} scalar The scalar to multiply with.
-     * @param {Cartesian2} [result] The object onto which to store the result.
-     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
-     */
-    Cartesian2.multiplyByScalar = function(cartesian, scalar, result) {
-                if (!defined(cartesian)) {
-            throw new DeveloperError('cartesian is required');
-        }
-        if (typeof scalar !== 'number') {
-            throw new DeveloperError('scalar is required and must be a number.');
-        }
-        
-        if (!defined(result)) {
-            return new Cartesian2(cartesian.x * scalar, cartesian.y * scalar);
-        }
-        result.x = cartesian.x * scalar;
-        result.y = cartesian.y * scalar;
-        return result;
-    };
-
-    /**
-     * Divides the provided Cartesian componentwise by the provided scalar.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} cartesian The Cartesian to be divided.
-     * @param {Number} scalar The scalar to divide by.
-     * @param {Cartesian2} [result] The object onto which to store the result.
-     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
-     */
-    Cartesian2.divideByScalar = function(cartesian, scalar, result) {
-                if (!defined(cartesian)) {
-            throw new DeveloperError('cartesian is required');
-        }
-        if (typeof scalar !== 'number') {
-            throw new DeveloperError('scalar is required and must be a number.');
-        }
-        
-        if (!defined(result)) {
-            return new Cartesian2(cartesian.x / scalar, cartesian.y / scalar);
-        }
-        result.x = cartesian.x / scalar;
-        result.y = cartesian.y / scalar;
-        return result;
-    };
-
-    /**
-     * Negates the provided Cartesian.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} cartesian The Cartesian to be negated.
-     * @param {Cartesian2} [result] The object onto which to store the result.
-     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
-     */
-    Cartesian2.negate = function(cartesian, result) {
-                if (!defined(cartesian)) {
-            throw new DeveloperError('cartesian is required');
-        }
-        
-        if (!defined(result)) {
-            return new Cartesian2(-cartesian.x, -cartesian.y);
-        }
-        result.x = -cartesian.x;
-        result.y = -cartesian.y;
-        return result;
-    };
-
-    /**
-     * Computes the absolute value of the provided Cartesian.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} cartesian The Cartesian whose absolute value is to be computed.
-     * @param {Cartesian2} [result] The object onto which to store the result.
-     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
-     */
-    Cartesian2.abs = function(cartesian, result) {
-                if (!defined(cartesian)) {
-            throw new DeveloperError('cartesian is required');
-        }
-        
-        if (!defined(result)) {
-            return new Cartesian2(Math.abs(cartesian.x), Math.abs(cartesian.y));
-        }
-        result.x = Math.abs(cartesian.x);
-        result.y = Math.abs(cartesian.y);
-        return result;
-    };
-
-    var lerpScratch = new Cartesian2();
-    /**
-     * Computes the linear interpolation or extrapolation at t using the provided cartesians.
-     * @memberof Cartesian2
-     *
-     * @param start The value corresponding to t at 0.0.
-     * @param end The value corresponding to t at 1.0.
-     * @param t The point along t at which to interpolate.
-     * @param {Cartesian2} [result] The object onto which to store the result.
-     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
-     */
-    Cartesian2.lerp = function(start, end, t, result) {
-                if (!defined(start)) {
-            throw new DeveloperError('start is required.');
-        }
-        if (!defined(end)) {
-            throw new DeveloperError('end is required.');
-        }
-        if (typeof t !== 'number') {
-            throw new DeveloperError('t is required and must be a number.');
-        }
-        
-        Cartesian2.multiplyByScalar(end, t, lerpScratch);
-        result = Cartesian2.multiplyByScalar(start, 1.0 - t, result);
-        return Cartesian2.add(lerpScratch, result, result);
-    };
-
-    var angleBetweenScratch = new Cartesian2();
-    var angleBetweenScratch2 = new Cartesian2();
-    /**
-     * Returns the angle, in radians, between the provided Cartesians.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} left The first Cartesian.
-     * @param {Cartesian2} right The second Cartesian.
-     * @returns {Number} The angle between the Cartesians.
-     */
-    Cartesian2.angleBetween = function(left, right) {
-                if (!defined(left)) {
-            throw new DeveloperError('left is required');
-        }
-        if (!defined(right)) {
-            throw new DeveloperError('right is required');
-        }
-        
-        Cartesian2.normalize(left, angleBetweenScratch);
-        Cartesian2.normalize(right, angleBetweenScratch2);
-        return Math.acos(Cartesian2.dot(angleBetweenScratch, angleBetweenScratch2));
-    };
-
-    var mostOrthogonalAxisScratch = new Cartesian2();
-    /**
-     * Returns the axis that is most orthogonal to the provided Cartesian.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} cartesian The Cartesian on which to find the most orthogonal axis.
-     * @param {Cartesian2} [result] The object onto which to store the result.
-     * @returns {Cartesian2} The most orthogonal axis.
-     */
-    Cartesian2.mostOrthogonalAxis = function(cartesian, result) {
-                if (!defined(cartesian)) {
-            throw new DeveloperError('cartesian is required.');
-        }
-        
-        var f = Cartesian2.normalize(cartesian, mostOrthogonalAxisScratch);
-        Cartesian2.abs(f, f);
-
-        if (f.x <= f.y) {
-            result = Cartesian2.clone(Cartesian2.UNIT_X, result);
-        } else {
-            result = Cartesian2.clone(Cartesian2.UNIT_Y, result);
-        }
-
-        return result;
-    };
-
-    /**
-     * Compares the provided Cartesians componentwise and returns
-     * <code>true</code> if they are equal, <code>false</code> otherwise.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} [left] The first Cartesian.
-     * @param {Cartesian2} [right] The second Cartesian.
-     * @returns {Boolean} <code>true</code> if left and right are equal, <code>false</code> otherwise.
-     */
-    Cartesian2.equals = function(left, right) {
-        return (left === right) ||
-               ((defined(left)) &&
-                (defined(right)) &&
-                (left.x === right.x) &&
-                (left.y === right.y));
-    };
-
-    /**
-     * Compares the provided Cartesians componentwise and returns
-     * <code>true</code> if they are within the provided epsilon,
-     * <code>false</code> otherwise.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} [left] The first Cartesian.
-     * @param {Cartesian2} [right] The second Cartesian.
-     * @param {Number} epsilon The epsilon to use for equality testing.
-     * @returns {Boolean} <code>true</code> if left and right are within the provided epsilon, <code>false</code> otherwise.
-     */
-    Cartesian2.equalsEpsilon = function(left, right, epsilon) {
-                if (typeof epsilon !== 'number') {
-            throw new DeveloperError('epsilon is required and must be a number.');
-        }
-        
-        return (left === right) ||
-               ((defined(left)) &&
-                (defined(right)) &&
-                (Math.abs(left.x - right.x) <= epsilon) &&
-                (Math.abs(left.y - right.y) <= epsilon));
-    };
-
-    /**
-     * An immutable Cartesian2 instance initialized to (0.0, 0.0).
-     * @memberof Cartesian2
-     */
-    Cartesian2.ZERO = freezeObject(new Cartesian2(0.0, 0.0));
-
-    /**
-     * An immutable Cartesian2 instance initialized to (1.0, 0.0).
-     * @memberof Cartesian2
-     */
-    Cartesian2.UNIT_X = freezeObject(new Cartesian2(1.0, 0.0));
-
-    /**
-     * An immutable Cartesian2 instance initialized to (0.0, 1.0).
-     * @memberof Cartesian2
-     */
-    Cartesian2.UNIT_Y = freezeObject(new Cartesian2(0.0, 1.0));
-
-    /**
-     * Duplicates this Cartesian2 instance.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} [result] The object onto which to store the result.
-     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
-     */
-    Cartesian2.prototype.clone = function(result) {
-        return Cartesian2.clone(this, result);
-    };
-
-    /**
-     * Compares this Cartesian against the provided Cartesian componentwise and returns
-     * <code>true</code> if they are equal, <code>false</code> otherwise.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} [right] The right hand side Cartesian.
-     * @returns {Boolean} <code>true</code> if they are equal, <code>false</code> otherwise.
-     */
-    Cartesian2.prototype.equals = function(right) {
-        return Cartesian2.equals(this, right);
-    };
-
-    /**
-     * Compares this Cartesian against the provided Cartesian componentwise and returns
-     * <code>true</code> if they are within the provided epsilon,
-     * <code>false</code> otherwise.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} [right] The right hand side Cartesian.
-     * @param {Number} epsilon The epsilon to use for equality testing.
-     * @returns {Boolean} <code>true</code> if they are within the provided epsilon, <code>false</code> otherwise.
-     */
-    Cartesian2.prototype.equalsEpsilon = function(right, epsilon) {
-        return Cartesian2.equalsEpsilon(this, right, epsilon);
-    };
-
-    /**
-     * Creates a string representing this Cartesian in the format '(x, y)'.
-     * @memberof Cartesian2
-     *
-     * @returns {String} A string representing the provided Cartesian in the format '(x, y)'.
-     */
-    Cartesian2.prototype.toString = function() {
-        return '(' + this.x + ', ' + this.y + ')';
-    };
-
-    return Cartesian2;
-});
-
-/*global define*/
-define('Core/barycentricCoordinates',[
-        './Cartesian2',
-        './Cartesian3',
-        './defined',
-        './DeveloperError'
-    ], function(
-        Cartesian2,
-        Cartesian3,
-        defined,
-        DeveloperError) {
-    "use strict";
-
-    var scratchCartesian1 = new Cartesian3();
-    var scratchCartesian2 = new Cartesian3();
-    var scratchCartesian3 = new Cartesian3();
-
-    /**
-     * Computes the barycentric coordinates for a point with respect to a triangle.
-     *
-     * @exports pointInsideTriangle
-     *
-     * @param {Cartesian2|Cartesian3} point The point to test.
-     * @param {Cartesian2|Cartesian3} p0 The first point of the triangle, corresponding to the barycentric x-axis.
-     * @param {Cartesian2|Cartesian3} p1 The second point of the triangle, corresponding to the barycentric y-axis.
-     * @param {Cartesian2|Cartesian3} p2 The third point of the triangle, corresponding to the barycentric z-axis.
-     * @param {Cartesian3} [result] The object onto which to store the result.
-     *
-     * @returns {Cartesian3} The modified result parameter or a new Cartesian3 instance if one was not provided.
-     *
-     * @example
-     * // Returns Cartesian3.UNIT_X
-     * var p = new Cesium.Cartesian3(-1.0, 0.0, 0.0);
-     * var b = Cesium.barycentricCoordinates(p,
-     *   new Cesium.Cartesian3(-1.0, 0.0, 0.0),
-     *   new Cesium.Cartesian3( 1.0, 0.0, 0.0),
-     *   new Cesium.Cartesian3( 0.0, 1.0, 1.0));
-     */
-    var barycentricCoordinates = function(point, p0, p1, p2, result) {
-                if (!defined(point) || !defined(p0) || !defined(p1) || !defined(p2)) {
-            throw new DeveloperError('point, p0, p1, and p2 are required.');
-        }
-        
-
-        if (!defined(result)) {
-            result = new Cartesian3();
-        }
-
-        // Implementation based on http://www.blackpawn.com/texts/pointinpoly/default.html.
-        var v0, v1, v2;
-        var dot00, dot01, dot02, dot11, dot12;
-
-        if(!defined(p0.z)) {
-          v0 = Cartesian2.subtract(p1, p0, scratchCartesian1);
-          v1 = Cartesian2.subtract(p2, p0, scratchCartesian2);
-          v2 = Cartesian2.subtract(point, p0, scratchCartesian3);
-
-          dot00 = Cartesian2.dot(v0, v0);
-          dot01 = Cartesian2.dot(v0, v1);
-          dot02 = Cartesian2.dot(v0, v2);
-          dot11 = Cartesian2.dot(v1, v1);
-          dot12 = Cartesian2.dot(v1, v2);
-        } else {
-          v0 = Cartesian3.subtract(p1, p0, scratchCartesian1);
-          v1 = Cartesian3.subtract(p2, p0, scratchCartesian2);
-          v2 = Cartesian3.subtract(point, p0, scratchCartesian3);
-
-          dot00 = Cartesian3.dot(v0, v0);
-          dot01 = Cartesian3.dot(v0, v1);
-          dot02 = Cartesian3.dot(v0, v2);
-          dot11 = Cartesian3.dot(v1, v1);
-          dot12 = Cartesian3.dot(v1, v2);
-        }
-
-        var q = 1.0 / (dot00 * dot11 - dot01 * dot01);
-        result.y = (dot11 * dot02 - dot01 * dot12) * q;
-        result.z = (dot00 * dot12 - dot01 * dot02) * q;
-        result.x = 1.0 - result.y - result.z;
-        return result;
-    };
-
-    return barycentricCoordinates;
-});
-
-/*global define*/
-define('Core/EncodedCartesian3',[
-        './Cartesian3',
-        './defined',
-        './DeveloperError'
-    ], function(
-        Cartesian3,
-        defined,
-        DeveloperError) {
-    "use strict";
-
-    /**
-     * A fixed-point encoding of a {@link Cartesian3} with 64-bit floating-point components, as two {@link Cartesian3}
-     * values that, when converted to 32-bit floating-point and added, approximate the original input.
-     * <p>
-     * This is used to encode positions in vertex buffers for rendering without jittering artifacts
-     * as described in <a href="http://blogs.agi.com/insight3d/index.php/2008/09/03/precisions-precisions/">Precisions, Precisions</a>.
-     * </p>
-     *
-     * @alias EncodedCartesian3
-     * @constructor
-     *
-     * @see czm_modelViewRelativeToEye
-     * @see czm_modelViewProjectionRelativeToEye
-     */
-    var EncodedCartesian3 = function() {
-        /**
-         * The high bits for each component.  Bits 0 to 22 store the whole value.  Bits 23 to 31 are not used.
-         * <p>
-         * The default is {@link Cartesian3.ZERO}.
-         * </p>
-         *
-         * @type {Cartesian3}
-         * @default {@link Cartesian3.ZERO}
-         */
-        this.high = Cartesian3.clone(Cartesian3.ZERO);
-
-        /**
-         * The low bits for each component.  Bits 7 to 22 store the whole value, and bits 0 to 6 store the fraction.  Bits 23 to 31 are not used.
-         * <p>
-         * The default is {@link Cartesian3.ZERO}.
-         * </p>
-         *
-         * @type {Cartesian3}
-         * @default {@link Cartesian3.ZERO}
-         */
-        this.low = Cartesian3.clone(Cartesian3.ZERO);
-    };
-
-    /**
-     * Encodes a 64-bit floating-point value as two floating-point values that, when converted to
-     * 32-bit floating-point and added, approximate the original input.  The returned object
-     * has <code>high</code> and <code>low</code> properties for the high and low bits, respectively.
-     * <p>
-     * The fixed-point encoding follows <a href="http://blogs.agi.com/insight3d/index.php/2008/09/03/precisions-precisions/">Precisions, Precisions</a>.
-     * </p>
-     * @memberof EncodedCartesian3
-     *
-     * @param {Number} value The floating-point value to encode.
-     * @param {Object} [result] The object onto which to store the result.
-     *
-     * @returns {Object} The modified result parameter or a new instance if one was not provided.
-     *
-     * @example
-     * var value = 1234567.1234567;
-     * var splitValue = Cesium.EncodedCartesian3.encode(value);
-     */
-    EncodedCartesian3.encode = function(value, result) {
-                if (!defined(value)) {
-            throw new DeveloperError('value is required');
-        }
-        
-        if (!defined(result)) {
-            result = {
-                high : 0.0,
-                low : 0.0
-            };
-        }
-
-        var doubleHigh;
-        if (value >= 0.0) {
-            doubleHigh = Math.floor(value / 65536.0) * 65536.0;
-            result.high = doubleHigh;
-            result.low = value - doubleHigh;
-        } else {
-            doubleHigh = Math.floor(-value / 65536.0) * 65536.0;
-            result.high = -doubleHigh;
-            result.low = value + doubleHigh;
-        }
-
-        return result;
-    };
-
-    var scratchEncode = {
-        high : 0.0,
-        low : 0.0
-    };
-
-    /**
-     * Encodes a {@link Cartesian3} with 64-bit floating-point components as two {@link Cartesian3}
-     * values that, when converted to 32-bit floating-point and added, approximate the original input.
-     * <p>
-     * The fixed-point encoding follows <a href="http://blogs.agi.com/insight3d/index.php/2008/09/03/precisions-precisions/">Precisions, Precisions</a>.
-     * </p>
-     * @memberof EncodedCartesian3
-     *
-     * @param {Cartesian3} cartesian The cartesian to encode.
-     * @param {EncodedCartesian3} [result] The object onto which to store the result.
-     * @returns {EncodedCartesian3} The modified result parameter or a new EncodedCartesian3 instance if one was not provided.
-     *
-     * @example
-     * var cart = new Cesium.Cartesian3(-10000000.0, 0.0, 10000000.0);
-     * var encoded = Cesium.EncodedCartesian3.fromCartesian(cart);
-     */
-    EncodedCartesian3.fromCartesian = function(cartesian, result) {
-                if (!defined(cartesian)) {
-            throw new DeveloperError('cartesian is required');
-        }
-        
-        if (!defined(result)) {
-            result = new EncodedCartesian3();
-        }
-
-        var high = result.high;
-        var low = result.low;
-
-        EncodedCartesian3.encode(cartesian.x, scratchEncode);
-        high.x = scratchEncode.high;
-        low.x = scratchEncode.low;
-
-        EncodedCartesian3.encode(cartesian.y, scratchEncode);
-        high.y = scratchEncode.high;
-        low.y = scratchEncode.low;
-
-        EncodedCartesian3.encode(cartesian.z, scratchEncode);
-        high.z = scratchEncode.high;
-        low.z = scratchEncode.low;
-
-        return result;
-    };
-
-    var encodedP = new EncodedCartesian3();
-
-    /**
-     * Encodes the provided <code>cartesian</code>, and writes it to an array with <code>high</code>
-     * components followed by <code>low</code> components, i.e. <code>[high.x, high.y, high.z, low.x, low.y, low.z]</code>.
-     * <p>
-     * This is used to create interleaved high-precision position vertex attributes.
-     * </p>
-     *
-     * @param {Cartesian3} cartesian The cartesian to encode.
-     * @param {Array} cartesianArray The array to write to.
-     * @param {Number} index The index into the array to start writing.  Six elements will be written.
-     *
-     * @exception {DeveloperError} index must be a number greater than or equal to 0.
-     *
-     * @example
-     * var positions = [
-     *    new Cesium.Cartesian3(),
-     *    // ...
-     * ];
-     * var encodedPositions = new Float32Array(2 * 3 * positions.length);
-     * var j = 0;
-     * for (var i = 0; i < positions.length; ++i) {
-     *   Cesium.EncodedCartesian3.writeElement(positions[i], encodedPositions, j);
-     *   j += 6;
-     * }
-     */
-    EncodedCartesian3.writeElements = function(cartesian, cartesianArray, index) {
-                if (!defined(cartesian)) {
-            throw new DeveloperError('cartesian is required');
-        }
-        if (!defined(cartesianArray)) {
-            throw new DeveloperError('cartesianArray is required');
-        }
-        if (typeof index !== 'number' || index < 0) {
-            throw new DeveloperError('index must be a number greater than or equal to 0.');
-        }
-        
-        EncodedCartesian3.fromCartesian(cartesian, encodedP);
-        var high = encodedP.high;
-        var low = encodedP.low;
-
-        cartesianArray[index] = high.x;
-        cartesianArray[index + 1] = high.y;
-        cartesianArray[index + 2] = high.z;
-        cartesianArray[index + 3] = low.x;
-        cartesianArray[index + 4] = low.y;
-        cartesianArray[index + 5] = low.z;
-    };
-
-    return EncodedCartesian3;
-});
-
-/*global define*/
-define('Core/QuadraticRealPolynomial',[
-        './DeveloperError',
-        './Math'
-    ],
-    function(
-        DeveloperError,
-        CesiumMath) {
-    "use strict";
-
-    /**
-     * Defines functions for 2nd order polynomial functions of one variable with only real coefficients.
-     *
-     * @exports QuadraticRealPolynomial
-     */
-    var QuadraticRealPolynomial = {};
-
-    /**
-     * Provides the discriminant of the quadratic equation from the supplied coefficients.
-     * @memberof QuadraticRealPolynomial
-     *
-     * @param {Number} a The coefficient of the 2nd order monomial.
-     * @param {Number} b The coefficient of the 1st order monomial.
-     * @param {Number} c The coefficient of the 0th order monomial.
-     * @returns {Number} The value of the discriminant.
-     */
-    QuadraticRealPolynomial.discriminant = function(a, b, c) {
-                if (typeof a !== 'number') {
-            throw new DeveloperError('a is a required number.');
-        }
-        if (typeof b !== 'number') {
-            throw new DeveloperError('b is a required number.');
-        }
-        if (typeof c !== 'number') {
-            throw new DeveloperError('c is a required number.');
-        }
-        
-        var discriminant = b * b - 4.0 * a * c;
-        return discriminant;
-    };
-
-    function addWithCancellationCheck(left, right, tolerance) {
-        var difference = left + right;
-        if ((CesiumMath.sign(left) !== CesiumMath.sign(right)) &&
-                Math.abs(difference / Math.max(Math.abs(left), Math.abs(right))) < tolerance) {
-            return 0.0;
-        }
-
-        return difference;
-    }
-
-    /**
-     * Provides the real valued roots of the quadratic polynomial with the provided coefficients.
-     * @memberof QuadraticRealPolynomial
-     *
-     * @param {Number} a The coefficient of the 2nd order monomial.
-     * @param {Number} b The coefficient of the 1st order monomial.
-     * @param {Number} c The coefficient of the 0th order monomial.
-     * @returns {Array} The real valued roots.
-     */
-    QuadraticRealPolynomial.realRoots = function(a, b, c) {
-                if (typeof a !== 'number') {
-            throw new DeveloperError('a is a required number.');
-        }
-        if (typeof b !== 'number') {
-            throw new DeveloperError('b is a required number.');
-        }
-        if (typeof c !== 'number') {
-            throw new DeveloperError('c is a required number.');
-        }
-        
-        var ratio;
-        if (a === 0.0) {
-            if (b === 0.0) {
-                // Constant function: c = 0.
-                return [];
-            }
-
-            // Linear function: b * x + c = 0.
-            return [-c / b];
-        } else if (b === 0.0) {
-            if (c === 0.0) {
-                // 2nd order monomial: a * x^2 = 0.
-                return [0.0, 0.0];
-            }
-
-            var cMagnitude = Math.abs(c);
-            var aMagnitude = Math.abs(a);
-
-            if ((cMagnitude < aMagnitude) && (cMagnitude / aMagnitude < CesiumMath.EPSILON14)) { // c ~= 0.0.
-                // 2nd order monomial: a * x^2 = 0.
-                return [0.0, 0.0];
-            } else if ((cMagnitude > aMagnitude) && (aMagnitude / cMagnitude < CesiumMath.EPSILON14)) { // a ~= 0.0.
-                // Constant function: c = 0.
-                return [];
-            }
-
-            // a * x^2 + c = 0
-            ratio = -c / a;
-
-            if (ratio < 0.0) {
-                // Both roots are complex.
-                return [];
-            }
-
-            // Both roots are real.
-            var root = Math.sqrt(ratio);
-            return [-root, root];
-        } else if (c === 0.0) {
-            // a * x^2 + b * x = 0
-            ratio = -b / a;
-            if (ratio < 0.0) {
-                return [ratio, 0.0];
-            }
-
-            return [0.0, ratio];
-        }
-
-        // a * x^2 + b * x + c = 0
-        var b2 = b * b;
-        var four_ac = 4.0 * a * c;
-        var radicand = addWithCancellationCheck(b2, -four_ac, CesiumMath.EPSILON14);
-
-        if (radicand < 0.0) {
-            // Both roots are complex.
-            return [];
-        }
-
-        var q = -0.5 * addWithCancellationCheck(b, CesiumMath.sign(b) * Math.sqrt(radicand), CesiumMath.EPSILON14);
-        if (b > 0.0) {
-            return [q / a, c / q];
-        }
-
-        return [c / q, q / a];
-    };
-
-    return QuadraticRealPolynomial;
-});
-/*global define*/
-define('Core/CubicRealPolynomial',[
-        './DeveloperError',
-        './QuadraticRealPolynomial'
-    ], function(
-        DeveloperError,
-        QuadraticRealPolynomial) {
-    "use strict";
-
-    /**
-     * Defines functions for 3rd order polynomial functions of one variable with only real coefficients.
-     *
-     * @exports CubicRealPolynomial
-     */
-    var CubicRealPolynomial = {};
-
-    /**
-     * Provides the discriminant of the cubic equation from the supplied coefficients.
-     * @memberof CubicRealPolynomial
-     *
-     * @param {Number} a The coefficient of the 3rd order monomial.
-     * @param {Number} b The coefficient of the 2nd order monomial.
-     * @param {Number} c The coefficient of the 1st order monomial.
-     * @param {Number} d The coefficient of the 0th order monomial.
-     * @returns {Number} The value of the discriminant.
-     */
-    CubicRealPolynomial.discriminant = function(a, b, c, d) {
-                if (typeof a !== 'number') {
-            throw new DeveloperError('a is a required number.');
-        }
-        if (typeof b !== 'number') {
-            throw new DeveloperError('b is a required number.');
-        }
-        if (typeof c !== 'number') {
-            throw new DeveloperError('c is a required number.');
-        }
-        if (typeof d !== 'number') {
-            throw new DeveloperError('d is a required number.');
-        }
-        
-        var a2 = a * a;
-        var b2 = b * b;
-        var c2 = c * c;
-        var d2 = d * d;
-
-        var discriminant = 18.0 * a * b * c * d + b2 * c2 - 27.0 * a2 * d2 - 4.0 * (a * c2 * c + b2 * b * d);
-        return discriminant;
-    };
-
-    function computeRealRoots(a, b, c, d) {
-        var A = a;
-        var B = b / 3.0;
-        var C = c / 3.0;
-        var D = d;
-
-        var AC = A * C;
-        var BD = B * D;
-        var B2 = B * B;
-        var C2 = C * C;
-        var delta1 = A * C - B2;
-        var delta2 = A * D - B * C;
-        var delta3 = B * D - C2;
-
-        var discriminant = 4.0 * delta1 * delta3 - delta2 * delta2;
-        var temp;
-        var temp1;
-
-        if (discriminant < 0.0) {
-            var ABar;
-            var CBar;
-            var DBar;
-
-            if (B2 * BD >= AC * C2) {
-                ABar = A;
-                CBar = delta1;
-                DBar = -2.0 * B * delta1 + A * delta2;
-            } else {
-                ABar = D;
-                CBar = delta3;
-                DBar = -D * delta2 + 2.0 * C * delta3;
-            }
-
-            var s = (DBar < 0.0) ? -1.0 : 1.0; // This is not Math.Sign()!
-            var temp0 = -s * Math.abs(ABar) * Math.sqrt(-discriminant);
-            temp1 = -DBar + temp0;
-
-            var x = temp1 / 2.0;
-            var p = x < 0.0 ? -Math.pow(-x, 1.0 / 3.0) : Math.pow(x, 1.0 / 3.0);
-            var q = (temp1 === temp0) ? -p : -CBar / p;
-
-            temp = (CBar <= 0.0) ? p + q : -DBar / (p * p + q * q + CBar);
-
-            if (B2 * BD >= AC * C2) {
-                return [(temp - B) / A];
-            }
-
-            return [-D / (temp + C)];
-        }
-
-        var CBarA = delta1;
-        var DBarA = -2.0 * B * delta1 + A * delta2;
-
-        var CBarD = delta3;
-        var DBarD = -D * delta2 + 2.0 * C * delta3;
-
-        var squareRootOfDiscriminant = Math.sqrt(discriminant);
-        var halfSquareRootOf3 = Math.sqrt(3.0) / 2.0;
-
-        var theta = Math.abs(Math.atan2(A * squareRootOfDiscriminant, -DBarA) / 3.0);
-        temp = 2.0 * Math.sqrt(-CBarA);
-        var cosine = Math.cos(theta);
-        temp1 = temp * cosine;
-        var temp3 = temp * (-cosine / 2.0 - halfSquareRootOf3 * Math.sin(theta));
-
-        var numeratorLarge = (temp1 + temp3 > 2.0 * B) ? temp1 - B : temp3 - B;
-        var denominatorLarge = A;
-
-        var root1 = numeratorLarge / denominatorLarge;
-
-        theta = Math.abs(Math.atan2(D * squareRootOfDiscriminant, -DBarD) / 3.0);
-        temp = 2.0 * Math.sqrt(-CBarD);
-        cosine = Math.cos(theta);
-        temp1 = temp * cosine;
-        temp3 = temp * (-cosine / 2.0 - halfSquareRootOf3 * Math.sin(theta));
-
-        var numeratorSmall = -D;
-        var denominatorSmall = (temp1 + temp3 < 2.0 * C) ? temp1 + C : temp3 + C;
-
-        var root3 = numeratorSmall / denominatorSmall;
-
-        var E = denominatorLarge * denominatorSmall;
-        var F = -numeratorLarge * denominatorSmall - denominatorLarge * numeratorSmall;
-        var G = numeratorLarge * numeratorSmall;
-
-        var root2 = (C * F - B * G) / (-B * F + C * E);
-
-        if (root1 <= root2) {
-            if (root1 <= root3) {
-                if (root2 <= root3) {
-                    return [root1, root2, root3];
-                }
-                return [root1, root3, root2];
-            }
-            return [root3, root1, root2];
-        }
-        if (root1 <= root3) {
-            return [root2, root1, root3];
-        }
-        if (root2 <= root3) {
-            return [root2, root3, root1];
-        }
-        return [root3, root2, root1];
-    }
-
-    /**
-     * Provides the real valued roots of the cubic polynomial with the provided coefficients.
-     * @memberof CubicRealPolynomial
-     *
-     * @param {Number} a The coefficient of the 3rd order monomial.
-     * @param {Number} b The coefficient of the 2nd order monomial.
-     * @param {Number} c The coefficient of the 1st order monomial.
-     * @param {Number} d The coefficient of the 0th order monomial.
-     * @returns {Array} The real valued roots.
-     */
-    CubicRealPolynomial.realRoots = function(a, b, c, d) {
-                if (typeof a !== 'number') {
-            throw new DeveloperError('a is a required number.');
-        }
-        if (typeof b !== 'number') {
-            throw new DeveloperError('b is a required number.');
-        }
-        if (typeof c !== 'number') {
-            throw new DeveloperError('c is a required number.');
-        }
-        if (typeof d !== 'number') {
-            throw new DeveloperError('d is a required number.');
-        }
-        
-        var roots;
-        var ratio;
-        if (a === 0.0) {
-            // Quadratic function: b * x^2 + c * x + d = 0.
-            return QuadraticRealPolynomial.realRoots(b, c, d);
-        } else if (b === 0.0) {
-            if (c === 0.0) {
-                if (d === 0.0) {
-                    // 3rd order monomial: a * x^3 = 0.
-                    return [0.0, 0.0, 0.0];
-                }
-
-                // a * x^3 + d = 0
-                ratio = -d / a;
-                var root = (ratio < 0.0) ? -Math.pow(-ratio, 1.0 / 3.0) : Math.pow(ratio, 1.0 / 3.0);
-                return [root, root, root];
-            } else if (d === 0.0) {
-                // x * (a * x^2 + c) = 0.
-                roots = QuadraticRealPolynomial.realRoots(a, 0, c);
-
-                // Return the roots in ascending order.
-                if (roots.Length === 0) {
-                    return [0.0];
-                }
-                return [roots[0], 0.0, roots[1]];
-            }
-
-            // Deflated cubic polynomial: a * x^3 + c * x + d= 0.
-            return computeRealRoots(a, 0, c, d);
-        } else if (c === 0.0) {
-            if (d === 0.0) {
-                // x^2 * (a * x + b) = 0.
-                ratio = -b / a;
-                if (ratio < 0.0) {
-                    return [ratio, 0.0, 0.0];
-                }
-                return [0.0, 0.0, ratio];
-            }
-            // a * x^3 + b * x^2 + d = 0.
-            return computeRealRoots(a, b, 0, d);
-        } else if (d === 0.0) {
-            // x * (a * x^2 + b * x + c) = 0
-            roots = QuadraticRealPolynomial.realRoots(a, b, c);
-
-            // Return the roots in ascending order.
-            if (roots.length === 0) {
-                return [0.0];
-            } else if (roots[1] <= 0.0) {
-                return [roots[0], roots[1], 0.0];
-            } else if (roots[0] >= 0.0) {
-                return [0.0, roots[0], roots[1]];
-            }
-            return [roots[0], 0.0, roots[1]];
-        }
-
-        return computeRealRoots(a, b, c, d);
-    };
-
-    return CubicRealPolynomial;
-});
-/*global define*/
-define('Core/QuarticRealPolynomial',[
-        './DeveloperError',
-        './Math',
-        './CubicRealPolynomial',
-        './QuadraticRealPolynomial'
-    ],
-    function(
-        DeveloperError,
-        CesiumMath,
-        CubicRealPolynomial,
-        QuadraticRealPolynomial) {
-    "use strict";
-
-    /**
-     * Defines functions for 4th order polynomial functions of one variable with only real coefficients.
-     *
-     * @exports QuarticRealPolynomial
-     */
-    var QuarticRealPolynomial = {};
-
-    /**
-     * Provides the discriminant of the quartic equation from the supplied coefficients.
-     * @memberof QuarticRealPolynomial
-     *
-     * @param {Number} a The coefficient of the 4th order monomial.
-     * @param {Number} b The coefficient of the 3rd order monomial.
-     * @param {Number} c The coefficient of the 2nd order monomial.
-     * @param {Number} d The coefficient of the 1st order monomial.
-     * @param {Number} e The coefficient of the 0th order monomial.
-     * @returns {Number} The value of the discriminant.
-     */
-    QuarticRealPolynomial.discriminant = function(a, b, c, d, e) {
-                if (typeof a !== 'number') {
-            throw new DeveloperError('a is a required number.');
-        }
-        if (typeof b !== 'number') {
-            throw new DeveloperError('b is a required number.');
-        }
-        if (typeof c !== 'number') {
-            throw new DeveloperError('c is a required number.');
-        }
-        if (typeof d !== 'number') {
-            throw new DeveloperError('d is a required number.');
-        }
-        if (typeof e !== 'number') {
-            throw new DeveloperError('e is a required number.');
-        }
-        
-        var a2 = a * a;
-        var a3 = a2 * a;
-        var b2 = b * b;
-        var b3 = b2 * b;
-        var c2 = c * c;
-        var c3 = c2 * c;
-        var d2 = d * d;
-        var d3 = d2 * d;
-        var e2 = e * e;
-        var e3 = e2 * e;
-
-        var discriminant = (b2 * c2 * d2 - 4.0 * b3 * d3 - 4.0 * a * c3 * d2 + 18 * a * b * c * d3 - 27.0 * a2 * d2 * d2 + 256.0 * a3 * e3) +
-            e * (18.0 * b3 * c * d - 4.0 * b2 * c3 + 16.0 * a * c2 * c2 - 80.0 * a * b * c2 * d - 6.0 * a * b2 * d2 + 144.0 * a2 * c * d2) +
-            e2 * (144.0 * a * b2 * c - 27.0 * b2 * b2 - 128.0 * a2 * c2 - 192.0 * a2 * b * d);
-        return discriminant;
-    };
-
-    function original(a3, a2, a1, a0) {
-        var a3Squared = a3 * a3;
-
-        var p = a2 - 3.0 * a3Squared / 8.0;
-        var q = a1 - a2 * a3 / 2.0 + a3Squared * a3 / 8.0;
-        var r = a0 - a1 * a3 / 4.0 + a2 * a3Squared / 16.0 - 3.0 * a3Squared * a3Squared / 256.0;
-
-        // Find the roots of the cubic equations:  h^6 + 2 p h^4 + (p^2 - 4 r) h^2 - q^2 = 0.
-        var cubicRoots = CubicRealPolynomial.realRoots(1.0, 2.0 * p, p * p - 4.0 * r, -q * q);
-
-        if (cubicRoots.length > 0) {
-            var temp = -a3 / 4.0;
-
-            // Use the largest positive root.
-            var hSquared = cubicRoots[cubicRoots.length - 1];
-
-            if (Math.abs(hSquared) < CesiumMath.EPSILON14) {
-                // y^4 + p y^2 + r = 0.
-                var roots = QuadraticRealPolynomial.realRoots(1.0, p, r);
-
-                if (roots.length === 2) {
-                    var root0 = roots[0];
-                    var root1 = roots[1];
-
-                    var y;
-                    if (root0 >= 0.0 && root1 >= 0.0) {
-                        var y0 = Math.sqrt(root0);
-                        var y1 = Math.sqrt(root1);
-
-                        return [temp - y1, temp - y0, temp + y0, temp + y1];
-                    } else if (root0 >= 0.0 && root1 < 0.0) {
-                        y = Math.sqrt(root0);
-                        return [temp - y, temp + y];
-                    } else if (root0 < 0.0 && root1 >= 0.0) {
-                        y = Math.sqrt(root1);
-                        return [temp - y, temp + y];
-                    }
-                }
-                return [];
-            } else if (hSquared > 0.0) {
-                var h = Math.sqrt(hSquared);
-
-                var m = (p + hSquared - q / h) / 2.0;
-                var n = (p + hSquared + q / h) / 2.0;
-
-                // Now solve the two quadratic factors:  (y^2 + h y + m)(y^2 - h y + n);
-                var roots1 = QuadraticRealPolynomial.realRoots(1.0, h, m);
-                var roots2 = QuadraticRealPolynomial.realRoots(1.0, -h, n);
-
-                if (roots1.length !== 0) {
-                    roots1[0] += temp;
-                    roots1[1] += temp;
-
-                    if (roots2.length !== 0) {
-                        roots2[0] += temp;
-                        roots2[1] += temp;
-
-                        if (roots1[1] <= roots2[0]) {
-                            return [roots1[0], roots1[1], roots2[0], roots2[1]];
-                        } else if (roots2[1] <= roots1[0]) {
-                            return [roots2[0], roots2[1], roots1[0], roots1[1]];
-                        } else if (roots1[0] >= roots2[0] && roots1[1] <= roots2[1]) {
-                            return [roots2[0], roots1[0], roots1[1], roots2[1]];
-                        } else if (roots2[0] >= roots1[0] && roots2[1] <= roots1[1]) {
-                            return [roots1[0], roots2[0], roots2[1], roots1[1]];
-                        } else if (roots1[0] > roots2[0] && roots1[0] < roots2[1]) {
-                            return [roots2[0], roots1[0], roots2[1], roots1[1]];
-                        }
-                        return [roots1[0], roots2[0], roots1[1], roots2[1]];
-                    }
-                    return roots1;
-                }
-
-                if (roots2.length !== 0) {
-                    roots2[0] += temp;
-                    roots2[1] += temp;
-
-                    return roots2;
-                }
-                return [];
-            }
-        }
-        return [];
-    }
-
-    function neumark(a3, a2, a1, a0) {
-        var a1Squared = a1 * a1;
-        var a2Squared = a2 * a2;
-        var a3Squared = a3 * a3;
-
-        var p = -2.0 * a2;
-        var q = a1 * a3 + a2Squared - 4.0 * a0;
-        var r = a3Squared * a0 - a1 * a2 * a3 + a1Squared;
-
-        var cubicRoots = CubicRealPolynomial.realRoots(1.0, p, q, r);
-
-        if (cubicRoots.length > 0) {
-            // Use the most positive root
-            var y = cubicRoots[0];
-
-            var temp = (a2 - y);
-            var tempSquared = temp * temp;
-
-            var g1 = a3 / 2.0;
-            var h1 = temp / 2.0;
-
-            var m = tempSquared - 4.0 * a0;
-            var mError = tempSquared + 4.0 * Math.abs(a0);
-
-            var n = a3Squared - 4.0 * y;
-            var nError = a3Squared + 4.0 * Math.abs(y);
-
-            var g2;
-            var h2;
-
-            if (y < 0.0 || (m * nError < n * mError)) {
-                var squareRootOfN = Math.sqrt(n);
-                g2 = squareRootOfN / 2.0;
-                h2 = squareRootOfN === 0.0 ? 0.0 : (a3 * h1 - a1) / squareRootOfN;
-            } else {
-                var squareRootOfM = Math.sqrt(m);
-                g2 = squareRootOfM === 0.0 ? 0.0 : (a3 * h1 - a1) / squareRootOfM;
-                h2 = squareRootOfM / 2.0;
-            }
-
-            var G;
-            var g;
-            if (g1 === 0.0 && g2 === 0.0) {
-                G = 0.0;
-                g = 0.0;
-            } else if (CesiumMath.sign(g1) === CesiumMath.sign(g2)) {
-                G = g1 + g2;
-                g = y / G;
-            } else {
-                g = g1 - g2;
-                G = y / g;
-            }
-
-            var H;
-            var h;
-            if (h1 === 0.0 && h2 === 0.0) {
-                H = 0.0;
-                h = 0.0;
-            } else if (CesiumMath.sign(h1) === CesiumMath.sign(h2)) {
-                H = h1 + h2;
-                h = a0 / H;
-            } else {
-                h = h1 - h2;
-                H = a0 / h;
-            }
-
-            // Now solve the two quadratic factors:  (y^2 + G y + H)(y^2 + g y + h);
-            var roots1 = QuadraticRealPolynomial.realRoots(1.0, G, H);
-            var roots2 = QuadraticRealPolynomial.realRoots(1.0, g, h);
-
-            if (roots1.length !== 0) {
-                if (roots2.length !== 0) {
-                    if (roots1[1] <= roots2[0]) {
-                        return [roots1[0], roots1[1], roots2[0], roots2[1]];
-                    } else if (roots2[1] <= roots1[0]) {
-                        return [roots2[0], roots2[1], roots1[0], roots1[1]];
-                    } else if (roots1[0] >= roots2[0] && roots1[1] <= roots2[1]) {
-                        return [roots2[0], roots1[0], roots1[1], roots2[1]];
-                    } else if (roots2[0] >= roots1[0] && roots2[1] <= roots1[1]) {
-                        return [roots1[0], roots2[0], roots2[1], roots1[1]];
-                    } else if (roots1[0] > roots2[0] && roots1[0] < roots2[1]) {
-                        return [roots2[0], roots1[0], roots2[1], roots1[1]];
-                    } else {
-                        return [roots1[0], roots2[0], roots1[1], roots2[1]];
-                    }
-                }
-                return roots1;
-            }
-            if (roots2.length !== 0) {
-                return roots2;
-            }
-        }
-        return [];
-    }
-
-    /**
-     * Provides the real valued roots of the quartic polynomial with the provided coefficients.
-     * @memberof QuarticRealPolynomial
-     *
-     * @param {Number} a The coefficient of the 4th order monomial.
-     * @param {Number} b The coefficient of the 3rd order monomial.
-     * @param {Number} c The coefficient of the 2nd order monomial.
-     * @param {Number} d The coefficient of the 1st order monomial.
-     * @param {Number} e The coefficient of the 0th order monomial.
-     * @returns {Array} The real valued roots.
-     */
-    QuarticRealPolynomial.realRoots = function(a, b, c, d, e) {
-                if (typeof a !== 'number') {
-            throw new DeveloperError('a is a required number.');
-        }
-        if (typeof b !== 'number') {
-            throw new DeveloperError('b is a required number.');
-        }
-        if (typeof c !== 'number') {
-            throw new DeveloperError('c is a required number.');
-        }
-        if (typeof d !== 'number') {
-            throw new DeveloperError('d is a required number.');
-        }
-        if (typeof e !== 'number') {
-            throw new DeveloperError('e is a required number.');
-        }
-        
-        if (Math.abs(a) < CesiumMath.EPSILON15) {
-            return CubicRealPolynomial.realRoots(b, c, d, e);
-        }
-        var a3 = b / a;
-        var a2 = c / a;
-        var a1 = d / a;
-        var a0 = e / a;
-
-        var k = (a3 < 0.0) ? 1 : 0;
-        k += (a2 < 0.0) ? k + 1 : k;
-        k += (a1 < 0.0) ? k + 1 : k;
-        k += (a0 < 0.0) ? k + 1 : k;
-
-        switch (k) {
-        case 0:
-            return original(a3, a2, a1, a0);
-        case 1:
-            return neumark(a3, a2, a1, a0);
-        case 2:
-            return neumark(a3, a2, a1, a0);
-        case 3:
-            return original(a3, a2, a1, a0);
-        case 4:
-            return original(a3, a2, a1, a0);
-        case 5:
-            return neumark(a3, a2, a1, a0);
-        case 6:
-            return original(a3, a2, a1, a0);
-        case 7:
-            return original(a3, a2, a1, a0);
-        case 8:
-            return neumark(a3, a2, a1, a0);
-        case 9:
-            return original(a3, a2, a1, a0);
-        case 10:
-            return original(a3, a2, a1, a0);
-        case 11:
-            return neumark(a3, a2, a1, a0);
-        case 12:
-            return original(a3, a2, a1, a0);
-        case 13:
-            return original(a3, a2, a1, a0);
-        case 14:
-            return original(a3, a2, a1, a0);
-        case 15:
-            return original(a3, a2, a1, a0);
-        default:
-            return undefined;
-        }
-    };
-
-    return QuarticRealPolynomial;
-});
-/*global define*/
-define('Core/IntersectionTests',[
-        './defined',
-        './DeveloperError',
-        './Math',
-        './Cartesian3',
-        './Cartographic',
-        './Matrix3',
-        './QuadraticRealPolynomial',
-        './QuarticRealPolynomial'
-    ],
-    function(
-        defined,
-        DeveloperError,
-        CesiumMath,
-        Cartesian3,
-        Cartographic,
-        Matrix3,
-        QuadraticRealPolynomial,
-        QuarticRealPolynomial) {
-    "use strict";
-
-    /**
-     * DOC_TBA
-     *
-     * @exports IntersectionTests
-     */
-    var IntersectionTests = {};
-
-    /**
-     * Computes the intersection of a ray and a plane.
-     * @memberof IntersectionTests
-     *
-     * @param {Ray} ray The ray.
-     * @param {Plane} plane The plane.
-     * @returns {Cartesian3} The intersection point or undefined if there is no intersections.
-     */
-    IntersectionTests.rayPlane = function(ray, plane, result) {
-                if (!defined(ray)) {
-            throw new DeveloperError('ray is required.');
-        }
-        if (!defined(plane)) {
-            throw new DeveloperError('plane is required.');
-        }
-        
-        var origin = ray.origin;
-        var direction = ray.direction;
-        var normal = plane.normal;
-        var denominator = Cartesian3.dot(normal, direction);
-
-        if (Math.abs(denominator) < CesiumMath.EPSILON15) {
-            // Ray is parallel to plane.  The ray may be in the polygon's plane.
-            return undefined;
-        }
-
-        var t = (-plane.distance - Cartesian3.dot(normal, origin)) / denominator;
-
-        if (t < 0) {
-            return undefined;
-        }
-
-        result = Cartesian3.multiplyByScalar(direction, t, result);
-        return Cartesian3.add(origin, result, result);
-    };
-
-    var scratchQ = new Cartesian3();
-    var scratchW = new Cartesian3();
-
-    /**
-     * Computes the intersection points of a ray with an ellipsoid.
-     * @memberof IntersectionTests
-     *
-     * @param {Ray} ray The ray.
-     * @param {Ellipsoid} ellipsoid The ellipsoid.
-     * @returns {Object} An object with the first (<code>start</code>) and the second (<code>stop</code>) intersection scalars for points along the ray or undefined if there are no intersections.
-     */
-    IntersectionTests.rayEllipsoid = function(ray, ellipsoid) {
-                if (!defined(ray)) {
-            throw new DeveloperError('ray is required.');
-        }
-        if (!defined(ellipsoid)) {
-            throw new DeveloperError('ellipsoid is required.');
-        }
-        
-        var inverseRadii = ellipsoid.oneOverRadii;
-        var q = Cartesian3.multiplyComponents(inverseRadii, ray.origin, scratchQ);
-        var w = Cartesian3.multiplyComponents(inverseRadii, ray.direction, scratchW);
-
-        var q2 = Cartesian3.magnitudeSquared(q);
-        var qw = Cartesian3.dot(q, w);
-
-        var difference, w2, product, discriminant, temp;
-
-        if (q2 > 1.0) {
-            // Outside ellipsoid.
-            if (qw >= 0.0) {
-                // Looking outward or tangent (0 intersections).
-                return undefined;
-            }
-
-            // qw < 0.0.
-            var qw2 = qw * qw;
-            difference = q2 - 1.0; // Positively valued.
-            w2 = Cartesian3.magnitudeSquared(w);
-            product = w2 * difference;
-
-            if (qw2 < product) {
-                // Imaginary roots (0 intersections).
-                return undefined;
-            } else if (qw2 > product) {
-                // Distinct roots (2 intersections).
-                discriminant = qw * qw - product;
-                temp = -qw + Math.sqrt(discriminant); // Avoid cancellation.
-                var root0 = temp / w2;
-                var root1 = difference / temp;
-                if (root0 < root1) {
-                    return {
-                        start : root0,
-                        stop : root1
-                    };
-                }
-
-                return {
-                    start : root1,
-                    stop : root0
-                };
-            } else {
-                // qw2 == product.  Repeated roots (2 intersections).
-                var root = Math.sqrt(difference / w2);
-                return {
-                    start : root,
-                    stop : root
-                };
-            }
-        } else if (q2 < 1.0) {
-            // Inside ellipsoid (2 intersections).
-            difference = q2 - 1.0; // Negatively valued.
-            w2 = Cartesian3.magnitudeSquared(w);
-            product = w2 * difference; // Negatively valued.
-
-            discriminant = qw * qw - product;
-            temp = -qw + Math.sqrt(discriminant); // Positively valued.
-            return {
-                start : 0.0,
-                stop : temp / w2
-            };
-        } else {
-            // q2 == 1.0. On ellipsoid.
-            if (qw < 0.0) {
-                // Looking inward.
-                w2 = Cartesian3.magnitudeSquared(w);
-                return {
-                    start : 0.0,
-                    stop : -qw / w2
-                };
-            }
-
-            // qw >= 0.0.  Looking outward or tangent.
-            return undefined;
-        }
-    };
-
-    function addWithCancellationCheck(left, right, tolerance) {
-        var difference = left + right;
-        if ((CesiumMath.sign(left) !== CesiumMath.sign(right)) &&
-                Math.abs(difference / Math.max(Math.abs(left), Math.abs(right))) < tolerance) {
-            return 0.0;
-        }
-
-        return difference;
-    }
-
-    function quadraticVectorExpression(A, b, c, x, w) {
-        var xSquared = x * x;
-        var wSquared = w * w;
-
-        var l2 = (A[Matrix3.COLUMN1ROW1] - A[Matrix3.COLUMN2ROW2]) * wSquared;
-        var l1 = w * (x * addWithCancellationCheck(A[Matrix3.COLUMN1ROW0], A[Matrix3.COLUMN0ROW1], CesiumMath.EPSILON15) + b.y);
-        var l0 = (A[Matrix3.COLUMN0ROW0] * xSquared + A[Matrix3.COLUMN2ROW2] * wSquared) + x * b.x + c;
-
-        var r1 = wSquared * addWithCancellationCheck(A[Matrix3.COLUMN2ROW1], A[Matrix3.COLUMN1ROW2], CesiumMath.EPSILON15);
-        var r0 = w * (x * addWithCancellationCheck(A[Matrix3.COLUMN2ROW0], A[Matrix3.COLUMN0ROW2]) + b.z);
-
-        var cosines;
-        var solutions = [];
-        if (r0 === 0.0 && r1 === 0.0) {
-            cosines = QuadraticRealPolynomial.realRoots(l2, l1, l0);
-            if (cosines.length === 0) {
-                return solutions;
-            }
-
-            var cosine0 = cosines[0];
-            var sine0 = Math.sqrt(Math.max(1.0 - cosine0 * cosine0, 0.0));
-            solutions.push(new Cartesian3(x, w * cosine0, w * -sine0));
-            solutions.push(new Cartesian3(x, w * cosine0, w * sine0));
-
-            if (cosines.length === 2) {
-                var cosine1 = cosines[1];
-                var sine1 = Math.sqrt(Math.max(1.0 - cosine1 * cosine1, 0.0));
-                solutions.push(new Cartesian3(x, w * cosine1, w * -sine1));
-                solutions.push(new Cartesian3(x, w * cosine1, w * sine1));
-            }
-
-            return solutions;
-        }
-
-        var r0Squared = r0 * r0;
-        var r1Squared = r1 * r1;
-        var l2Squared = l2 * l2;
-        var r0r1 = r0 * r1;
-
-        var c4 = l2Squared + r1Squared;
-        var c3 = 2.0 * (l1 * l2 + r0r1);
-        var c2 = 2.0 * l0 * l2 + l1 * l1 - r1Squared + r0Squared;
-        var c1 = 2.0 * (l0 * l1 - r0r1);
-        var c0 = l0 * l0 - r0Squared;
-
-        if (c4 === 0.0 && c3 === 0.0 && c2 === 0.0 && c1 === 0.0) {
-            return solutions;
-        }
-
-        cosines = QuarticRealPolynomial.realRoots(c4, c3, c2, c1, c0);
-        var length = cosines.length;
-        if (length === 0) {
-            return solutions;
-        }
-
-        for ( var i = 0; i < length; ++i) {
-            var cosine = cosines[i];
-            var cosineSquared = cosine * cosine;
-            var sineSquared = Math.max(1.0 - cosineSquared, 0.0);
-            var sine = Math.sqrt(sineSquared);
-
-            //var left = l2 * cosineSquared + l1 * cosine + l0;
-            var left;
-            if (CesiumMath.sign(l2) === CesiumMath.sign(l0)) {
-                left = addWithCancellationCheck(l2 * cosineSquared + l0, l1 * cosine, CesiumMath.EPSILON12);
-            } else if (CesiumMath.sign(l0) === CesiumMath.sign(l1 * cosine)) {
-                left = addWithCancellationCheck(l2 * cosineSquared, l1 * cosine + l0, CesiumMath.EPSILON12);
-            } else {
-                left = addWithCancellationCheck(l2 * cosineSquared + l1 * cosine, l0, CesiumMath.EPSILON12);
-            }
-
-            var right = addWithCancellationCheck(r1 * cosine, r0, CesiumMath.EPSILON15);
-            var product = left * right;
-
-            if (product < 0.0) {
-                solutions.push(new Cartesian3(x, w * cosine, w * sine));
-            } else if (product > 0.0) {
-                solutions.push(new Cartesian3(x, w * cosine, w * -sine));
-            } else if (sine !== 0.0) {
-                solutions.push(new Cartesian3(x, w * cosine, w * -sine));
-                solutions.push(new Cartesian3(x, w * cosine, w * sine));
-                ++i;
-            } else {
-                solutions.push(new Cartesian3(x, w * cosine, w * sine));
-            }
-        }
-
-        return solutions;
-    }
-
-    /**
-     * Provides the point along the ray which is nearest to the ellipsoid.
-     * @memberof IntersectionTests
-     *
-     * @param {Ray} ray The ray.
-     * @param {Ellipsoid} ellipsoid The ellipsoid.
-     * @returns {Cartesian} The nearest planetodetic point on the ray.
-     */
-    IntersectionTests.grazingAltitudeLocation = function(ray, ellipsoid) {
-                if (!defined(ray)) {
-            throw new DeveloperError('ray is required.');
-        }
-        if (!defined(ellipsoid)) {
-            throw new DeveloperError('ellipsoid is required.');
-        }
-        
-        var position = ray.origin;
-        var direction = ray.direction;
-
-        var normal = ellipsoid.geodeticSurfaceNormal(position);
-
-        if (Cartesian3.dot(direction, normal) >= 0.0) { // The location provided is the closest point in altitude
-            return position;
-        }
-
-        var intersects = defined(this.rayEllipsoid(ray, ellipsoid));
-
-        // Compute the scaled direction vector.
-        var f = ellipsoid.transformPositionToScaledSpace(direction);
-
-        // Constructs a basis from the unit scaled direction vector. Construct its rotation and transpose.
-        var firstAxis = Cartesian3.normalize(f);
-        var reference = Cartesian3.mostOrthogonalAxis(f);
-        var secondAxis = Cartesian3.normalize(Cartesian3.cross(reference, firstAxis));
-        var thirdAxis  = Cartesian3.normalize(Cartesian3.cross(firstAxis, secondAxis));
-        var B = new Matrix3(firstAxis.x, secondAxis.x, thirdAxis.x,
-                            firstAxis.y, secondAxis.y, thirdAxis.y,
-                            firstAxis.z, secondAxis.z, thirdAxis.z);
-        var B_T = Matrix3.transpose(B);
-
-        // Get the scaling matrix and its inverse.
-        var D_I = Matrix3.fromScale(ellipsoid.radii);
-        var D = Matrix3.fromScale(ellipsoid.oneOverRadii);
-
-        var C = new Matrix3(0.0, direction.z, -direction.y,
-                            -direction.z, 0.0, direction.x,
-                            direction.y, -direction.x, 0.0);
-
-        var temp = Matrix3.multiply(Matrix3.multiply(B_T, D), C);
-        var A = Matrix3.multiply(Matrix3.multiply(temp, D_I), B);
-        var b = Matrix3.multiplyByVector(temp, position);
-
-        // Solve for the solutions to the expression in standard form:
-        var solutions = quadraticVectorExpression(A, Cartesian3.negate(b), 0.0, 0.0, 1.0);
-
-        var s;
-        var altitude;
-        var length = solutions.length;
-        if (length > 0) {
-            var closest = Cartesian3.ZERO;
-            var maximumValue = Number.NEGATIVE_INFINITY;
-
-            for ( var i = 0; i < length; ++i) {
-                s = Matrix3.multiplyByVector(D_I, Matrix3.multiplyByVector(B, solutions[i]));
-                var v = Cartesian3.normalize(Cartesian3.subtract(s, position));
-                var dotProduct = Cartesian3.dot(v, direction);
-
-                if (dotProduct > maximumValue) {
-                    maximumValue = dotProduct;
-                    closest = s;
-                }
-            }
-
-            var surfacePoint = ellipsoid.cartesianToCartographic(closest);
-            maximumValue = CesiumMath.clamp(maximumValue, 0.0, 1.0);
-            altitude = Cartesian3.magnitude(Cartesian3.subtract(closest, position)) * Math.sqrt(1.0 - maximumValue * maximumValue);
-            altitude = intersects ? -altitude : altitude;
-            return ellipsoid.cartographicToCartesian(new Cartographic(surfacePoint.longitude, surfacePoint.latitude, altitude));
-        }
-
-        return undefined;
-    };
-
-    var lineSegmentPlaneDifference = new Cartesian3();
-
-    /**
-     * Computes the intersection of a line segment and a plane.
-     * @memberof IntersectionTests
-     *
-     * @param {Cartesian3} endPoint0 An end point of the line segment.
-     * @param {Cartesian3} endPoint1 The other end point of the line segment.
-     * @param {Plane} plane The plane.
-     * @param {Cartesian3} [result] The object onto which to store the result.
-     * @returns {Cartesian3} The intersection point or undefined if there is no intersection.
-     *
-     * @example
-     * var origin = ellipsoid.cartographicToCartesian(Cesium.Cartographic.fromDegrees(-75.59777, 40.03883, 0.0));
-     * var normal = ellipsoid.geodeticSurfaceNormal(origin);
-     * var plane = Cesium.Plane.fromPointNormal(origin, normal);
-     *
-     * var p0 = new Cesium.Cartesian3(...);
-     * var p1 = new Cesium.Cartesian3(...);
-     *
-     * // find the intersection of the line segment from p0 to p1 and the tangent plane at origin.
-     * var intersection = Cesium.IntersectionTests.lineSegmentPlane(p0, p1, plane);
-     */
-    IntersectionTests.lineSegmentPlane = function(endPoint0, endPoint1, plane, result) {
-                if (!defined(endPoint0)) {
-            throw new DeveloperError('endPoint0 is required.');
-        }
-        if (!defined(endPoint1)) {
-            throw new DeveloperError('endPoint1 is required.');
-        }
-        if (!defined(plane)) {
-            throw new DeveloperError('plane is required.');
-        }
-        
-        var difference = Cartesian3.subtract(endPoint1, endPoint0, lineSegmentPlaneDifference);
-        var normal = plane.normal;
-        var nDotDiff = Cartesian3.dot(normal, difference);
-
-        // check if the segment and plane are parallel
-        if (Math.abs(nDotDiff) < CesiumMath.EPSILON6) {
-            return undefined;
-        }
-
-        var nDotP0 = Cartesian3.dot(normal, endPoint0);
-        var t = -(plane.distance + nDotP0) / nDotDiff;
-
-        // intersection only if t is in [0, 1]
-        if (t < 0.0 || t > 1.0) {
-            return undefined;
-        }
-
-        // intersection is endPoint0 + t * (endPoint1 - endPoint0)
-        if (!defined(result)) {
-            result = new Cartesian3();
-        }
-        Cartesian3.multiplyByScalar(difference, t, result);
-        Cartesian3.add(endPoint0, result, result);
-        return result;
-    };
-
-    /**
-     * Computes the intersection of a triangle and a plane
-     * @memberof IntersectionTests
-     *
-     * @param {Cartesian3} p0 First point of the triangle
-     * @param {Cartesian3} p1 Second point of the triangle
-     * @param {Cartesian3} p2 Third point of the triangle
-     * @param {Plane} plane Intersection plane
-     *
-     * @returns {Object} An object with properties <code>positions</code> and <code>indices</code>, which are arrays that represent three triangles that do not cross the plane. (Undefined if no intersection exists)
-     *
-     * @example
-     * var origin = ellipsoid.cartographicToCartesian(Cesium.Cartographic.fromDegrees(-75.59777, 40.03883, 0.0));
-     * var normal = ellipsoid.geodeticSurfaceNormal(origin);
-     * var plane = Cesium.Plane.fromPointNormal(origin, normal);
-     *
-     * var p0 = new Cesium.Cartesian3(...);
-     * var p1 = new Cesium.Cartesian3(...);
-     * var p2 = new Cesium.Cartesian3(...);
-     *
-     * // convert the triangle composed of points (p0, p1, p2) to three triangles that don't cross the plane
-     * var triangles = Cesium.IntersectionTests.lineSegmentPlane(p0, p1, p2, plane);
-     */
-    IntersectionTests.trianglePlaneIntersection = function(p0, p1, p2, plane) {
-                if ((!defined(p0)) ||
-            (!defined(p1)) ||
-            (!defined(p2)) ||
-            (!defined(plane))) {
-            throw new DeveloperError('p0, p1, p2, and plane are required.');
-        }
-        
-        var planeNormal = plane.normal;
-        var planeD = plane.distance;
-        var p0Behind = (Cartesian3.dot(planeNormal, p0) + planeD) < 0.0;
-        var p1Behind = (Cartesian3.dot(planeNormal, p1) + planeD) < 0.0;
-        var p2Behind = (Cartesian3.dot(planeNormal, p2) + planeD) < 0.0;
-        // Given these dots products, the calls to lineSegmentPlaneIntersection
-        // always have defined results.
-
-        var numBehind = 0;
-        numBehind += p0Behind ? 1 : 0;
-        numBehind += p1Behind ? 1 : 0;
-        numBehind += p2Behind ? 1 : 0;
-
-        var u1, u2;
-        if (numBehind === 1 || numBehind === 2) {
-            u1 = new Cartesian3();
-            u2 = new Cartesian3();
-        }
-
-        if (numBehind === 1) {
-            if (p0Behind) {
-                IntersectionTests.lineSegmentPlane(p0, p1, plane, u1);
-                IntersectionTests.lineSegmentPlane(p0, p2, plane, u2);
-
-                return {
-                    positions : [p0, p1, p2, u1, u2 ],
-                    indices : [
-                        // Behind
-                        0, 3, 4,
-
-                        // In front
-                        1, 2, 4,
-                        1, 4, 3
-                    ]
-                };
-            } else if (p1Behind) {
-                IntersectionTests.lineSegmentPlane(p1, p2, plane, u1);
-                IntersectionTests.lineSegmentPlane(p1, p0, plane, u2);
-
-                return {
-                    positions : [p0, p1, p2, u1, u2 ],
-                    indices : [
-                        // Behind
-                        1, 3, 4,
-
-                        // In front
-                        2, 0, 4,
-                        2, 4, 3
-                    ]
-                };
-            } else if (p2Behind) {
-                IntersectionTests.lineSegmentPlane(p2, p0, plane, u1);
-                IntersectionTests.lineSegmentPlane(p2, p1, plane, u2);
-
-                return {
-                    positions : [p0, p1, p2, u1, u2 ],
-                    indices : [
-                        // Behind
-                        2, 3, 4,
-
-                        // In front
-                        0, 1, 4,
-                        0, 4, 3
-                    ]
-                };
-            }
-        } else if (numBehind === 2) {
-            if (!p0Behind) {
-                IntersectionTests.lineSegmentPlane(p1, p0, plane, u1);
-                IntersectionTests.lineSegmentPlane(p2, p0, plane, u2);
-
-                return {
-                    positions : [p0, p1, p2, u1, u2 ],
-                    indices : [
-                        // Behind
-                        1, 2, 4,
-                        1, 4, 3,
-
-                        // In front
-                        0, 3, 4
-                    ]
-                };
-            } else if (!p1Behind) {
-                IntersectionTests.lineSegmentPlane(p2, p1, plane, u1);
-                IntersectionTests.lineSegmentPlane(p0, p1, plane, u2);
-
-                return {
-                    positions : [p0, p1, p2, u1, u2 ],
-                    indices : [
-                        // Behind
-                        2, 0, 4,
-                        2, 4, 3,
-
-                        // In front
-                        1, 3, 4
-                    ]
-                };
-            } else if (!p2Behind) {
-                IntersectionTests.lineSegmentPlane(p0, p2, plane, u1);
-                IntersectionTests.lineSegmentPlane(p1, p2, plane, u2);
-
-                return {
-                    positions : [p0, p1, p2, u1, u2 ],
-                    indices : [
-                        // Behind
-                        0, 1, 4,
-                        0, 4, 3,
-
-                        // In front
-                        2, 3, 4
-                    ]
-                };
-            }
-        }
-
-        // if numBehind is 3, the triangle is completely behind the plane;
-        // otherwise, it is completely in front (numBehind is 0).
-        return undefined;
-    };
-
-    return IntersectionTests;
-});
-
-/*global define*/
-define('Core/Plane',[
-        './Cartesian3',
-        './defined',
-        './DeveloperError'
-    ], function(
-        Cartesian3,
-        defined,
-        DeveloperError) {
-    "use strict";
-
-    /**
-     * A plane in Hessian Normal Form defined by
-     * <pre>
-     * ax + by + cz + d = 0
-     * </pre>
-     * where (a, b, c) is the plane's <code>normal</code>, d is the signed
-     * <code>distance</code> to the plane, and (x, y, z) is any point on
-     * the plane.
-     *
-     * @alias Plane
-     * @constructor
-     *
-     * @param {Cartesian3} normal The plane's normal (normalized).
-     * @param {Number} distance The shortest distance from the origin to the plane.  The sign of
-     * <code>distance</code> determines which side of the plane the origin
-     * is on.  If <code>distance</code> is positive, the origin is in the half-space
-     * in the direction of the normal; if negative, the origin is in the half-space
-     * opposite to the normal; if zero, the plane passes through the origin.
-     *
-     * @example
-     * // The plane x=0
-     * var plane = new Cesium.Plane(Cesium.Cartesian3.UNIT_X, 0.0);
-     */
-    var Plane = function(normal, distance) {
-                if (!defined(normal))  {
-            throw new DeveloperError('normal is required.');
-        }
-        if (!defined(distance)) {
-            throw new DeveloperError('distance is required.');
-        }
-        
-        /**
-         * The plane's normal.
-         *
-         * @type {Cartesian3}
-         */
-        this.normal = Cartesian3.clone(normal);
-
-        /**
-         * The shortest distance from the origin to the plane.  The sign of
-         * <code>distance</code> determines which side of the plane the origin
-         * is on.  If <code>distance</code> is positive, the origin is in the half-space
-         * in the direction of the normal; if negative, the origin is in the half-space
-         * opposite to the normal; if zero, the plane passes through the origin.
-         *
-         * @type {Number}
-         */
-        this.distance = distance;
-    };
-
-    /**
-     * Creates a plane from a normal and a point on the plane.
-     * @memberof Plane
-     *
-     * @param {Cartesian3} point The point on the plane.
-     * @param {Cartesian3} normal The plane's normal (normalized).
-     * @param {Plane} [result] The object onto which to store the result.
-     * @returns {Plane} A new plane instance or the modified result parameter.
-     *
-     * @example
-     * var point = ellipsoid.cartographicToCartesian(Cesium.Cartographic.fromDegrees(-72.0, 40.0));
-     * var normal = ellipsoid.geodeticSurfaceNormal(point);
-     * var tangentPlane = Cesium.Plane.fromPointNormal(point, normal);
-     */
-    Plane.fromPointNormal = function(point, normal, result) {
-                if (!defined(point)) {
-            throw new DeveloperError('point is required.');
-        }
-        if (!defined(normal)) {
-            throw new DeveloperError('normal is required.');
-        }
-        
-        var distance = -Cartesian3.dot(normal, point);
-
-        if (!defined(result)) {
-            return new Plane(normal, distance);
-        }
-
-        Cartesian3.clone(normal, result.normal);
-        result.distance = distance;
-        return result;
-    };
-
-    /**
-     * Computes the signed shortest distance of a point to a plane.
-     * The sign of the distance determines which side of the plane the point
-     * is on.  If the distance is positive, the point is in the half-space
-     * in the direction of the normal; if negative, the point is in the half-space
-     * opposite to the normal; if zero, the plane passes through the point.
-     * @memberof Plane
-     *
-     * @param {Plane} plane The plane.
-     * @param {Cartesian3} point The point.
-     * @returns {Number} The signed shortest distance of the point to the plane.
-     */
-    Plane.getPointDistance = function(plane, point) {
-                if (!defined(plane)) {
-            throw new DeveloperError('plane is required.');
-        }
-        if (!defined(point)) {
-            throw new DeveloperError('point is required.');
-        }
-        
-        return Cartesian3.dot(plane.normal, point) + plane.distance;
-    };
-
-    return Plane;
-});
-
-/*global define*/
-define('Core/Tipsify',[
-        './defaultValue',
-        './defined',
-        './DeveloperError'
-    ], function(
-        defaultValue,
-        defined,
-        DeveloperError) {
-    "use strict";
-
-    /**
-     * Encapsulates an algorithm to optimize triangles for the post
-     * vertex-shader cache.  This is based on the 2007 SIGGRAPH paper
-     * 'Fast Triangle Reordering for Vertex Locality and Reduced Overdraw.'
-     * The runtime is linear but several passes are made.
-     *
-     * @exports Tipsify
-     *
-     * @see <a href='http://gfx.cs.princeton.edu/pubs/Sander_2007_%3ETR/tipsy.pdf'>
-     * Fast Triangle Reordering for Vertex Locality and Reduced Overdraw</a>
-     * by Sander, Nehab, and Barczak
-     */
-    var Tipsify = {};
-
-    /**
-     * Calculates the average cache miss ratio (ACMR) for a given set of indices.
-     *
-     * @param {Array} description.indices Lists triads of numbers corresponding to the indices of the vertices
-     *                        in the vertex buffer that define the geometry's triangles.
-     * @param {Number} [description.maximumIndex] The maximum value of the elements in <code>args.indices</code>.
-     *                                     If not supplied, this value will be computed.
-     * @param {Number} [description.cacheSize=24] The number of vertices that can be stored in the cache at any one time.
-     *
-     * @exception {DeveloperError} indices length must be a multiple of three.
-     * @exception {DeveloperError} cacheSize must be greater than two.
-     *
-     * @returns {Number} The average cache miss ratio (ACMR).
-     *
-     * @example
-     * var indices = [0, 1, 2, 3, 4, 5];
-     * var maxIndex = 5;
-     * var cacheSize = 3;
-     * var acmr = Cesium.Tipsify.calculateACMR({indices : indices, maxIndex : maxIndex, cacheSize : cacheSize});
-     */
-    Tipsify.calculateACMR = function(description) {
-        description = defaultValue(description, defaultValue.EMPTY_OBJECT);
-        var indices = description.indices;
-        var maximumIndex = description.maximumIndex;
-        var cacheSize = defaultValue(description.cacheSize, 24);
-
-                if (!defined(indices)) {
-            throw new DeveloperError('indices is required.');
-        }
-        
-        var numIndices = indices.length;
-
-                if (numIndices < 3 || numIndices % 3 !== 0) {
-            throw new DeveloperError('indices length must be a multiple of three.');
-        }
-        if (maximumIndex <= 0) {
-            throw new DeveloperError('maximumIndex must be greater than zero.');
-        }
-        if (cacheSize < 3) {
-            throw new DeveloperError('cacheSize must be greater than two.');
-        }
-        
-        // Compute the maximumIndex if not given
-        if (!defined(maximumIndex)) {
-            maximumIndex = 0;
-            var currentIndex = 0;
-            var intoIndices = indices[currentIndex];
-            while (currentIndex < numIndices) {
-                if (intoIndices > maximumIndex) {
-                    maximumIndex = intoIndices;
-                }
-                ++currentIndex;
-                intoIndices = indices[currentIndex];
-            }
-        }
-
-        // Vertex time stamps
-        var vertexTimeStamps = [];
-        for ( var i = 0; i < maximumIndex + 1; i++) {
-            vertexTimeStamps[i] = 0;
-        }
-
-        // Cache processing
-        var s = cacheSize + 1;
-        for ( var j = 0; j < numIndices; ++j) {
-            if ((s - vertexTimeStamps[indices[j]]) > cacheSize) {
-                vertexTimeStamps[indices[j]] = s;
-                ++s;
-            }
-        }
-
-        return (s - cacheSize + 1) / (numIndices / 3);
-    };
-
-    /**
-     * Optimizes triangles for the post-vertex shader cache.
-     *
-     * @param {Array} description.indices Lists triads of numbers corresponding to the indices of the vertices
-     *                        in the vertex buffer that define the geometry's triangles.
-     * @param {Number} [description.maximumIndex] The maximum value of the elements in <code>args.indices</code>.
-     *                                     If not supplied, this value will be computed.
-     * @param {Number} [description.cacheSize=24] The number of vertices that can be stored in the cache at any one time.
-     *
-     * @exception {DeveloperError} indices length must be a multiple of three.
-     * @exception {DeveloperError} cacheSize must be greater than two.
-     *
-     * @returns {Array} A list of the input indices in an optimized order.
-     *
-     * @example
-     * var indices = [0, 1, 2, 3, 4, 5];
-     * var maxIndex = 5;
-     * var cacheSize = 3;
-     * var reorderedIndices = Cesium.Tipsify.tipsify({indices : indices, maxIndex : maxIndex, cacheSize : cacheSize});
-     */
-    Tipsify.tipsify = function(description) {
-        description = defaultValue(description, defaultValue.EMPTY_OBJECT);
-        var indices = description.indices;
-        var maximumIndex = description.maximumIndex;
-        var cacheSize = defaultValue(description.cacheSize, 24);
-
-        var cursor;
-
-        function skipDeadEnd(vertices, deadEnd, indices, maximumIndexPlusOne) {
-            while (deadEnd.length >= 1) {
-                // while the stack is not empty
-                var d = deadEnd[deadEnd.length - 1]; // top of the stack
-                deadEnd.splice(deadEnd.length - 1, 1); // pop the stack
-
-                if (vertices[d].numLiveTriangles > 0) {
-                    return d;
-                }
-            }
-
-            while (cursor < maximumIndexPlusOne) {
-                if (vertices[cursor].numLiveTriangles > 0) {
-                    ++cursor;
-                    return cursor - 1;
-                }
-                ++cursor;
-            }
-            return -1;
-        }
-
-        function getNextVertex(indices, cacheSize, oneRing, vertices, s, deadEnd, maximumIndexPlusOne) {
-            var n = -1;
-            var p;
-            var m = -1;
-            var itOneRing = 0;
-            while (itOneRing < oneRing.length) {
-                var index = oneRing[itOneRing];
-                if (vertices[index].numLiveTriangles) {
-                    p = 0;
-                    if ((s - vertices[index].timeStamp + (2 * vertices[index].numLiveTriangles)) <= cacheSize) {
-                        p = s - vertices[index].timeStamp;
-                    }
-                    if ((p > m) || (m === -1)) {
-                        m = p;
-                        n = index;
-                    }
-                }
-                ++itOneRing;
-            }
-            if (n === -1) {
-                return skipDeadEnd(vertices, deadEnd, indices, maximumIndexPlusOne);
-            }
-            return n;
-        }
-
-                if (!defined(indices)) {
-            throw new DeveloperError('indices is required.');
-        }
-        
-        var numIndices = indices.length;
-
-                if (numIndices < 3 || numIndices % 3 !== 0) {
-            throw new DeveloperError('indices length must be a multiple of three.');
-        }
-        if (maximumIndex <= 0) {
-            throw new DeveloperError('maximumIndex must be greater than zero.');
-        }
-        if (cacheSize < 3) {
-            throw new DeveloperError('cacheSize must be greater than two.');
-        }
-        
-        // Determine maximum index
-        var maximumIndexPlusOne = 0;
-        var currentIndex = 0;
-        var intoIndices = indices[currentIndex];
-        var endIndex = numIndices;
-        if (defined(maximumIndex)) {
-            maximumIndexPlusOne = maximumIndex + 1;
-        } else {
-            while (currentIndex < endIndex) {
-                if (intoIndices > maximumIndexPlusOne) {
-                    maximumIndexPlusOne = intoIndices;
-                }
-                ++currentIndex;
-                intoIndices = indices[currentIndex];
-            }
-            if (maximumIndexPlusOne === -1) {
-                return 0;
-            }
-            ++maximumIndexPlusOne;
-        }
-
-        // Vertices
-        var vertices = [];
-        for ( var i = 0; i < maximumIndexPlusOne; i++) {
-            vertices[i] = {
-                numLiveTriangles : 0,
-                timeStamp : 0,
-                vertexTriangles : []
-            };
-        }
-        currentIndex = 0;
-        var triangle = 0;
-        while (currentIndex < endIndex) {
-            vertices[indices[currentIndex]].vertexTriangles.push(triangle);
-            ++(vertices[indices[currentIndex]]).numLiveTriangles;
-            vertices[indices[currentIndex + 1]].vertexTriangles.push(triangle);
-            ++(vertices[indices[currentIndex + 1]]).numLiveTriangles;
-            vertices[indices[currentIndex + 2]].vertexTriangles.push(triangle);
-            ++(vertices[indices[currentIndex + 2]]).numLiveTriangles;
-            ++triangle;
-            currentIndex += 3;
-        }
-
-        // Starting index
-        var f = 0;
-
-        // Time Stamp
-        var s = cacheSize + 1;
-        cursor = 1;
-
-        // Process
-        var oneRing = [];
-        var deadEnd = []; //Stack
-        var vertex;
-        var intoVertices;
-        var currentOutputIndex = 0;
-        var outputIndices = [];
-        var numTriangles = numIndices / 3;
-        var triangleEmitted = [];
-        for (i = 0; i < numTriangles; i++) {
-            triangleEmitted[i] = false;
-        }
-        var index;
-        var limit;
-        while (f !== -1) {
-            oneRing = [];
-            intoVertices = vertices[f];
-            limit = intoVertices.vertexTriangles.length;
-            for ( var k = 0; k < limit; ++k) {
-                triangle = intoVertices.vertexTriangles[k];
-                if (!triangleEmitted[triangle]) {
-                    triangleEmitted[triangle] = true;
-                    currentIndex = triangle + triangle + triangle;
-                    for ( var j = 0; j < 3; ++j) {
-                        // Set this index as a possible next index
-                        index = indices[currentIndex];
-                        oneRing.push(index);
-                        deadEnd.push(index);
-
-                        // Output index
-                        outputIndices[currentOutputIndex] = index;
-                        ++currentOutputIndex;
-
-                        // Cache processing
-                        vertex = vertices[index];
-                        --vertex.numLiveTriangles;
-                        if ((s - vertex.timeStamp) > cacheSize) {
-                            vertex.timeStamp = s;
-                            ++s;
-                        }
-                        ++currentIndex;
-                    }
-                }
-            }
-            f = getNextVertex(indices, cacheSize, oneRing, vertices, s, deadEnd, maximumIndexPlusOne);
-        }
-
-        return outputIndices;
-    };
-
-    return Tipsify;
-});
-
-/*global define*/
-define('Core/GeometryPipeline',[
-        './barycentricCoordinates',
-        './defaultValue',
-        './defined',
-        './DeveloperError',
-        './Cartesian2',
-        './Cartesian3',
-        './Cartesian4',
-        './Cartographic',
-        './EncodedCartesian3',
-        './Intersect',
-        './IntersectionTests',
-        './Math',
-        './Matrix3',
-        './Matrix4',
-        './Plane',
-        './GeographicProjection',
-        './ComponentDatatype',
-        './IndexDatatype',
-        './PrimitiveType',
-        './Tipsify',
-        './BoundingSphere',
-        './Geometry',
-        './GeometryAttribute'
-    ], function(
-        barycentricCoordinates,
-        defaultValue,
-        defined,
-        DeveloperError,
-        Cartesian2,
-        Cartesian3,
-        Cartesian4,
-        Cartographic,
-        EncodedCartesian3,
-        Intersect,
-        IntersectionTests,
-        CesiumMath,
-        Matrix3,
-        Matrix4,
-        Plane,
-        GeographicProjection,
-        ComponentDatatype,
-        IndexDatatype,
-        PrimitiveType,
-        Tipsify,
-        BoundingSphere,
-        Geometry,
-        GeometryAttribute) {
-    "use strict";
-
-    /**
-     * Content pipeline functions for geometries.
-     *
-     * @exports GeometryPipeline
-     *
-     * @see Geometry
-     * @see Context#createVertexArrayFromGeometry
-     */
-    var GeometryPipeline = {};
-
-    function addTriangle(lines, index, i0, i1, i2) {
-        lines[index++] = i0;
-        lines[index++] = i1;
-
-        lines[index++] = i1;
-        lines[index++] = i2;
-
-        lines[index++] = i2;
-        lines[index] = i0;
-    }
-
-    function trianglesToLines(triangles) {
-        var count = triangles.length;
-        var size = (count / 3) * 6;
-        var lines = IndexDatatype.createTypedArray(count, size);
-
-        var index = 0;
-        for ( var i = 0; i < count; i += 3, index += 6) {
-            addTriangle(lines, index, triangles[i], triangles[i + 1], triangles[i + 2]);
-        }
-
-        return lines;
-    }
-
-    function triangleStripToLines(triangles) {
-        var count = triangles.length;
-        if (count >= 3) {
-            var size = (count - 2) * 6;
-            var lines = IndexDatatype.createTypedArray(count, size);
-
-            addTriangle(lines, 0, triangles[0], triangles[1], triangles[2]);
-            var index = 6;
-
-            for ( var i = 3; i < count; ++i, index += 6) {
-                addTriangle(lines, index, triangles[i - 1], triangles[i], triangles[i - 2]);
-            }
-
-            return lines;
-        }
-
-        return new Uint16Array();
-    }
-
-    function triangleFanToLines(triangles) {
-        if (triangles.length > 0) {
-            var count = triangles.length - 1;
-            var size = (count - 1) * 6;
-            var lines = IndexDatatype.createTypedArray(count, size);
-
-            var base = triangles[0];
-            var index = 0;
-            for ( var i = 1; i < count; ++i, index += 6) {
-                addTriangle(lines, index, base, triangles[i], triangles[i + 1]);
-            }
-
-            return lines;
-        }
-
-        return new Uint16Array();
-    }
-
-    /**
-     * Converts a geometry's triangle indices to line indices.  If the geometry has an <code>indices</code>
-     * and its <code>primitiveType</code> is <code>TRIANGLES</code>, <code>TRIANGLE_STRIP</code>,
-     * <code>TRIANGLE_FAN</code>, it is converted to <code>LINES</code>; otherwise, the geometry is not changed.
-     * <p>
-     * This is commonly used to create a wireframe geometry for visual debugging.
-     * </p>
-     *
-     * @param {Geometry} geometry The geometry to modify.
-     *
-     * @returns {Geometry} The modified <code>geometry</code> argument, with its triangle indices converted to lines.
-     *
-     * @exception {DeveloperError} geometry.primitiveType must be TRIANGLES, TRIANGLE_STRIP, or TRIANGLE_FAN.
-     *
-     * @example
-     * geometry = Cesium.GeometryPipeline.toWireframe(geometry);
-     */
-    GeometryPipeline.toWireframe = function(geometry) {
-                if (!defined(geometry)) {
-            throw new DeveloperError('geometry is required.');
-        }
-        
-        var indices = geometry.indices;
-        if (defined(indices)) {
-            switch (geometry.primitiveType) {
-                case PrimitiveType.TRIANGLES:
-                    geometry.indices = trianglesToLines(indices);
-                    break;
-                case PrimitiveType.TRIANGLE_STRIP:
-                    geometry.indices = triangleStripToLines(indices);
-                    break;
-                case PrimitiveType.TRIANGLE_FAN:
-                    geometry.indices = triangleFanToLines(indices);
-                    break;
-                default:
-                    throw new DeveloperError('geometry.primitiveType must be TRIANGLES, TRIANGLE_STRIP, or TRIANGLE_FAN.');
-            }
-
-            geometry.primitiveType = PrimitiveType.LINES;
-        }
-
-        return geometry;
-    };
-
-    /**
-     * Creates a new {@link Geometry} with <code>LINES</code> representing the provided
-     * attribute (<code>attributeName</code>) for the provided geometry.  This is used to
-     * visualize vector attributes like normals, binormals, and tangents.
-     *
-     * @param {Geometry} geometry The <code>Geometry</code> instance with the attribute.
-     * @param {String} [attributeName='normal'] The name of the attribute.
-     * @param {Number} [length=10000.0] The length of each line segment in meters.  This can be negative to point the vector in the opposite direction.
-     *
-     * @returns {Geometry} A new <code>Geometry<code> instance with line segments for the vector.
-     *
-     * @exception {DeveloperError} geometry.attributes must have an attribute with the same name as the attributeName parameter.
-     *
-     * @example
-     * var geometry = Cesium.GeometryPipeline.createLineSegmentsForVectors(instance.geometry, 'binormal', 100000.0),
-     */
-    GeometryPipeline.createLineSegmentsForVectors = function(geometry, attributeName, length) {
-        attributeName = defaultValue(attributeName, 'normal');
-
-                if (!defined(geometry)) {
-            throw new DeveloperError('geometry is required.');
-        }
-        if (!defined(geometry.attributes.position)) {
-            throw new DeveloperError('geometry.attributes.position is required.');
-        }
-        if (!defined(geometry.attributes[attributeName])) {
-            throw new DeveloperError('geometry.attributes must have an attribute with the same name as the attributeName parameter, ' + attributeName + '.');
-        }
-        
-        length = defaultValue(length, 10000.0);
-
-        var positions = geometry.attributes.position.values;
-        var vectors = geometry.attributes[attributeName].values;
-        var positionsLength = positions.length;
-
-        var newPositions = new Float64Array(2 * positionsLength);
-
-        var j = 0;
-        for (var i = 0; i < positionsLength; i += 3) {
-            newPositions[j++] = positions[i];
-            newPositions[j++] = positions[i + 1];
-            newPositions[j++] = positions[i + 2];
-
-            newPositions[j++] = positions[i] + (vectors[i] * length);
-            newPositions[j++] = positions[i + 1] + (vectors[i + 1] * length);
-            newPositions[j++] = positions[i + 2] + (vectors[i + 2] * length);
-        }
-
-        var newBoundingSphere;
-        var bs = geometry.boundingSphere;
-        if (defined(bs)) {
-            newBoundingSphere = new BoundingSphere(bs.center, bs.radius + length);
-        }
-
-        return new Geometry({
-            attributes : {
-                position : new GeometryAttribute({
-                    componentDatatype : ComponentDatatype.DOUBLE,
-                    componentsPerAttribute : 3,
-                    values : newPositions
-                })
-            },
-            primitiveType : PrimitiveType.LINES,
-            boundingSphere : newBoundingSphere
-        });
-    };
-
-    /**
-     * Creates an object that maps attribute names to unique locations (indices)
-     * for matching vertex attributes and shader programs.
-     *
-     * @param {Geometry} geometry The geometry, which is not modified, to create the object for.
-     *
-     * @returns {Object} An object with attribute name / index pairs.
-     *
-     * @example
-     * var attributeLocations = Cesium.GeometryPipeline.createAttributeLocations(geometry);
-     * // Example output
-     * // {
-     * //   'position' : 0,
-     * //   'normal' : 1
-     * // }
-     *
-     * @see Context#createVertexArrayFromGeometry
-     * @see ShaderCache
-     */
-    GeometryPipeline.createAttributeLocations = function(geometry) {
-                if (!defined(geometry)) {
-            throw new DeveloperError('geometry is required.');
-        }
-        
-        // There can be a WebGL performance hit when attribute 0 is disabled, so
-        // assign attribute locations to well-known attributes.
-        var semantics = [
-            'position',
-            'positionHigh',
-            'positionLow',
-
-            // From VertexFormat.position - after 2D projection and high-precision encoding
-            'position3DHigh',
-            'position3DLow',
-            'position2DHigh',
-            'position2DLow',
-
-            // From Primitive
-            'pickColor',
-
-            // From VertexFormat
-            'normal',
-            'st',
-            'binormal',
-            'tangent'
-        ];
-
-        var attributes = geometry.attributes;
-        var indices = {};
-        var j = 0;
-        var i;
-        var len = semantics.length;
-
-        // Attribute locations for well-known attributes
-        for (i = 0; i < len; ++i) {
-            var semantic = semantics[i];
-
-            if (defined(attributes[semantic])) {
-                indices[semantic] = j++;
-            }
-        }
-
-        // Locations for custom attributes
-        for (var name in attributes) {
-            if (attributes.hasOwnProperty(name) && (!defined(indices[name]))) {
-                indices[name] = j++;
-            }
-        }
-
-        return indices;
-    };
-
-    /**
-     * Reorders a geometry's attributes and <code>indices</code> to achieve better performance from the GPU's pre-vertex-shader cache.
-     *
-     * @param {Geometry} geometry The geometry to modify.
-     *
-     * @returns {Geometry} The modified <code>geometry</code> argument, with its attributes and indices reordered for the GPU's pre-vertex-shader cache.
-     *
-     * @exception {DeveloperError} Each attribute array in geometry.attributes must have the same number of attributes.
-     *
-     * @example
-     * geometry = Cesium.GeometryPipeline.reorderForPreVertexCache(geometry);
-     *
-     * @see GeometryPipeline.reorderForPostVertexCache
-     */
-    GeometryPipeline.reorderForPreVertexCache = function(geometry) {
-                if (!defined(geometry)) {
-            throw new DeveloperError('geometry is required.');
-        }
-        
-        var numVertices = Geometry.computeNumberOfVertices(geometry);
-
-        var indices = geometry.indices;
-        if (defined(indices)) {
-            var indexCrossReferenceOldToNew = new Int32Array(numVertices);
-            for ( var i = 0; i < numVertices; i++) {
-                indexCrossReferenceOldToNew[i] = -1;
-            }
-
-            // Construct cross reference and reorder indices
-            var indicesIn = indices;
-            var numIndices = indicesIn.length;
-            var indicesOut = IndexDatatype.createTypedArray(numVertices, numIndices);
-
-            var intoIndicesIn = 0;
-            var intoIndicesOut = 0;
-            var nextIndex = 0;
-            var tempIndex;
-            while (intoIndicesIn < numIndices) {
-                tempIndex = indexCrossReferenceOldToNew[indicesIn[intoIndicesIn]];
-                if (tempIndex !== -1) {
-                    indicesOut[intoIndicesOut] = tempIndex;
-                } else {
-                    tempIndex = indicesIn[intoIndicesIn];
-                    indexCrossReferenceOldToNew[tempIndex] = nextIndex;
-
-                    indicesOut[intoIndicesOut] = nextIndex;
-                    ++nextIndex;
-                }
-                ++intoIndicesIn;
-                ++intoIndicesOut;
-            }
-            geometry.indices = indicesOut;
-
-            // Reorder attributes
-            var attributes = geometry.attributes;
-            for ( var property in attributes) {
-                if (attributes.hasOwnProperty(property) &&
-                        defined(attributes[property]) &&
-                        defined(attributes[property].values)) {
-
-                    var attribute = attributes[property];
-                    var elementsIn = attribute.values;
-                    var intoElementsIn = 0;
-                    var numComponents = attribute.componentsPerAttribute;
-                    var elementsOut = ComponentDatatype.createTypedArray(attribute.componentDatatype, nextIndex * numComponents);
-                    while (intoElementsIn < numVertices) {
-                        var temp = indexCrossReferenceOldToNew[intoElementsIn];
-                        if (temp !== -1) {
-                            for (i = 0; i < numComponents; i++) {
-                                elementsOut[numComponents * temp + i] = elementsIn[numComponents * intoElementsIn + i];
-                            }
-                        }
-                        ++intoElementsIn;
-                    }
-                    attribute.values = elementsOut;
-                }
-            }
-        }
-
-        return geometry;
-    };
-
-    /**
-     * Reorders a geometry's <code>indices</code> to achieve better performance from the GPU's
-     * post vertex-shader cache by using the Tipsify algorithm.  If the geometry <code>primitiveType</code>
-     * is not <code>TRIANGLES</code> or the geometry does not have an <code>indices</code>, this function has no effect.
-     *
-     * @param {Geometry} geometry The geometry to modify.
-     * @param {Number} [cacheCapacity=24] The number of vertices that can be held in the GPU's vertex cache.
-     *
-     * @returns {Geometry} The modified <code>geometry</code> argument, with its indices reordered for the post-vertex-shader cache.
-     *
-     * @exception {DeveloperError} cacheCapacity must be greater than two.
-     *
-     * @example
-     * geometry = Cesium.GeometryPipeline.reorderForPostVertexCache(geometry);
-     *
-     * @see GeometryPipeline.reorderForPreVertexCache
-     * @see <a href='http://gfx.cs.princeton.edu/pubs/Sander_2007_%3ETR/tipsy.pdf'>
-     * Fast Triangle Reordering for Vertex Locality and Reduced Overdraw</a>
-     * by Sander, Nehab, and Barczak
-     */
-    GeometryPipeline.reorderForPostVertexCache = function(geometry, cacheCapacity) {
-                if (!defined(geometry)) {
-            throw new DeveloperError('geometry is required.');
-        }
-        
-        var indices = geometry.indices;
-        if ((geometry.primitiveType === PrimitiveType.TRIANGLES) && (defined(indices))) {
-            var numIndices = indices.length;
-            var maximumIndex = 0;
-            for ( var j = 0; j < numIndices; j++) {
-                if (indices[j] > maximumIndex) {
-                    maximumIndex = indices[j];
-                }
-            }
-            geometry.indices = Tipsify.tipsify({
-                indices : indices,
-                maximumIndex : maximumIndex,
-                cacheSize : cacheCapacity
-            });
-        }
-
-        return geometry;
-    };
-
-    function copyAttributesDescriptions(attributes) {
-        var newAttributes = {};
-
-        for ( var attribute in attributes) {
-            if (attributes.hasOwnProperty(attribute) &&
-                    defined(attributes[attribute]) &&
-                    defined(attributes[attribute].values)) {
-
-                var attr = attributes[attribute];
-                newAttributes[attribute] = new GeometryAttribute({
-                    componentDatatype : attr.componentDatatype,
-                    componentsPerAttribute : attr.componentsPerAttribute,
-                    normalize : attr.normalize,
-                    values : []
-                });
-            }
-        }
-
-        return newAttributes;
-    }
-
-    function copyVertex(destinationAttributes, sourceAttributes, index) {
-        for ( var attribute in sourceAttributes) {
-            if (sourceAttributes.hasOwnProperty(attribute) &&
-                    defined(sourceAttributes[attribute]) &&
-                    defined(sourceAttributes[attribute].values)) {
-
-                var attr = sourceAttributes[attribute];
-
-                for ( var k = 0; k < attr.componentsPerAttribute; ++k) {
-                    destinationAttributes[attribute].values.push(attr.values[(index * attr.componentsPerAttribute) + k]);
-                }
-            }
-        }
-    }
-
-    /**
-     * Splits a geometry into multiple geometries, if necessary, to ensure that indices in the
-     * <code>indices</code> fit into unsigned shorts.  This is used to meet the WebGL requirements
-     * when {@link Context#getElementIndexUint} is <code>false</code>.
-     * <p>
-     * If the geometry does not have any <code>indices</code>, this function has no effect.
-     * </p>
-     *
-     * @param {Geometry} geometry The geometry to be split into multiple geometries.
-     *
-     * @returns {Array} An array of geometries, each with indices that fit into unsigned shorts.
-     *
-     * @exception {DeveloperError} geometry.primitiveType must equal to PrimitiveType.TRIANGLES, PrimitiveType.LINES, or PrimitiveType.POINTS
-     * @exception {DeveloperError} All geometry attribute lists must have the same number of attributes.
-     *
-     * @example
-     * var geometries = Cesium.GeometryPipeline.fitToUnsignedShortIndices(geometry);
-     */
-    GeometryPipeline.fitToUnsignedShortIndices = function(geometry) {
-                if (!defined(geometry)) {
-            throw new DeveloperError('geometry is required.');
-        }
-        if ((defined(geometry.indices)) &&
-            ((geometry.primitiveType !== PrimitiveType.TRIANGLES) &&
-             (geometry.primitiveType !== PrimitiveType.LINES) &&
-             (geometry.primitiveType !== PrimitiveType.POINTS))) {
-            throw new DeveloperError('geometry.primitiveType must equal to PrimitiveType.TRIANGLES, PrimitiveType.LINES, or PrimitiveType.POINTS.');
-        }
-        
-        var geometries = [];
-
-        // If there's an index list and more than 64K attributes, it is possible that
-        // some indices are outside the range of unsigned short [0, 64K - 1]
-        var numberOfVertices = Geometry.computeNumberOfVertices(geometry);
-        if (defined(geometry.indices) && (numberOfVertices > CesiumMath.SIXTY_FOUR_KILOBYTES)) {
-            var oldToNewIndex = [];
-            var newIndices = [];
-            var currentIndex = 0;
-            var newAttributes = copyAttributesDescriptions(geometry.attributes);
-
-            var originalIndices = geometry.indices;
-            var numberOfIndices = originalIndices.length;
-
-            var indicesPerPrimitive;
-
-            if (geometry.primitiveType === PrimitiveType.TRIANGLES) {
-                indicesPerPrimitive = 3;
-            } else if (geometry.primitiveType === PrimitiveType.LINES) {
-                indicesPerPrimitive = 2;
-            } else if (geometry.primitiveType === PrimitiveType.POINTS) {
-                indicesPerPrimitive = 1;
-            }
-
-            for ( var j = 0; j < numberOfIndices; j += indicesPerPrimitive) {
-                for (var k = 0; k < indicesPerPrimitive; ++k) {
-                    var x = originalIndices[j + k];
-                    var i = oldToNewIndex[x];
-                    if (!defined(i)) {
-                        i = currentIndex++;
-                        oldToNewIndex[x] = i;
-                        copyVertex(newAttributes, geometry.attributes, x);
-                    }
-                    newIndices.push(i);
-                }
-
-                if (currentIndex + indicesPerPrimitive > CesiumMath.SIXTY_FOUR_KILOBYTES) {
-                    geometries.push(new Geometry({
-                        attributes : newAttributes,
-                        indices : newIndices,
-                        primitiveType : geometry.primitiveType,
-                        boundingSphere : geometry.boundingSphere
-                    }));
-
-                    // Reset for next vertex-array
-                    oldToNewIndex = [];
-                    newIndices = [];
-                    currentIndex = 0;
-                    newAttributes = copyAttributesDescriptions(geometry.attributes);
-                }
-            }
-
-            if (newIndices.length !== 0) {
-                geometries.push(new Geometry({
-                    attributes : newAttributes,
-                    indices : newIndices,
-                    primitiveType : geometry.primitiveType,
-                    boundingSphere : geometry.boundingSphere
-                }));
-            }
-        } else {
-            // No need to split into multiple geometries
-            geometries.push(geometry);
-        }
-
-        return geometries;
-    };
-
-    var scratchProjectTo2DCartesian3 = new Cartesian3();
-    var scratchProjectTo2DCartographic = new Cartographic();
-
-    /**
-     * Projects a geometry's 3D <code>position</code> attribute to 2D, replacing the <code>position</code>
-     * attribute with separate <code>position3D</code> and <code>position2D</code> attributes.
-     * <p>
-     * If the geometry does not have a <code>position</code>, this function has no effect.
-     * </p>
-     *
-     * @param {Geometry} geometry The geometry to modify.
-     * @param {String} attributeName The name of the attribute.
-     * @param {String} attributeName3D The name of the attribute in 3D.
-     * @param {String} attributeName2D The name of the attribute in 2D.
-     * @param {Object} [projection=new GeographicProjection()] The projection to use.
-     *
-     * @returns {Geometry} The modified <code>geometry</code> argument with <code>position3D</code> and <code>position2D</code> attributes.
-     *
-     * @exception {DeveloperError} geometry must have attribute matching the attributeName argument.
-     * @exception {DeveloperError} The attribute componentDatatype must be ComponentDatatype.DOUBLE.
-     * @exception {DeveloperError} Could not project a point to 2D.
-     *
-     * @example
-     * geometry = Cesium.GeometryPipeline.projectTo2D(geometry, 'position', 'position3D', 'position2D');
-     */
-    GeometryPipeline.projectTo2D = function(geometry, attributeName, attributeName3D, attributeName2D, projection) {
-                if (!defined(geometry)) {
-            throw new DeveloperError('geometry is required.');
-        }
-        if (!defined(attributeName)) {
-            throw new DeveloperError('attributeName is required.');
-        }
-        if (!defined(attributeName3D)) {
-            throw new DeveloperError('attributeName3D is required.');
-        }
-        if (!defined(attributeName2D)) {
-            throw new DeveloperError('attributeName2D is required.');
-        }
-        if (!defined(geometry.attributes[attributeName])) {
-            throw new DeveloperError('geometry must have attribute matching the attributeName argument: ' + attributeName + '.');
-        }
-        if (geometry.attributes[attributeName].componentDatatype.value !== ComponentDatatype.DOUBLE.value) {
-            throw new DeveloperError('The attribute componentDatatype must be ComponentDatatype.DOUBLE.');
-        }
-        
-        var attribute = geometry.attributes[attributeName];
-        projection = (defined(projection)) ? projection : new GeographicProjection();
-        var ellipsoid = projection.ellipsoid;
-
-        // Project original values to 2D.
-        var values3D = attribute.values;
-        var projectedValues = new Float64Array(values3D.length);
-        var index = 0;
-
-        for ( var i = 0; i < values3D.length; i += 3) {
-            var value = Cartesian3.fromArray(values3D, i, scratchProjectTo2DCartesian3);
-
-            var lonLat = ellipsoid.cartesianToCartographic(value, scratchProjectTo2DCartographic);
-            if (!defined(lonLat)) {
-                throw new DeveloperError('Could not project point (' + value.x + ', ' + value.y + ', ' + value.z + ') to 2D.');
-            }
-
-            var projectedLonLat = projection.project(lonLat, scratchProjectTo2DCartesian3);
-
-            projectedValues[index++] = projectedLonLat.x;
-            projectedValues[index++] = projectedLonLat.y;
-            projectedValues[index++] = projectedLonLat.z;
-        }
-
-        // Rename original cartesians to WGS84 cartesians.
-        geometry.attributes[attributeName3D] = attribute;
-
-        // Replace original cartesians with 2D projected cartesians
-        geometry.attributes[attributeName2D] = new GeometryAttribute({
-            componentDatatype : ComponentDatatype.DOUBLE,
-            componentsPerAttribute : 3,
-            values : projectedValues
-        });
-        delete geometry.attributes[attributeName];
-
-        return geometry;
-    };
-
-    var encodedResult = {
-        high : 0.0,
-        low : 0.0
-    };
-
-    /**
-     * Encodes floating-point geometry attribute values as two separate attributes to improve
-     * rendering precision using the same encoding as {@link EncodedCartesian3}.
-     * <p>
-     * This is commonly used to create high-precision position vertex attributes.
-     * </p>
-     *
-     * @param {Geometry} geometry The geometry to modify.
-     * @param {String} attributeName The name of the attribute.
-     * @param {String} attributeHighName The name of the attribute for the encoded high bits.
-     * @param {String} attributeLowName The name of the attribute for the encoded low bits.
-     *
-     * @returns {Geometry} The modified <code>geometry</code> argument, with its encoded attribute.
-     *
-     * @exception {DeveloperError} geometry must have attribute matching the attributeName argument.
-     * @exception {DeveloperError} The attribute componentDatatype must be ComponentDatatype.DOUBLE.
-     *
-     * @example
-     * geometry = Cesium.GeometryPipeline.encodeAttribute(geometry, 'position3D', 'position3DHigh', 'position3DLow');
-     *
-     * @see EncodedCartesian3
-     */
-    GeometryPipeline.encodeAttribute = function(geometry, attributeName, attributeHighName, attributeLowName) {
-                if (!defined(geometry)) {
-            throw new DeveloperError('geometry is required.');
-        }
-        if (!defined(attributeName)) {
-            throw new DeveloperError('attributeName is required.');
-        }
-        if (!defined(attributeHighName)) {
-            throw new DeveloperError('attributeHighName is required.');
-        }
-        if (!defined(attributeLowName)) {
-            throw new DeveloperError('attributeLowName is required.');
-        }
-        if (!defined(geometry.attributes[attributeName])) {
-            throw new DeveloperError('geometry must have attribute matching the attributeName argument: ' + attributeName + '.');
-        }
-        if (geometry.attributes[attributeName].componentDatatype.value !== ComponentDatatype.DOUBLE.value) {
-            throw new DeveloperError('The attribute componentDatatype must be ComponentDatatype.DOUBLE.');
-        }
-        
-        var attribute = geometry.attributes[attributeName];
-        var values = attribute.values;
-        var length = values.length;
-        var highValues = new Float32Array(length);
-        var lowValues = new Float32Array(length);
-
-        for (var i = 0; i < length; ++i) {
-            EncodedCartesian3.encode(values[i], encodedResult);
-            highValues[i] = encodedResult.high;
-            lowValues[i] = encodedResult.low;
-        }
-
-        var componentsPerAttribute = attribute.componentsPerAttribute;
-
-        geometry.attributes[attributeHighName] = new GeometryAttribute({
-            componentDatatype : ComponentDatatype.FLOAT,
-            componentsPerAttribute : componentsPerAttribute,
-            values : highValues
-        });
-        geometry.attributes[attributeLowName] = new GeometryAttribute({
-            componentDatatype : ComponentDatatype.FLOAT,
-            componentsPerAttribute : componentsPerAttribute,
-            values : lowValues
-        });
-        delete geometry.attributes[attributeName];
-
-        return geometry;
-    };
-
-    var scratchCartesian3 = new Cartesian3();
-
-    function transformPoint(matrix, attribute) {
-        if (defined(attribute)) {
-            var values = attribute.values;
-            var length = values.length;
-            for (var i = 0; i < length; i += 3) {
-                Cartesian3.unpack(values, i, scratchCartesian3);
-                Matrix4.multiplyByPoint(matrix, scratchCartesian3, scratchCartesian3);
-                Cartesian3.pack(scratchCartesian3, values, i);
-            }
-        }
-    }
-
-    function transformVector(matrix, attribute) {
-        if (defined(attribute)) {
-            var values = attribute.values;
-            var length = values.length;
-            for (var i = 0; i < length; i += 3) {
-                Cartesian3.unpack(values, i, scratchCartesian3);
-                Matrix3.multiplyByVector(matrix, scratchCartesian3, scratchCartesian3);
-                scratchCartesian3 = Cartesian3.normalize(scratchCartesian3, scratchCartesian3);
-                Cartesian3.pack(scratchCartesian3, values, i);
-            }
-        }
-    }
-
-    var inverseTranspose = new Matrix4();
-    var normalMatrix = new Matrix3();
-
-    /**
-     * Transforms a geometry instance to world coordinates.  This is used as a prerequisite
-     * to batch together several instances with {@link GeometryPipeline.combine}.  This changes
-     * the instance's <code>modelMatrix</code> to {@link Matrix4.IDENTITY} and transforms the
-     * following attributes if they are present: <code>position</code>, <code>normal</code>,
-     * <code>binormal</code>, and <code>tangent</code>.
-     *
-     * @param {GeometryInstance} instance The geometry instance to modify.
-     *
-     * @returns {GeometryInstance} The modified <code>instance</code> argument, with its attributes transforms to world coordinates.
-     *
-     * @example
-     * for (var i = 0; i < instances.length; ++i) {
-     *   Cesium.GeometryPipeline.transformToWorldCoordinates(instances[i]);
-     * }
-     * var geometry = Cesium.GeometryPipeline.combine(instances);
-     *
-     * @see GeometryPipeline.combine
-     */
-    GeometryPipeline.transformToWorldCoordinates = function(instance) {
-                if (!defined(instance)) {
-            throw new DeveloperError('instance is required.');
-        }
-        
-        var modelMatrix = instance.modelMatrix;
-
-        if (Matrix4.equals(modelMatrix, Matrix4.IDENTITY)) {
-            // Already in world coordinates
-            return instance;
-        }
-
-        var attributes = instance.geometry.attributes;
-
-        // Transform attributes in known vertex formats
-        transformPoint(modelMatrix, attributes.position);
-        transformPoint(modelMatrix, attributes.prevPosition);
-        transformPoint(modelMatrix, attributes.nextPosition);
-
-        if ((defined(attributes.normal)) ||
-            (defined(attributes.binormal)) ||
-            (defined(attributes.tangent))) {
-
-            Matrix4.inverse(modelMatrix, inverseTranspose);
-            Matrix4.transpose(inverseTranspose, inverseTranspose);
-            Matrix4.getRotation(inverseTranspose, normalMatrix);
-
-            transformVector(normalMatrix, attributes.normal);
-            transformVector(normalMatrix, attributes.binormal);
-            transformVector(normalMatrix, attributes.tangent);
-        }
-
-        var boundingSphere = instance.geometry.boundingSphere;
-
-        if (defined(boundingSphere)) {
-            instance.geometry.boundingSphere = BoundingSphere.transform(boundingSphere, modelMatrix, boundingSphere);
-        }
-
-        instance.modelMatrix = Matrix4.clone(Matrix4.IDENTITY);
-
-        return instance;
-    };
-
-    function findAttributesInAllGeometries(instances) {
-        var length = instances.length;
-
-        var attributesInAllGeometries = {};
-
-        var attributes0 = instances[0].geometry.attributes;
-        var name;
-
-        for (name in attributes0) {
-            if (attributes0.hasOwnProperty(name) &&
-                    defined(attributes0[name]) &&
-                    defined(attributes0[name].values)) {
-
-                var attribute = attributes0[name];
-                var numberOfComponents = attribute.values.length;
-                var inAllGeometries = true;
-
-                // Does this same attribute exist in all geometries?
-                for (var i = 1; i < length; ++i) {
-                    var otherAttribute = instances[i].geometry.attributes[name];
-
-                    if ((!defined(otherAttribute)) ||
-                        (attribute.componentDatatype.value !== otherAttribute.componentDatatype.value) ||
-                        (attribute.componentsPerAttribute !== otherAttribute.componentsPerAttribute) ||
-                        (attribute.normalize !== otherAttribute.normalize)) {
-
-                        inAllGeometries = false;
-                        break;
-                    }
-
-                    numberOfComponents += otherAttribute.values.length;
-                }
-
-                if (inAllGeometries) {
-                    attributesInAllGeometries[name] = new GeometryAttribute({
-                        componentDatatype : attribute.componentDatatype,
-                        componentsPerAttribute : attribute.componentsPerAttribute,
-                        normalize : attribute.normalize,
-                        values : ComponentDatatype.createTypedArray(attribute.componentDatatype, numberOfComponents)
-                    });
-                }
-            }
-        }
-
-        return attributesInAllGeometries;
-    }
-
-    /**
-     * Combines geometry from several {@link GeometryInstance} objects into one geometry.
-     * This concatenates the attributes, concatenates and adjusts the indices, and creates
-     * a bounding sphere encompassing all instances.
-     * <p>
-     * If the instances do not have the same attributes, a subset of attributes common
-     * to all instances is used, and the others are ignored.
-     * </p>
-     * <p>
-     * This is used by {@link Primitive} to efficiently render a large amount of static data.
-     * </p>
-     *
-     * @param {Array} [instances] The array of {@link GeometryInstance} objects whose geometry will be combined.
-     *
-     * @returns {Geometry} A single geometry created from the provided geometry instances.
-     *
-     * @exception {DeveloperError} All instances must have the same modelMatrix.
-     * @exception {DeveloperError} All instance geometries must have an indices or not have one.
-     * @exception {DeveloperError} All instance geometries must have the same primitiveType.
-     *
-     * @example
-     * for (var i = 0; i < instances.length; ++i) {
-     *   Cesium.GeometryPipeline.transformToWorldCoordinates(instances[i]);
-     * }
-     * var geometry = Cesium.GeometryPipeline.combine(instances);
-     *
-     * @see GeometryPipeline.transformToWorldCoordinates
-     */
-    GeometryPipeline.combine = function(instances) {
-                if ((!defined(instances)) || (instances.length < 1)) {
-            throw new DeveloperError('instances is required and must have length greater than zero.');
-        }
-        
-        var length = instances.length;
-
-        var name;
-        var i;
-        var j;
-        var k;
-
-        var m = instances[0].modelMatrix;
-        var haveIndices = (defined(instances[0].geometry.indices));
-        var primitiveType = instances[0].geometry.primitiveType;
-
-                for (i = 1; i < length; ++i) {
-            if (!Matrix4.equals(instances[i].modelMatrix, m)) {
-                throw new DeveloperError('All instances must have the same modelMatrix.');
-            }
-            if ((defined(instances[i].geometry.indices)) !== haveIndices) {
-                throw new DeveloperError('All instance geometries must have an indices or not have one.');
-            }
-            if (instances[i].geometry.primitiveType !== primitiveType) {
-                throw new DeveloperError('All instance geometries must have the same primitiveType.');
-            }
-        }
-        
-        // Find subset of attributes in all geometries
-        var attributes = findAttributesInAllGeometries(instances);
-        var values;
-        var sourceValues;
-        var sourceValuesLength;
-
-        // Combine attributes from each geometry into a single typed array
-        for (name in attributes) {
-            if (attributes.hasOwnProperty(name)) {
-                values = attributes[name].values;
-
-                k = 0;
-                for (i = 0; i < length; ++i) {
-                    sourceValues = instances[i].geometry.attributes[name].values;
-                    sourceValuesLength = sourceValues.length;
-
-                    for (j = 0; j < sourceValuesLength; ++j) {
-                        values[k++] = sourceValues[j];
-                    }
-                }
-            }
-        }
-
-        // Combine index lists
-        var indices;
-
-        if (haveIndices) {
-            var numberOfIndices = 0;
-            for (i = 0; i < length; ++i) {
-                numberOfIndices += instances[i].geometry.indices.length;
-            }
-
-            var numberOfVertices = Geometry.computeNumberOfVertices(new Geometry({
-                attributes : attributes,
-                primitiveType : PrimitiveType.POINTS
-            }));
-            var destIndices = IndexDatatype.createTypedArray(numberOfVertices, numberOfIndices);
-
-            var destOffset = 0;
-            var offset = 0;
-
-            for (i = 0; i < length; ++i) {
-                var sourceIndices = instances[i].geometry.indices;
-                var sourceIndicesLen = sourceIndices.length;
-
-                for (k = 0; k < sourceIndicesLen; ++k) {
-                    destIndices[destOffset++] = offset + sourceIndices[k];
-                }
-
-                offset += Geometry.computeNumberOfVertices(instances[i].geometry);
-            }
-
-            indices = destIndices;
-        }
-
-        // Create bounding sphere that includes all instances
-        var center = new Cartesian3();
-        var radius = 0.0;
-        var bs;
-
-        for (i = 0; i < length; ++i) {
-            bs = instances[i].geometry.boundingSphere;
-            if (!defined(bs)) {
-                // If any geometries have an undefined bounding sphere, then so does the combined geometry
-                center = undefined;
-                break;
-            }
-
-            Cartesian3.add(bs.center, center, center);
-        }
-
-        if (defined(center)) {
-            Cartesian3.divideByScalar(center, length, center);
-
-            for (i = 0; i < length; ++i) {
-                bs = instances[i].geometry.boundingSphere;
-                var tempRadius = Cartesian3.magnitude(Cartesian3.subtract(bs.center, center)) + bs.radius;
-
-                if (tempRadius > radius) {
-                    radius = tempRadius;
-                }
-            }
-        }
-
-        return new Geometry({
-            attributes : attributes,
-            indices : indices,
-            primitiveType : primitiveType,
-            boundingSphere : (defined(center)) ? new BoundingSphere(center, radius) : undefined
-        });
-    };
-
-    var normal = new Cartesian3();
-    var v0 = new Cartesian3();
-    var v1 = new Cartesian3();
-    var v2 = new Cartesian3();
-
-    /**
-     * Computes per-vertex normals for a geometry containing <code>TRIANGLES</code> by averaging the normals of
-     * all triangles incident to the vertex.  The result is a new <code>normal</code> attribute added to the geometry.
-     * This assumes a counter-clockwise winding order.
-     *
-     * @param {Geometry} geometry The geometry to modify.
-     *
-     * @returns {Geometry} The modified <code>geometry</code> argument with the computed <code>normal</code> attribute.
-     *
-     * @exception {DeveloperError} geometry.indices length must be greater than 0 and be a multiple of 3.
-     * @exception {DeveloperError} geometry.primitiveType must be {@link PrimitiveType.TRIANGLES}.
-     *
-     * @example
-     * Cesium.GeometryPipeline.computeNormal(geometry);
-     */
-    GeometryPipeline.computeNormal = function(geometry) {
-                if (!defined(geometry)) {
-            throw new DeveloperError('geometry is required.');
-        }
-        if (!defined(geometry.attributes.position) || !defined(geometry.attributes.position.values)) {
-            throw new DeveloperError('geometry.attributes.position.values is required.');
-        }
-        if (!defined(geometry.indices)) {
-            throw new DeveloperError('geometry.indices is required.');
-        }
-        if (geometry.indices.length < 2 || geometry.indices.length % 3 !== 0) {
-            throw new DeveloperError('geometry.indices length must be greater than 0 and be a multiple of 3.');
-        }
-        if (geometry.primitiveType !== PrimitiveType.TRIANGLES) {
-            throw new DeveloperError('geometry.primitiveType must be PrimitiveType.TRIANGLES.');
-        }
-        
-        var indices = geometry.indices;
-        var attributes = geometry.attributes;
-        var vertices = attributes.position.values;
-        var numVertices = attributes.position.values.length / 3;
-        var numIndices = indices.length;
-        var normalsPerVertex = new Array(numVertices);
-        var normalsPerTriangle = new Array(numIndices / 3);
-        var normalIndices = new Array(numIndices);
-
-        for ( var i = 0; i < numVertices; i++) {
-            normalsPerVertex[i] = {
-                indexOffset : 0,
-                count : 0,
-                currentCount : 0
-            };
-        }
-
-        var j = 0;
-        for (i = 0; i < numIndices; i += 3) {
-            var i0 = indices[i];
-            var i1 = indices[i + 1];
-            var i2 = indices[i + 2];
-            var i03 = i0 * 3;
-            var i13 = i1 * 3;
-            var i23 = i2 * 3;
-
-            v0.x = vertices[i03];
-            v0.y = vertices[i03 + 1];
-            v0.z = vertices[i03 + 2];
-            v1.x = vertices[i13];
-            v1.y = vertices[i13 + 1];
-            v1.z = vertices[i13 + 2];
-            v2.x = vertices[i23];
-            v2.y = vertices[i23 + 1];
-            v2.z = vertices[i23 + 2];
-
-            normalsPerVertex[i0].count++;
-            normalsPerVertex[i1].count++;
-            normalsPerVertex[i2].count++;
-
-            Cartesian3.subtract(v1, v0, v1);
-            Cartesian3.subtract(v2, v0, v2);
-            normalsPerTriangle[j] = Cartesian3.cross(v1, v2);
-            j++;
-        }
-
-        var indexOffset = 0;
-        for (i = 0; i < numVertices; i++) {
-            normalsPerVertex[i].indexOffset += indexOffset;
-            indexOffset += normalsPerVertex[i].count;
-        }
-
-        j = 0;
-        var vertexNormalData;
-        for (i = 0; i < numIndices; i += 3) {
-            vertexNormalData = normalsPerVertex[indices[i]];
-            var index = vertexNormalData.indexOffset + vertexNormalData.currentCount;
-            normalIndices[index] = j;
-            vertexNormalData.currentCount++;
-
-            vertexNormalData = normalsPerVertex[indices[i + 1]];
-            index = vertexNormalData.indexOffset + vertexNormalData.currentCount;
-            normalIndices[index] = j;
-            vertexNormalData.currentCount++;
-
-            vertexNormalData = normalsPerVertex[indices[i + 2]];
-            index = vertexNormalData.indexOffset + vertexNormalData.currentCount;
-            normalIndices[index] = j;
-            vertexNormalData.currentCount++;
-
-            j++;
-        }
-
-        var normalValues = new Float32Array(numVertices * 3);
-        for (i = 0; i < numVertices; i++) {
-            var i3 = i * 3;
-            vertexNormalData = normalsPerVertex[i];
-            if (vertexNormalData.count > 0) {
-                Cartesian3.clone(Cartesian3.ZERO, normal);
-                for (j = 0; j < vertexNormalData.count; j++) {
-                    Cartesian3.add(normal, normalsPerTriangle[normalIndices[vertexNormalData.indexOffset + j]], normal);
-                }
-                Cartesian3.normalize(normal, normal);
-                normalValues[i3] = normal.x;
-                normalValues[i3 + 1] = normal.y;
-                normalValues[i3 + 2] = normal.z;
-            } else {
-                normalValues[i3] = 0.0;
-                normalValues[i3 + 1] = 0.0;
-                normalValues[i3 + 2] = 1.0;
-            }
-        }
-
-        geometry.attributes.normal = new GeometryAttribute({
-            componentDatatype : ComponentDatatype.FLOAT,
-            componentsPerAttribute : 3,
-            values : normalValues
-        });
-
-        return geometry;
-    };
-
-    var normalScratch = new Cartesian3();
-    var normalScale = new Cartesian3();
-    var tScratch = new Cartesian3();
-
-    /**
-     * Computes per-vertex binormals and tangents for a geometry containing <code>TRIANGLES</code>.
-     * The result is new <code>binormal</code> and <code>tangent</code> attributes added to the geometry.
-     * This assumes a counter-clockwise winding order.
-     * <p>
-     * Based on <a href="http://www.terathon.com/code/tangent.html">Computing Tangent Space Basis Vectors
-     * for an Arbitrary Mesh</a> by Eric Lengyel.
-     * </p>
-     *
-     * @param {Geometry} geometry The geometry to modify.
-     *
-     * @returns {Geometry} The modified <code>geometry</code> argument with the computed <code>binormal</code> and <code>tangent</code> attributes.
-     *
-     * @exception {DeveloperError} geometry.indices length must be greater than 0 and be a multiple of 3.
-     * @exception {DeveloperError} geometry.primitiveType must be {@link PrimitiveType.TRIANGLES}.
-     *
-     * @example
-     * Cesium.GeometryPipeline.computeBinormalAndTangent(geometry);
-     */
-    GeometryPipeline.computeBinormalAndTangent = function(geometry) {
-                if (!defined(geometry)) {
-            throw new DeveloperError('geometry is required.');
-        }
-        
-        var attributes = geometry.attributes;
-        var indices = geometry.indices;
-
-                if (!defined(attributes.position) || !defined(attributes.position.values)) {
-            throw new DeveloperError('geometry.attributes.position.values is required.');
-        }
-        if (!defined(attributes.normal) || !defined(attributes.normal.values)) {
-            throw new DeveloperError('geometry.attributes.normal.values is required.');
-        }
-        if (!defined(attributes.st) || !defined(attributes.st.values)) {
-            throw new DeveloperError('geometry.attributes.st.values is required.');
-        }
-        if (!defined(indices)) {
-            throw new DeveloperError('geometry.indices is required.');
-        }
-        if (indices.length < 2 || indices.length % 3 !== 0) {
-            throw new DeveloperError('geometry.indices length must be greater than 0 and be a multiple of 3.');
-        }
-        if (geometry.primitiveType !== PrimitiveType.TRIANGLES) {
-            throw new DeveloperError('geometry.primitiveType must be PrimitiveType.TRIANGLES.');
-        }
-        
-        var vertices = geometry.attributes.position.values;
-        var normals = geometry.attributes.normal.values;
-        var st = geometry.attributes.st.values;
-
-        var numVertices = geometry.attributes.position.values.length / 3;
-        var numIndices = indices.length;
-        var tan1 = new Array(numVertices * 3);
-
-        for ( var i = 0; i < tan1.length; i++) {
-            tan1[i] = 0;
-        }
-
-        var i03;
-        var i13;
-        var i23;
-        for (i = 0; i < numIndices; i += 3) {
-            var i0 = indices[i];
-            var i1 = indices[i + 1];
-            var i2 = indices[i + 2];
-            i03 = i0 * 3;
-            i13 = i1 * 3;
-            i23 = i2 * 3;
-            var i02 = i0 * 2;
-            var i12 = i1 * 2;
-            var i22 = i2 * 2;
-
-            var ux = vertices[i03];
-            var uy = vertices[i03 + 1];
-            var uz = vertices[i03 + 2];
-
-            var wx = st[i02];
-            var wy = st[i02 + 1];
-            var t1 = st[i12 + 1] - wy;
-            var t2 = st[i22 + 1] - wy;
-
-            var r = 1.0 / ((st[i12] - wx) * t2 - (st[i22] - wx) * t1);
-            var sdirx = (t2 * (vertices[i13] - ux) - t1 * (vertices[i23] - ux)) * r;
-            var sdiry = (t2 * (vertices[i13 + 1] - uy) - t1 * (vertices[i23 + 1] - uy)) * r;
-            var sdirz = (t2 * (vertices[i13 + 2] - uz) - t1 * (vertices[i23 + 2] - uz)) * r;
-
-            tan1[i03] += sdirx;
-            tan1[i03 + 1] += sdiry;
-            tan1[i03 + 2] += sdirz;
-
-            tan1[i13] += sdirx;
-            tan1[i13 + 1] += sdiry;
-            tan1[i13 + 2] += sdirz;
-
-            tan1[i23] += sdirx;
-            tan1[i23 + 1] += sdiry;
-            tan1[i23 + 2] += sdirz;
-        }
-
-        var binormalValues = new Float32Array(numVertices * 3);
-        var tangentValues = new Float32Array(numVertices * 3);
-
-        for (i = 0; i < numVertices; i++) {
-            i03 = i * 3;
-            i13 = i03 + 1;
-            i23 = i03 + 2;
-
-            var n = Cartesian3.fromArray(normals, i03, normalScratch);
-            var t = Cartesian3.fromArray(tan1, i03, tScratch);
-            var scalar = Cartesian3.dot(n, t);
-            Cartesian3.multiplyByScalar(n, scalar, normalScale);
-            Cartesian3.normalize(Cartesian3.subtract(t, normalScale, t), t);
-
-            tangentValues[i03] = t.x;
-            tangentValues[i13] = t.y;
-            tangentValues[i23] = t.z;
-
-            Cartesian3.normalize(Cartesian3.cross(n, t, t), t);
-
-            binormalValues[i03] = t.x;
-            binormalValues[i13] = t.y;
-            binormalValues[i23] = t.z;
-        }
-
-        geometry.attributes.tangent = new GeometryAttribute({
-            componentDatatype : ComponentDatatype.FLOAT,
-            componentsPerAttribute : 3,
-            values : tangentValues
-        });
-
-        geometry.attributes.binormal = new GeometryAttribute({
-            componentDatatype : ComponentDatatype.FLOAT,
-            componentsPerAttribute : 3,
-            values : binormalValues
-        });
-
-        return geometry;
-    };
-
-    function indexTriangles(geometry) {
-        if (defined(geometry.indices)) {
-            return geometry;
-        }
-        var numberOfVertices = Geometry.computeNumberOfVertices(geometry);
-
-                if (numberOfVertices < 3) {
-            throw new DeveloperError('The number of vertices must be at least three.');
-        }
-        if (numberOfVertices % 3 !== 0) {
-            throw new DeveloperError('The number of vertices must be a multiple of three.');
-        }
-        
-        var indices = IndexDatatype.createTypedArray(numberOfVertices, numberOfVertices);
-        for (var i = 0; i < numberOfVertices; ++i) {
-            indices[i] = i;
-        }
-
-        geometry.indices = indices;
-        return geometry;
-    }
-
-    function indexTriangleFan(geometry) {
-        var numberOfVertices = Geometry.computeNumberOfVertices(geometry);
-
-                if (numberOfVertices < 3) {
-            throw new DeveloperError('The number of vertices must be at least three.');
-        }
-        
-        var indices = IndexDatatype.createTypedArray(numberOfVertices, (numberOfVertices - 2) * 3);
-        indices[0] = 1;
-        indices[1] = 0;
-        indices[2] = 2;
-
-        var indicesIndex = 3;
-        for (var i = 3; i < numberOfVertices; ++i) {
-            indices[indicesIndex++] = i - 1;
-            indices[indicesIndex++] = 0;
-            indices[indicesIndex++] = i;
-        }
-
-        geometry.indices = indices;
-        geometry.primitiveType = PrimitiveType.TRIANGLES;
-        return geometry;
-    }
-
-    function indexTriangleStrip(geometry) {
-        var numberOfVertices = Geometry.computeNumberOfVertices(geometry);
-
-                if (numberOfVertices < 3) {
-            throw new DeveloperError('The number of vertices must be at least 3.');
-        }
-        
-        var indices = IndexDatatype.createTypedArray(numberOfVertices, (numberOfVertices - 2) * 3);
-        indices[0] = 0;
-        indices[1] = 1;
-        indices[2] = 2;
-
-        if (numberOfVertices > 3) {
-            indices[3] = 0;
-            indices[4] = 2;
-            indices[5] = 3;
-        }
-
-        var indicesIndex = 6;
-        for (var i = 3; i < numberOfVertices - 1; i += 2) {
-            indices[indicesIndex++] = i;
-            indices[indicesIndex++] = i - 1;
-            indices[indicesIndex++] = i + 1;
-
-            if (i + 2 < numberOfVertices) {
-                indices[indicesIndex++] = i;
-                indices[indicesIndex++] = i + 1;
-                indices[indicesIndex++] = i + 2;
-            }
-        }
-
-        geometry.indices = indices;
-        geometry.primitiveType = PrimitiveType.TRIANGLES;
-        return geometry;
-    }
-
-    function indexLines(geometry) {
-        if (defined(geometry.indices)) {
-            return geometry;
-        }
-        var numberOfVertices = Geometry.computeNumberOfVertices(geometry);
-
-                if (numberOfVertices < 2) {
-            throw new DeveloperError('The number of vertices must be at least two.');
-        }
-        if (numberOfVertices % 2 !== 0) {
-            throw new DeveloperError('The number of vertices must be a multiple of 2.');
-        }
-        
-        var indices = IndexDatatype.createTypedArray(numberOfVertices, numberOfVertices);
-        for (var i = 0; i < numberOfVertices; ++i) {
-            indices[i] = i;
-        }
-
-        geometry.indices = indices;
-        return geometry;
-    }
-
-    function indexLineStrip(geometry) {
-        var numberOfVertices = Geometry.computeNumberOfVertices(geometry);
-
-                if (numberOfVertices < 2) {
-            throw new DeveloperError('The number of vertices must be at least two.');
-        }
-        
-        var indices = IndexDatatype.createTypedArray(numberOfVertices, (numberOfVertices - 1) * 2);
-        indices[0] = 0;
-        indices[1] = 1;
-        var indicesIndex = 2;
-        for (var i = 2; i < numberOfVertices; ++i) {
-            indices[indicesIndex++] = i - 1;
-            indices[indicesIndex++] = i;
-        }
-
-        geometry.indices = indices;
-        geometry.primitiveType = PrimitiveType.LINES;
-        return geometry;
-    }
-
-    function indexLineLoop(geometry) {
-        var numberOfVertices = Geometry.computeNumberOfVertices(geometry);
-
-                if (numberOfVertices < 2) {
-            throw new DeveloperError('The number of vertices must be at least two.');
-        }
-        
-        var indices = IndexDatatype.createTypedArray(numberOfVertices, numberOfVertices * 2);
-
-        indices[0] = 0;
-        indices[1] = 1;
-
-        var indicesIndex = 2;
-        for (var i = 2; i < numberOfVertices; ++i) {
-            indices[indicesIndex++] = i - 1;
-            indices[indicesIndex++] = i;
-        }
-
-        indices[indicesIndex++] = numberOfVertices - 1;
-        indices[indicesIndex] = 0;
-
-        geometry.indices = indices;
-        geometry.primitiveType = PrimitiveType.LINES;
-        return geometry;
-    }
-
-    function indexPrimitive(geometry) {
-        switch (geometry.primitiveType) {
-        case PrimitiveType.TRIANGLE_FAN:
-            return indexTriangleFan(geometry);
-        case PrimitiveType.TRIANGLE_STRIP:
-            return indexTriangleStrip(geometry);
-        case PrimitiveType.TRIANGLES:
-            return indexTriangles(geometry);
-        case PrimitiveType.LINE_STRIP:
-            return indexLineStrip(geometry);
-        case PrimitiveType.LINE_LOOP:
-            return indexLineLoop(geometry);
-        case PrimitiveType.LINES:
-            return indexLines(geometry);
-        }
-
-        return geometry;
-    }
-
-    function offsetPointFromXZPlane(p, isBehind) {
-        if (Math.abs(p.y) < CesiumMath.EPSILON11){
-            if (isBehind) {
-                p.y = -CesiumMath.EPSILON11;
-            } else {
-                p.y = CesiumMath.EPSILON11;
-            }
-        }
-    }
-
-    var c3 = new Cartesian3();
-    function getXZIntersectionOffsetPoints(p, p1, u1, v1) {
-        Cartesian3.add(p, Cartesian3.multiplyByScalar(Cartesian3.subtract(p1, p, c3), p.y/(p.y-p1.y), c3), u1);
-        Cartesian3.clone(u1, v1);
-        offsetPointFromXZPlane(u1, true);
-        offsetPointFromXZPlane(v1, false);
-    }
-
-    var u1 = new Cartesian3();
-    var u2 = new Cartesian3();
-    var q1 = new Cartesian3();
-    var q2 = new Cartesian3();
-
-    var splitTriangleResult = {
-        positions : new Array(7),
-        indices : new Array(3 * 3)
-    };
-
-    function splitTriangle(p0, p1, p2) {
-        // In WGS84 coordinates, for a triangle approximately on the
-        // ellipsoid to cross the IDL, first it needs to be on the
-        // negative side of the plane x = 0.
-        if ((p0.x >= 0.0) || (p1.x >= 0.0) || (p2.x >= 0.0)) {
-            return undefined;
-        }
-
-        var p0Behind = p0.y < 0.0;
-        var p1Behind = p1.y < 0.0;
-        var p2Behind = p2.y < 0.0;
-
-        offsetPointFromXZPlane(p0, p0Behind);
-        offsetPointFromXZPlane(p1, p1Behind);
-        offsetPointFromXZPlane(p2, p2Behind);
-
-        var numBehind = 0;
-        numBehind += p0Behind ? 1 : 0;
-        numBehind += p1Behind ? 1 : 0;
-        numBehind += p2Behind ? 1 : 0;
-
-        var indices = splitTriangleResult.indices;
-
-        if (numBehind === 1) {
-            indices[1] = 3;
-            indices[2] = 4;
-            indices[5] = 6;
-            indices[7] = 6;
-            indices[8] = 5;
-
-            if (p0Behind) {
-                getXZIntersectionOffsetPoints(p0, p1, u1, q1);
-                getXZIntersectionOffsetPoints(p0, p2, u2, q2);
-
-                indices[0] = 0;
-                indices[3] = 1;
-                indices[4] = 2;
-                indices[6] = 1;
-            } else if (p1Behind) {
-                getXZIntersectionOffsetPoints(p1, p2, u1, q1);
-                getXZIntersectionOffsetPoints(p1, p0, u2, q2);
-
-                indices[0] = 1;
-                indices[3] = 2;
-                indices[4] = 0;
-                indices[6] = 2;
-            } else if (p2Behind) {
-                getXZIntersectionOffsetPoints(p2, p0, u1, q1);
-                getXZIntersectionOffsetPoints(p2, p1, u2, q2);
-
-                indices[0] = 2;
-                indices[3] = 0;
-                indices[4] = 1;
-                indices[6] = 0;
-            }
-        } else if (numBehind === 2) {
-            indices[2] = 4;
-            indices[4] = 4;
-            indices[5] = 3;
-            indices[7] = 5;
-            indices[8] = 6;
-
-            if (!p0Behind) {
-                getXZIntersectionOffsetPoints(p0, p1, u1, q1);
-                getXZIntersectionOffsetPoints(p0, p2, u2, q2);
-
-                indices[0] = 1;
-                indices[1] = 2;
-                indices[3] = 1;
-                indices[6] = 0;
-            } else if (!p1Behind) {
-                getXZIntersectionOffsetPoints(p1, p2, u1, q1);
-                getXZIntersectionOffsetPoints(p1, p0, u2, q2);
-
-                indices[0] = 2;
-                indices[1] = 0;
-                indices[3] = 2;
-                indices[6] = 1;
-            } else if (!p2Behind) {
-                getXZIntersectionOffsetPoints(p2, p0, u1, q1);
-                getXZIntersectionOffsetPoints(p2, p1, u2, q2);
-
-                indices[0] = 0;
-                indices[1] = 1;
-                indices[3] = 0;
-                indices[6] = 2;
-            }
-        }
-
-        var positions = splitTriangleResult.positions;
-        positions[0] = p0;
-        positions[1] = p1;
-        positions[2] = p2;
-        splitTriangleResult.length = 3;
-
-        if (numBehind === 1 || numBehind === 2) {
-            positions[3] = u1;
-            positions[4] = u2;
-            positions[5] = q1;
-            positions[6] = q2;
-            splitTriangleResult.length = 7;
-        }
-
-        return splitTriangleResult;
-    }
-
-    function computeTriangleAttributes(i0, i1, i2, dividedTriangle, normals, binormals, tangents, texCoords) {
-        if (!defined(normals) && !defined(binormals) && !defined(tangents) && !defined(texCoords)) {
-            return;
-        }
-
-        var positions = dividedTriangle.positions;
-        var p0 = positions[0];
-        var p1 = positions[1];
-        var p2 = positions[2];
-
-        var n0, n1, n2;
-        var b0, b1, b2;
-        var t0, t1, t2;
-        var s0, s1, s2;
-        var v0, v1, v2;
-        var u0, u1, u2;
-
-        if (defined(normals)) {
-            n0 = Cartesian3.fromArray(normals, i0 * 3);
-            n1 = Cartesian3.fromArray(normals, i1 * 3);
-            n2 = Cartesian3.fromArray(normals, i2 * 3);
-        }
-
-        if (defined(binormals)) {
-            b0 = Cartesian3.fromArray(binormals, i0 * 3);
-            b1 = Cartesian3.fromArray(binormals, i1 * 3);
-            b2 = Cartesian3.fromArray(binormals, i2 * 3);
-        }
-
-        if (defined(tangents)) {
-            t0 = Cartesian3.fromArray(tangents, i0 * 3);
-            t1 = Cartesian3.fromArray(tangents, i1 * 3);
-            t2 = Cartesian3.fromArray(tangents, i2 * 3);
-        }
-
-        if (defined(texCoords)) {
-            s0 = Cartesian2.fromArray(texCoords, i0 * 2);
-            s1 = Cartesian2.fromArray(texCoords, i1 * 2);
-            s2 = Cartesian2.fromArray(texCoords, i2 * 2);
-        }
-
-        for (var i = 3; i < positions.length; ++i) {
-            var point = positions[i];
-            var coords = barycentricCoordinates(point, p0, p1, p2);
-
-            if (defined(normals)) {
-                v0 = Cartesian3.multiplyByScalar(n0, coords.x, v0);
-                v1 = Cartesian3.multiplyByScalar(n1, coords.y, v1);
-                v2 = Cartesian3.multiplyByScalar(n2, coords.z, v2);
-
-                var normal = Cartesian3.add(v0, v1);
-                Cartesian3.add(normal, v2, normal);
-                Cartesian3.normalize(normal, normal);
-
-                normals.push(normal.x, normal.y, normal.z);
-            }
-
-            if (defined(binormals)) {
-                v0 = Cartesian3.multiplyByScalar(b0, coords.x, v0);
-                v1 = Cartesian3.multiplyByScalar(b1, coords.y, v1);
-                v2 = Cartesian3.multiplyByScalar(b2, coords.z, v2);
-
-                var binormal = Cartesian3.add(v0, v1);
-                Cartesian3.add(binormal, v2, binormal);
-                Cartesian3.normalize(binormal, binormal);
-
-                binormals.push(binormal.x, binormal.y, binormal.z);
-            }
-
-            if (defined(tangents)) {
-                v0 = Cartesian3.multiplyByScalar(t0, coords.x, v0);
-                v1 = Cartesian3.multiplyByScalar(t1, coords.y, v1);
-                v2 = Cartesian3.multiplyByScalar(t2, coords.z, v2);
-
-                var tangent = Cartesian3.add(v0, v1);
-                Cartesian3.add(tangent, v2, tangent);
-                Cartesian3.normalize(tangent, tangent);
-
-                tangents.push(tangent.x, tangent.y, tangent.z);
-            }
-
-            if (defined(texCoords)) {
-                u0 = Cartesian2.multiplyByScalar(s0, coords.x, u0);
-                u1 = Cartesian2.multiplyByScalar(s1, coords.y, u1);
-                u2 = Cartesian2.multiplyByScalar(s2, coords.z, u2);
-
-                var texCoord = Cartesian2.add(u0, u1);
-                Cartesian2.add(texCoord, u2, texCoord);
-
-                texCoords.push(texCoord.x, texCoord.y);
-            }
-        }
-    }
-
-    function wrapLongitudeTriangles(geometry) {
-        var attributes = geometry.attributes;
-        var positions = attributes.position.values;
-        var normals = (defined(attributes.normal)) ? attributes.normal.values : undefined;
-        var binormals = (defined(attributes.binormal)) ? attributes.binormal.values : undefined;
-        var tangents = (defined(attributes.tangent)) ? attributes.tangent.values : undefined;
-        var texCoords = (defined(attributes.st)) ? attributes.st.values : undefined;
-        var indices = geometry.indices;
-
-        var newPositions = Array.prototype.slice.call(positions, 0);
-        var newNormals = (defined(normals)) ? Array.prototype.slice.call(normals, 0) : undefined;
-        var newBinormals = (defined(binormals)) ? Array.prototype.slice.call(binormals, 0) : undefined;
-        var newTangents = (defined(tangents)) ? Array.prototype.slice.call(tangents, 0) : undefined;
-        var newTexCoords = (defined(texCoords)) ? Array.prototype.slice.call(texCoords, 0) : undefined;
-        var newIndices = [];
-
-        var len = indices.length;
-        for (var i = 0; i < len; i += 3) {
-            var i0 = indices[i];
-            var i1 = indices[i + 1];
-            var i2 = indices[i + 2];
-
-            var p0 = Cartesian3.fromArray(positions, i0 * 3);
-            var p1 = Cartesian3.fromArray(positions, i1 * 3);
-            var p2 = Cartesian3.fromArray(positions, i2 * 3);
-
-            var result = splitTriangle(p0, p1, p2);
-            if (defined(result)) {
-                newPositions[i0 * 3 + 1] = result.positions[0].y;
-                newPositions[i1 * 3 + 1] = result.positions[1].y;
-                newPositions[i2 * 3 + 1] = result.positions[2].y;
-
-                if (result.length > 3) {
-                    var positionsLength = newPositions.length / 3;
-                    for(var j = 0; j < result.indices.length; ++j) {
-                        var index = result.indices[j];
-                        if (index < 3) {
-                            newIndices.push(indices[i + index]);
-                        } else {
-                            newIndices.push(index - 3 + positionsLength);
-                        }
-                    }
-
-                    for (var k = 3; k < result.positions.length; ++k) {
-                        var position = result.positions[k];
-                        newPositions.push(position.x, position.y, position.z);
-                    }
-                    computeTriangleAttributes(i0, i1, i2, result, newNormals, newBinormals, newTangents, newTexCoords);
-                } else {
-                    newIndices.push(i0, i1, i2);
-                }
-            } else {
-                newIndices.push(i0, i1, i2);
-            }
-        }
-
-        geometry.attributes.position.values = new Float64Array(newPositions);
-
-        if (defined(newNormals)) {
-            attributes.normal.values = ComponentDatatype.createTypedArray(attributes.normal.componentDatatype, newNormals);
-        }
-
-        if (defined(newBinormals)) {
-            attributes.binormal.values = ComponentDatatype.createTypedArray(attributes.binormal.componentDatatype, newBinormals);
-        }
-
-        if (defined(newTangents)) {
-            attributes.tangent.values = ComponentDatatype.createTypedArray(attributes.tangent.componentDatatype, newTangents);
-        }
-
-        if (defined(newTexCoords)) {
-            attributes.st.values = ComponentDatatype.createTypedArray(attributes.st.componentDatatype, newTexCoords);
-        }
-
-        var numberOfVertices = Geometry.computeNumberOfVertices(geometry);
-        geometry.indices = IndexDatatype.createTypedArray(numberOfVertices, newIndices);
-    }
-
-    function wrapLongitudeLines(geometry) {
-        var attributes = geometry.attributes;
-        var positions = attributes.position.values;
-        var indices = geometry.indices;
-
-        var newPositions = Array.prototype.slice.call(positions, 0);
-        var newIndices = [];
-
-        var xzPlane = Plane.fromPointNormal(Cartesian3.ZERO, Cartesian3.UNIT_Y);
-
-        var length = indices.length;
-        for ( var i = 0; i < length; i += 2) {
-            var i0 = indices[i];
-            var i1 = indices[i + 1];
-
-            var prev = Cartesian3.fromArray(positions, i0 * 3);
-            var cur = Cartesian3.fromArray(positions, i1 * 3);
-
-            if (Math.abs(prev.y) < CesiumMath.EPSILON6){
-                if (prev.y < 0.0) {
-                    prev.y = -CesiumMath.EPSILON6;
-                } else {
-                    prev.y = CesiumMath.EPSILON6;
-                }
-
-                newPositions[i0 * 3 + 1] = prev.y;
-            }
-
-            if (Math.abs(cur.y) < CesiumMath.EPSILON6){
-                if (cur.y < 0.0) {
-                    cur.y = -CesiumMath.EPSILON6;
-                } else {
-                    cur.y = CesiumMath.EPSILON6;
-                }
-
-                newPositions[i1 * 3 + 1] = cur.y;
-            }
-
-            newIndices.push(i0);
-
-            // intersects the IDL if either endpoint is on the negative side of the yz-plane
-            if (prev.x < 0.0 || cur.x < 0.0) {
-                // and intersects the xz-plane
-                var intersection = IntersectionTests.lineSegmentPlane(prev, cur, xzPlane);
-                if (defined(intersection)) {
-                    // move point on the xz-plane slightly away from the plane
-                    var offset = Cartesian3.multiplyByScalar(Cartesian3.UNIT_Y, 5.0 * CesiumMath.EPSILON9);
-                    if (prev.y < 0.0) {
-                        Cartesian3.negate(offset, offset);
-                    }
-
-                    var index = newPositions.length / 3;
-                    newIndices.push(index, index + 1);
-
-                    var offsetPoint = Cartesian3.add(intersection, offset);
-                    newPositions.push(offsetPoint.x, offsetPoint.y, offsetPoint.z);
-
-                    Cartesian3.negate(offset, offset);
-                    Cartesian3.add(intersection, offset, offsetPoint);
-                    newPositions.push(offsetPoint.x, offsetPoint.y, offsetPoint.z);
-                }
-            }
-
-            newIndices.push(i1);
-        }
-
-        geometry.attributes.position.values = new Float64Array(newPositions);
-        var numberOfVertices = Geometry.computeNumberOfVertices(geometry);
-        geometry.indices = IndexDatatype.createTypedArray(numberOfVertices, newIndices);
-    }
-
-    /**
-     * Splits the geometry's primitives, by introducing new vertices and indices,that
-     * intersect the International Date Line so that no primitives cross longitude
-     * -180/180 degrees.  This is not required for 3D drawing, but is required for
-     * correcting drawing in 2D and Columbus view.
-     *
-     * @param {Geometry} geometry The geometry to modify.
-     *
-     * @returns {Geometry} The modified <code>geometry</code> argument, with it's primitives split at the International Date Line.
-     *
-     * @example
-     * geometry = Cesium.GeometryPipeline.wrapLongitude(geometry);
-     */
-    GeometryPipeline.wrapLongitude = function(geometry) {
-                if (!defined(geometry)) {
-            throw new DeveloperError('geometry is required.');
-        }
-        
-        var boundingSphere = geometry.boundingSphere;
-        if (defined(boundingSphere)) {
-            var minX = boundingSphere.center.x - boundingSphere.radius;
-            if (minX > 0 || BoundingSphere.intersect(boundingSphere, Cartesian4.UNIT_Y) !== Intersect.INTERSECTING) {
-                return geometry;
-            }
-        }
-
-        indexPrimitive(geometry);
-        if (geometry.primitiveType === PrimitiveType.TRIANGLES) {
-            wrapLongitudeTriangles(geometry);
-        } else if (geometry.primitiveType === PrimitiveType.LINES) {
-            wrapLongitudeLines(geometry);
-        }
-
-        return geometry;
-    };
-
-    return GeometryPipeline;
-});
-
-/*global define*/
-define('Scene/PrimitivePipeline',[
-        '../Core/defined',
-        '../Core/defaultValue',
-        '../Core/Color',
-        '../Core/ComponentDatatype',
-        '../Core/DeveloperError',
-        '../Core/FeatureDetection',
-        '../Core/Geometry',
-        '../Core/GeometryAttribute',
-        '../Core/GeometryPipeline',
-        '../Core/Matrix4'
-    ], function(
-        defined,
-        defaultValue,
-        Color,
-        ComponentDatatype,
-        DeveloperError,
-        FeatureDetection,
-        Geometry,
-        GeometryAttribute,
-        GeometryPipeline,
-        Matrix4) {
-    "use strict";
-
-    // Bail out if the browser doesn't support typed arrays, to prevent the setup function
-    // from failing, since we won't be able to create a WebGL context anyway.
-    if (!FeatureDetection.supportsTypedArrays()) {
-        return {};
-    }
-
-    function transformToWorldCoordinates(instances, primitiveModelMatrix, allow3DOnly) {
-        var toWorld = !allow3DOnly;
-        var length = instances.length;
-        var i;
-
-        if (!toWorld && (length > 1)) {
-            var modelMatrix = instances[0].modelMatrix;
-
-            for (i = 1; i < length; ++i) {
-                if (!Matrix4.equals(modelMatrix, instances[i].modelMatrix)) {
-                    toWorld = true;
-                    break;
-                }
-            }
-        }
-
-        if (toWorld) {
-            for (i = 0; i < length; ++i) {
-                GeometryPipeline.transformToWorldCoordinates(instances[i]);
-            }
-        } else {
-            // Leave geometry in local coordinate system; auto update model-matrix.
-            Matrix4.clone(instances[0].modelMatrix, primitiveModelMatrix);
-        }
-    }
-
-    function addPickColorAttribute(instances, pickIds) {
-        var length = instances.length;
-
-        for (var i = 0; i < length; ++i) {
-            var instance = instances[i];
-            var geometry = instance.geometry;
-            var attributes = geometry.attributes;
-            var positionAttr = attributes.position;
-            var numberOfComponents = 4 * (positionAttr.values.length / positionAttr.componentsPerAttribute);
-
-            attributes.pickColor = new GeometryAttribute({
-                componentDatatype : ComponentDatatype.UNSIGNED_BYTE,
-                componentsPerAttribute : 4,
-                normalize : true,
-                values : new Uint8Array(numberOfComponents)
-            });
-
-            var pickColor = pickIds[i];
-            var red = Color.floatToByte(pickColor.red);
-            var green = Color.floatToByte(pickColor.green);
-            var blue = Color.floatToByte(pickColor.blue);
-            var alpha = Color.floatToByte(pickColor.alpha);
-            var values = attributes.pickColor.values;
-
-            for (var j = 0; j < numberOfComponents; j += 4) {
-                values[j] = red;
-                values[j + 1] = green;
-                values[j + 2] = blue;
-                values[j + 3] = alpha;
-            }
-        }
-    }
-
-    function getCommonPerInstanceAttributeNames(instances) {
-        var length = instances.length;
-
-        var attributesInAllInstances = [];
-        var attributes0 = instances[0].attributes;
-        var name;
-
-        for (name in attributes0) {
-            if (attributes0.hasOwnProperty(name)) {
-                var attribute = attributes0[name];
-                var inAllInstances = true;
-
-                // Does this same attribute exist in all instances?
-                for (var i = 1; i < length; ++i) {
-                    var otherAttribute = instances[i].attributes[name];
-
-                    if (!defined(otherAttribute) ||
-                        (attribute.componentDatatype.value !== otherAttribute.componentDatatype.value) ||
-                        (attribute.componentsPerAttribute !== otherAttribute.componentsPerAttribute) ||
-                        (attribute.normalize !== otherAttribute.normalize)) {
-
-                        inAllInstances = false;
-                        break;
-                    }
-                }
-
-                if (inAllInstances) {
-                    attributesInAllInstances.push(name);
-                }
-            }
-        }
-
-        return attributesInAllInstances;
-    }
-
-    function addPerInstanceAttributes(instances, names) {
-        var length = instances.length;
-        for (var i = 0; i < length; ++i) {
-            var instance = instances[i];
-            var instanceAttributes = instance.attributes;
-            var geometry = instance.geometry;
-            var numberOfVertices = Geometry.computeNumberOfVertices(geometry);
-
-            var namesLength = names.length;
-            for (var j = 0; j < namesLength; ++j) {
-                var name = names[j];
-                var attribute = instanceAttributes[name];
-                var componentDatatype = attribute.componentDatatype;
-                var value = attribute.value;
-                var componentsPerAttribute = value.length;
-
-                var buffer = ComponentDatatype.createTypedArray(componentDatatype, numberOfVertices * componentsPerAttribute);
-                for (var k = 0; k < numberOfVertices; ++k) {
-                    buffer.set(value, k * componentsPerAttribute);
-                }
-
-                geometry.attributes[name] = new GeometryAttribute({
-                    componentDatatype : componentDatatype,
-                    componentsPerAttribute : componentsPerAttribute,
-                    normalize : attribute.normalize,
-                    values : buffer
-                });
-            }
-        }
-    }
-
-    function geometryPipeline(parameters) {
-        var instances = parameters.instances;
-        var pickIds = parameters.pickIds;
-        var projection = parameters.projection;
-        var uintIndexSupport = parameters.elementIndexUintSupported;
-        var allow3DOnly = parameters.allow3DOnly;
-        var allowPicking = parameters.allowPicking;
-        var vertexCacheOptimize = parameters.vertexCacheOptimize;
-        var modelMatrix = parameters.modelMatrix;
-
-        var i;
-        var length = instances.length;
-        var primitiveType = instances[0].geometry.primitiveType;
-
-                for (i = 1; i < length; ++i) {
-            if (instances[i].geometry.primitiveType !== primitiveType) {
-                throw new DeveloperError('All instance geometries must have the same primitiveType.');
-            }
-        }
-        
-        // Unify to world coordinates before combining.
-        transformToWorldCoordinates(instances, modelMatrix, allow3DOnly);
-
-        // Clip to IDL
-        if (!allow3DOnly) {
-            for (i = 0; i < length; ++i) {
-                GeometryPipeline.wrapLongitude(instances[i].geometry);
-            }
-        }
-
-        // Add pickColor attribute for picking individual instances
-        if (allowPicking) {
-            addPickColorAttribute(instances, pickIds);
-        }
-
-        // add attributes to the geometry for each per-instance attribute
-        var perInstanceAttributeNames = getCommonPerInstanceAttributeNames(instances);
-        addPerInstanceAttributes(instances, perInstanceAttributeNames);
-
-        // Optimize for vertex shader caches
-        if (vertexCacheOptimize) {
-            for (i = 0; i < length; ++i) {
-                GeometryPipeline.reorderForPostVertexCache(instances[i].geometry);
-                GeometryPipeline.reorderForPreVertexCache(instances[i].geometry);
-            }
-        }
-
-        // Combine into single geometry for better rendering performance.
-        var geometry = GeometryPipeline.combine(instances);
-
-        // Split positions for GPU RTE
-        var attributes = geometry.attributes;
-        var name;
-        if (!allow3DOnly) {
-            for (name in attributes) {
-                if (attributes.hasOwnProperty(name) && attributes[name].componentDatatype.value === ComponentDatatype.DOUBLE.value) {
-                    var name3D = name + '3D';
-                    var name2D = name + '2D';
-
-                    // Compute 2D positions
-                    GeometryPipeline.projectTo2D(geometry, name, name3D, name2D, projection);
-
-                    GeometryPipeline.encodeAttribute(geometry, name3D, name3D + 'High', name3D + 'Low');
-                    GeometryPipeline.encodeAttribute(geometry, name2D, name2D + 'High', name2D + 'Low');
-                }
-            }
-        } else {
-            for (name in attributes) {
-                if (attributes.hasOwnProperty(name) && attributes[name].componentDatatype.value === ComponentDatatype.DOUBLE.value) {
-                    GeometryPipeline.encodeAttribute(geometry, name, name + '3DHigh', name + '3DLow');
-                }
-            }
-        }
-
-        if (!uintIndexSupport) {
-            // Break into multiple geometries to fit within unsigned short indices if needed
-            return GeometryPipeline.fitToUnsignedShortIndices(geometry);
-        }
-
-        // Unsigned int indices are supported.  No need to break into multiple geometries.
-        return [geometry];
-    }
-
-    function createPerInstanceVAAttributes(geometry, attributeLocations, names) {
-        var vaAttributes = [];
-        var attributes = geometry.attributes;
-
-        var length = names.length;
-        for (var i = 0; i < length; ++i) {
-            var name = names[i];
-            var attribute = attributes[name];
-
-            var componentDatatype = attribute.componentDatatype;
-            if (componentDatatype.value === ComponentDatatype.DOUBLE.value) {
-                componentDatatype = ComponentDatatype.FLOAT;
-            }
-
-            var typedArray = ComponentDatatype.createTypedArray(componentDatatype, attribute.values);
-            vaAttributes.push({
-                index : attributeLocations[name],
-                componentDatatype : componentDatatype,
-                componentsPerAttribute : attribute.componentsPerAttribute,
-                normalize : attribute.normalize,
-                values : typedArray
-            });
-
-            delete attributes[name];
-        }
-
-        return vaAttributes;
-    }
-
-    function computePerInstanceAttributeLocations(instances, vertexArrays, attributeLocations) {
-        var indices = [];
-
-        var names = getCommonPerInstanceAttributeNames(instances);
-        var length = instances.length;
-        var offsets = {};
-        var vaIndices = {};
-
-        for (var i = 0; i < length; ++i) {
-            var instance = instances[i];
-            var numberOfVertices = Geometry.computeNumberOfVertices(instance.geometry);
-
-            var namesLength = names.length;
-            for (var j = 0; j < namesLength; ++j) {
-                var name = names[j];
-                var index = attributeLocations[name];
-
-                var tempVertexCount = numberOfVertices;
-                while (tempVertexCount > 0) {
-                    var vaIndex = defaultValue(vaIndices[name], 0);
-                    var va = vertexArrays[vaIndex];
-                    var vaLength = va.length;
-
-                    var attribute;
-                    for (var k = 0; k < vaLength; ++k) {
-                        attribute = va[k];
-                        if (attribute.index === index) {
-                            break;
-                        }
-                    }
-
-                    if (!defined(indices[i])) {
-                        indices[i] = {};
-                    }
-
-                    if (!defined(indices[i][name])) {
-                        indices[i][name] = {
-                            dirty : false,
-                            value : instance.attributes[name].value,
-                            indices : []
-                        };
-                    }
-
-                    var size = attribute.values.length / attribute.componentsPerAttribute;
-                    var offset = defaultValue(offsets[name], 0);
-
-                    var count;
-                    if (offset + tempVertexCount < size) {
-                        count = tempVertexCount;
-                        indices[i][name].indices.push({
-                            attribute : attribute,
-                            offset : offset,
-                            count : count
-                        });
-                        offsets[name] = offset + tempVertexCount;
-                    } else {
-                        count = size - offset;
-                        indices[i][name].indices.push({
-                            attribute : attribute,
-                            offset : offset,
-                            count : count
-                        });
-                        offsets[name] = 0;
-                        vaIndices[name] = vaIndex + 1;
-                    }
-
-                    tempVertexCount -= count;
-                }
-            }
-        }
-
-        return indices;
-    }
-
-    /**
-     * @private
-     */
-    var PrimitivePipeline = {};
-
-    /**
-     * @private
-     */
-    PrimitivePipeline.combineGeometry = function(parameters) {
-        var clonedParameters = {
-            instances : parameters.instances,
-            pickIds : parameters.pickIds,
-            ellipsoid : parameters.ellipsoid,
-            projection : parameters.projection,
-            elementIndexUintSupported : parameters.elementIndexUintSupported,
-            allow3DOnly : parameters.allow3DOnly,
-            allowPicking : parameters.allowPicking,
-            vertexCacheOptimize : parameters.vertexCacheOptimize,
-            modelMatrix : Matrix4.clone(parameters.modelMatrix)
-        };
-        var geometries = geometryPipeline(clonedParameters);
-        var attributeLocations = GeometryPipeline.createAttributeLocations(geometries[0]);
-
-        var instances = clonedParameters.instances;
-        var perInstanceAttributeNames = getCommonPerInstanceAttributeNames(instances);
-
-        var perInstanceAttributes = [];
-        var length = geometries.length;
-        for (var i = 0; i < length; ++i) {
-            var geometry = geometries[i];
-            perInstanceAttributes.push(createPerInstanceVAAttributes(geometry, attributeLocations, perInstanceAttributeNames));
-        }
-
-        var indices = computePerInstanceAttributeLocations(instances, perInstanceAttributes, attributeLocations);
-
-        return {
-            geometries : geometries,
-            modelMatrix : clonedParameters.modelMatrix,
-            attributeLocations : attributeLocations,
-            vaAttributes : perInstanceAttributes,
-            vaAttributeLocations : indices
-        };
-    };
-
-    /*
-     * The below functions are needed when transferring typed arrays to/from web
-     * workers. This is a workaround for:
-     *
-     * https://bugzilla.mozilla.org/show_bug.cgi?id=841904
-     */
-
-    function stupefyTypedArray(typedArray) {
-        if (defined(typedArray.constructor.name)) {
-            return {
-                type : typedArray.constructor.name,
-                buffer : typedArray.buffer
-            };
-        } else {
-            return typedArray;
-        }
-    }
-
-    var typedArrayMap = {
-        Int8Array : Int8Array,
-        Uint8Array : Uint8Array,
-        Int16Array : Int16Array,
-        Uint16Array : Uint16Array,
-        Int32Array : Int32Array,
-        Uint32Array : Uint32Array,
-        Float32Array : Float32Array,
-        Float64Array : Float64Array
-    };
-
-    function unStupefyTypedArray(typedArray) {
-        if (defined(typedArray.type)) {
-            return new typedArrayMap[typedArray.type](typedArray.buffer);
-        } else {
-            return typedArray;
-        }
-    }
-
-    /**
-     * @private
-     */
-    PrimitivePipeline.transferGeometry = function(geometry, transferableObjects) {
-        var typedArray;
-        var attributes = geometry.attributes;
-        for (var name in attributes) {
-            if (attributes.hasOwnProperty(name) &&
-                    defined(attributes[name]) &&
-                    defined(attributes[name].values)) {
-                typedArray = attributes[name].values;
-
-                if (FeatureDetection.supportsTransferringArrayBuffers() && transferableObjects.indexOf(attributes[name].values.buffer) < 0) {
-                    transferableObjects.push(typedArray.buffer);
-                }
-
-                if (!defined(typedArray.type)) {
-                    attributes[name].values = stupefyTypedArray(typedArray);
-                }
-            }
-        }
-
-        if (defined(geometry.indices)) {
-            typedArray = geometry.indices;
-
-            if (FeatureDetection.supportsTransferringArrayBuffers()) {
-                transferableObjects.push(typedArray.buffer);
-            }
-
-            if (!defined(typedArray.type)) {
-                geometry.indices = stupefyTypedArray(geometry.indices);
-            }
-        }
-    };
-
-    /**
-     * @private
-     */
-    PrimitivePipeline.transferGeometries = function(geometries, transferableObjects) {
-        var length = geometries.length;
-        for (var i = 0; i < length; ++i) {
-            PrimitivePipeline.transferGeometry(geometries[i], transferableObjects);
-        }
-    };
-
-    /**
-     * @private
-     */
-    PrimitivePipeline.transferPerInstanceAttributes = function(perInstanceAttributes, transferableObjects) {
-        var length = perInstanceAttributes.length;
-        for (var i = 0; i < length; ++i) {
-            var vaAttributes = perInstanceAttributes[i];
-            var vaLength = vaAttributes.length;
-            for (var j = 0; j < vaLength; ++j) {
-                var typedArray = vaAttributes[j].values;
-                if (FeatureDetection.supportsTransferringArrayBuffers()) {
-                    transferableObjects.push(typedArray.buffer);
-                }
-                vaAttributes[j].values = stupefyTypedArray(typedArray);
-            }
-        }
-    };
-
-    /**
-     * @private
-     */
-    PrimitivePipeline.transferInstances = function(instances, transferableObjects) {
-        var length = instances.length;
-        for (var i = 0; i < length; ++i) {
-            var instance = instances[i];
-            PrimitivePipeline.transferGeometry(instance.geometry, transferableObjects);
-        }
-    };
-
-    /**
-     * @private
-     */
-    PrimitivePipeline.receiveGeometry = function(geometry) {
-        var attributes = geometry.attributes;
-        for (var name in attributes) {
-            if (attributes.hasOwnProperty(name) &&
-                    defined(attributes[name]) &&
-                    defined(attributes[name].values)) {
-                attributes[name].values = unStupefyTypedArray(attributes[name].values);
-            }
-        }
-
-        if (defined(geometry.indices)) {
-            geometry.indices = unStupefyTypedArray(geometry.indices);
-        }
-    };
-
-    /**
-     * @private
-     */
-    PrimitivePipeline.receiveGeometries = function(geometries) {
-        var length = geometries.length;
-        for (var i = 0; i < length; ++i) {
-            PrimitivePipeline.receiveGeometry(geometries[i]);
-        }
-    };
-
-    /**
-     * @private
-     */
-    PrimitivePipeline.receivePerInstanceAttributes = function(perInstanceAttributes) {
-        var length = perInstanceAttributes.length;
-        for (var i = 0; i < length; ++i) {
-            var vaAttributes = perInstanceAttributes[i];
-            var vaLength = vaAttributes.length;
-            for (var j = 0; j < vaLength; ++j) {
-                vaAttributes[j].values = unStupefyTypedArray(vaAttributes[j].values);
-            }
-        }
-    };
-
-    /**
-     * @private
-     */
-    PrimitivePipeline.receiveInstances = function(instances) {
-        var length = instances.length;
-        for (var i = 0; i < length; ++i) {
-            var instance = instances[i];
-            PrimitivePipeline.receiveGeometry(instance.geometry);
-        }
-    };
-
-    return PrimitivePipeline;
-});
-
-/*global define*/
-define('Workers/createTaskProcessorWorker',[
-        '../Core/defaultValue',
-        '../Core/defined'
-    ], function(
-        defaultValue,
-        defined) {
-    "use strict";
-
-    /**
-     * Creates an adapter function to allow a calculation function to operate as a Web Worker,
-     * paired with TaskProcessor, to receive tasks and return results.
-     *
-     * @exports createTaskProcessorWorker
-     *
-     * @param {Function} workerFunction A function that takes as input two arguments:
-     * a parameters object, and an array into which transferable result objects can be pushed,
-     * and returns as output a result object.
-     * @returns {Function} An adapter function that handles the interaction with TaskProcessor,
-     * specifically, task ID management and posting a response message containing the result.
-     *
-     * @example
-     * function doCalculation(parameters, transferableObjects) {
-     *   // calculate some result using the inputs in parameters
-     *   return result;
-     * }
-     *
-     * return Cesium.createTaskProcessorWorker(doCalculation);
-     * // the resulting function is compatible with TaskProcessor
-     *
-     * @see TaskProcessor
-     * @see <a href='http://www.w3.org/TR/workers/'>Web Workers</a>
-     * @see <a href='http://www.w3.org/TR/html5/common-dom-interfaces.html#transferable-objects'>Transferable objects</a>
-     */
-    var createTaskProcessorWorker = function(workerFunction) {
-        var postMessage;
-        var transferableObjects = [];
-        var responseMessage = {
-            id : undefined,
-            result : undefined,
-            error : undefined
-        };
-
-        return function(event) {
-            /*global self*/
-            var data = event.data;
-
-            transferableObjects.length = 0;
-            responseMessage.id = data.id;
-            responseMessage.error = undefined;
-            responseMessage.result = undefined;
-
-            try {
-                responseMessage.result = workerFunction(data.parameters, transferableObjects);
-            } catch (e) {
-                responseMessage.error = e;
-            }
-
-            if (!defined(postMessage)) {
-                postMessage = defaultValue(self.webkitPostMessage, self.postMessage);
-            }
-
-            try {
-                postMessage(responseMessage, transferableObjects);
-            } catch (e) {
-                // something went wrong trying to post the message, post a simpler
-                // error that we can be sure will be cloneable
-                responseMessage.result = undefined;
-                responseMessage.error = 'postMessage failed with error: ' + e + '\n  with responseMessage: ' + JSON.stringify(responseMessage);
-                postMessage(responseMessage);
-            }
-        };
-    };
-
-    return createTaskProcessorWorker;
-});
-/*global define*/
-define('Workers/createCircleOutlineGeometry',[
-        '../Core/Cartesian3',
+define('Workers/createCircleOutlineGeometry',['../Core/Cartesian3',
         '../Core/CircleOutlineGeometry',
-        '../Core/Ellipsoid',
-        '../Scene/PrimitivePipeline',
-        './createTaskProcessorWorker'
+        '../Core/Ellipsoid'
     ], function(
         Cartesian3,
         CircleOutlineGeometry,
-        Ellipsoid,
-        PrimitivePipeline,
-        createTaskProcessorWorker) {
+        Ellipsoid) {
     "use strict";
 
-    function createCircleOutlineGeometry(parameters, transferableObjects) {
-        var circleGeometry = parameters.geometry;
+    function createCircleOutlineGeometry(circleGeometry) {
         circleGeometry._ellipseGeometry._center = Cartesian3.clone(circleGeometry._ellipseGeometry._center);
         circleGeometry._ellipseGeometry._ellipsoid = Ellipsoid.clone(circleGeometry._ellipseGeometry._ellipsoid);
-
-        var geometry = CircleOutlineGeometry.createGeometry(circleGeometry);
-        PrimitivePipeline.transferGeometry(geometry, transferableObjects);
-
-        return {
-            geometry : geometry,
-            index : parameters.index
-        };
+        return CircleOutlineGeometry.createGeometry(circleGeometry);
     }
 
-    return createTaskProcessorWorker(createCircleOutlineGeometry);
+    return createCircleOutlineGeometry;
 });
 }());
