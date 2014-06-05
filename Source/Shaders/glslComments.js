@@ -338,23 +338,6 @@
  * vec4 color = czm_antialias(bottomColor, topColor, currentColor, dist, 0.1);
  */
 /**
- * @license
- * Cellular noise ("Worley noise") in 2D in GLSL.
- * Copyright (c) Stefan Gustavson 2011-04-19. All rights reserved.
- * This code is released under the conditions of the MIT license.
- * See LICENSE file for details.
- */
-/**
- * DOC_TBA
- *
- * Implemented by Stefan Gustavson, and distributed under the MIT License.  {@link http://openglinsights.git.sourceforge.net/git/gitweb.cgi?p=openglinsights/openglinsights;a=tree;f=proceduraltextures}
- *
- * @name czm_cellular
- * @glslFunction
- *
- * @see Stefan Gustavson's chapter, <i>Procedural Textures in GLSL</i>, in <a href="http://www.openglinsights.com/">OpenGL Insights</a>.
- */
-/**
  * DOC_TBA
  *
  * @name czm_columbusViewMorph
@@ -724,28 +707,6 @@
  * @example
  * vec3 greyScale = czm_saturation(color, 0.0);
  * vec3 doubleSaturation = czm_saturation(color, 2.0);
- */
-/**
- * @license
- * Description : Array and textureless GLSL 2D/3D/4D simplex 
- *               noise functions.
- *      Author : Ian McEwan, Ashima Arts.
- *  Maintainer : ijm
- *     Lastmod : 20110822 (ijm)
- *     License : Copyright (C) 2011 Ashima Arts. All rights reserved.
- *               Distributed under the MIT License. See LICENSE file.
- *               https://github.com/ashima/webgl-noise
- */
-/**
- * DOC_TBA
- *
- * Implemented by Ian McEwan, Ashima Arts, and distributed under the MIT License.  {@link https://github.com/ashima/webgl-noise}
- *
- * @name czm_snoise
- * @glslFunction
- *
- * @see <a href="https://github.com/ashima/webgl-noise">https://github.com/ashima/webgl-noise</a>
- * @see Stefan Gustavson's paper <a href="http://www.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf">Simplex noise demystified</a>
  */
 /**
  * Creates a matrix that transforms vectors from tangent space to eye space.

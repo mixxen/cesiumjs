@@ -1,7 +1,7 @@
 /**
  * Cesium - https://github.com/AnalyticalGraphicsInc/cesium
  *
- * Copyright 2011-2013 Cesium Contributors
+ * Copyright 2011-2014 Cesium Contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ define('Core/defined',[],function() {
      * @exports defined
      *
      * @example
-     * if (defined(positions)) {
+     * if (Cesium.defined(positions)) {
      *      doSomething();
      * } else {
      *      doSomethingElse();
@@ -80,7 +80,7 @@ define('Core/defaultValue',[
      * @exports defaultValue
      *
      * @example
-     * param = defaultValue(param, 'default');
+     * param = Cesium.defaultValue(param, 'default');
      */
     var defaultValue = function(a, b) {
         if (a !== undefined) {
@@ -364,11 +364,11 @@ define('Core/Cartesian3',[
      * @example
      * // Create a Cartesian3 with (1.0, 2.0, 3.0)
      * var v = [1.0, 2.0, 3.0];
-     * var p = Cartesian3.fromArray(v);
+     * var p = Cesium.Cartesian3.fromArray(v);
      *
      * // Create a Cartesian3 with (1.0, 2.0, 3.0) using an offset into an array
      * var v2 = [0.0, 0.0, 1.0, 2.0, 3.0];
-     * var p2 = Cartesian3.fromArray(v2, 2);
+     * var p2 = Cesium.Cartesian3.fromArray(v2, 2);
      */
     Cartesian3.fromArray = Cartesian3.unpack;
 
@@ -512,7 +512,7 @@ define('Core/Cartesian3',[
      *
      * @example
      * // Returns 1.0
-     * var d = Cartesian3.distance(new Cartesian3(1.0, 0.0, 0.0), new Cartesian3(2.0, 0.0, 0.0));
+     * var d = Cesium.Cartesian3.distance(new Cesium.Cartesian3(1.0, 0.0, 0.0), new Cesium.Cartesian3(2.0, 0.0, 0.0));
      */
     Cartesian3.distance = function(left, right) {
                 if (!defined(left) || !defined(right)) {
@@ -1201,11 +1201,11 @@ define('Core/Cartesian4',[
      * @example
      * // Create a Cartesian4 with (1.0, 2.0, 3.0, 4.0)
      * var v = [1.0, 2.0, 3.0, 4.0];
-     * var p = Cartesian4.fromArray(v);
+     * var p = Cesium.Cartesian4.fromArray(v);
      *
      * // Create a Cartesian4 with (1.0, 2.0, 3.0, 4.0) using an offset into an array
      * var v2 = [0.0, 0.0, 1.0, 2.0, 3.0, 4.0];
-     * var p2 = Cartesian4.fromArray(v2, 2);
+     * var p2 = Cesium.Cartesian4.fromArray(v2, 2);
      */
     Cartesian4.fromArray = Cartesian4.unpack;
 
@@ -1352,7 +1352,7 @@ define('Core/Cartesian4',[
      *
      * @example
      * // Returns 1.0
-     * var d = Cartesian4.distance(new Cartesian4(1.0, 0.0, 0.0, 0.0), new Cartesian4(2.0, 0.0, 0.0, 0.0));
+     * var d = Cesium.Cartesian4.distance(new Cesium.Cartesian4(1.0, 0.0, 0.0, 0.0), new Cesium.Cartesian4(2.0, 0.0, 0.0, 0.0));
      */
     Cartesian4.distance = function(left, right) {
                 if (!defined(left) || !defined(right)) {
@@ -2429,7 +2429,7 @@ define('Core/Math',[
      *
      * @example
      * // Convert 270 degrees to -90 degrees longitude
-     * var longitude = CesiumMath.convertLongitudeRange(CesiumMath.toRadians(270.0));
+     * var longitude = Cesium.Math.convertLongitudeRange(Cesium.Math.toRadians(270.0));
      */
     CesiumMath.convertLongitudeRange = function(angle) {
         var twoPi = CesiumMath.TWO_PI;
@@ -2502,7 +2502,7 @@ define('Core/Math',[
      *
      * @example
      * //Compute 7!, which is equal to 5040
-     * var computedFactorial = CesiumMath.factorial(7);
+     * var computedFactorial = Cesium.Math.factorial(7);
      *
      * @exception {DeveloperError} A number greater than or equal to 0 is required.
      */
@@ -2533,8 +2533,8 @@ define('Core/Math',[
      * @returns {Number} The incremented number.
      *
      * @example
-     * var n = CesiumMath.incrementWrap(5, 10, 0); // returns 6
-     * var n = CesiumMath.incrementWrap(10, 10, 0); // returns 0
+     * var n = Cesium.Math.incrementWrap(5, 10, 0); // returns 6
+     * var n = Cesium.Math.incrementWrap(10, 10, 0); // returns 0
      *
      * @exception {DeveloperError} Maximum value must be greater than minimum value.
      */
@@ -2564,8 +2564,8 @@ define('Core/Math',[
      * @exception {DeveloperError} A number greater than or equal to 0 is required.
      *
      * @example
-     * var t = CesiumMath.isPowerOfTwo(16); // true
-     * var f = CesiumMath.isPowerOfTwo(20); // false
+     * var t = Cesium.Math.isPowerOfTwo(16); // true
+     * var f = Cesium.Math.isPowerOfTwo(20); // false
      */
     CesiumMath.isPowerOfTwo = function(n) {
                 if (typeof n !== 'number' || n < 0) {
@@ -2587,8 +2587,8 @@ define('Core/Math',[
      * @exception {DeveloperError} A number greater than or equal to 0 is required.
      *
      * @example
-     * var n = CesiumMath.nextPowerOfTwo(29); // 32
-     * var m = CesiumMath.nextPowerOfTwo(32); // 32
+     * var n = Cesium.Math.nextPowerOfTwo(29); // 32
+     * var m = Cesium.Math.nextPowerOfTwo(32); // 32
      */
     CesiumMath.nextPowerOfTwo = function(n) {
                 if (typeof n !== 'number' || n < 0) {
@@ -2788,9 +2788,10 @@ define('Core/Cartographic',[
      * @exception {DeveloperError} epsilon is required and must be a number.
      */
     Cartographic.equalsEpsilon = function(left, right, epsilon) {
-        if (typeof epsilon !== 'number') {
+                if (typeof epsilon !== 'number') {
             throw new DeveloperError('epsilon is required and must be a number.');
         }
+        
         return (left === right) ||
                ((defined(left)) &&
                 (defined(right)) &&
@@ -2809,9 +2810,10 @@ define('Core/Cartographic',[
      * @exception {DeveloperError} cartographic is required.
      */
     Cartographic.toString = function(cartographic) {
-        if (!defined(cartographic)) {
+                if (!defined(cartographic)) {
             throw new DeveloperError('cartographic is required');
         }
+        
         return '(' + cartographic.longitude + ', ' + cartographic.latitude + ', ' + cartographic.height + ')';
     };
 
@@ -2919,10 +2921,10 @@ define('Core/Ellipsoid',[
         y = defaultValue(y, 0.0);
         z = defaultValue(z, 0.0);
 
-        if (x < 0.0 || y < 0.0 || z < 0.0) {
+                if (x < 0.0 || y < 0.0 || z < 0.0) {
             throw new DeveloperError('All radii components must be greater than or equal to zero.');
         }
-
+        
         this._radii = new Cartesian3(x, y, z);
 
         this._radiiSquared = new Cartesian3(x * x,
@@ -3110,10 +3112,10 @@ define('Core/Ellipsoid',[
      * @exception {DeveloperError} cartographic is required.
      */
     Ellipsoid.prototype.geodeticSurfaceNormalCartographic = function(cartographic, result) {
-        if (!defined(cartographic)) {
+                if (!defined(cartographic)) {
             throw new DeveloperError('cartographic is required.');
         }
-
+        
         var longitude = cartographic.longitude;
         var latitude = cartographic.latitude;
         var cosLatitude = Math.cos(latitude);
@@ -3161,8 +3163,8 @@ define('Core/Ellipsoid',[
      *
      * @example
      * //Create a Cartographic and determine it's Cartesian representation on a WGS84 ellipsoid.
-     * var position = new Cartographic(Math.toRadians(21), Math.toRadians(78), 5000);
-     * var cartesianPosition = Ellipsoid.WGS84.cartographicToCartesian(position);
+     * var position = new Cesium.Cartographic(Cesium.Math.toRadians(21), Cesium.Math.toRadians(78), 5000);
+     * var cartesianPosition = Cesium.Ellipsoid.WGS84.cartographicToCartesian(position);
      */
     Ellipsoid.prototype.cartographicToCartesian = function(cartographic, result) {
         //`cartographic is required` is thrown from geodeticSurfaceNormalCartographic.
@@ -3188,16 +3190,16 @@ define('Core/Ellipsoid',[
      *
      * @example
      * //Convert an array of Cartographics and determine their Cartesian representation on a WGS84 ellipsoid.
-     * var positions = [new Cartographic(Math.toRadians(21), Math.toRadians(78), 0),
-     *                  new Cartographic(Math.toRadians(21.321), Math.toRadians(78.123), 100),
-     *                  new Cartographic(Math.toRadians(21.645), Math.toRadians(78.456), 250)
-     * var cartesianPositions = Ellipsoid.WGS84.cartographicArrayToCartesianArray(positions);
+     * var positions = [new Cesium.Cartographic(Cesium.Math.toRadians(21), Cesium.Math.toRadians(78), 0),
+     *                  new Cesium.Cartographic(Cesium.Math.toRadians(21.321), Cesium.Math.toRadians(78.123), 100),
+     *                  new Cesium.Cartographic(Cesium.Math.toRadians(21.645), Cesium.Math.toRadians(78.456), 250)
+     * var cartesianPositions = Cesium.Ellipsoid.WGS84.cartographicArrayToCartesianArray(positions);
      */
     Ellipsoid.prototype.cartographicArrayToCartesianArray = function(cartographics, result) {
-        if (!defined(cartographics)) {
+                if (!defined(cartographics)) {
             throw new DeveloperError('cartographics is required.');
         }
-
+        
         var length = cartographics.length;
         if (!defined(result)) {
             result = new Array(length);
@@ -3227,8 +3229,8 @@ define('Core/Ellipsoid',[
      *
      * @example
      * //Create a Cartesian and determine it's Cartographic representation on a WGS84 ellipsoid.
-     * var position = new Cartesian(17832.12, 83234.52, 952313.73);
-     * var cartographicPosition = Ellipsoid.WGS84.cartesianToCartographic(position);
+     * var position = new Cesium.Cartesian(17832.12, 83234.52, 952313.73);
+     * var cartographicPosition = Cesium.Ellipsoid.WGS84.cartesianToCartographic(position);
      */
     Ellipsoid.prototype.cartesianToCartographic = function(cartesian, result) {
         //`cartesian is required.` is thrown from scaleToGeodeticSurface
@@ -3266,16 +3268,16 @@ define('Core/Ellipsoid',[
      *
      * @example
      * //Create an array of Cartesians and determine their Cartographic representation on a WGS84 ellipsoid.
-     * var positions = [new Cartesian(17832.12, 83234.52, 952313.73),
-     *                  new Cartesian(17832.13, 83234.53, 952313.73),
-     *                  new Cartesian(17832.14, 83234.54, 952313.73)]
-     * var cartographicPositions = Ellipsoid.WGS84.cartesianArrayToCartographicArray(positions);
+     * var positions = [new Cesium.Cartesian(17832.12, 83234.52, 952313.73),
+     *                  new Cesium.Cartesian(17832.13, 83234.53, 952313.73),
+     *                  new Cesium.Cartesian(17832.14, 83234.54, 952313.73)]
+     * var cartographicPositions = Cesium.Ellipsoid.WGS84.cartesianArrayToCartographicArray(positions);
      */
     Ellipsoid.prototype.cartesianArrayToCartographicArray = function(cartesians, result) {
-        if (!defined(cartesians)) {
+                if (!defined(cartesians)) {
             throw new DeveloperError('cartesians is required.');
         }
-
+        
         var length = cartesians.length;
         if (!defined(result)) {
             result = new Array(length);
@@ -3304,10 +3306,10 @@ define('Core/Ellipsoid',[
      * @exception {DeveloperError} cartesian is required.
      */
     Ellipsoid.prototype.scaleToGeodeticSurface = function(cartesian, result) {
-        if (!defined(cartesian)) {
+                if (!defined(cartesian)) {
             throw new DeveloperError('cartesian is required.');
         }
-
+        
         var positionX = cartesian.x;
         var positionY = cartesian.y;
         var positionZ = cartesian.z;
@@ -3408,10 +3410,10 @@ define('Core/Ellipsoid',[
      * @exception {DeveloperError} cartesian is required.
      */
     Ellipsoid.prototype.scaleToGeocentricSurface = function(cartesian, result) {
-        if (!defined(cartesian)) {
+                if (!defined(cartesian)) {
             throw new DeveloperError('cartesian is required.');
         }
-
+        
         var positionX = cartesian.x;
         var positionY = cartesian.y;
         var positionZ = cartesian.z;
@@ -3610,8 +3612,8 @@ define('Core/Enumeration',['./defined'], function(defined) {
      * @example
      * // Create an object with two enumerations.
      * var filter = {
-     *     NEAREST : new Enumeration(0x2600, 'NEAREST'),
-     *     LINEAR : new Enumeration(0x2601, 'LINEAR')
+     *     NEAREST : new Cesium.Enumeration(0x2600, 'NEAREST'),
+     *     LINEAR : new Cesium.Enumeration(0x2601, 'LINEAR')
      * };
      */
     var Enumeration = function(value, name, properties) {
@@ -3840,11 +3842,11 @@ define('Core/Matrix3',[
      * // [1.0, 2.0, 3.0]
      *
      * var v = [1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 3.0, 3.0, 3.0];
-     * var m = Matrix3.fromArray(v);
+     * var m = Cesium.Matrix3.fromArray(v);
      *
      * // Create same Matrix3 with using an offset into an array
      * var v2 = [0.0, 0.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 3.0, 3.0, 3.0];
-     * var m2 = Matrix3.fromArray(v2, 2);
+     * var m2 = Cesium.Matrix3.fromArray(v2, 2);
      */
     Matrix3.fromArray = function(array, startingIndex, result) {
                 if (!defined(array)) {
@@ -3990,7 +3992,7 @@ define('Core/Matrix3',[
      * //   [7.0, 0.0, 0.0]
      * //   [0.0, 8.0, 0.0]
      * //   [0.0, 0.0, 9.0]
-     * var m = Matrix3.fromScale(new Cartesian3(7.0, 8.0, 9.0));
+     * var m = Cesium.Matrix3.fromScale(new Cesium.Cartesian3(7.0, 8.0, 9.0));
      */
     Matrix3.fromScale = function(scale, result) {
                 if (!defined(scale)) {
@@ -4031,7 +4033,7 @@ define('Core/Matrix3',[
      * //   [2.0, 0.0, 0.0]
      * //   [0.0, 2.0, 0.0]
      * //   [0.0, 0.0, 2.0]
-     * var m = Matrix3.fromUniformScale(2.0);
+     * var m = Cesium.Matrix3.fromUniformScale(2.0);
      */
     Matrix3.fromUniformScale = function(scale, result) {
                 if (typeof scale !== 'number') {
@@ -4069,9 +4071,9 @@ define('Core/Matrix3',[
      *
      * @example
      * // Rotate a point 45 degrees counterclockwise around the x-axis.
-     * var p = new Cartesian3(5, 6, 7);
-     * var m = Matrix3.fromRotationX(CesiumMath.toRadians(45.0));
-     * var rotated = Matrix3.multiplyByVector(m, p);
+     * var p = new Cesium.Cartesian3(5, 6, 7);
+     * var m = Cesium.Matrix3.fromRotationX(Cesium.Math.toRadians(45.0));
+     * var rotated = Cesium.Matrix3.multiplyByVector(m, p);
      */
     Matrix3.fromRotationX = function(angle, result) {
                 if (!defined(angle)) {
@@ -4113,9 +4115,9 @@ define('Core/Matrix3',[
      *
      * @example
      * // Rotate a point 45 degrees counterclockwise around the y-axis.
-     * var p = new Cartesian3(5, 6, 7);
-     * var m = Matrix3.fromRotationY(CesiumMath.toRadians(45.0));
-     * var rotated = Matrix3.multiplyByVector(m, p);
+     * var p = new Cesium.Cartesian3(5, 6, 7);
+     * var m = Cesium.Matrix3.fromRotationY(Cesium.Math.toRadians(45.0));
+     * var rotated = Cesium.Matrix3.multiplyByVector(m, p);
      */
     Matrix3.fromRotationY = function(angle, result) {
                 if (!defined(angle)) {
@@ -4157,9 +4159,9 @@ define('Core/Matrix3',[
      *
      * @example
      * // Rotate a point 45 degrees counterclockwise around the z-axis.
-     * var p = new Cartesian3(5, 6, 7);
-     * var m = Matrix3.fromRotationZ(CesiumMath.toRadians(45.0));
-     * var rotated = Matrix3.multiplyByVector(m, p);
+     * var p = new Cesium.Cartesian3(5, 6, 7);
+     * var m = Cesium.Matrix3.fromRotationZ(Cesium.Math.toRadians(45.0));
+     * var rotated = Cesium.Matrix3.multiplyByVector(m, p);
      */
     Matrix3.fromRotationZ = function(angle, result) {
                 if (!defined(angle)) {
@@ -4232,8 +4234,8 @@ define('Core/Matrix3',[
      * @exception {DeveloperError} column is required and must be 0, 1, or 2.
      *
      * @example
-     * var myMatrix = new Matrix3();
-     * var column1Row0Index = Matrix3.getElementIndex(1, 0);
+     * var myMatrix = new Cesium.Matrix3();
+     * var column1Row0Index = Cesium.Matrix3.getElementIndex(1, 0);
      * var column1Row0 = myMatrix[column1Row0Index]
      * myMatrix[column1Row0Index] = 10.0;
      */
@@ -4690,18 +4692,18 @@ define('Core/Matrix3',[
      * @example
      * var a = //... symetric matrix
      * var result = {
-     *     unitary : new Matrix3(),
-     *     diagonal : new Matrix3()
+     *     unitary : new Cesium.Matrix3(),
+     *     diagonal : new Cesium.Matrix3()
      * };
-     * Matrix3.getEigenDecomposition(a, result);
+     * Cesium.Matrix3.getEigenDecomposition(a, result);
      *
-     * var unitaryTranspose = Matrix3.transpose(result.unitary);
-     * var b = Matrix.multiply(result.unitary, result.diagonal);
-     * Matrix3.multiply(b, unitaryTranspose, b); // b is now equal to a
+     * var unitaryTranspose = Cesium.Matrix3.transpose(result.unitary);
+     * var b = Cesium.Matrix3.multiply(result.unitary, result.diagonal);
+     * Cesium.Matrix3.multiply(b, unitaryTranspose, b); // b is now equal to a
      *
-     * var lambda = Matrix3.getColumn(result.diagonal, 0).x;  // first eigenvalue
-     * var v = Matrix3.getColumn(result.unitary, 0);          // first eigenvector
-     * var c = Cartesian3.multiplyByScalar(v, lambda);        // equal to Matrix3.multiplyByVector(a, v)
+     * var lambda = Cesium.Matrix3.getColumn(result.diagonal, 0).x;  // first eigenvalue
+     * var v = Cesium.Matrix3.getColumn(result.unitary, 0);          // first eigenvector
+     * var c = Cesium.Cartesian3.multiplyByScalar(v, lambda);        // equal to Cesium.Matrix3.multiplyByVector(a, v)
      */
     Matrix3.getEigenDecomposition = function(matrix, result) {
                 if (!defined(matrix)) {
@@ -4785,10 +4787,10 @@ define('Core/Matrix3',[
      * @exception {DeveloperError} matrix is required.
      */
     Matrix3.determinant = function(matrix) {
-        if (!defined(matrix)) {
+                if (!defined(matrix)) {
             throw new DeveloperError('matrix is required');
         }
-
+        
         var m11 = matrix[0];
         var m21 = matrix[3];
         var m31 = matrix[6];
@@ -4814,10 +4816,10 @@ define('Core/Matrix3',[
      * @exception {DeveloperError} matrix is not invertible.
      */
     Matrix3.inverse = function(matrix, result) {
-        if (!defined(matrix)) {
+                if (!defined(matrix)) {
             throw new DeveloperError('matrix is required');
         }
-
+        
         var m11 = matrix[0];
         var m21 = matrix[1];
         var m31 = matrix[2];
@@ -5214,11 +5216,11 @@ define('Core/Matrix4',[
      * // [1.0, 2.0, 3.0, 4.0]
      *
      * var v = [1.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 2.0, 3.0, 3.0, 3.0, 3.0, 4.0, 4.0, 4.0, 4.0];
-     * var m = Matrix4.fromArray(v);
+     * var m = Cesium.Matrix4.fromArray(v);
      *
      * // Create same Matrix4 with using an offset into an array
      * var v2 = [0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 2.0, 3.0, 3.0, 3.0, 3.0, 4.0, 4.0, 4.0, 4.0];
-     * var m2 = Matrix4.fromArray(v2, 2);
+     * var m2 = Cesium.Matrix4.fromArray(v2, 2);
      */
     Matrix4.fromArray = function(array, startingIndex, result) {
                 if (!defined(array)) {
@@ -5376,10 +5378,10 @@ define('Core/Matrix4',[
      * @exception {DeveloperError} scale is required.
      *
      * @example
-     * result = Matrix4.fromTranslationQuaternionRotationScale(
-     *   new Cartesian3(1.0, 2.0, 3.0), // translation
-     *   Quaternion.IDENTITY,           // rotation
-     *   new Cartesian3(7.0, 8.0, 9.0), // scale
+     * result = Cesium.Matrix4.fromTranslationQuaternionRotationScale(
+     *   new Cesium.Cartesian3(1.0, 2.0, 3.0), // translation
+     *   Cesium.Quaternion.IDENTITY,           // rotation
+     *   new Cesium.Cartesian3(7.0, 8.0, 9.0), // scale
      *   result);
      */
     Matrix4.fromTranslationQuaternionRotationScale = function(translation, rotation, scale, result) {
@@ -5476,7 +5478,7 @@ define('Core/Matrix4',[
      * //   [0.0, 8.0, 0.0, 0.0]
      * //   [0.0, 0.0, 9.0, 0.0]
      * //   [0.0, 0.0, 0.0, 1.0]
-     * var m = Matrix4.fromScale(new Cartesian3(7.0, 8.0, 9.0));
+     * var m = Cesium.Matrix4.fromScale(new Cartesian3(7.0, 8.0, 9.0));
      */
     Matrix4.fromScale = function(scale, result) {
                 if (!defined(scale)) {
@@ -5526,7 +5528,7 @@ define('Core/Matrix4',[
      * //   [0.0, 2.0, 0.0, 0.0]
      * //   [0.0, 0.0, 2.0, 0.0]
      * //   [0.0, 0.0, 0.0, 1.0]
-     * var m = Matrix4.fromScale(2.0);
+     * var m = Cesium.Matrix4.fromScale(2.0);
      */
     Matrix4.fromUniformScale = function(scale, result) {
                 if (typeof scale !== 'number') {
@@ -5959,7 +5961,7 @@ define('Core/Matrix4',[
      *
      * @example
      * // Example 1.  Create viewport transformation using an explicit viewport and depth range.
-     * var m = Matrix4.computeViewportTransformation({
+     * var m = Cesium.Matrix4.computeViewportTransformation({
      *     x : 0.0,
      *     y : 0.0,
      *     width : 1024.0,
@@ -5967,7 +5969,7 @@ define('Core/Matrix4',[
      * }, 0.0, 1.0);
      *
      * // Example 2.  Create viewport transformation using the context's viewport.
-     * var m = Matrix4.computeViewportTransformation(context.getViewport());
+     * var m = Cesium.Matrix4.computeViewportTransformation(context.getViewport());
      */
     Matrix4.computeViewportTransformation = function(viewport, nearDepthRange, farDepthRange, result) {
         viewport = defaultValue(viewport, defaultValue.EMPTY_OBJECT);
@@ -6032,7 +6034,7 @@ define('Core/Matrix4',[
      * //     [11.0, 15.0, 19.0, 23.0]
      * //     [12.0, 16.0, 20.0, 24.0]
      * //     [13.0, 17.0, 21.0, 25.0]
-     * var a = Matrix4.toArray(m);
+     * var a = Cesium.Matrix4.toArray(m);
      *
      * // m remains the same
      * //creates a = [10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0, 19.0, 20.0, 21.0, 22.0, 23.0, 24.0, 25.0]
@@ -6080,8 +6082,8 @@ define('Core/Matrix4',[
      * @exception {DeveloperError} column is required and must be 0, 1, 2, or 3.
      *
      * @example
-     * var myMatrix = new Matrix4();
-     * var column1Row0Index = Matrix4.getElementIndex(1, 0);
+     * var myMatrix = new Cesium.Matrix4();
+     * var column1Row0Index = Cesium.Matrix4.getElementIndex(1, 0);
      * var column1Row0 = myMatrix[column1Row0Index]
      * myMatrix[column1Row0Index] = 10.0;
      */
@@ -6118,11 +6120,11 @@ define('Core/Matrix4',[
      * //     [22.0, 23.0, 24.0, 25.0]
      *
      * //Example 1: Creates an instance of Cartesian
-     * var a = Matrix4.getColumn(m, 2);
+     * var a = Cesium.Matrix4.getColumn(m, 2);
      *
      * //Example 2: Sets values for Cartesian instance
-     * var a = new Cartesian4();
-     * Matrix4.getColumn(m, 2, a);
+     * var a = new Cesium.Cartesian4();
+     * Cesium.Matrix4.getColumn(m, 2, a);
      *
      * // a.x = 12.0; a.y = 16.0; a.z = 20.0; a.w = 24.0;
      *
@@ -6175,7 +6177,7 @@ define('Core/Matrix4',[
      * //     [18.0, 19.0, 20.0, 21.0]
      * //     [22.0, 23.0, 24.0, 25.0]
      *
-     * var a = Matrix4.setColumn(m, 2, new Cartesian4(99.0, 98.0, 97.0, 96.0));
+     * var a = Cesium.Matrix4.setColumn(m, 2, new Cartesian4(99.0, 98.0, 97.0, 96.0));
      *
      * // m remains the same
      * // a = [10.0, 11.0, 99.0, 13.0]
@@ -6226,11 +6228,11 @@ define('Core/Matrix4',[
      * //     [22.0, 23.0, 24.0, 25.0]
      *
      * //Example 1: Returns an instance of Cartesian
-     * var a = Matrix4.getRow(m, 2);
+     * var a = Cesium.Matrix4.getRow(m, 2);
      *
      * //Example 1: Sets values for a Cartesian instance
      * var a = new Cartesian4();
-     * Matrix4.getRow(m, 2, a);
+     * Cesium.Matrix4.getRow(m, 2, a);
      *
      * // a.x = 18.0; a.y = 19.0; a.z = 20.0; a.w = 21.0;
      */
@@ -6281,7 +6283,7 @@ define('Core/Matrix4',[
      * //     [18.0, 19.0, 20.0, 21.0]
      * //     [22.0, 23.0, 24.0, 25.0]
      *
-     * var a = Matrix4.setRow(m, 2, new Cartesian4(99.0, 98.0, 97.0, 96.0));
+     * var a = Cesium.Matrix4.setRow(m, 2, new Cartesian4(99.0, 98.0, 97.0, 96.0));
      *
      * // m remains the same
      * // a = [10.0, 11.0, 12.0, 13.0]
@@ -6427,9 +6429,9 @@ define('Core/Matrix4',[
      * @exception {DeveloperError} right is required.
      *
      * @example
-     * var m1 = new Matrix4(1.0, 6.0, 7.0, 0.0, 2.0, 5.0, 8.0, 0.0, 3.0, 4.0, 9.0, 0.0, 0.0, 0.0, 0.0, 1.0];
-     * var m2 = Transforms.eastNorthUpToFixedFrame(new Cartesian3(1.0, 1.0, 1.0));
-     * var m3 = Matrix4.multiplyTransformation(m1, m2);
+     * var m1 = new Cesium.Matrix4(1.0, 6.0, 7.0, 0.0, 2.0, 5.0, 8.0, 0.0, 3.0, 4.0, 9.0, 0.0, 0.0, 0.0, 0.0, 1.0];
+     * var m2 = Cesium.Transforms.eastNorthUpToFixedFrame(new Cesium.Cartesian3(1.0, 1.0, 1.0));
+     * var m3 = Cesium.Matrix4.multiplyTransformation(m1, m2);
      */
     Matrix4.multiplyTransformation = function(left, right, result) {
                 if (!defined(left)) {
@@ -6525,8 +6527,8 @@ define('Core/Matrix4',[
      * @see Matrix4#fromTranslation
      *
      * @example
-     * // Instead of Matrix4.multiply(m, Matrix4.fromTranslation(position), m);
-     * Matrix4.multiplyByTranslation(m, position, m);
+     * // Instead of Matrix4.multiply(m, Cesium.Matrix4.fromTranslation(position), m);
+     * Cesium.Matrix4.multiplyByTranslation(m, position, m);
      */
     Matrix4.multiplyByTranslation = function(matrix, translation, result) {
                 if (!defined(matrix)) {
@@ -6592,8 +6594,8 @@ define('Core/Matrix4',[
      * @see Matrix4#multiplyByScale
      *
      * @example
-     * // Instead of Matrix4.multiply(m, Matrix4.fromUniformScale(scale), m);
-     * Matrix4.multiplyByUniformScale(m, scale, m);
+     * // Instead of Matrix4.multiply(m, Cesium.Matrix4.fromUniformScale(scale), m);
+     * Cesium.Matrix4.multiplyByUniformScale(m, scale, m);
      */
     Matrix4.multiplyByUniformScale = function(matrix, scale, result) {
                 if (typeof scale !== 'number') {
@@ -6626,8 +6628,8 @@ define('Core/Matrix4',[
      * @see Matrix4#multiplyByUniformScale
      *
      * @example
-     * // Instead of Matrix4.multiply(m, Matrix4.fromScale(scale), m);
-     * Matrix4.multiplyByUniformScale(m, scale, m);
+     * // Instead of Matrix4.multiply(m, Cesium.Matrix4.fromScale(scale), m);
+     * Cesium.Matrix4.multiplyByUniformScale(m, scale, m);
      */
     Matrix4.multiplyByScale = function(matrix, scale, result) {
                 if (!defined(matrix)) {
@@ -6727,11 +6729,11 @@ define('Core/Matrix4',[
      * @exception {DeveloperError} matrix is required.
      *
      * @example
-     * Cartesian3 p = new Cartesian3(1.0, 2.0, 3.0);
-     * Matrix4.multiplyByPointAsVector(matrix, p, result);
+     * var p = new Cesium.Cartesian3(1.0, 2.0, 3.0);
+     * Cesium.Matrix4.multiplyByPointAsVector(matrix, p, result);
      * // A shortcut for
      * //   Cartesian3 p = ...
-     * //   Matrix4.multiplyByVector(matrix, new Cartesian4(p.x, p.y, p.z, 0.0), result);
+     * //   Cesium.Matrix4.multiplyByVector(matrix, new Cesium.Cartesian4(p.x, p.y, p.z, 0.0), result);
      */
     Matrix4.multiplyByPointAsVector = function(matrix, cartesian, result) {
                 if (!defined(matrix)) {
@@ -6772,8 +6774,8 @@ define('Core/Matrix4',[
      * @exception {DeveloperError} matrix is required.
      *
      * @example
-     * Cartesian3 p = new Cartesian3(1.0, 2.0, 3.0);
-     * Matrix4.multiplyByPoint(matrix, p, result);
+     * var p = new Cesium.Cartesian3(1.0, 2.0, 3.0);
+     * Cesium.Matrix4.multiplyByPoint(matrix, p, result);
      */
     Matrix4.multiplyByPoint = function(matrix, cartesian, result) {
                 if (!defined(matrix)) {
@@ -6820,7 +6822,7 @@ define('Core/Matrix4',[
      * //     [18.0, 19.0, 20.0, 21.0]
      * //     [22.0, 23.0, 24.0, 25.0]
      *
-     * var a = Matrix4.multiplyByScalar(m, -2);
+     * var a = Cesium.Matrix4.multiplyByScalar(m, -2);
      *
      * // m remains the same
      * // a = [-20.0, -22.0, -24.0, -26.0]
@@ -6879,7 +6881,7 @@ define('Core/Matrix4',[
      * //     [18.0, 19.0, 20.0, 21.0]
      * //     [22.0, 23.0, 24.0, 25.0]
      *
-     * var a = Matrix4.negate(m);
+     * var a = Cesium.Matrix4.negate(m);
      *
      * // m remains the same
      * // a = [-10.0, -11.0, -12.0, -13.0]
@@ -6935,7 +6937,7 @@ define('Core/Matrix4',[
      * //     [18.0, 19.0, 20.0, 21.0]
      * //     [22.0, 23.0, 24.0, 25.0]
      *
-     * var a = Matrix4.negate(m);
+     * var a = Cesium.Matrix4.negate(m);
      *
      * // m remains the same
      * // a = [10.0, 14.0, 18.0, 22.0]
@@ -7047,7 +7049,7 @@ define('Core/Matrix4',[
      * //     [12.0, 16.0, 20.0, 24.0]
      * //     [13.0, 17.0, 21.0, 25.0]
      *
-     * if(Matrix4.equals(a,b)) {
+     * if(Cesium.Matrix4.equals(a,b)) {
      *      console.log("Both matrices are equal");
      * } else {
      *      console.log("They are not equal");
@@ -7104,7 +7106,7 @@ define('Core/Matrix4',[
      * //     [12.0, 16.0, 20.0, 24.0]
      * //     [13.0, 17.0, 21.0, 25.0]
      *
-     * if(Matrix4.equalsEpsilon(a,b,0.1)){
+     * if(Cesium.Matrix4.equalsEpsilon(a,b,0.1)){
      *      console.log("Difference between both the matrices is less than 0.1");
      * } else {
      *      console.log("Difference between both the matrices is not less than 0.1");
@@ -7185,8 +7187,8 @@ define('Core/Matrix4',[
      * //     [12.0, 16.0, 20.0, 24.0]
      * //     [13.0, 17.0, 21.0, 25.0]
      *
-     * var b = new Matrix3();
-     * Matrix4.getRotation(m,b);
+     * var b = new Cesium.Matrix3();
+     * Cesium.Matrix4.getRotation(m,b);
      *
      * // b = [10.0, 14.0, 18.0]
      * //     [11.0, 15.0, 19.0]
@@ -7902,11 +7904,11 @@ define('Core/BoundingSphere',[
      * // Compute the bounding sphere from 3 positions, each specified relative to a center.
      * // In addition to the X, Y, and Z coordinates, the points array contains two additional
      * // elements per point which are ignored for the purpose of computing the bounding sphere.
-     * var center = new Cartesian3(1.0, 2.0, 3.0);
+     * var center = new Cesium.Cartesian3(1.0, 2.0, 3.0);
      * var points = [1.0, 2.0, 3.0, 0.1, 0.2,
      *               4.0, 5.0, 6.0, 0.1, 0.2,
      *               7.0, 8.0, 9.0, 0.1, 0.2];
-     * var sphere = BoundingSphere.fromVertices(points, center, 5);
+     * var sphere = Cesium.BoundingSphere.fromVertices(points, center, 5);
      */
     BoundingSphere.fromVertices = function(positions, center, stride, result) {
         if (!defined(result)) {
@@ -8074,7 +8076,7 @@ define('Core/BoundingSphere',[
      *
      * @example
      * // Create a bounding sphere around the unit cube
-     * var sphere = BoundingSphere.fromCornerPoints(new Cartesian3(-0.5, -0.5, -0.5), new Cartesian3(0.5, 0.5, 0.5));
+     * var sphere = Cesium.BoundingSphere.fromCornerPoints(new Cesium.Cartesian3(-0.5, -0.5, -0.5), new Cesium.Cartesian3(0.5, 0.5, 0.5));
      */
     BoundingSphere.fromCornerPoints = function(corner, oppositeCorner, result) {
                 if (!defined(corner) || !defined(oppositeCorner)) {
@@ -8105,7 +8107,7 @@ define('Core/BoundingSphere',[
      * @exception {DeveloperError} ellipsoid is required.
      *
      * @example
-     * var boundingSphere = BoundingSphere.fromEllipsoid(ellipsoid);
+     * var boundingSphere = Cesium.BoundingSphere.fromEllipsoid(ellipsoid);
      */
     BoundingSphere.fromEllipsoid = function(ellipsoid, result) {
                 if (!defined(ellipsoid)) {
@@ -8305,9 +8307,9 @@ define('Core/BoundingSphere',[
      * @exception {DeveloperError} transform is required.
      *
      * @example
-     * var modelMatrix = Transforms.eastNorthUpToFixedFrame(positionOnEllipsoid);
-     * var boundingSphere = new BoundingSphere();
-     * var newBoundingSphere = BoundingSphere.transformWithoutScale(boundingSphere, modelMatrix);
+     * var modelMatrix = Cesium.Transforms.eastNorthUpToFixedFrame(positionOnEllipsoid);
+     * var boundingSphere = new Cesium.BoundingSphere();
+     * var newBoundingSphere = Cesium.BoundingSphere.transformWithoutScale(boundingSphere, modelMatrix);
      */
     BoundingSphere.transformWithoutScale = function(sphere, transform, result) {
                 if (!defined(sphere)) {
@@ -8639,15 +8641,15 @@ define('Core/EllipsoidalOccluder',[
      *
      * @example
      * // Construct an ellipsoidal occluder with radii 1.0, 1.1, and 0.9.
-     * var cameraPosition = new Cartesian3(5.0, 6.0, 7.0);
-     * var occluderEllipsoid = new Ellipsoid(1.0, 1.1, 0.9);
-     * var occluder = new EllipsoidalOccluder(occluderEllipsoid, cameraPosition);
+     * var cameraPosition = new Cesium.Cartesian3(5.0, 6.0, 7.0);
+     * var occluderEllipsoid = new Cesium.Ellipsoid(1.0, 1.1, 0.9);
+     * var occluder = new Cesium.EllipsoidalOccluder(occluderEllipsoid, cameraPosition);
      */
     var EllipsoidalOccluder = function(ellipsoid, cameraPosition) {
-        if (!defined(ellipsoid)) {
+                if (!defined(ellipsoid)) {
             throw new DeveloperError('ellipsoid is required.');
         }
-
+        
         this._ellipsoid = ellipsoid;
         this._cameraPosition = new Cartesian3();
         this._cameraPositionInScaledSpace = new Cartesian3();
@@ -8711,10 +8713,10 @@ define('Core/EllipsoidalOccluder',[
      * @returns {boolean} <code>true</code> if the occludee is visible; otherwise <code>false</code>.
      *
      * @example
-     * var cameraPosition = new Cartesian3(0, 0, 2.5);
-     * var ellipsoid = new Ellipsoid(1.0, 1.1, 0.9);
-     * var occluder = new EllipsoidalOccluder(ellipsoid, cameraPosition);
-     * var point = new Cartesian3(0, -3, -3);
+     * var cameraPosition = new Cesium.Cartesian3(0, 0, 2.5);
+     * var ellipsoid = new Cesium.Ellipsoid(1.0, 1.1, 0.9);
+     * var occluder = new Cesium.EllipsoidalOccluder(ellipsoid, cameraPosition);
+     * var point = new Cesium.Cartesian3(0, -3, -3);
      * occluder.isPointVisible(point); //returns true
      */
     EllipsoidalOccluder.prototype.isPointVisible = function(occludee) {
@@ -8735,10 +8737,10 @@ define('Core/EllipsoidalOccluder',[
      * @returns {boolean} <code>true</code> if the occludee is visible; otherwise <code>false</code>.
      *
      * @example
-     * var cameraPosition = new Cartesian3(0, 0, 2.5);
-     * var ellipsoid = new Ellipsoid(1.0, 1.1, 0.9);
-     * var occluder = new EllipsoidalOccluder(ellipsoid, cameraPosition);
-     * var point = new Cartesian3(0, -3, -3);
+     * var cameraPosition = new Cesium.Cartesian3(0, 0, 2.5);
+     * var ellipsoid = new Cesium.Ellipsoid(1.0, 1.1, 0.9);
+     * var occluder = new Cesium.EllipsoidalOccluder(ellipsoid, cameraPosition);
+     * var point = new Cesium.Cartesian3(0, -3, -3);
      * var scaledSpacePoint = ellipsoid.transformPositionToScaledSpace(point);
      * occluder.isScaledSpacePointVisible(scaledSpacePoint); //returns true
      */
@@ -8770,17 +8772,15 @@ define('Core/EllipsoidalOccluder',[
      * @returns {Cartesian3} The computed horizon culling point, expressed in the ellipsoid-scaled space.
      */
     EllipsoidalOccluder.prototype.computeHorizonCullingPoint = function(directionToPoint, positions, result) {
-        if (!defined(directionToPoint)) {
+                if (!defined(directionToPoint)) {
             throw new DeveloperError('directionToPoint is required');
         }
         if (!defined(positions)) {
             throw new DeveloperError('positions is required');
         }
-
+        
         var ellipsoid = this._ellipsoid;
-
         var scaledSpaceDirectionToPoint = computeScaledSpaceDirectionToPoint(ellipsoid, directionToPoint);
-
         var resultMagnitude = 0.0;
 
         for (var i = 0, len = positions.length; i < len; ++i) {
@@ -8813,7 +8813,7 @@ define('Core/EllipsoidalOccluder',[
      * @returns {Cartesian3} The computed horizon culling point, expressed in the ellipsoid-scaled space.
      */
     EllipsoidalOccluder.prototype.computeHorizonCullingPointFromVertices = function(directionToPoint, vertices, stride, center, result) {
-        if (!defined(directionToPoint)) {
+                if (!defined(directionToPoint)) {
             throw new DeveloperError('directionToPoint is required');
         }
         if (!defined(vertices)) {
@@ -8822,13 +8822,10 @@ define('Core/EllipsoidalOccluder',[
         if (!defined(stride)) {
             throw new DeveloperError('stride is required');
         }
-
+        
         center = defaultValue(center, Cartesian3.ZERO);
-
         var ellipsoid = this._ellipsoid;
-
         var scaledSpaceDirectionToPoint = computeScaledSpaceDirectionToPoint(ellipsoid, directionToPoint);
-
         var resultMagnitude = 0.0;
 
         for (var i = 0, len = vertices.length; i < len; i += stride) {
@@ -8858,10 +8855,10 @@ define('Core/EllipsoidalOccluder',[
      * @returns {Cartesian3} The computed horizon culling point, expressed in the ellipsoid-scaled space.
      */
     EllipsoidalOccluder.prototype.computeHorizonCullingPointFromExtent = function(extent, ellipsoid, result) {
-        if (!defined(extent)) {
+                if (!defined(extent)) {
             throw new DeveloperError('extent is required.');
         }
-
+        
         var positions = extent.subsample(ellipsoid, 0.0, subsampleScratch);
         var bs = BoundingSphere.fromPoints(positions);
 
@@ -8993,7 +8990,7 @@ define('Core/Extent',[
      * @returns {Extent} The modified result parameter or a new Extent instance if none was provided.
      *
      * @example
-     * var extent = Extent.fromDegrees(0.0, 20.0, 10.0, 30.0);
+     * var extent = Cesium.Extent.fromDegrees(0.0, 20.0, 10.0, 30.0);
      */
     Extent.fromDegrees = function(west, south, east, north, result) {
         west = CesiumMath.toRadians(defaultValue(west, 0.0));
@@ -9022,10 +9019,10 @@ define('Core/Extent',[
      * @returns {Extent} The modified result parameter or a new Extent instance if none was provided.
      */
     Extent.fromCartographicArray = function(cartographics, result) {
-        if (!defined(cartographics)) {
+                if (!defined(cartographics)) {
             throw new DeveloperError('cartographics is required.');
         }
-
+        
         var minLon = Number.MAX_VALUE;
         var maxLon = -Number.MAX_VALUE;
         var minLat = Number.MAX_VALUE;
@@ -9133,10 +9130,10 @@ define('Core/Extent',[
      * @exception {DeveloperError} epsilon is required and must be a number.
      */
     Extent.prototype.equalsEpsilon = function(other, epsilon) {
-        if (typeof epsilon !== 'number') {
+                if (typeof epsilon !== 'number') {
             throw new DeveloperError('epsilon is required and must be a number.');
         }
-
+        
         return defined(other) &&
                (Math.abs(this.west - other.west) <= epsilon) &&
                (Math.abs(this.south - other.south) <= epsilon) &&
@@ -9157,7 +9154,7 @@ define('Core/Extent',[
      * @exception {DeveloperError} <code>west</code> must be in the interval [<code>-Pi</code>, <code>Pi</code>].
      */
     Extent.prototype.validate = function() {
-        var north = this.north;
+                var north = this.north;
         if (typeof north !== 'number') {
             throw new DeveloperError('north is required to be a number.');
         }
@@ -9192,7 +9189,7 @@ define('Core/Extent',[
         if (east < -Math.PI || east > Math.PI) {
             throw new DeveloperError('east must be in the interval [-Pi, Pi].');
         }
-    };
+            };
 
     /**
      * Computes the southwest corner of this extent.
@@ -9290,9 +9287,10 @@ define('Core/Extent',[
      * @exception {DeveloperError} otherExtent is required.
      */
     Extent.prototype.intersectWith = function(otherExtent, result) {
-        if (!defined(otherExtent)) {
+                if (!defined(otherExtent)) {
             throw new DeveloperError('otherExtent is required.');
         }
+        
         var west = Math.max(this.west, otherExtent.west);
         var south = Math.max(this.south, otherExtent.south);
         var east = Math.min(this.east, otherExtent.east);
@@ -9317,9 +9315,10 @@ define('Core/Extent',[
      * @exception {DeveloperError} cartographic is required.
      */
     Extent.prototype.contains = function(cartographic) {
-        if (!defined(cartographic)) {
+                if (!defined(cartographic)) {
             throw new DeveloperError('cartographic is required.');
         }
+        
         return cartographic.longitude >= this.west &&
                cartographic.longitude <= this.east &&
                cartographic.latitude >= this.south &&
@@ -9517,7 +9516,7 @@ define('Core/HeightmapTessellator',[
      * var height = 5;
      * var vertices = new Float32Array(width * height * 6);
      * var description = ;
-     * HeightmapTessellator.computeVertices({
+     * Cesium.HeightmapTessellator.computeVertices({
      *     vertices : vertices,
      *     heightmap : [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0],
      *     width : width,
@@ -9532,26 +9531,22 @@ define('Core/HeightmapTessellator',[
      * });
      */
     HeightmapTessellator.computeVertices = function(description) {
-        if (!defined(description) || !defined(description.heightmap)) {
+                if (!defined(description) || !defined(description.heightmap)) {
             throw new DeveloperError('description.heightmap is required.');
         }
-
         if (!defined(description.width) || !defined(description.height)) {
             throw new DeveloperError('description.width and description.height are required.');
         }
-
         if (!defined(description.vertices)) {
             throw new DeveloperError('description.vertices is required.');
         }
-
         if (!defined(description.nativeExtent)) {
             throw new DeveloperError('description.nativeExtent is required.');
         }
-
         if (!defined(description.skirtHeight)) {
             throw new DeveloperError('description.skirtHeight is required.');
         }
-
+        
         // This function tends to be a performance hotspot for terrain rendering,
         // so it employs a lot of inlining and unrolling as an optimization.
         // In particular, the functionality of Ellipsoid.cartographicToCartesian
@@ -9769,7 +9764,7 @@ define('Workers/createTaskProcessorWorker',[
      *   return result;
      * }
      *
-     * return createTaskProcessorWorker(doCalculation);
+     * return Cesium.createTaskProcessorWorker(doCalculation);
      * // the resulting function is compatible with TaskProcessor
      *
      * @see TaskProcessor
