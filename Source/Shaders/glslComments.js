@@ -315,6 +315,9 @@
  * rgb = czm_XYZToRGB(xyz);
  */
 /**
+ * @private
+ */
+/**
  * Procedural anti-aliasing by blurring two colors that meet at a sharp edge.
  *
  * @name czm_antialias
@@ -758,6 +761,9 @@
  * @see EncodedCartesian3
  */
 /**
+ * @private
+ */
+/**
  * Returns the transpose of the matrix.  The input <code>matrix</code> can be 
  * a <code>mat2</code>, <code>mat3</code>, or <code>mat4</code>.
  *
@@ -858,6 +864,25 @@
  *
  * @name czm_fullRaySegment
  * @glslConstant 
+ */
+/**
+ * Compositing for Weighted Blended Order-Independent Transparency. See:
+ * - http://jcgt.org/published/0002/02/09/
+ * - http://casual-effects.blogspot.com/2014/03/weighted-blended-order-independent.html
+ */
+/**
+ * @license
+ * Copyright (c) 2011 NVIDIA Corporation. All rights reserved.
+ *
+ * TO  THE MAXIMUM  EXTENT PERMITTED  BY APPLICABLE  LAW, THIS SOFTWARE  IS PROVIDED
+ * *AS IS*  AND NVIDIA AND  ITS SUPPLIERS DISCLAIM  ALL WARRANTIES,  EITHER  EXPRESS
+ * OR IMPLIED, INCLUDING, BUT NOT LIMITED  TO, NONINFRINGEMENT,IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  IN NO EVENT SHALL  NVIDIA 
+ * OR ITS SUPPLIERS BE  LIABLE  FOR  ANY  DIRECT, SPECIAL,  INCIDENTAL,  INDIRECT,  OR  
+ * CONSEQUENTIAL DAMAGES WHATSOEVER (INCLUDING, WITHOUT LIMITATION,  DAMAGES FOR LOSS 
+ * OF BUSINESS PROFITS, BUSINESS INTERRUPTION, LOSS OF BUSINESS INFORMATION, OR ANY 
+ * OTHER PECUNIARY LOSS) ARISING OUT OF THE  USE OF OR INABILITY  TO USE THIS SOFTWARE, 
+ * EVEN IF NVIDIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
 /**
  * @license

@@ -2657,6 +2657,554 @@ define('Core/Ellipsoid',[
 });
 
 /*global define*/
+define('Core/Extent',[
+        './freezeObject',
+        './defaultValue',
+        './defined',
+        './Ellipsoid',
+        './Cartographic',
+        './DeveloperError',
+        './Math'
+    ], function(
+        freezeObject,
+        defaultValue,
+        defined,
+        Ellipsoid,
+        Cartographic,
+        DeveloperError,
+        CesiumMath) {
+    "use strict";
+
+    /**
+     * A two dimensional region specified as longitude and latitude coordinates.
+     *
+     * @alias Extent
+     * @constructor
+     *
+     * @param {Number} [west=0.0] The westernmost longitude, in radians, in the range [-Pi, Pi].
+     * @param {Number} [south=0.0] The southernmost latitude, in radians, in the range [-Pi/2, Pi/2].
+     * @param {Number} [east=0.0] The easternmost longitude, in radians, in the range [-Pi, Pi].
+     * @param {Number} [north=0.0] The northernmost latitude, in radians, in the range [-Pi/2, Pi/2].
+     */
+    var Extent = function(west, south, east, north) {
+        /**
+         * The westernmost longitude in radians in the range [-Pi, Pi].
+         *
+         * @type {Number}
+         * @default 0.0
+         */
+        this.west = defaultValue(west, 0.0);
+
+        /**
+         * The southernmost latitude in radians in the range [-Pi/2, Pi/2].
+         *
+         * @type {Number}
+         * @default 0.0
+         */
+        this.south = defaultValue(south, 0.0);
+
+        /**
+         * The easternmost longitude in radians in the range [-Pi, Pi].
+         *
+         * @type {Number}
+         * @default 0.0
+         */
+        this.east = defaultValue(east, 0.0);
+
+        /**
+         * The northernmost latitude in radians in the range [-Pi/2, Pi/2].
+         *
+         * @type {Number}
+         * @default 0.0
+         */
+        this.north = defaultValue(north, 0.0);
+    };
+
+    /**
+     * Creates an extent given the boundary longitude and latitude in degrees.
+     *
+     * @memberof Extent
+     *
+     * @param {Number} [west=0.0] The westernmost longitude in degrees in the range [-180.0, 180.0].
+     * @param {Number} [south=0.0] The southernmost latitude in degrees in the range [-90.0, 90.0].
+     * @param {Number} [east=0.0] The easternmost longitude in degrees in the range [-180.0, 180.0].
+     * @param {Number} [north=0.0] The northernmost latitude in degrees in the range [-90.0, 90.0].
+     * @param {Extent} [result] The object onto which to store the result, or undefined if a new instance should be created.
+     *
+     * @returns {Extent} The modified result parameter or a new Extent instance if none was provided.
+     *
+     * @example
+     * var extent = Cesium.Extent.fromDegrees(0.0, 20.0, 10.0, 30.0);
+     */
+    Extent.fromDegrees = function(west, south, east, north, result) {
+        west = CesiumMath.toRadians(defaultValue(west, 0.0));
+        south = CesiumMath.toRadians(defaultValue(south, 0.0));
+        east = CesiumMath.toRadians(defaultValue(east, 0.0));
+        north = CesiumMath.toRadians(defaultValue(north, 0.0));
+
+        if (!defined(result)) {
+            return new Extent(west, south, east, north);
+        }
+
+        result.west = west;
+        result.south = south;
+        result.east = east;
+        result.north = north;
+
+        return result;
+    };
+
+    /**
+     * Creates the smallest possible Extent that encloses all positions in the provided array.
+     * @memberof Extent
+     *
+     * @param {Array} cartographics The list of Cartographic instances.
+     * @param {Extent} [result] The object onto which to store the result, or undefined if a new instance should be created.
+     * @returns {Extent} The modified result parameter or a new Extent instance if none was provided.
+     */
+    Extent.fromCartographicArray = function(cartographics, result) {
+                if (!defined(cartographics)) {
+            throw new DeveloperError('cartographics is required.');
+        }
+        
+        var minLon = Number.MAX_VALUE;
+        var maxLon = -Number.MAX_VALUE;
+        var minLat = Number.MAX_VALUE;
+        var maxLat = -Number.MAX_VALUE;
+
+        for ( var i = 0, len = cartographics.length; i < len; i++) {
+            var position = cartographics[i];
+            minLon = Math.min(minLon, position.longitude);
+            maxLon = Math.max(maxLon, position.longitude);
+            minLat = Math.min(minLat, position.latitude);
+            maxLat = Math.max(maxLat, position.latitude);
+        }
+
+        if (!defined(result)) {
+            return new Extent(minLon, minLat, maxLon, maxLat);
+        }
+
+        result.west = minLon;
+        result.south = minLat;
+        result.east = maxLon;
+        result.north = maxLat;
+        return result;
+    };
+
+    /**
+     * Duplicates an Extent.
+     *
+     * @memberof Extent
+     *
+     * @param {Extent} extent The extent to clone.
+     * @param {Extent} [result] The object onto which to store the result, or undefined if a new instance should be created.
+     * @returns {Extent} The modified result parameter or a new Extent instance if none was provided. (Returns undefined if extent is undefined)
+     */
+    Extent.clone = function(extent, result) {
+        if (!defined(extent)) {
+            return undefined;
+        }
+
+        if (!defined(result)) {
+            return new Extent(extent.west, extent.south, extent.east, extent.north);
+        }
+
+        result.west = extent.west;
+        result.south = extent.south;
+        result.east = extent.east;
+        result.north = extent.north;
+        return result;
+    };
+
+    /**
+     * Duplicates this Extent.
+     *
+     * @memberof Extent
+     *
+     * @param {Extent} [result] The object onto which to store the result.
+     * @returns {Extent} The modified result parameter or a new Extent instance if none was provided.
+     */
+    Extent.prototype.clone = function(result) {
+        return Extent.clone(this, result);
+    };
+
+    /**
+     * Compares the provided Extent with this Extent componentwise and returns
+     * <code>true</code> if they are equal, <code>false</code> otherwise.
+     * @memberof Extent
+     *
+     * @param {Extent} [other] The Extent to compare.
+     * @returns {Boolean} <code>true</code> if the Extents are equal, <code>false</code> otherwise.
+     */
+    Extent.prototype.equals = function(other) {
+        return Extent.equals(this, other);
+    };
+
+    /**
+     * Compares the provided extents and returns <code>true</code> if they are equal,
+     * <code>false</code> otherwise.
+     *
+     * @memberof Extent
+     *
+     * @param {Extent} [left] The first Extent.
+     * @param {Extent} [right] The second Extent.
+     *
+     * @returns {Boolean} <code>true</code> if left and right are equal; otherwise <code>false</code>.
+     */
+    Extent.equals = function(left, right) {
+        return (left === right) ||
+               ((defined(left)) &&
+                (defined(right)) &&
+                (left.west === right.west) &&
+                (left.south === right.south) &&
+                (left.east === right.east) &&
+                (left.north === right.north));
+    };
+
+    /**
+     * Compares the provided Extent with this Extent componentwise and returns
+     * <code>true</code> if they are within the provided epsilon,
+     * <code>false</code> otherwise.
+     * @memberof Extent
+     *
+     * @param {Extent} [other] The Extent to compare.
+     * @param {Number} epsilon The epsilon to use for equality testing.
+     * @returns {Boolean} <code>true</code> if the Extents are within the provided epsilon, <code>false</code> otherwise.
+     */
+    Extent.prototype.equalsEpsilon = function(other, epsilon) {
+                if (typeof epsilon !== 'number') {
+            throw new DeveloperError('epsilon is required and must be a number.');
+        }
+        
+        return defined(other) &&
+               (Math.abs(this.west - other.west) <= epsilon) &&
+               (Math.abs(this.south - other.south) <= epsilon) &&
+               (Math.abs(this.east - other.east) <= epsilon) &&
+               (Math.abs(this.north - other.north) <= epsilon);
+    };
+
+    /**
+     * Checks an Extent's properties and throws if they are not in valid ranges.
+     *
+     * @param {Extent} extent The extent to validate
+     *
+     * @exception {DeveloperError} <code>north</code> must be in the interval [<code>-Pi/2</code>, <code>Pi/2</code>].
+     * @exception {DeveloperError} <code>south</code> must be in the interval [<code>-Pi/2</code>, <code>Pi/2</code>].
+     * @exception {DeveloperError} <code>east</code> must be in the interval [<code>-Pi</code>, <code>Pi</code>].
+     * @exception {DeveloperError} <code>west</code> must be in the interval [<code>-Pi</code>, <code>Pi</code>].
+     */
+    Extent.validate = function(extent) {
+                if (!defined(extent)) {
+            throw new DeveloperError('extent is required');
+        }
+
+        var north = extent.north;
+        if (typeof north !== 'number') {
+            throw new DeveloperError('north is required to be a number.');
+        }
+
+        if (north < -CesiumMath.PI_OVER_TWO || north > CesiumMath.PI_OVER_TWO) {
+            throw new DeveloperError('north must be in the interval [-Pi/2, Pi/2].');
+        }
+
+        var south = extent.south;
+        if (typeof south !== 'number') {
+            throw new DeveloperError('south is required to be a number.');
+        }
+
+        if (south < -CesiumMath.PI_OVER_TWO || south > CesiumMath.PI_OVER_TWO) {
+            throw new DeveloperError('south must be in the interval [-Pi/2, Pi/2].');
+        }
+
+        var west = extent.west;
+        if (typeof west !== 'number') {
+            throw new DeveloperError('west is required to be a number.');
+        }
+
+        if (west < -Math.PI || west > Math.PI) {
+            throw new DeveloperError('west must be in the interval [-Pi, Pi].');
+        }
+
+        var east = extent.east;
+        if (typeof east !== 'number') {
+            throw new DeveloperError('east is required to be a number.');
+        }
+
+        if (east < -Math.PI || east > Math.PI) {
+            throw new DeveloperError('east must be in the interval [-Pi, Pi].');
+        }
+            };
+
+    /**
+     * Computes the southwest corner of an extent.
+     * @memberof Extent
+     *
+     * @param {Extent} extent The extent for which to find the corner
+     * @param {Cartographic} [result] The object onto which to store the result.
+     * @returns {Cartographic} The modified result parameter or a new Cartographic instance if none was provided.
+     */
+    Extent.getSouthwest = function(extent, result) {
+                if (!defined(extent)) {
+            throw new DeveloperError('extent is required');
+        }
+        
+        if (!defined(result)) {
+            return new Cartographic(extent.west, extent.south);
+        }
+        result.longitude = extent.west;
+        result.latitude = extent.south;
+        result.height = 0.0;
+        return result;
+    };
+
+    /**
+     * Computes the northwest corner of an extent.
+     * @memberof Extent
+     *
+     * @param {Extent} extent The extent for which to find the corner
+     * @param {Cartographic} [result] The object onto which to store the result.
+     * @returns {Cartographic} The modified result parameter or a new Cartographic instance if none was provided.
+     */
+    Extent.getNorthwest = function(extent, result) {
+                if (!defined(extent)) {
+            throw new DeveloperError('extent is required');
+        }
+        
+        if (!defined(result)) {
+            return new Cartographic(extent.west, extent.north);
+        }
+        result.longitude = extent.west;
+        result.latitude = extent.north;
+        result.height = 0.0;
+        return result;
+    };
+
+    /**
+     * Computes the northeast corner of an extent.
+     * @memberof Extent
+     *
+     * @param {Extent} extent The extent for which to find the corner
+     * @param {Cartographic} [result] The object onto which to store the result.
+     * @returns {Cartographic} The modified result parameter or a new Cartographic instance if none was provided.
+     */
+    Extent.getNortheast = function(extent, result) {
+                if (!defined(extent)) {
+            throw new DeveloperError('extent is required');
+        }
+        
+        if (!defined(result)) {
+            return new Cartographic(extent.east, extent.north);
+        }
+        result.longitude = extent.east;
+        result.latitude = extent.north;
+        result.height = 0.0;
+        return result;
+    };
+
+    /**
+     * Computes the southeast corner of an extent.
+     * @memberof Extent
+     *
+     * @param {Extent} extent The extent for which to find the corner
+     * @param {Cartographic} [result] The object onto which to store the result.
+     * @returns {Cartographic} The modified result parameter or a new Cartographic instance if none was provided.
+     */
+    Extent.getSoutheast = function(extent, result) {
+                if (!defined(extent)) {
+            throw new DeveloperError('extent is required');
+        }
+        
+        if (!defined(result)) {
+            return new Cartographic(extent.east, extent.south);
+        }
+        result.longitude = extent.east;
+        result.latitude = extent.south;
+        result.height = 0.0;
+        return result;
+    };
+
+    /**
+     * Computes the center of an extent.
+     * @memberof Extent
+     *
+     * @param {Extent} extent The extent for which to find the center
+     * @param {Cartographic} [result] The object onto which to store the result.
+     * @returns {Cartographic} The modified result parameter or a new Cartographic instance if none was provided.
+     */
+    Extent.getCenter = function(extent, result) {
+                if (!defined(extent)) {
+            throw new DeveloperError('extent is required');
+        }
+        
+        if (!defined(result)) {
+            return new Cartographic((extent.west + extent.east) * 0.5, (extent.south + extent.north) * 0.5);
+        }
+        result.longitude = (extent.west + extent.east) * 0.5;
+        result.latitude = (extent.south + extent.north) * 0.5;
+        result.height = 0.0;
+        return result;
+    };
+
+    /**
+     * Computes the intersection of two extents
+     * @memberof Extent
+     *
+     * @param {Extent} extent On extent to find an intersection
+     * @param otherExtent Another extent to find an intersection
+     * @param {Extent} [result] The object onto which to store the result.
+     * @returns {Extent} The modified result parameter or a new Extent instance if none was provided.
+     */
+    Extent.intersectWith = function(extent, otherExtent, result) {
+                if (!defined(extent)) {
+            throw new DeveloperError('extent is required');
+        }
+        if (!defined(otherExtent)) {
+            throw new DeveloperError('otherExtent is required.');
+        }
+        
+        var west = Math.max(extent.west, otherExtent.west);
+        var south = Math.max(extent.south, otherExtent.south);
+        var east = Math.min(extent.east, otherExtent.east);
+        var north = Math.min(extent.north, otherExtent.north);
+        if (!defined(result)) {
+            return new Extent(west, south, east, north);
+        }
+        result.west = west;
+        result.south = south;
+        result.east = east;
+        result.north = north;
+        return result;
+    };
+
+    /**
+     * Returns true if the cartographic is on or inside the extent, false otherwise.
+     * @memberof Extent
+     *
+     * @param {Extent} extent The extent
+     * @param {Cartographic} cartographic The cartographic to test.
+     * @returns {Boolean} true if the provided cartographic is inside the extent, false otherwise.
+     */
+    Extent.contains = function(extent, cartographic) {
+                if (!defined(extent)) {
+            throw new DeveloperError('extent is required');
+        }
+        if (!defined(cartographic)) {
+            throw new DeveloperError('cartographic is required.');
+        }
+        
+        return cartographic.longitude >= extent.west &&
+               cartographic.longitude <= extent.east &&
+               cartographic.latitude >= extent.south &&
+               cartographic.latitude <= extent.north;
+    };
+
+    /**
+     * Determines if the extent is empty, i.e., if <code>west >= east</code>
+     * or <code>south >= north</code>.
+     *
+     * @memberof Extent
+     *
+     * @param {Extent} extent The extent
+     * @returns {Boolean} True if the extent is empty; otherwise, false.
+     */
+    Extent.isEmpty = function(extent) {
+                if (!defined(extent)) {
+            throw new DeveloperError('extent is required');
+        }
+        
+        return extent.west >= extent.east || extent.south >= extent.north;
+    };
+
+    var subsampleLlaScratch = new Cartographic();
+    /**
+     * Samples an extent so that it includes a list of Cartesian points suitable for passing to
+     * {@link BoundingSphere#fromPoints}.  Sampling is necessary to account
+     * for extents that cover the poles or cross the equator.
+     *
+     * @param {Extent} extent The extent to subsample.
+     * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid to use.
+     * @param {Number} [surfaceHeight=0.0] The height of the extent above the ellipsoid.
+     * @param {Array} [result] The array of Cartesians onto which to store the result.
+     * @returns {Array} The modified result parameter or a new Array of Cartesians instances if none was provided.
+     */
+    Extent.subsample = function(extent, ellipsoid, surfaceHeight, result) {
+                if (!defined(extent)) {
+            throw new DeveloperError('extent is required');
+        }
+        
+        ellipsoid = defaultValue(ellipsoid, Ellipsoid.WGS84);
+        surfaceHeight = defaultValue(surfaceHeight, 0.0);
+
+        if (!defined(result)) {
+            result = [];
+        }
+        var length = 0;
+
+        var north = extent.north;
+        var south = extent.south;
+        var east = extent.east;
+        var west = extent.west;
+
+        var lla = subsampleLlaScratch;
+        lla.height = surfaceHeight;
+
+        lla.longitude = west;
+        lla.latitude = north;
+        result[length] = ellipsoid.cartographicToCartesian(lla, result[length]);
+        length++;
+
+        lla.longitude = east;
+        result[length] = ellipsoid.cartographicToCartesian(lla, result[length]);
+        length++;
+
+        lla.latitude = south;
+        result[length] = ellipsoid.cartographicToCartesian(lla, result[length]);
+        length++;
+
+        lla.longitude = west;
+        result[length] = ellipsoid.cartographicToCartesian(lla, result[length]);
+        length++;
+
+        if (north < 0.0) {
+            lla.latitude = north;
+        } else if (south > 0.0) {
+            lla.latitude = south;
+        } else {
+            lla.latitude = 0.0;
+        }
+
+        for ( var i = 1; i < 8; ++i) {
+            var temp = -Math.PI + i * CesiumMath.PI_OVER_TWO;
+            if (west < temp && temp < east) {
+                lla.longitude = temp;
+                result[length] = ellipsoid.cartographicToCartesian(lla, result[length]);
+                length++;
+            }
+        }
+
+        if (lla.latitude === 0.0) {
+            lla.longitude = west;
+            result[length] = ellipsoid.cartographicToCartesian(lla, result[length]);
+            length++;
+            lla.longitude = east;
+            result[length] = ellipsoid.cartographicToCartesian(lla, result[length]);
+            length++;
+        }
+        result.length = length;
+        return result;
+    };
+
+    /**
+     * The largest possible extent.
+     * @memberof Extent
+     * @type Extent
+    */
+    Extent.MAX_VALUE = freezeObject(new Extent(-Math.PI, -CesiumMath.PI_OVER_TWO, Math.PI, CesiumMath.PI_OVER_TWO));
+
+    return Extent;
+});
+
+/*global define*/
 define('Core/GeographicProjection',[
         './defaultValue',
         './defined',
@@ -7349,6 +7897,7 @@ define('Core/BoundingSphere',[
         './defined',
         './DeveloperError',
         './Ellipsoid',
+        './Extent',
         './GeographicProjection',
         './Intersect',
         './Interval',
@@ -7360,6 +7909,7 @@ define('Core/BoundingSphere',[
         defined,
         DeveloperError,
         Ellipsoid,
+        Extent,
         GeographicProjection,
         Intersect,
         Interval,
@@ -7376,6 +7926,7 @@ define('Core/BoundingSphere',[
      *
      * @see AxisAlignedBoundingBox
      * @see BoundingRectangle
+     * @see Packable
      */
     var BoundingSphere = function(center, radius) {
         /**
@@ -7599,9 +8150,9 @@ define('Core/BoundingSphere',[
 
         projection = defaultValue(projection, defaultProjection);
 
-        extent.getSouthwest(fromExtent2DSouthwest);
+        Extent.getSouthwest(extent, fromExtent2DSouthwest);
         fromExtent2DSouthwest.height = minimumHeight;
-        extent.getNortheast(fromExtent2DNortheast);
+        Extent.getNortheast(extent, fromExtent2DNortheast);
         fromExtent2DNortheast.height = maximumHeight;
 
         var lowerLeft = projection.project(fromExtent2DSouthwest, fromExtent2DLowerLeft);
@@ -7638,7 +8189,7 @@ define('Core/BoundingSphere',[
 
         var positions;
         if (defined(extent)) {
-            positions = extent.subsample(ellipsoid, surfaceHeight, fromExtent3DScratch);
+            positions = Extent.subsample(extent, ellipsoid, surfaceHeight, fromExtent3DScratch);
         }
 
         return BoundingSphere.fromPoints(positions, result);
@@ -7909,6 +8460,65 @@ define('Core/BoundingSphere',[
         return result;
     };
 
+    /**
+     * The number of elements used to pack the object into an array.
+     * @Type {Number}
+     */
+    BoundingSphere.packedLength = 4;
+
+    /**
+     * Stores the provided instance into the provided array.
+     * @memberof BoundingSphere
+     *
+     * @param {BoundingSphere} value The value to pack.
+     * @param {Array} array The array to pack into.
+     * @param {Number} [startingIndex=0] The index into the array at which to start packing the elements.
+     */
+    BoundingSphere.pack = function(value, array, startingIndex) {
+                if (!defined(value)) {
+            throw new DeveloperError('value is required');
+        }
+
+        if (!defined(array)) {
+            throw new DeveloperError('array is required');
+        }
+        
+        startingIndex = defaultValue(startingIndex, 0);
+
+        var center = value.center;
+        array[startingIndex++] = center.x;
+        array[startingIndex++] = center.y;
+        array[startingIndex++] = center.z;
+        array[startingIndex] = value.radius;
+    };
+
+    /**
+     * Retrieves an instance from a packed array.
+     * @memberof BoundingSphere
+     *
+     * @param {Array} array The packed array.
+     * @param {Number} [startingIndex=0] The starting index of the element to be unpacked.
+     * @param {Cartesian3} [result] The object into which to store the result.
+     */
+    BoundingSphere.unpack = function(array, startingIndex, result) {
+                if (!defined(array)) {
+            throw new DeveloperError('array is required');
+        }
+        
+        startingIndex = defaultValue(startingIndex, 0);
+
+        if (!defined(result)) {
+            result = new BoundingSphere();
+        }
+
+        var center = result.center;
+        center.x = array[startingIndex++];
+        center.y = array[startingIndex++];
+        center.z = array[startingIndex++];
+        result.radius = array[startingIndex];
+        return result;
+    };
+
     var unionScratch = new Cartesian3();
     var unionScratchCenter = new Cartesian3();
     /**
@@ -8042,6 +8652,34 @@ define('Core/BoundingSphere',[
                 Cartesian3.magnitude(Matrix4.getColumn(transform, 2, columnScratch))) * sphere.radius;
 
         return result;
+    };
+
+    var distanceSquaredToScratch = new Cartesian3();
+
+    /**
+     * Computes the estimated distance squared from the closest point on a bounding sphere to a point.
+     * @memberof BoundingSphere
+     *
+     * @param {BoundingSphere} sphere The sphere.
+     * @param {Cartesian3} cartesian The point
+     * @returns {Number} The estimated distance squared from the bounding sphere to the point.
+     *
+     * @example
+     * // Sort bounding spheres from back to front
+     * spheres.sort(function(a, b) {
+     *     return BoundingSphere.distanceSquaredTo(b, camera.positionWC) - BoundingSphere.distanceSquaredTo(a, camera.positionWC);
+     * });
+     */
+    BoundingSphere.distanceSquaredTo = function(sphere, cartesian) {
+                if (!defined(sphere)) {
+            throw new DeveloperError('sphere is required.');
+        }
+        if (!defined(cartesian)) {
+            throw new DeveloperError('cartesian is required.');
+        }
+        
+        var diff = Cartesian3.subtract(sphere.center, cartesian, distanceSquaredToScratch);
+        return Cartesian3.magnitudeSquared(diff) - sphere.radius * sphere.radius;
     };
 
     /**
@@ -8248,41 +8886,6 @@ define('Core/BoundingSphere',[
     };
 
     /**
-     * Duplicates this BoundingSphere instance.
-     * @memberof BoundingSphere
-     *
-     * @param {BoundingSphere} [result] The object onto which to store the result.
-     * @returns {BoundingSphere} The modified result parameter or a new BoundingSphere instance if none was provided.
-     */
-    BoundingSphere.prototype.clone = function(result) {
-        return BoundingSphere.clone(this, result);
-    };
-
-    /**
-     * Computes a bounding sphere that contains both this bounding sphere and the argument sphere.
-     * @memberof BoundingSphere
-     *
-     * @param {BoundingSphere} right The sphere to enclose in this bounding sphere.
-     * @param {BoundingSphere} [result] The object onto which to store the result.
-     * @returns {BoundingSphere} The modified result parameter or a new BoundingSphere instance if none was provided.
-     */
-    BoundingSphere.prototype.union = function(right, result) {
-        return BoundingSphere.union(this, right, result);
-    };
-
-    /**
-     * Computes a bounding sphere that is sphere expanded to contain point.
-     * @memberof BoundingSphere
-     *
-     * @param {Cartesian3} point A point to enclose in a bounding sphere.
-     * @param {BoundingSphere} [result] The object onto which to store the result.
-     * @returns {BoundingSphere} The modified result parameter or a new BoundingSphere instance if one was not provided.
-     */
-    BoundingSphere.prototype.expand = function(point, result) {
-        return BoundingSphere.expand(this, point, result);
-    };
-
-    /**
      * Determines which side of a plane the sphere is located.
      * @memberof BoundingSphere
      *
@@ -8298,35 +8901,6 @@ define('Core/BoundingSphere',[
     };
 
     /**
-     * The distances calculated by the vector from the center of the bounding sphere to position projected onto direction
-     * plus/minus the radius of the bounding sphere.
-     * <br>
-     * If you imagine the infinite number of planes with normal direction, this computes the smallest distance to the
-     * closest and farthest planes from position that intersect the bounding sphere.
-     * @memberof BoundingSphere
-     *
-     * @param {Cartesian3} position The position to calculate the distance from.
-     * @param {Cartesian3} direction The direction from position.
-     * @param {Cartesian2} [result] A Cartesian2 to store the nearest and farthest distances.
-     * @returns {Interval} The nearest and farthest distances on the bounding sphere from position in direction.
-     */
-    BoundingSphere.prototype.getPlaneDistances = function(position, direction, result) {
-        return BoundingSphere.getPlaneDistances(this, position, direction, result);
-    };
-
-    /**
-     * Creates a bounding sphere in 2D from this bounding sphere. This bounding sphere must be in 3D world coordinates.
-     * @memberof BoundingSphere
-     *
-     * @param {Object} [projection=GeographicProjection] The projection to 2D.
-     * @param {BoundingSphere} [result] The object onto which to store the result.
-     * @returns {BoundingSphere} The modified result parameter or a new BoundingSphere instance if none was provided.
-     */
-    BoundingSphere.prototype.projectTo2D = function(projection, result) {
-        return BoundingSphere.projectTo2D(this, projection, result);
-    };
-
-    /**
      * Compares this BoundingSphere against the provided BoundingSphere componentwise and returns
      * <code>true</code> if they are equal, <code>false</code> otherwise.
      * @memberof BoundingSphere
@@ -8336,6 +8910,17 @@ define('Core/BoundingSphere',[
      */
     BoundingSphere.prototype.equals = function(right) {
         return BoundingSphere.equals(this, right);
+    };
+
+    /**
+     * Duplicates this BoundingSphere instance.
+     * @memberof BoundingSphere
+     *
+     * @param {BoundingSphere} [result] The object onto which to store the result.
+     * @returns {BoundingSphere} The modified result parameter or a new BoundingSphere instance if none was provided.
+     */
+    BoundingSphere.prototype.clone = function(result) {
+        return BoundingSphere.clone(this, result);
     };
 
     return BoundingSphere;
@@ -9045,7 +9630,12 @@ define('Core/Cartesian2',[
 });
 
 /*global define*/
-define('Core/Fullscreen',['./defined'], function(defined) {
+define('Core/Fullscreen',[
+        './defined',
+        './defineProperties'
+    ], function(
+        defined,
+        defineProperties) {
     "use strict";
 
     var _supportsFullscreen;
@@ -9066,6 +9656,90 @@ define('Core/Fullscreen',['./defined'], function(defined) {
      * @see <a href='http://dvcs.w3.org/hg/fullscreen/raw-file/tip/Overview.html'>W3C Fullscreen Living Specification</a>
      */
     var Fullscreen = {};
+
+    defineProperties(Fullscreen, {
+        /**
+         * The element that is currently fullscreen, if any.  To simply check if the
+         * browser is in fullscreen mode or not, use {@link Fullscreen#fullscreen}.
+         * @memberof Fullscreen
+         * @type {Object}
+         */
+        element: {
+            get : function() {
+                if (!Fullscreen.supportsFullscreen()) {
+                    return undefined;
+                }
+
+                return document[_names.fullscreenElement];
+            }
+        },
+
+        /**
+         * The name of the event on the document that is fired when fullscreen is
+         * entered or exited.  This event name is intended for use with addEventListener.
+         * In your event handler, to determine if the browser is in fullscreen mode or not,
+         * use {@link Fullscreen#fullscreen}.
+         * @memberof Fullscreen
+         * @type {String}
+         */
+        changeEventName : {
+            get : function() {
+                if (!Fullscreen.supportsFullscreen()) {
+                    return undefined;
+                }
+
+                return _names.fullscreenchange;
+            }
+        },
+
+        /**
+         * The name of the event that is fired when a fullscreen error
+         * occurs.  This event name is intended for use with addEventListener.
+         * @memberof Fullscreen
+         * @type {String}
+         */
+        errorEventName : {
+            get : function() {
+                if (!Fullscreen.supportsFullscreen()) {
+                    return undefined;
+                }
+
+                return _names.fullscreenerror;
+            }
+        },
+
+        /**
+         * Determine whether the browser will allow an element to be made fullscreen, or not.
+         * For example, by default, iframes cannot go fullscreen unless the containing page
+         * adds an "allowfullscreen" attribute (or prefixed equivalent).
+         * @memberof Fullscreen
+         * @type {Boolean}
+         */
+        enabled : {
+            get : function() {
+                if (!Fullscreen.supportsFullscreen()) {
+                    return undefined;
+                }
+
+                return document[_names.fullscreenEnabled];
+            }
+        },
+
+        /**
+         * Determines if the browser is currently in fullscreen mode.
+         * @memberof Fullsreen
+         * @type {Boolean}
+         */
+        fullscreen : {
+            get : function() {
+                if (!Fullscreen.supportsFullscreen()) {
+                    return undefined;
+                }
+
+                return Fullscreen.element !== null;
+            }
+        }
+    });
 
     /**
      * Detects whether the browser supports the standard fullscreen API.
@@ -9200,86 +9874,6 @@ define('Core/Fullscreen',['./defined'], function(defined) {
         }
 
         document[_names.exitFullscreen]();
-    };
-
-    /**
-     * Determine whether the browser will allow an element to be made fullscreen, or not.
-     * For example, by default, iframes cannot go fullscreen unless the containing page
-     * adds an "allowfullscreen" attribute (or prefixed equivalent).
-     *
-     * @returns {Boolean} <code>true</code> if the browser is able to enter fullscreen mode,
-     * <code>false</code> if not, and <code>undefined</code> if the browser does not
-     * support fullscreen mode.
-     */
-    Fullscreen.isFullscreenEnabled = function() {
-        if (!Fullscreen.supportsFullscreen()) {
-            return undefined;
-        }
-
-        return document[_names.fullscreenEnabled];
-    };
-
-    /**
-     * Gets the element that is currently fullscreen, if any.  To simply check if the
-     * browser is in fullscreen mode or not, use {@link Fullscreen#isFullscreen}.
-     *
-     * @returns {Object} the element that is currently fullscreen, or <code>null</code> if the browser is
-     * not in fullscreen mode, or <code>undefined</code> if the browser does not support fullscreen
-     * mode.
-     */
-    Fullscreen.getFullscreenElement = function() {
-        if (!Fullscreen.supportsFullscreen()) {
-            return undefined;
-        }
-
-        return document[_names.fullscreenElement];
-    };
-
-    /**
-     * Determines if the browser is currently in fullscreen mode.
-     *
-     * @returns {Boolean} <code>true</code> if the browser is currently in fullscreen mode, <code>false</code>
-     * if it is not, or <code>undefined</code> if the browser does not support fullscreen mode.
-     */
-    Fullscreen.isFullscreen = function() {
-        if (!Fullscreen.supportsFullscreen()) {
-            return undefined;
-        }
-
-        return Fullscreen.getFullscreenElement() !== null;
-    };
-
-    /**
-     * Gets the name of the event on the document that is fired when fullscreen is
-     * entered or exited.  This event name is intended for use with addEventListener.
-     *
-     * In your event handler, to determine if the browser is in fullscreen mode or not,
-     * use {@link Fullscreen#isFullscreen}.
-     *
-     * @returns {String} the name of the event that is fired when fullscreen is entered or
-     * exited, or <code>undefined</code> if fullscreen is not supported.
-     */
-    Fullscreen.getFullscreenChangeEventName = function() {
-        if (!Fullscreen.supportsFullscreen()) {
-            return undefined;
-        }
-
-        return _names.fullscreenchange;
-    };
-
-    /**
-     * Gets the name of the event that is fired when a fullscreen error
-     * occurs.  This event name is intended for use with addEventListener.
-     *
-     * @returns {String} the name of the event that is fired when a fullscreen error occurs,
-     * or <code>undefined</code> if fullscreen is not supported.
-     */
-    Fullscreen.getFullscreenErrorEventName = function() {
-        if (!Fullscreen.supportsFullscreen()) {
-            return undefined;
-        }
-
-        return _names.fullscreenerror;
     };
 
     return Fullscreen;
@@ -9570,6 +10164,58 @@ define('Core/ComponentDatatype',[
     };
 
     /**
+     * Gets the ComponentDatatype for the provided value.
+     *
+     * @param {Number} value The value.
+     *
+     * @returns {ComponentDatatype} The ComponentDatatype for the provided value, or undefined if no enumeration with the provided value exists.
+     */
+    ComponentDatatype.fromValue = function(value) {
+        switch (value) {
+        case ComponentDatatype.BYTE.value:
+            return ComponentDatatype.BYTE;
+        case ComponentDatatype.UNSIGNED_BYTE.value:
+            return ComponentDatatype.UNSIGNED_BYTE;
+        case ComponentDatatype.SHORT.value:
+            return ComponentDatatype.SHORT;
+        case ComponentDatatype.UNSIGNED_SHORT.value:
+            return ComponentDatatype.UNSIGNED_SHORT;
+        case ComponentDatatype.FLOAT.value:
+            return ComponentDatatype.FLOAT;
+        case ComponentDatatype.DOUBLE.value:
+            return ComponentDatatype.DOUBLE;
+        }
+    };
+
+    /**
+     * Gets the ComponentDatatype for the provided TypedArray instance.
+     *
+     * @param {TypedArray} array The typed array.
+     *
+     * @returns {ComponentDatatype} The ComponentDatatype for the provided array, or undefined if the array is not a TypedArray.
+     */
+    ComponentDatatype.fromTypedArray = function(array) {
+        if (array instanceof Int8Array) {
+            return ComponentDatatype.BYTE;
+        }
+        if (array instanceof Uint8Array) {
+            return ComponentDatatype.UNSIGNED_BYTE;
+        }
+        if (array instanceof Int16Array) {
+            return ComponentDatatype.SHORT;
+        }
+        if (array instanceof Uint16Array) {
+            return ComponentDatatype.UNSIGNED_SHORT;
+        }
+        if (array instanceof Float32Array) {
+            return ComponentDatatype.FLOAT;
+        }
+        if (array instanceof Float64Array) {
+            return ComponentDatatype.DOUBLE;
+        }
+    };
+
+    /**
      * Validates that the provided component datatype is a valid {@link ComponentDatatype}
      *
      * @param {ComponentDatatype} componentDatatype The component datatype to validate.
@@ -9792,505 +10438,6 @@ define('Core/IndexDatatype',[
     };
 
     return IndexDatatype;
-});
-
-/*global define*/
-define('Core/Extent',[
-        './freezeObject',
-        './defaultValue',
-        './defined',
-        './Ellipsoid',
-        './Cartographic',
-        './DeveloperError',
-        './Math'
-    ], function(
-        freezeObject,
-        defaultValue,
-        defined,
-        Ellipsoid,
-        Cartographic,
-        DeveloperError,
-        CesiumMath) {
-    "use strict";
-
-    /**
-     * A two dimensional region specified as longitude and latitude coordinates.
-     *
-     * @alias Extent
-     * @constructor
-     *
-     * @param {Number} [west=0.0] The westernmost longitude, in radians, in the range [-Pi, Pi].
-     * @param {Number} [south=0.0] The southernmost latitude, in radians, in the range [-Pi/2, Pi/2].
-     * @param {Number} [east=0.0] The easternmost longitude, in radians, in the range [-Pi, Pi].
-     * @param {Number} [north=0.0] The northernmost latitude, in radians, in the range [-Pi/2, Pi/2].
-     */
-    var Extent = function(west, south, east, north) {
-        /**
-         * The westernmost longitude in radians in the range [-Pi, Pi].
-         *
-         * @type {Number}
-         * @default 0.0
-         */
-        this.west = defaultValue(west, 0.0);
-
-        /**
-         * The southernmost latitude in radians in the range [-Pi/2, Pi/2].
-         *
-         * @type {Number}
-         * @default 0.0
-         */
-        this.south = defaultValue(south, 0.0);
-
-        /**
-         * The easternmost longitude in radians in the range [-Pi, Pi].
-         *
-         * @type {Number}
-         * @default 0.0
-         */
-        this.east = defaultValue(east, 0.0);
-
-        /**
-         * The northernmost latitude in radians in the range [-Pi/2, Pi/2].
-         *
-         * @type {Number}
-         * @default 0.0
-         */
-        this.north = defaultValue(north, 0.0);
-    };
-
-    /**
-     * Creates an extent given the boundary longitude and latitude in degrees.
-     *
-     * @memberof Extent
-     *
-     * @param {Number} [west=0.0] The westernmost longitude in degrees in the range [-180.0, 180.0].
-     * @param {Number} [south=0.0] The southernmost latitude in degrees in the range [-90.0, 90.0].
-     * @param {Number} [east=0.0] The easternmost longitude in degrees in the range [-180.0, 180.0].
-     * @param {Number} [north=0.0] The northernmost latitude in degrees in the range [-90.0, 90.0].
-     * @param {Extent} [result] The object onto which to store the result, or undefined if a new instance should be created.
-     *
-     * @returns {Extent} The modified result parameter or a new Extent instance if none was provided.
-     *
-     * @example
-     * var extent = Cesium.Extent.fromDegrees(0.0, 20.0, 10.0, 30.0);
-     */
-    Extent.fromDegrees = function(west, south, east, north, result) {
-        west = CesiumMath.toRadians(defaultValue(west, 0.0));
-        south = CesiumMath.toRadians(defaultValue(south, 0.0));
-        east = CesiumMath.toRadians(defaultValue(east, 0.0));
-        north = CesiumMath.toRadians(defaultValue(north, 0.0));
-
-        if (!defined(result)) {
-            return new Extent(west, south, east, north);
-        }
-
-        result.west = west;
-        result.south = south;
-        result.east = east;
-        result.north = north;
-
-        return result;
-    };
-
-    /**
-     * Creates the smallest possible Extent that encloses all positions in the provided array.
-     * @memberof Extent
-     *
-     * @param {Array} cartographics The list of Cartographic instances.
-     * @param {Extent} [result] The object onto which to store the result, or undefined if a new instance should be created.
-     * @returns {Extent} The modified result parameter or a new Extent instance if none was provided.
-     */
-    Extent.fromCartographicArray = function(cartographics, result) {
-                if (!defined(cartographics)) {
-            throw new DeveloperError('cartographics is required.');
-        }
-        
-        var minLon = Number.MAX_VALUE;
-        var maxLon = -Number.MAX_VALUE;
-        var minLat = Number.MAX_VALUE;
-        var maxLat = -Number.MAX_VALUE;
-
-        for ( var i = 0, len = cartographics.length; i < len; i++) {
-            var position = cartographics[i];
-            minLon = Math.min(minLon, position.longitude);
-            maxLon = Math.max(maxLon, position.longitude);
-            minLat = Math.min(minLat, position.latitude);
-            maxLat = Math.max(maxLat, position.latitude);
-        }
-
-        if (!defined(result)) {
-            return new Extent(minLon, minLat, maxLon, maxLat);
-        }
-
-        result.west = minLon;
-        result.south = minLat;
-        result.east = maxLon;
-        result.north = maxLat;
-        return result;
-    };
-
-    /**
-     * Duplicates an Extent.
-     *
-     * @memberof Extent
-     *
-     * @param {Extent} extent The extent to clone.
-     * @param {Extent} [result] The object onto which to store the result, or undefined if a new instance should be created.
-     * @returns {Extent} The modified result parameter or a new Extent instance if none was provided. (Returns undefined if extent is undefined)
-     */
-    Extent.clone = function(extent, result) {
-        if (!defined(extent)) {
-            return undefined;
-        }
-
-        if (!defined(result)) {
-            return new Extent(extent.west, extent.south, extent.east, extent.north);
-        }
-
-        result.west = extent.west;
-        result.south = extent.south;
-        result.east = extent.east;
-        result.north = extent.north;
-        return result;
-    };
-
-    /**
-     * Duplicates this Extent.
-     *
-     * @memberof Extent
-     *
-     * @param {Extent} [result] The object onto which to store the result.
-     * @returns {Extent} The modified result parameter or a new Extent instance if none was provided.
-     */
-    Extent.prototype.clone = function(result) {
-        return Extent.clone(this, result);
-    };
-
-    /**
-     * Compares the provided Extent with this Extent componentwise and returns
-     * <code>true</code> if they are equal, <code>false</code> otherwise.
-     * @memberof Extent
-     *
-     * @param {Extent} [other] The Extent to compare.
-     * @returns {Boolean} <code>true</code> if the Extents are equal, <code>false</code> otherwise.
-     */
-    Extent.prototype.equals = function(other) {
-        return Extent.equals(this, other);
-    };
-
-    /**
-     * Compares the provided extents and returns <code>true</code> if they are equal,
-     * <code>false</code> otherwise.
-     *
-     * @memberof Extent
-     *
-     * @param {Extent} [left] The first Extent.
-     * @param {Extent} [right] The second Extent.
-     *
-     * @returns {Boolean} <code>true</code> if left and right are equal; otherwise <code>false</code>.
-     */
-    Extent.equals = function(left, right) {
-        return (left === right) ||
-               ((defined(left)) &&
-                (defined(right)) &&
-                (left.west === right.west) &&
-                (left.south === right.south) &&
-                (left.east === right.east) &&
-                (left.north === right.north));
-    };
-
-    /**
-     * Compares the provided Extent with this Extent componentwise and returns
-     * <code>true</code> if they are within the provided epsilon,
-     * <code>false</code> otherwise.
-     * @memberof Extent
-     *
-     * @param {Extent} [other] The Extent to compare.
-     * @param {Number} epsilon The epsilon to use for equality testing.
-     * @returns {Boolean} <code>true</code> if the Extents are within the provided epsilon, <code>false</code> otherwise.
-     */
-    Extent.prototype.equalsEpsilon = function(other, epsilon) {
-                if (typeof epsilon !== 'number') {
-            throw new DeveloperError('epsilon is required and must be a number.');
-        }
-        
-        return defined(other) &&
-               (Math.abs(this.west - other.west) <= epsilon) &&
-               (Math.abs(this.south - other.south) <= epsilon) &&
-               (Math.abs(this.east - other.east) <= epsilon) &&
-               (Math.abs(this.north - other.north) <= epsilon);
-    };
-
-    /**
-     * Checks this Extent's properties and throws if they are not in valid ranges.
-     *
-     * @exception {DeveloperError} <code>north</code> must be in the interval [<code>-Pi/2</code>, <code>Pi/2</code>].
-     * @exception {DeveloperError} <code>south</code> must be in the interval [<code>-Pi/2</code>, <code>Pi/2</code>].
-     * @exception {DeveloperError} <code>east</code> must be in the interval [<code>-Pi</code>, <code>Pi</code>].
-     * @exception {DeveloperError} <code>west</code> must be in the interval [<code>-Pi</code>, <code>Pi</code>].
-     */
-    Extent.prototype.validate = function() {
-                var north = this.north;
-        if (typeof north !== 'number') {
-            throw new DeveloperError('north is required to be a number.');
-        }
-
-        if (north < -CesiumMath.PI_OVER_TWO || north > CesiumMath.PI_OVER_TWO) {
-            throw new DeveloperError('north must be in the interval [-Pi/2, Pi/2].');
-        }
-
-        var south = this.south;
-        if (typeof south !== 'number') {
-            throw new DeveloperError('south is required to be a number.');
-        }
-
-        if (south < -CesiumMath.PI_OVER_TWO || south > CesiumMath.PI_OVER_TWO) {
-            throw new DeveloperError('south must be in the interval [-Pi/2, Pi/2].');
-        }
-
-        var west = this.west;
-        if (typeof west !== 'number') {
-            throw new DeveloperError('west is required to be a number.');
-        }
-
-        if (west < -Math.PI || west > Math.PI) {
-            throw new DeveloperError('west must be in the interval [-Pi, Pi].');
-        }
-
-        var east = this.east;
-        if (typeof east !== 'number') {
-            throw new DeveloperError('east is required to be a number.');
-        }
-
-        if (east < -Math.PI || east > Math.PI) {
-            throw new DeveloperError('east must be in the interval [-Pi, Pi].');
-        }
-            };
-
-    /**
-     * Computes the southwest corner of this extent.
-     * @memberof Extent
-     *
-     * @param {Cartographic} [result] The object onto which to store the result.
-     * @returns {Cartographic} The modified result parameter or a new Cartographic instance if none was provided.
-     */
-    Extent.prototype.getSouthwest = function(result) {
-        if (!defined(result)) {
-            return new Cartographic(this.west, this.south);
-        }
-        result.longitude = this.west;
-        result.latitude = this.south;
-        result.height = 0.0;
-        return result;
-    };
-
-    /**
-     * Computes the northwest corner of this extent.
-     * @memberof Extent
-     *
-     * @param {Cartographic} [result] The object onto which to store the result.
-     * @returns {Cartographic} The modified result parameter or a new Cartographic instance if none was provided.
-     */
-    Extent.prototype.getNorthwest = function(result) {
-        if (!defined(result)) {
-            return new Cartographic(this.west, this.north);
-        }
-        result.longitude = this.west;
-        result.latitude = this.north;
-        result.height = 0.0;
-        return result;
-    };
-
-    /**
-     * Computes the northeast corner of this extent.
-     * @memberof Extent
-     *
-     * @param {Cartographic} [result] The object onto which to store the result.
-     * @returns {Cartographic} The modified result parameter or a new Cartographic instance if none was provided.
-     */
-    Extent.prototype.getNortheast = function(result) {
-        if (!defined(result)) {
-            return new Cartographic(this.east, this.north);
-        }
-        result.longitude = this.east;
-        result.latitude = this.north;
-        result.height = 0.0;
-        return result;
-    };
-
-    /**
-     * Computes the southeast corner of this extent.
-     * @memberof Extent
-     *
-     * @param {Cartographic} [result] The object onto which to store the result.
-     * @returns {Cartographic} The modified result parameter or a new Cartographic instance if none was provided.
-     */
-    Extent.prototype.getSoutheast = function(result) {
-        if (!defined(result)) {
-            return new Cartographic(this.east, this.south);
-        }
-        result.longitude = this.east;
-        result.latitude = this.south;
-        result.height = 0.0;
-        return result;
-    };
-
-    /**
-     * Computes the center of this extent.
-     * @memberof Extent
-     *
-     * @param {Cartographic} [result] The object onto which to store the result.
-     * @returns {Cartographic} The modified result parameter or a new Cartographic instance if none was provided.
-     */
-    Extent.prototype.getCenter = function(result) {
-        if (!defined(result)) {
-            return new Cartographic((this.west + this.east) * 0.5, (this.south + this.north) * 0.5);
-        }
-        result.longitude = (this.west + this.east) * 0.5;
-        result.latitude = (this.south + this.north) * 0.5;
-        result.height = 0.0;
-        return result;
-    };
-
-    /**
-     * Computes the intersection of this extent with the provided extent.
-     * @memberof Extent
-     *
-     * @param otherExtent The extent to intersect with this extent.
-     * @param {Extent} [result] The object onto which to store the result.
-     * @returns {Extent} The modified result parameter or a new Extent instance if none was provided.
-     */
-    Extent.prototype.intersectWith = function(otherExtent, result) {
-                if (!defined(otherExtent)) {
-            throw new DeveloperError('otherExtent is required.');
-        }
-        
-        var west = Math.max(this.west, otherExtent.west);
-        var south = Math.max(this.south, otherExtent.south);
-        var east = Math.min(this.east, otherExtent.east);
-        var north = Math.min(this.north, otherExtent.north);
-        if (!defined(result)) {
-            return new Extent(west, south, east, north);
-        }
-        result.west = west;
-        result.south = south;
-        result.east = east;
-        result.north = north;
-        return result;
-    };
-
-    /**
-     * Returns true if the provided cartographic is on or inside the extent, false otherwise.
-     * @memberof Extent
-     *
-     * @param {Cartographic} cartographic The cartographic to test.
-     * @returns {Boolean} true if the provided cartographic is inside the extent, false otherwise.
-     */
-    Extent.prototype.contains = function(cartographic) {
-                if (!defined(cartographic)) {
-            throw new DeveloperError('cartographic is required.');
-        }
-        
-        return cartographic.longitude >= this.west &&
-               cartographic.longitude <= this.east &&
-               cartographic.latitude >= this.south &&
-               cartographic.latitude <= this.north;
-    };
-
-    /**
-     * Determines if the extent is empty, i.e., if <code>west >= east</code>
-     * or <code>south >= north</code>.
-     *
-     * @memberof Extent
-     *
-     * @returns {Boolean} True if the extent is empty; otherwise, false.
-     */
-    Extent.prototype.isEmpty = function() {
-        return this.west >= this.east || this.south >= this.north;
-    };
-
-    var subsampleLlaScratch = new Cartographic();
-    /**
-     * Samples this extent so that it includes a list of Cartesian points suitable for passing to
-     * {@link BoundingSphere#fromPoints}.  Sampling is necessary to account
-     * for extents that cover the poles or cross the equator.
-     *
-     * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid to use.
-     * @param {Number} [surfaceHeight=0.0] The height of the extent above the ellipsoid.
-     * @param {Array} [result] The array of Cartesians onto which to store the result.
-     * @returns {Array} The modified result parameter or a new Array of Cartesians instances if none was provided.
-     */
-    Extent.prototype.subsample = function(ellipsoid, surfaceHeight, result) {
-        ellipsoid = defaultValue(ellipsoid, Ellipsoid.WGS84);
-        surfaceHeight = defaultValue(surfaceHeight, 0.0);
-
-        if (!defined(result)) {
-            result = [];
-        }
-        var length = 0;
-
-        var north = this.north;
-        var south = this.south;
-        var east = this.east;
-        var west = this.west;
-
-        var lla = subsampleLlaScratch;
-        lla.height = surfaceHeight;
-
-        lla.longitude = west;
-        lla.latitude = north;
-        result[length] = ellipsoid.cartographicToCartesian(lla, result[length]);
-        length++;
-
-        lla.longitude = east;
-        result[length] = ellipsoid.cartographicToCartesian(lla, result[length]);
-        length++;
-
-        lla.latitude = south;
-        result[length] = ellipsoid.cartographicToCartesian(lla, result[length]);
-        length++;
-
-        lla.longitude = west;
-        result[length] = ellipsoid.cartographicToCartesian(lla, result[length]);
-        length++;
-
-        if (north < 0.0) {
-            lla.latitude = north;
-        } else if (south > 0.0) {
-            lla.latitude = south;
-        } else {
-            lla.latitude = 0.0;
-        }
-
-        for ( var i = 1; i < 8; ++i) {
-            var temp = -Math.PI + i * CesiumMath.PI_OVER_TWO;
-            if (west < temp && temp < east) {
-                lla.longitude = temp;
-                result[length] = ellipsoid.cartographicToCartesian(lla, result[length]);
-                length++;
-            }
-        }
-
-        if (lla.latitude === 0.0) {
-            lla.longitude = west;
-            result[length] = ellipsoid.cartographicToCartesian(lla, result[length]);
-            length++;
-            lla.longitude = east;
-            result[length] = ellipsoid.cartographicToCartesian(lla, result[length]);
-            length++;
-        }
-        result.length = length;
-        return result;
-    };
-
-    /**
-     * The largest possible extent.
-     * @memberof Extent
-     * @type Extent
-    */
-    Extent.MAX_VALUE = freezeObject(new Extent(-Math.PI, -CesiumMath.PI_OVER_TWO, Math.PI, CesiumMath.PI_OVER_TWO));
-
-    return Extent;
 });
 
 /*global define*/
@@ -12259,22 +12406,6 @@ define('Core/Plane',[
         }
         
         return Cartesian3.dot(plane.normal, point) + plane.distance;
-    };
-
-
-    /**
-     * Computes the signed shortest distance of a point to this plane.
-     * The sign of the distance determines which side of this plane the point
-     * is on.  If the distance is positive, the point is in the half-space
-     * in the direction of the normal; if negative, the point is in the half-space
-     * opposite to the normal; if zero, this plane passes through the point.
-     * @memberof Plane
-     *
-     * @param {Cartesian3} point The point.
-     * @returns {Number} The signed shortest distance of the point to this plane.
-     */
-    Plane.prototype.getPointDistance = function(point) {
-        return Plane.getPointDistance(this, point);
     };
 
     return Plane;
@@ -17441,7 +17572,7 @@ define('Core/ExtentGeometry',[
                 if (!defined(extent)) {
             throw new DeveloperError('extent is required.');
         }
-        extent.validate();
+        Extent.validate(extent);
         if (extent.east < extent.west) {
             throw new DeveloperError('options.extent.east must be greater than options.extent.west');
         }
@@ -17491,8 +17622,8 @@ define('Core/ExtentGeometry',[
         var radiiSquared = ellipsoid.radiiSquared;
 
         Extent.clone(extent, stExtent);
-        extent.getNorthwest(nwCartographic);
-        extent.getCenter(centerCartographic);
+        Extent.getNorthwest(extent, nwCartographic);
+        Extent.getCenter(extent, centerCartographic);
 
         var granYCos = granularityY;
         var granXCos = granularityX;

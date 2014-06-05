@@ -33,6 +33,7 @@ define([
         './Structs/raySegment',
         './Functions/RGBToXYZ',
         './Functions/XYZToRGB',
+        './Functions/alphaWeight',
         './Functions/antialias',
         './Functions/columbusViewMorph',
         './Functions/computePosition',
@@ -62,6 +63,7 @@ define([
         './Functions/saturation',
         './Functions/tangentToEyeSpaceMatrix',
         './Functions/translateRelativeToEye',
+        './Functions/translucentPhong',
         './Functions/transpose',
         './Functions/windowToEyeCoordinates'
     ], function(
@@ -97,6 +99,7 @@ define([
         czm_raySegment,
         czm_RGBToXYZ,
         czm_XYZToRGB,
+        czm_alphaWeight,
         czm_antialias,
         czm_columbusViewMorph,
         czm_computePosition,
@@ -126,6 +129,7 @@ define([
         czm_saturation,
         czm_tangentToEyeSpaceMatrix,
         czm_translateRelativeToEye,
+        czm_translucentPhong,
         czm_transpose,
         czm_windowToEyeCoordinates) {
     "use strict";
@@ -162,6 +166,7 @@ define([
         czm_raySegment : czm_raySegment,
         czm_RGBToXYZ : czm_RGBToXYZ,
         czm_XYZToRGB : czm_XYZToRGB,
+        czm_alphaWeight : czm_alphaWeight,
         czm_antialias : czm_antialias,
         czm_columbusViewMorph : czm_columbusViewMorph,
         czm_computePosition : czm_computePosition,
@@ -191,6 +196,7 @@ define([
         czm_saturation : czm_saturation,
         czm_tangentToEyeSpaceMatrix : czm_tangentToEyeSpaceMatrix,
         czm_translateRelativeToEye : czm_translateRelativeToEye,
+        czm_translucentPhong : czm_translucentPhong,
         czm_transpose : czm_transpose,
         czm_windowToEyeCoordinates : czm_windowToEyeCoordinates};
 });
