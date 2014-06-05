@@ -128,7 +128,7 @@ section
     display: none;
 }
 
-.optional:after {
+.signature-attributes {
     content: "opt";
     font-size: 60%;
     color: #aaa;
@@ -389,12 +389,11 @@ h4
     font-size: 140%;
     font-weight: bold;
     letter-spacing: -0.01em;
-    margin-top: 16px;
-    margin: 18px 0 3px 0;
+    margin: 18px 0;
     color: #A35A00;
 }
 
-h5, .container-overview .subsection-title
+h5, .container-overview .subsection-title, .details-header
 {
     font-size: 120%;
     font-weight: bold;
@@ -435,19 +434,22 @@ h6
     font-family: Consolas, "Lucida Console", Monaco, monospace;
 }
 
+.nameContainer .signature {
+    font-size: 90%;
+    font-weight: normal;
+}
+
 .details { margin-top: 14px; }
 .details dt { width:100px; float:left; border-left: 2px solid #DDD; padding-left: 10px;  padding-top: 6px; }
-.details dd { margin-left: 50px; }
-.details ul { margin: 0; }
-.details ul { list-style-type: none; }
-.details li { margin-left: 30px; padding-top: 6px; }
+#main ul { margin: 0; }
+#main ul { list-style-type: none; }
+
+dd { margin-left: 0.8em; }
 
 .see-list li{
     margin: 0;
     padding: 0;
 }
-
-.description { margin-left: 16px; }
 
 .code-caption
 {
@@ -514,6 +516,16 @@ h6
 .params th, .props th { border-right: 1px solid #aaa; }
 .params thead .last, .props thead .last { border-right: 1px solid #ddd; }
 
+.params .optional {
+  float: left;
+  border-radius: 3px;
+  background-color: #ddd!important;
+  font-size: 0.7em;
+  padding: 2px 4px;
+  margin-right: 5px;
+  color: gray;
+}
+
 .colorSwath {
     display: inline-block;
     width: 15em;
@@ -560,4 +572,25 @@ h6
 .permalink:hover {
     text-decoration: none;
     border-bottom: 1px solid #A35A00;
+}
+
+span.attribute-static,
+span.attribute-readonly,
+span.attribute-constant {
+  display: inline-block;
+  border-radius: 3px;
+  background-color: #779c34 !important;
+  color: #fff;
+  font-size: 0.7em;
+  padding: 2px 4px;
+  margin-right: 8px;
+}
+
+.description {
+    margin: 1em 0;
+}
+
+.source-link {
+    font-size: 85%;
+    margin-top: 8px;
 }

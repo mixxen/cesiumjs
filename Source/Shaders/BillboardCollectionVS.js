@@ -20,8 +20,6 @@ attribute vec4 pickColor;\n\
 attribute vec4 color;\n\
 #endif\n\
 \n\
-const vec2 czm_highResolutionSnapScale = vec2(1.0, 1.0);    // TODO\n\
-\n\
 varying vec2 v_textureCoordinates;\n\
 \n\
 #ifdef RENDER_FOR_PICK\n\
@@ -110,7 +108,7 @@ void main() \n\
 \n\
     vec4 positionWC = czm_eyeToWindowCoordinates(positionEC);\n\
     \n\
-    vec2 halfSize = imageSize * scale * czm_highResolutionSnapScale;\n\
+    vec2 halfSize = imageSize * scale * czm_resolutionScale;\n\
     halfSize *= ((direction * 2.0) - 1.0);\n\
     \n\
     positionWC.xy += (origin * abs(halfSize));\n\
@@ -140,7 +138,7 @@ void main() \n\
     \n\
     positionWC.xy += halfSize;\n\
     positionWC.xy += translate;\n\
-    positionWC.xy += (pixelOffset * czm_highResolutionSnapScale);\n\
+    positionWC.xy += (pixelOffset * czm_resolutionScale);\n\
 \n\
     gl_Position = czm_viewportOrthographic * vec4(positionWC.xy, -positionWC.z, 1.0);\n\
     v_textureCoordinates = textureCoordinates;\n\

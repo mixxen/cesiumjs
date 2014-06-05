@@ -10,7 +10,7 @@
  *\n\
  * @returns {czm_ellipsoid} The WGS84 ellipsoid, with its center at the origin of world coordinates, in eye coordinates.\n\
  *\n\
- * @see Ellipsoid.getWgs84\n\
+ * @see Ellipsoid.WGS84\n\
  *\n\
  * @example\n\
  * czm_ellipsoid ellipsoid = czm_getWgs84EllipsoidEC();\n\

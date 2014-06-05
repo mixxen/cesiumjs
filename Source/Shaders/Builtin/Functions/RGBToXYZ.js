@@ -5,7 +5,7 @@
     return "/**\n\
  * Converts an RGB color to CIE Yxy.\n\
  * <p>The conversion is described in\n\
- * <a href=\"http://content.gpwiki.org/index.php/D3DBook:High-Dynamic_Range_Rendering#Luminance_Transform\">Luminance Transform</a>\n\
+ * {@link http://content.gpwiki.org/index.php/D3DBook:High-Dynamic_Range_Rendering#Luminance_Transform|Luminance Transform}\n\
  * </p>\n\
  * \n\
  * @name czm_RGBToXYZ\n\

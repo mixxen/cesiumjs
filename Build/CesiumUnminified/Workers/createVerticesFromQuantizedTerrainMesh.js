@@ -45,7 +45,10 @@ define('Core/defined',[],function() {
 });
 
 /*global define*/
-define('Core/freezeObject',['./defined'], function(defined) {
+define('Core/freezeObject',[
+        './defined'
+    ], function(
+        defined) {
     "use strict";
 
     /**
@@ -98,7 +101,10 @@ define('Core/defaultValue',[
     return defaultValue;
 });
 /*global define*/
-define('Core/DeveloperError',['./defined'], function(defined) {
+define('Core/DeveloperError',[
+        './defined'
+    ], function(
+        defined) {
     "use strict";
 
     /**
@@ -113,7 +119,7 @@ define('Core/DeveloperError',['./defined'], function(defined) {
      *
      * @alias DeveloperError
      *
-     * @param {String} [message=undefined] The error message for this exception.
+     * @param {String} [message] The error message for this exception.
      *
      * @see RuntimeError
      * @constructor
@@ -169,17 +175,911 @@ define('Core/DeveloperError',['./defined'], function(defined) {
     return DeveloperError;
 });
 
+/*
+  I've wrapped Makoto Matsumoto and Takuji Nishimura's code in a namespace
+  so it's better encapsulated. Now you can have multiple random number generators
+  and they won't stomp all over eachother's state.
+
+  If you want to use this as a substitute for Math.random(), use the random()
+  method like so:
+
+  var m = new MersenneTwister();
+  var randomNumber = m.random();
+
+  You can also call the other genrand_{foo}() methods on the instance.
+
+  If you want to use a specific seed in order to get a repeatable random
+  sequence, pass an integer into the constructor:
+
+  var m = new MersenneTwister(123);
+
+  and that will always produce the same random sequence.
+
+  Sean McCullough (banksean@gmail.com)
+*/
+
+/*
+   A C-program for MT19937, with initialization improved 2002/1/26.
+   Coded by Takuji Nishimura and Makoto Matsumoto.
+
+   Before using, initialize the state by using init_genrand(seed)
+   or init_by_array(init_key, key_length).
+*/
+/**
+@license
+mersenne-twister.js - https://gist.github.com/banksean/300494
+
+   Copyright (C) 1997 - 2002, Makoto Matsumoto and Takuji Nishimura,
+   All rights reserved.
+
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+
+     1. Redistributions of source code must retain the above copyright
+        notice, this list of conditions and the following disclaimer.
+
+     2. Redistributions in binary form must reproduce the above copyright
+        notice, this list of conditions and the following disclaimer in the
+        documentation and/or other materials provided with the distribution.
+
+     3. The names of its contributors may not be used to endorse or promote
+        products derived from this software without specific prior written
+        permission.
+
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+   A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+   EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+   PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+   PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+   LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+/*
+   Any feedback is very welcome.
+   http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html
+   email: m-mat @ math.sci.hiroshima-u.ac.jp (remove space)
+*/
+define('ThirdParty/mersenne-twister',[],function() {
+var MersenneTwister = function(seed) {
+  if (seed == undefined) {
+    seed = new Date().getTime();
+  }
+  /* Period parameters */
+  this.N = 624;
+  this.M = 397;
+  this.MATRIX_A = 0x9908b0df;   /* constant vector a */
+  this.UPPER_MASK = 0x80000000; /* most significant w-r bits */
+  this.LOWER_MASK = 0x7fffffff; /* least significant r bits */
+
+  this.mt = new Array(this.N); /* the array for the state vector */
+  this.mti=this.N+1; /* mti==N+1 means mt[N] is not initialized */
+
+  this.init_genrand(seed);
+}
+
+/* initializes mt[N] with a seed */
+MersenneTwister.prototype.init_genrand = function(s) {
+  this.mt[0] = s >>> 0;
+  for (this.mti=1; this.mti<this.N; this.mti++) {
+      var s = this.mt[this.mti-1] ^ (this.mt[this.mti-1] >>> 30);
+   this.mt[this.mti] = (((((s & 0xffff0000) >>> 16) * 1812433253) << 16) + (s & 0x0000ffff) * 1812433253)
+  + this.mti;
+      /* See Knuth TAOCP Vol2. 3rd Ed. P.106 for multiplier. */
+      /* In the previous versions, MSBs of the seed affect   */
+      /* only MSBs of the array mt[].                        */
+      /* 2002/01/09 modified by Makoto Matsumoto             */
+      this.mt[this.mti] >>>= 0;
+      /* for >32 bit machines */
+  }
+}
+
+/* initialize by an array with array-length */
+/* init_key is the array for initializing keys */
+/* key_length is its length */
+/* slight change for C++, 2004/2/26 */
+//MersenneTwister.prototype.init_by_array = function(init_key, key_length) {
+//  var i, j, k;
+//  this.init_genrand(19650218);
+//  i=1; j=0;
+//  k = (this.N>key_length ? this.N : key_length);
+//  for (; k; k--) {
+//    var s = this.mt[i-1] ^ (this.mt[i-1] >>> 30)
+//    this.mt[i] = (this.mt[i] ^ (((((s & 0xffff0000) >>> 16) * 1664525) << 16) + ((s & 0x0000ffff) * 1664525)))
+//      + init_key[j] + j; /* non linear */
+//    this.mt[i] >>>= 0; /* for WORDSIZE > 32 machines */
+//    i++; j++;
+//    if (i>=this.N) { this.mt[0] = this.mt[this.N-1]; i=1; }
+//    if (j>=key_length) j=0;
+//  }
+//  for (k=this.N-1; k; k--) {
+//    var s = this.mt[i-1] ^ (this.mt[i-1] >>> 30);
+//    this.mt[i] = (this.mt[i] ^ (((((s & 0xffff0000) >>> 16) * 1566083941) << 16) + (s & 0x0000ffff) * 1566083941))
+//      - i; /* non linear */
+//    this.mt[i] >>>= 0; /* for WORDSIZE > 32 machines */
+//    i++;
+//    if (i>=this.N) { this.mt[0] = this.mt[this.N-1]; i=1; }
+//  }
+//
+//  this.mt[0] = 0x80000000; /* MSB is 1; assuring non-zero initial array */
+//}
+
+/* generates a random number on [0,0xffffffff]-interval */
+MersenneTwister.prototype.genrand_int32 = function() {
+  var y;
+  var mag01 = new Array(0x0, this.MATRIX_A);
+  /* mag01[x] = x * MATRIX_A  for x=0,1 */
+
+  if (this.mti >= this.N) { /* generate N words at one time */
+    var kk;
+
+    if (this.mti == this.N+1)   /* if init_genrand() has not been called, */
+      this.init_genrand(5489); /* a default initial seed is used */
+
+    for (kk=0;kk<this.N-this.M;kk++) {
+      y = (this.mt[kk]&this.UPPER_MASK)|(this.mt[kk+1]&this.LOWER_MASK);
+      this.mt[kk] = this.mt[kk+this.M] ^ (y >>> 1) ^ mag01[y & 0x1];
+    }
+    for (;kk<this.N-1;kk++) {
+      y = (this.mt[kk]&this.UPPER_MASK)|(this.mt[kk+1]&this.LOWER_MASK);
+      this.mt[kk] = this.mt[kk+(this.M-this.N)] ^ (y >>> 1) ^ mag01[y & 0x1];
+    }
+    y = (this.mt[this.N-1]&this.UPPER_MASK)|(this.mt[0]&this.LOWER_MASK);
+    this.mt[this.N-1] = this.mt[this.M-1] ^ (y >>> 1) ^ mag01[y & 0x1];
+
+    this.mti = 0;
+  }
+
+  y = this.mt[this.mti++];
+
+  /* Tempering */
+  y ^= (y >>> 11);
+  y ^= (y << 7) & 0x9d2c5680;
+  y ^= (y << 15) & 0xefc60000;
+  y ^= (y >>> 18);
+
+  return y >>> 0;
+}
+
+/* generates a random number on [0,0x7fffffff]-interval */
+//MersenneTwister.prototype.genrand_int31 = function() {
+//  return (this.genrand_int32()>>>1);
+//}
+
+/* generates a random number on [0,1]-real-interval */
+//MersenneTwister.prototype.genrand_real1 = function() {
+//  return this.genrand_int32()*(1.0/4294967295.0);
+//  /* divided by 2^32-1 */
+//}
+
+/* generates a random number on [0,1)-real-interval */
+MersenneTwister.prototype.random = function() {
+  return this.genrand_int32()*(1.0/4294967296.0);
+  /* divided by 2^32 */
+}
+
+/* generates a random number on (0,1)-real-interval */
+//MersenneTwister.prototype.genrand_real3 = function() {
+//  return (this.genrand_int32() + 0.5)*(1.0/4294967296.0);
+//  /* divided by 2^32 */
+//}
+
+/* generates a random number on [0,1) with 53-bit resolution*/
+//MersenneTwister.prototype.genrand_res53 = function() {
+//  var a=this.genrand_int32()>>>5, b=this.genrand_int32()>>>6;
+//  return(a*67108864.0+b)*(1.0/9007199254740992.0);
+//}
+
+/* These real versions are due to Isaku Wada, 2002/01/09 added */
+
+return MersenneTwister;
+});
+/*global define*/
+define('Core/Math',[
+        '../ThirdParty/mersenne-twister',
+        './defaultValue',
+        './defined',
+        './DeveloperError'
+    ], function(
+        MersenneTwister,
+        defaultValue,
+        defined,
+        DeveloperError) {
+    "use strict";
+
+    /**
+     * Math functions.
+     * @exports CesiumMath
+     */
+    var CesiumMath = {};
+
+    /**
+     * 0.1
+     * @type {Number}
+     * @constant
+     */
+    CesiumMath.EPSILON1 = 0.1;
+
+    /**
+     * 0.01
+     * @type {Number}
+     * @constant
+     */
+    CesiumMath.EPSILON2 = 0.01;
+
+    /**
+     * 0.001
+     * @type {Number}
+     * @constant
+     */
+    CesiumMath.EPSILON3 = 0.001;
+
+    /**
+     * 0.0001
+     * @type {Number}
+     * @constant
+     */
+    CesiumMath.EPSILON4 = 0.0001;
+
+    /**
+     * 0.00001
+     * @type {Number}
+     * @constant
+     */
+    CesiumMath.EPSILON5 = 0.00001;
+
+    /**
+     * 0.000001
+     * @type {Number}
+     * @constant
+     */
+    CesiumMath.EPSILON6 = 0.000001;
+
+    /**
+     * 0.0000001
+     * @type {Number}
+     * @constant
+     */
+    CesiumMath.EPSILON7 = 0.0000001;
+
+    /**
+     * 0.00000001
+     * @type {Number}
+     * @constant
+     */
+    CesiumMath.EPSILON8 = 0.00000001;
+
+    /**
+     * 0.000000001
+     * @type {Number}
+     * @constant
+     */
+    CesiumMath.EPSILON9 = 0.000000001;
+
+    /**
+     * 0.0000000001
+     * @type {Number}
+     * @constant
+     */
+    CesiumMath.EPSILON10 = 0.0000000001;
+
+    /**
+     * 0.00000000001
+     * @type {Number}
+     * @constant
+     */
+    CesiumMath.EPSILON11 = 0.00000000001;
+
+    /**
+     * 0.000000000001
+     * @type {Number}
+     * @constant
+     */
+    CesiumMath.EPSILON12 = 0.000000000001;
+
+    /**
+     * 0.0000000000001
+     * @type {Number}
+     * @constant
+     */
+    CesiumMath.EPSILON13 = 0.0000000000001;
+
+    /**
+     * 0.00000000000001
+     * @type {Number}
+     * @constant
+     */
+    CesiumMath.EPSILON14 = 0.00000000000001;
+
+    /**
+     * 0.000000000000001
+     * @type {Number}
+     * @constant
+     */
+    CesiumMath.EPSILON15 = 0.000000000000001;
+
+    /**
+     * 0.0000000000000001
+     * @type {Number}
+     * @constant
+     */
+    CesiumMath.EPSILON16 = 0.0000000000000001;
+
+    /**
+     * 0.00000000000000001
+     * @type {Number}
+     * @constant
+     */
+    CesiumMath.EPSILON17 = 0.00000000000000001;
+
+    /**
+     * 0.000000000000000001
+     * @type {Number}
+     * @constant
+     */
+    CesiumMath.EPSILON18 = 0.000000000000000001;
+
+    /**
+     * 0.0000000000000000001
+     * @type {Number}
+     * @constant
+     */
+    CesiumMath.EPSILON19 = 0.0000000000000000001;
+
+    /**
+     * 0.00000000000000000001
+     * @type {Number}
+     * @constant
+     */
+    CesiumMath.EPSILON20 = 0.00000000000000000001;
+
+    /**
+     * 3.986004418e14
+     * @type {Number}
+     * @constant
+     */
+    CesiumMath.GRAVITATIONALPARAMETER = 3.986004418e14;
+
+    /**
+     * Radius of the sun in meters: 6.955e8
+     * @type {Number}
+     * @constant
+     */
+    CesiumMath.SOLAR_RADIUS = 6.955e8;
+
+    /**
+     * The mean radius of the moon, according to the "Report of the IAU/IAG Working Group on
+     * Cartographic Coordinates and Rotational Elements of the Planets and satellites: 2000",
+     * Celestial Mechanics 82: 83-110, 2002.
+     * @type {Number}
+     * @constant
+     */
+    CesiumMath.LUNAR_RADIUS = 1737400.0;
+
+    /**
+     * 64 * 1024
+     * @type {Number}
+     * @constant
+     */
+    CesiumMath.SIXTY_FOUR_KILOBYTES = 64 * 1024;
+
+    /**
+     * Returns the sign of the value; 1 if the value is positive, -1 if the value is
+     * negative, or 0 if the value is 0.
+     *
+     * @param {Number} value The value to return the sign of.
+     *
+     * @returns {Number} The sign of value.
+     */
+    CesiumMath.sign = function(value) {
+        if (value > 0) {
+            return 1;
+        }
+        if (value < 0) {
+            return -1;
+        }
+
+        return 0;
+    };
+
+    /**
+     * Returns the hyperbolic sine of a {@code Number}.
+     * The hyperbolic sine of <em>value</em> is defined to be
+     * (<em>e<sup>x</sup>&nbsp;-&nbsp;e<sup>-x</sup></em>)/2.0
+     * where <i>e</i> is Euler's number, approximately 2.71828183.
+     *
+     * <p>Special cases:
+     *   <ul>
+     *     <li>If the argument is NaN, then the result is NaN.</li>
+     *
+     *     <li>If the argument is infinite, then the result is an infinity
+     *     with the same sign as the argument.</li>
+     *
+     *     <li>If the argument is zero, then the result is a zero with the
+     *     same sign as the argument.</li>
+     *   </ul>
+     *</p>
+     *
+     * @param {Number} value The number whose hyperbolic sine is to be returned.
+     *
+     * @returns The hyperbolic sine of {@code value}.
+     */
+    CesiumMath.sinh = function(value) {
+        var part1 = Math.pow(Math.E, value);
+        var part2 = Math.pow(Math.E, -1.0 * value);
+
+        return (part1 - part2) * 0.5;
+    };
+
+    /**
+     * Returns the hyperbolic cosine of a {@code Number}.
+     * The hyperbolic cosine of <strong>value</strong> is defined to be
+     * (<em>e<sup>x</sup>&nbsp;+&nbsp;e<sup>-x</sup></em>)/2.0
+     * where <i>e</i> is Euler's number, approximately 2.71828183.
+     *
+     * <p>Special cases:
+     *   <ul>
+     *     <li>If the argument is NaN, then the result is NaN.</li>
+     *
+     *     <li>If the argument is infinite, then the result is positive infinity.</li>
+     *
+     *     <li>If the argument is zero, then the result is {@code 1.0}.</li>
+     *   </ul>
+     *</p>
+     *
+     * @param {Number} value The number whose hyperbolic cosine is to be returned.
+     *
+     * @returns The hyperbolic cosine of {@code value}.
+     */
+    CesiumMath.cosh = function(value) {
+        var part1 = Math.pow(Math.E, value);
+        var part2 = Math.pow(Math.E, -1.0 * value);
+
+        return (part1 + part2) * 0.5;
+    };
+
+    /**
+     * Computes the linear interpolation of two values.
+     *
+     * @param {Number} p The start value to interpolate.
+     * @param {Number} q The end value to interpolate.
+     * @param {Number} time The time of interpolation generally in the range <code>[0.0, 1.0]</code>.
+     * @returns {Number} The linearly interpolated value.
+     *
+     * @example
+     * var n = Cesium.Math.lerp(0.0, 2.0, 0.5); // returns 1.0
+     */
+    CesiumMath.lerp = function(p, q, time) {
+        return ((1.0 - time) * p) + (time * q);
+    };
+
+    /**
+     * pi
+     *
+     * @type {Number}
+     * @constant
+     * @see czm_pi
+     */
+    CesiumMath.PI = Math.PI;
+
+    /**
+     * 1/pi
+     *
+     * @type {Number}
+     * @constant
+     * @see czm_oneOverPi
+     */
+    CesiumMath.ONE_OVER_PI = 1.0 / Math.PI;
+
+    /**
+     * pi/2
+     *
+     * @type {Number}
+     * @constant
+     * @see czm_piOverTwo
+     */
+    CesiumMath.PI_OVER_TWO = Math.PI * 0.5;
+
+    /**
+     * pi/3
+     *
+     * @type {Number}
+     * @constant
+     * @see czm_piOverThree
+     */
+    CesiumMath.PI_OVER_THREE = Math.PI / 3.0;
+
+    /**
+     * pi/4
+     *
+     * @type {Number}
+     * @constant
+     * @see czm_piOverFour
+     */
+    CesiumMath.PI_OVER_FOUR = Math.PI / 4.0;
+
+    /**
+     * pi/6
+     *
+     * @type {Number}
+     * @constant
+     * @see czm_piOverSix
+     */
+    CesiumMath.PI_OVER_SIX = Math.PI / 6.0;
+
+    /**
+     * 3pi/2
+     *
+     * @type {Number}
+     * @constant
+     * @see czm_threePiOver2
+     */
+    CesiumMath.THREE_PI_OVER_TWO = (3.0 * Math.PI) * 0.5;
+
+    /**
+     * 2pi
+     *
+     * @type {Number}
+     * @constant
+     * @see czm_twoPi
+     */
+    CesiumMath.TWO_PI = 2.0 * Math.PI;
+
+    /**
+     * 1/2pi
+     *
+     * @type {Number}
+     * @constant
+     * @see czm_oneOverTwoPi
+     */
+    CesiumMath.ONE_OVER_TWO_PI = 1.0 / (2.0 * Math.PI);
+
+    /**
+     * The number of radians in a degree.
+     *
+     * @type {Number}
+     * @constant
+     * @default Math.PI / 180.0
+     * @see czm_radiansPerDegree
+     */
+    CesiumMath.RADIANS_PER_DEGREE = Math.PI / 180.0;
+
+    /**
+     * The number of degrees in a radian.
+     *
+     * @type {Number}
+     * @constant
+     * @default 180.0 / Math.PI
+     * @see czm_degreesPerRadian
+     */
+    CesiumMath.DEGREES_PER_RADIAN = 180.0 / Math.PI;
+
+    /**
+     * The number of radians in an arc second.
+     *
+     * @type {Number}
+     * @constant
+     * @default {@link CesiumMath.RADIANS_PER_DEGREE} / 3600.0
+     * @see czm_radiansPerArcSecond
+     */
+    CesiumMath.RADIANS_PER_ARCSECOND = CesiumMath.RADIANS_PER_DEGREE / 3600.0;
+
+    /**
+     * Converts degrees to radians.
+     * @param {Number} degrees The angle to convert in degrees.
+     * @returns {Number} The corresponding angle in radians.
+     */
+    CesiumMath.toRadians = function(degrees) {
+                if (!defined(degrees)) {
+            throw new DeveloperError('degrees is required.');
+        }
+                return degrees * CesiumMath.RADIANS_PER_DEGREE;
+    };
+
+    /**
+     * Converts radians to degrees.
+     * @param {Number} radians The angle to convert in radians.
+     * @returns {Number} The corresponding angle in degrees.
+     */
+    CesiumMath.toDegrees = function(radians) {
+                if (!defined(radians)) {
+            throw new DeveloperError('radians is required.');
+        }
+                return radians * CesiumMath.DEGREES_PER_RADIAN;
+    };
+
+    /**
+     * Converts a longitude value, in radians, to the range [<code>-Math.PI</code>, <code>Math.PI</code>).
+     *
+     * @param {Number} angle The longitude value, in radians, to convert to the range [<code>-Math.PI</code>, <code>Math.PI</code>).
+     *
+     * @returns {Number} The equivalent longitude value in the range [<code>-Math.PI</code>, <code>Math.PI</code>).
+     *
+     * @example
+     * // Convert 270 degrees to -90 degrees longitude
+     * var longitude = Cesium.Math.convertLongitudeRange(Cesium.Math.toRadians(270.0));
+     */
+    CesiumMath.convertLongitudeRange = function(angle) {
+                if (!defined(angle)) {
+            throw new DeveloperError('angle is required.');
+        }
+                var twoPi = CesiumMath.TWO_PI;
+
+        var simplified = angle - Math.floor(angle / twoPi) * twoPi;
+
+        if (simplified < -Math.PI) {
+            return simplified + twoPi;
+        }
+        if (simplified >= Math.PI) {
+            return simplified - twoPi;
+        }
+
+        return simplified;
+    };
+
+    /**
+     * Produces an angle in the range 0 <= angle <= 2Pi which is equivalent to the provided angle.
+     * @param {Number} angle in radians
+     * @returns {Number} The angle in the range ()<code>-CesiumMath.PI</code>, <code>CesiumMath.PI</code>).
+     */
+    CesiumMath.negativePiToPi = function(x) {
+                if (!defined(x)) {
+            throw new DeveloperError('x is required.');
+        }
+                var epsilon10 = CesiumMath.EPSILON10;
+        var pi = CesiumMath.PI;
+        var two_pi = CesiumMath.TWO_PI;
+        while (x < -(pi + epsilon10)) {
+            x += two_pi;
+        }
+        if (x < -pi) {
+            return -pi;
+        }
+        while (x > pi + epsilon10) {
+            x -= two_pi;
+        }
+        return x > pi ? pi : x;
+    };
+
+    /**
+     * Produces an angle in the range -Pi <= angle <= Pi which is equivalent to the provided angle.
+     * @param {Number} angle in radians
+     * @returns {Number} The angle in the range (0 , <code>CesiumMath.TWO_PI</code>).
+     */
+    CesiumMath.zeroToTwoPi = function(x) {
+                if (!defined(x)) {
+            throw new DeveloperError('x is required.');
+        }
+                var value = x % CesiumMath.TWO_PI;
+        // We do a second modules here if we add 2Pi to ensure that we don't have any numerical issues with very
+        // small negative values.
+        return (value < 0.0) ? (value + CesiumMath.TWO_PI) % CesiumMath.TWO_PI : value;
+    };
+
+    /**
+     * Determines if two values are equal within the provided epsilon.  This is useful
+     * to avoid problems due to roundoff error when comparing floating-point values directly.
+     *
+     * @param {Number} left The first value to compare.
+     * @param {Number} right The other value to compare.
+     * @param {Number} [epsilon=0.0] The maximum inclusive delta between <code>left</code> and <code>right</code> where they will be considered equal.
+     * @returns {Boolean} <code>true</code> if the values are equal within the epsilon; otherwise, <code>false</code>.
+     *
+     * @example
+     * var b = Cesium.Math.equalsEpsilon(0.0, 0.01, Cesium.Math.EPSILON2); // true
+     * var b = Cesium.Math.equalsEpsilon(0.0, 0.1, Cesium.Math.EPSILON2);  // false
+     */
+    CesiumMath.equalsEpsilon = function(left, right, epsilon) {
+                if (!defined(left)) {
+            throw new DeveloperError('left is required.');
+        }
+
+        if (!defined(right)) {
+            throw new DeveloperError('right is required.');
+        }
+                epsilon = defaultValue(epsilon, 0.0);
+        return Math.abs(left - right) <= epsilon;
+    };
+
+    var factorials = [1];
+
+    /**
+     * Computes the factorial of the provided number.
+     *
+     * @memberof CesiumMath
+     *
+     * @param {Number} n The number whose factorial is to be computed.
+     *
+     * @returns {Number} The factorial of the provided number or undefined if the number is less than 0.
+     *
+     * @see {@link http://en.wikipedia.org/wiki/Factorial|Factorial on Wikipedia}
+     *
+     * @example
+     * //Compute 7!, which is equal to 5040
+     * var computedFactorial = Cesium.Math.factorial(7);
+     *
+     * @exception {DeveloperError} A number greater than or equal to 0 is required.
+     */
+    CesiumMath.factorial = function(n) {
+                if (typeof n !== 'number' || n < 0) {
+            throw new DeveloperError('A number greater than or equal to 0 is required.');
+        }
+        
+        var length = factorials.length;
+        if (n >= length) {
+            var sum = factorials[length - 1];
+            for ( var i = length; i <= n; i++) {
+                factorials.push(sum * i);
+            }
+        }
+        return factorials[n];
+    };
+
+    /**
+     * Increments a number with a wrapping to a minimum value if the number exceeds the maximum value.
+     *
+     * @memberof CesiumMath
+     *
+     * @param {Number} [n] The number to be incremented.
+     * @param {Number} [maximumValue] The maximum incremented value before rolling over to the minimum value.
+     * @param {Number} [minimumValue=0.0] The number reset to after the maximum value has been exceeded.
+     *
+     * @returns {Number} The incremented number.
+     *
+     * @example
+     * var n = Cesium.Math.incrementWrap(5, 10, 0); // returns 6
+     * var n = Cesium.Math.incrementWrap(10, 10, 0); // returns 0
+     *
+     * @exception {DeveloperError} Maximum value must be greater than minimum value.
+     */
+    CesiumMath.incrementWrap = function(n, maximumValue, minimumValue) {
+        minimumValue = defaultValue(minimumValue, 0.0);
+
+                if (!defined(n)) {
+            throw new DeveloperError('n is required.');
+        }
+        if (maximumValue <= minimumValue) {
+            throw new DeveloperError('maximumValue must be greater than minimumValue.');
+        }
+        
+        ++n;
+        if (n > maximumValue) {
+            n = minimumValue;
+        }
+        return n;
+    };
+
+    /**
+     * Determines if a positive integer is a power of two.
+     *
+     * @memberof CesiumMath
+     *
+     * @param {Number} n The positive integer to test.
+     *
+     * @returns {Boolean} <code>true</code> if the number if a power of two; otherwise, <code>false</code>.
+     *
+     * @exception {DeveloperError} A number greater than or equal to 0 is required.
+     *
+     * @example
+     * var t = Cesium.Math.isPowerOfTwo(16); // true
+     * var f = Cesium.Math.isPowerOfTwo(20); // false
+     */
+    CesiumMath.isPowerOfTwo = function(n) {
+                if (typeof n !== 'number' || n < 0) {
+            throw new DeveloperError('A number greater than or equal to 0 is required.');
+        }
+        
+        return (n !== 0) && ((n & (n - 1)) === 0);
+    };
+
+    /**
+     * Computes the next power-of-two integer greater than or equal to the provided positive integer.
+     *
+     * @memberof CesiumMath
+     *
+     * @param {Number} n The positive integer to test.
+     *
+     * @returns {Number} The next power-of-two integer.
+     *
+     * @exception {DeveloperError} A number greater than or equal to 0 is required.
+     *
+     * @example
+     * var n = Cesium.Math.nextPowerOfTwo(29); // 32
+     * var m = Cesium.Math.nextPowerOfTwo(32); // 32
+     */
+    CesiumMath.nextPowerOfTwo = function(n) {
+                if (typeof n !== 'number' || n < 0) {
+            throw new DeveloperError('A number greater than or equal to 0 is required.');
+        }
+        
+        // From http://graphics.stanford.edu/~seander/bithacks.html#RoundUpPowerOf2
+        --n;
+        n |= n >> 1;
+        n |= n >> 2;
+        n |= n >> 4;
+        n |= n >> 8;
+        n |= n >> 16;
+        ++n;
+
+        return n;
+    };
+
+    /**
+     * Constraint a value to lie between two values.
+     *
+     * @memberof CesiumMath
+     *
+     * @param {Number} value The value to constrain.
+     * @param {Number} min The minimum value.
+     * @param {Number} max The maximum value.
+     * @returns The value clamped so that min <= value <= max.
+     */
+    CesiumMath.clamp = function(value, min, max) {
+                if (!defined(value)) {
+            throw new DeveloperError('value is required');
+        }
+        if (!defined(min)) {
+            throw new DeveloperError('min is required.');
+        }
+        if (!defined(max)) {
+            throw new DeveloperError('max is required.');
+        }
+                return value < min ? min : value > max ? max : value;
+    };
+
+    var randomNumberGenerator = new MersenneTwister();
+
+    /**
+     * Sets the seed used by the random number generator
+     * in {@link CesiumMath#nextRandomNumber}.
+     *
+     * @memberof CesiumMath
+     *
+     * @param {Number} seed An integer used as the seed.
+     */
+    CesiumMath.setRandomNumberSeed = function(seed) {
+                if (!defined(seed)) {
+            throw new DeveloperError('seed is required.');
+        }
+        
+        randomNumberGenerator = new MersenneTwister(seed);
+    };
+
+    /**
+     * Generates a random number in the range of [0.0, 1.0)
+     * using a Mersenne twister.
+     *
+     * @memberof CesiumMath
+     *
+     * @returns A random number in the range of [0.0, 1.0).
+     *
+     * @see CesiumMath.setRandomNumberSeed
+     * @see {@link http://en.wikipedia.org/wiki/Mersenne_twister|Mersenne twister on Wikipedia}
+     */
+    CesiumMath.nextRandomNumber = function() {
+        return randomNumberGenerator.random();
+    };
+
+    return CesiumMath;
+});
+
 /*global define*/
 define('Core/Cartesian3',[
         './defaultValue',
         './defined',
         './DeveloperError',
-        './freezeObject'
+        './freezeObject',
+        './Math'
     ], function(
         defaultValue,
         defined,
         DeveloperError,
-        freezeObject) {
+        freezeObject,
+        CesiumMath) {
     "use strict";
 
     /**
@@ -301,7 +1201,7 @@ define('Core/Cartesian3',[
 
     /**
      * The number of elements used to pack the object into an array.
-     * @Type {Number}
+     * @type {Number}
      */
     Cartesian3.packedLength = 3;
 
@@ -310,7 +1210,7 @@ define('Core/Cartesian3',[
      * @memberof Cartesian3
      *
      * @param {Cartesian3} value The value to pack.
-     * @param {Array} array The array to pack into.
+     * @param {Number[]} array The array to pack into.
      * @param {Number} [startingIndex=0] The index into the array at which to start packing the elements.
      */
     Cartesian3.pack = function(value, array, startingIndex) {
@@ -333,7 +1233,7 @@ define('Core/Cartesian3',[
      * Retrieves an instance from a packed array.
      * @memberof Cartesian3
      *
-     * @param {Array} array The packed array.
+     * @param {Number[]} array The packed array.
      * @param {Number} [startingIndex=0] The starting index of the element to be unpacked.
      * @param {Cartesian3} [result] The object into which to store the result.
      */
@@ -357,7 +1257,7 @@ define('Core/Cartesian3',[
      * Creates a Cartesian3 from three consecutive elements in an array.
      * @memberof Cartesian3
      *
-     * @param {Array} array The array whose three consecutive elements correspond to the x, y, and z components, respectively.
+     * @param {Number[]} array The array whose three consecutive elements correspond to the x, y, and z components, respectively.
      * @param {Number} [startingIndex=0] The offset into the array of the first element, which corresponds to the x component.
      * @param {Cartesian3} [result] The object onto which to store the result.
      *
@@ -378,7 +1278,7 @@ define('Core/Cartesian3',[
      * Computes the value of the maximum component for the supplied Cartesian.
      * @memberof Cartesian3
      *
-     * @param {Cartesian3} The cartesian to use.
+     * @param {Cartesian3} cartesian The cartesian to use.
      * @returns {Number} The value of the maximum component.
      */
     Cartesian3.getMaximumComponent = function(cartesian) {
@@ -393,7 +1293,7 @@ define('Core/Cartesian3',[
      * Computes the value of the minimum component for the supplied Cartesian.
      * @memberof Cartesian3
      *
-     * @param {Cartesian3} The cartesian to use.
+     * @param {Cartesian3} cartesian The cartesian to use.
      * @returns {Number} The value of the minimum component.
      */
     Cartesian3.getMinimumComponent = function(cartesian) {
@@ -730,9 +1630,9 @@ define('Core/Cartesian3',[
      * Computes the linear interpolation or extrapolation at t using the provided cartesians.
      * @memberof Cartesian3
      *
-     * @param start The value corresponding to t at 0.0.
-     * @param end The value corresponding to t at 1.0.
-     * @param t The point along t at which to interpolate.
+     * @param {Cartesian3} start The value corresponding to t at 0.0.
+     * @param {Cartesian3} end The value corresponding to t at 1.0.
+     * @param {Number} t The point along t at which to interpolate.
      * @param {Cartesian3} [result] The object onto which to store the result.
      * @returns {Cartesian3} The modified result parameter or a new Cartesian3 instance if one was not provided.
      */
@@ -891,6 +1791,218 @@ define('Core/Cartesian3',[
     };
 
     /**
+     * Returns a Cartesian3 position from longitude and latitude values given in degrees.
+     * @memberof Cartesian3
+     *
+     * @param {Number} longitude The longitude, in degrees
+     * @param {Number} latitude The latitude, in degrees
+     * @param {Number} [height=0.0] The height, in meters, above the ellipsoid.
+     * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid on which the position lies.
+     * @param {Cartesian3} [result] The object onto which to store the result.
+     *
+     * @returns {Cartesian3} The position
+     *
+     * @example
+     * var position = Cartesian3.fromDegrees(-115.0, 37.0);
+     */
+    Cartesian3.fromDegrees = function(longitude, latitude, height, ellipsoid, result) {
+                if (!defined(longitude)) {
+            throw new DeveloperError('longitude is required');
+        }
+        if (!defined(latitude)) {
+            throw new DeveloperError('latitude is required');
+        }
+        
+        var lon = CesiumMath.toRadians(longitude);
+        var lat = CesiumMath.toRadians(latitude);
+        return Cartesian3.fromRadians(lon, lat, height, ellipsoid, result);
+    };
+
+    var scratchN = new Cartesian3();
+    var scratchK = new Cartesian3();
+    var wgs84RadiiSquared = new Cartesian3(6378137.0 * 6378137.0, 6378137.0 * 6378137.0, 6356752.3142451793 * 6356752.3142451793);
+
+    /**
+     * Returns a Cartesian3 position from longitude and latitude values given in radians.
+     * @memberof Cartesian3
+     *
+     * @param {Number} longitude The longitude, in radians
+     * @param {Number} latitude The latitude, in radians
+     * @param {Number} [height=0.0] The height, in meters, above the ellipsoid.
+     * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid on which the position lies.
+     * @param {Cartesian3} [result] The object onto which to store the result.
+     *
+     * @returns {Cartesian3} The position
+     *
+     * @example
+     * var position = Cartesian3.fromRadians(-2.007, 0.645);
+     */
+    Cartesian3.fromRadians = function(longitude, latitude, height, ellipsoid, result) {
+                if (!defined(longitude)) {
+            throw new DeveloperError('longitude is required');
+        }
+        if (!defined(latitude)) {
+            throw new DeveloperError('latitude is required');
+        }
+        
+        height = defaultValue(height, 0.0);
+        var radiiSquared = defined(ellipsoid) ? ellipsoid.radiiSquared : wgs84RadiiSquared;
+
+        var cosLatitude = Math.cos(latitude);
+        scratchN.x = cosLatitude * Math.cos(longitude);
+        scratchN.y = cosLatitude * Math.sin(longitude);
+        scratchN.z = Math.sin(latitude);
+        scratchN = Cartesian3.normalize(scratchN, scratchN);
+
+        Cartesian3.multiplyComponents(radiiSquared, scratchN, scratchK);
+        var gamma = Math.sqrt(Cartesian3.dot(scratchN, scratchK));
+        scratchK = Cartesian3.divideByScalar(scratchK, gamma, scratchK);
+        scratchN = Cartesian3.multiplyByScalar(scratchN, height, scratchN);
+        return Cartesian3.add(scratchK, scratchN, result);
+    };
+
+    /**
+     * Returns an array of Cartesian3 positions given an array of longitude and latitude values given in degrees.
+     * @memberof Cartesian3
+     *
+     * @param {Number[]} coordinates A list of longitude and latitude values. Values alternate [longitude, latitude, longitude, latitude...].
+     * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid on which the coordinates lie.
+     * @param {Cartesian3[]} [result] An array of Cartesian3 objects to store the result.
+     *
+     * @returns {Cartesian3[]} The array of positions.
+     *
+     * @example
+     * var positions = Cartesian3.fromDegreesArray([-115.0, 37.0, -107.0, 33.0]);
+     */
+    Cartesian3.fromDegreesArray = function(coordinates, ellipsoid, result) {
+                if (!defined(coordinates)) {
+            throw new DeveloperError('positions is required.');
+        }
+        
+        var pos = new Array(coordinates.length);
+        for (var i = 0; i < coordinates.length; i++) {
+            pos[i] = CesiumMath.toRadians(coordinates[i]);
+        }
+
+        return Cartesian3.fromRadiansArray(pos, ellipsoid, result);
+    };
+
+    /**
+     * Returns an array of Cartesian3 positions given an array of longitude and latitude values given in radians.
+     * @memberof Cartesian3
+     *
+     * @param {Number[]} coordinates A list of longitude and latitude values. Values alternate [longitude, latitude, longitude, latitude...].
+     * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid on which the coordinates lie.
+     * @param {Cartesian3[]} [result] An array of Cartesian3 objects to store the result.
+     *
+     * @returns {Cartesian3[]} The array of positions.
+     *
+     * @example
+     * var positions = Cartesian3.fromRadiansArray([-2.007, 0.645, -1.867, .575]);
+     */
+    Cartesian3.fromRadiansArray = function(coordinates, ellipsoid, result) {
+                if (!defined(coordinates)) {
+            throw new DeveloperError('positions is required.');
+        }
+        if (coordinates.length < 2) {
+            throw new DeveloperError('positions length cannot be less than 2.');
+        }
+        if (coordinates.length % 2 !== 0) {
+            throw new DeveloperError('positions length must be a multiple of 2.');
+        }
+        
+        var length = coordinates.length;
+        if (!defined(result)) {
+            result = new Array(length/2);
+        } else {
+            result.length = length/2;
+        }
+
+        for ( var i = 0; i < length; i+=2) {
+            var lon = coordinates[i];
+            var lat = coordinates[i+1];
+            result[i/2] = Cartesian3.fromRadians(lon, lat, 0, ellipsoid, result[i/2]);
+        }
+
+        return result;
+    };
+
+    /**
+     * Returns an array of Cartesian3 positions given an array of longitude, latitude and height values where longitude and latitude are given in degrees.
+     * @memberof Cartesian3
+     *
+     * @param {Number[]} coordinates A list of longitude, latitude and height values. Values alternate [longitude, latitude, height,, longitude, latitude, height...].
+     * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid on which the position lies.
+     * @param {Cartesian3[]} [result] An array of Cartesian3 objects to store the result.
+     *
+     * @returns {Cartesian3[]} The array of positions.
+     *
+     * @example
+     * var positions = Cartesian3.fromDegreesArrayHeights([-115.0, 37.0, 100000.0, -107.0, 33.0, 150000.0]);
+     */
+    Cartesian3.fromDegreesArrayHeights = function(coordinates, ellipsoid, result) {
+                if (!defined(coordinates)) {
+            throw new DeveloperError('positions is required.');
+        }
+        if (coordinates.length < 3) {
+            throw new DeveloperError('positions length cannot be less than 3.');
+        }
+        if (coordinates.length % 3 !== 0) {
+            throw new DeveloperError('positions length must be a multiple of 3.');
+        }
+        
+        var pos = new Array(coordinates.length);
+        for (var i = 0; i < coordinates.length; i+=3) {
+            pos[i] = CesiumMath.toRadians(coordinates[i]);
+            pos[i+1] = CesiumMath.toRadians(coordinates[i+1]);
+            pos[i+2] = coordinates[i+2];
+        }
+
+        return Cartesian3.fromRadiansArrayHeights(pos, ellipsoid, result);
+    };
+
+    /**
+     * Returns an array of Cartesian3 positions given an array of longitude, latitude and height values where longitude and latitude are given in radians.
+     * @memberof Cartesian3
+     *
+     * @param {Number[]} coordinates A list of longitude, latitude and height values. Values alternate [longitude, latitude, height,, longitude, latitude, height...].
+     * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid on which the position lies.
+     * @param {Cartesian3[]} [result] An array of Cartesian3 objects to store the result.
+     *
+     * @returns {Cartesian3[]} The array of positions.
+     *
+     * @example
+     * var positions = Cartesian3.fromradiansArrayHeights([-2.007, 0.645, 100000.0, -1.867, .575, 150000.0]);
+     */
+    Cartesian3.fromRadiansArrayHeights = function(coordinates, ellipsoid, result) {
+                if (!defined(coordinates)) {
+            throw new DeveloperError('positions is required.');
+        }
+        if (coordinates.length < 3) {
+            throw new DeveloperError('positions length cannot be less than 3.');
+        }
+        if (coordinates.length % 3 !== 0) {
+            throw new DeveloperError('positions length must be a multiple of 3.');
+        }
+        
+        var length = coordinates.length;
+        if (!defined(result)) {
+            result = new Array(length/3);
+        } else {
+            result.length = length/3;
+        }
+
+        for ( var i = 0; i < length; i+=3) {
+            var lon = coordinates[i];
+            var lat = coordinates[i+1];
+            var alt = coordinates[i+2];
+            result[i/3] = Cartesian3.fromRadians(lon, lat, alt, ellipsoid, result[i/3]);
+        }
+
+        return result;
+    };
+
+    /**
      * An immutable Cartesian3 instance initialized to (0.0, 0.0, 0.0).
      * @memberof Cartesian3
      */
@@ -964,846 +2076,6 @@ define('Core/Cartesian3',[
     return Cartesian3;
 });
 
-/*
-  I've wrapped Makoto Matsumoto and Takuji Nishimura's code in a namespace
-  so it's better encapsulated. Now you can have multiple random number generators
-  and they won't stomp all over eachother's state.
-
-  If you want to use this as a substitute for Math.random(), use the random()
-  method like so:
-
-  var m = new MersenneTwister();
-  var randomNumber = m.random();
-
-  You can also call the other genrand_{foo}() methods on the instance.
-
-  If you want to use a specific seed in order to get a repeatable random
-  sequence, pass an integer into the constructor:
-
-  var m = new MersenneTwister(123);
-
-  and that will always produce the same random sequence.
-
-  Sean McCullough (banksean@gmail.com)
-*/
-
-/*
-   A C-program for MT19937, with initialization improved 2002/1/26.
-   Coded by Takuji Nishimura and Makoto Matsumoto.
-
-   Before using, initialize the state by using init_genrand(seed)
-   or init_by_array(init_key, key_length).
-*/
-/**
-@license
-mersenne-twister.js - https://gist.github.com/banksean/300494
-
-   Copyright (C) 1997 - 2002, Makoto Matsumoto and Takuji Nishimura,
-   All rights reserved.
-
-   Redistribution and use in source and binary forms, with or without
-   modification, are permitted provided that the following conditions
-   are met:
-
-     1. Redistributions of source code must retain the above copyright
-        notice, this list of conditions and the following disclaimer.
-
-     2. Redistributions in binary form must reproduce the above copyright
-        notice, this list of conditions and the following disclaimer in the
-        documentation and/or other materials provided with the distribution.
-
-     3. The names of its contributors may not be used to endorse or promote
-        products derived from this software without specific prior written
-        permission.
-
-   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-   A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-   CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-   EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
-   PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
-   PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-   LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-   SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
-/*
-   Any feedback is very welcome.
-   http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt.html
-   email: m-mat @ math.sci.hiroshima-u.ac.jp (remove space)
-*/
-define('ThirdParty/mersenne-twister',[],function() {
-var MersenneTwister = function(seed) {
-  if (seed == undefined) {
-    seed = new Date().getTime();
-  }
-  /* Period parameters */
-  this.N = 624;
-  this.M = 397;
-  this.MATRIX_A = 0x9908b0df;   /* constant vector a */
-  this.UPPER_MASK = 0x80000000; /* most significant w-r bits */
-  this.LOWER_MASK = 0x7fffffff; /* least significant r bits */
-
-  this.mt = new Array(this.N); /* the array for the state vector */
-  this.mti=this.N+1; /* mti==N+1 means mt[N] is not initialized */
-
-  this.init_genrand(seed);
-}
-
-/* initializes mt[N] with a seed */
-MersenneTwister.prototype.init_genrand = function(s) {
-  this.mt[0] = s >>> 0;
-  for (this.mti=1; this.mti<this.N; this.mti++) {
-      var s = this.mt[this.mti-1] ^ (this.mt[this.mti-1] >>> 30);
-   this.mt[this.mti] = (((((s & 0xffff0000) >>> 16) * 1812433253) << 16) + (s & 0x0000ffff) * 1812433253)
-  + this.mti;
-      /* See Knuth TAOCP Vol2. 3rd Ed. P.106 for multiplier. */
-      /* In the previous versions, MSBs of the seed affect   */
-      /* only MSBs of the array mt[].                        */
-      /* 2002/01/09 modified by Makoto Matsumoto             */
-      this.mt[this.mti] >>>= 0;
-      /* for >32 bit machines */
-  }
-}
-
-/* initialize by an array with array-length */
-/* init_key is the array for initializing keys */
-/* key_length is its length */
-/* slight change for C++, 2004/2/26 */
-//MersenneTwister.prototype.init_by_array = function(init_key, key_length) {
-//  var i, j, k;
-//  this.init_genrand(19650218);
-//  i=1; j=0;
-//  k = (this.N>key_length ? this.N : key_length);
-//  for (; k; k--) {
-//    var s = this.mt[i-1] ^ (this.mt[i-1] >>> 30)
-//    this.mt[i] = (this.mt[i] ^ (((((s & 0xffff0000) >>> 16) * 1664525) << 16) + ((s & 0x0000ffff) * 1664525)))
-//      + init_key[j] + j; /* non linear */
-//    this.mt[i] >>>= 0; /* for WORDSIZE > 32 machines */
-//    i++; j++;
-//    if (i>=this.N) { this.mt[0] = this.mt[this.N-1]; i=1; }
-//    if (j>=key_length) j=0;
-//  }
-//  for (k=this.N-1; k; k--) {
-//    var s = this.mt[i-1] ^ (this.mt[i-1] >>> 30);
-//    this.mt[i] = (this.mt[i] ^ (((((s & 0xffff0000) >>> 16) * 1566083941) << 16) + (s & 0x0000ffff) * 1566083941))
-//      - i; /* non linear */
-//    this.mt[i] >>>= 0; /* for WORDSIZE > 32 machines */
-//    i++;
-//    if (i>=this.N) { this.mt[0] = this.mt[this.N-1]; i=1; }
-//  }
-//
-//  this.mt[0] = 0x80000000; /* MSB is 1; assuring non-zero initial array */
-//}
-
-/* generates a random number on [0,0xffffffff]-interval */
-MersenneTwister.prototype.genrand_int32 = function() {
-  var y;
-  var mag01 = new Array(0x0, this.MATRIX_A);
-  /* mag01[x] = x * MATRIX_A  for x=0,1 */
-
-  if (this.mti >= this.N) { /* generate N words at one time */
-    var kk;
-
-    if (this.mti == this.N+1)   /* if init_genrand() has not been called, */
-      this.init_genrand(5489); /* a default initial seed is used */
-
-    for (kk=0;kk<this.N-this.M;kk++) {
-      y = (this.mt[kk]&this.UPPER_MASK)|(this.mt[kk+1]&this.LOWER_MASK);
-      this.mt[kk] = this.mt[kk+this.M] ^ (y >>> 1) ^ mag01[y & 0x1];
-    }
-    for (;kk<this.N-1;kk++) {
-      y = (this.mt[kk]&this.UPPER_MASK)|(this.mt[kk+1]&this.LOWER_MASK);
-      this.mt[kk] = this.mt[kk+(this.M-this.N)] ^ (y >>> 1) ^ mag01[y & 0x1];
-    }
-    y = (this.mt[this.N-1]&this.UPPER_MASK)|(this.mt[0]&this.LOWER_MASK);
-    this.mt[this.N-1] = this.mt[this.M-1] ^ (y >>> 1) ^ mag01[y & 0x1];
-
-    this.mti = 0;
-  }
-
-  y = this.mt[this.mti++];
-
-  /* Tempering */
-  y ^= (y >>> 11);
-  y ^= (y << 7) & 0x9d2c5680;
-  y ^= (y << 15) & 0xefc60000;
-  y ^= (y >>> 18);
-
-  return y >>> 0;
-}
-
-/* generates a random number on [0,0x7fffffff]-interval */
-//MersenneTwister.prototype.genrand_int31 = function() {
-//  return (this.genrand_int32()>>>1);
-//}
-
-/* generates a random number on [0,1]-real-interval */
-//MersenneTwister.prototype.genrand_real1 = function() {
-//  return this.genrand_int32()*(1.0/4294967295.0);
-//  /* divided by 2^32-1 */
-//}
-
-/* generates a random number on [0,1)-real-interval */
-MersenneTwister.prototype.random = function() {
-  return this.genrand_int32()*(1.0/4294967296.0);
-  /* divided by 2^32 */
-}
-
-/* generates a random number on (0,1)-real-interval */
-//MersenneTwister.prototype.genrand_real3 = function() {
-//  return (this.genrand_int32() + 0.5)*(1.0/4294967296.0);
-//  /* divided by 2^32 */
-//}
-
-/* generates a random number on [0,1) with 53-bit resolution*/
-//MersenneTwister.prototype.genrand_res53 = function() {
-//  var a=this.genrand_int32()>>>5, b=this.genrand_int32()>>>6;
-//  return(a*67108864.0+b)*(1.0/9007199254740992.0);
-//}
-
-/* These real versions are due to Isaku Wada, 2002/01/09 added */
-
-return MersenneTwister;
-});
-/*global define*/
-define('Core/Math',[
-        './defaultValue',
-        './defined',
-        './DeveloperError',
-        '../ThirdParty/mersenne-twister'
-       ], function(
-         defaultValue,
-         defined,
-         DeveloperError,
-         MersenneTwister) {
-    "use strict";
-
-    /**
-     * Math functions.
-     * @exports CesiumMath
-     */
-    var CesiumMath = {};
-
-    /**
-     * 0.1
-     * @type {Number}
-     * @constant
-     */
-    CesiumMath.EPSILON1 = 0.1;
-
-    /**
-     * 0.01
-     * @type {Number}
-     * @constant
-     */
-    CesiumMath.EPSILON2 = 0.01;
-
-    /**
-     * 0.001
-     * @type {Number}
-     * @constant
-     */
-    CesiumMath.EPSILON3 = 0.001;
-
-    /**
-     * 0.0001
-     * @type {Number}
-     * @constant
-     */
-    CesiumMath.EPSILON4 = 0.0001;
-
-    /**
-     * 0.00001
-     * @type {Number}
-     * @constant
-     */
-    CesiumMath.EPSILON5 = 0.00001;
-
-    /**
-     * 0.000001
-     * @type {Number}
-     * @constant
-     */
-    CesiumMath.EPSILON6 = 0.000001;
-
-    /**
-     * 0.0000001
-     * @type {Number}
-     * @constant
-     */
-    CesiumMath.EPSILON7 = 0.0000001;
-
-    /**
-     * 0.00000001
-     * @type {Number}
-     * @constant
-     */
-    CesiumMath.EPSILON8 = 0.00000001;
-
-    /**
-     * 0.000000001
-     * @type {Number}
-     * @constant
-     */
-    CesiumMath.EPSILON9 = 0.000000001;
-
-    /**
-     * 0.0000000001
-     * @type {Number}
-     * @constant
-     */
-    CesiumMath.EPSILON10 = 0.0000000001;
-
-    /**
-     * 0.00000000001
-     * @type {Number}
-     * @constant
-     */
-    CesiumMath.EPSILON11 = 0.00000000001;
-
-    /**
-     * 0.000000000001
-     * @type {Number}
-     * @constant
-     */
-    CesiumMath.EPSILON12 = 0.000000000001;
-
-    /**
-     * 0.0000000000001
-     * @type {Number}
-     * @constant
-     */
-    CesiumMath.EPSILON13 = 0.0000000000001;
-
-    /**
-     * 0.00000000000001
-     * @type {Number}
-     * @constant
-     */
-    CesiumMath.EPSILON14 = 0.00000000000001;
-
-    /**
-     * 0.000000000000001
-     * @type {Number}
-     * @constant
-     */
-    CesiumMath.EPSILON15 = 0.000000000000001;
-
-    /**
-     * 0.0000000000000001
-     * @type {Number}
-     * @constant
-     */
-    CesiumMath.EPSILON16 = 0.0000000000000001;
-
-    /**
-     * 0.00000000000000001
-     * @type {Number}
-     * @constant
-     */
-    CesiumMath.EPSILON17 = 0.00000000000000001;
-
-    /**
-     * 0.000000000000000001
-     * @type {Number}
-     * @constant
-     */
-    CesiumMath.EPSILON18 = 0.000000000000000001;
-
-    /**
-     * 0.0000000000000000001
-     * @type {Number}
-     * @constant
-     */
-    CesiumMath.EPSILON19 = 0.0000000000000000001;
-
-    /**
-     * 0.00000000000000000001
-     * @type {Number}
-     * @constant
-     */
-    CesiumMath.EPSILON20 = 0.00000000000000000001;
-
-    /**
-     * 3.986004418e14
-     * @type {Number}
-     * @constant
-     */
-    CesiumMath.GRAVITATIONALPARAMETER = 3.986004418e14;
-
-    /**
-     * Radius of the sun in meters: 6.955e8
-     * @type {Number}
-     * @constant
-     */
-    CesiumMath.SOLAR_RADIUS = 6.955e8;
-
-    /**
-     * The mean radius of the moon, according to the "Report of the IAU/IAG Working Group on
-     * Cartographic Coordinates and Rotational Elements of the Planets and satellites: 2000",
-     * Celestial Mechanics 82: 83-110, 2002.
-     * @type {Number}
-     * @constant
-     */
-    CesiumMath.LUNAR_RADIUS = 1737400.0;
-
-    /**
-     * 64 * 1024
-     * @type {Number}
-     * @constant
-     */
-    CesiumMath.SIXTY_FOUR_KILOBYTES = 64 * 1024;
-
-    /**
-     * Returns the sign of the value; 1 if the value is positive, -1 if the value is
-     * negative, or 0 if the value is 0.
-     *
-     * @param {Number} value The value to return the sign of.
-     *
-     * @returns {Number} The sign of value.
-     */
-    CesiumMath.sign = function(value) {
-        if (value > 0) {
-            return 1;
-        }
-        if (value < 0) {
-            return -1;
-        }
-
-        return 0;
-    };
-
-    /**
-     * Returns the hyperbolic sine of a {@code Number}.
-     * The hyperbolic sine of <em>value</em> is defined to be
-     * (<em>e<sup>x</sup>&nbsp;-&nbsp;e<sup>-x</sup></em>)/2.0
-     * where <i>e</i> is Euler's number, approximately 2.71828183.
-     *
-     * <p>Special cases:
-     *   <ul>
-     *     <li>If the argument is NaN, then the result is NaN.</li>
-     *
-     *     <li>If the argument is infinite, then the result is an infinity
-     *     with the same sign as the argument.</li>
-     *
-     *     <li>If the argument is zero, then the result is a zero with the
-     *     same sign as the argument.</li>
-     *   </ul>
-     *</p>
-     *
-     * @param value The number whose hyperbolic sine is to be returned.
-     *
-     * @returns The hyperbolic sine of {@code value}.
-     */
-    CesiumMath.sinh = function(value) {
-        var part1 = Math.pow(Math.E, value);
-        var part2 = Math.pow(Math.E, -1.0 * value);
-
-        return (part1 - part2) * 0.5;
-    };
-
-    /**
-     * Returns the hyperbolic cosine of a {@code Number}.
-     * The hyperbolic cosine of <strong>value</strong> is defined to be
-     * (<em>e<sup>x</sup>&nbsp;+&nbsp;e<sup>-x</sup></em>)/2.0
-     * where <i>e</i> is Euler's number, approximately 2.71828183.
-     *
-     * <p>Special cases:
-     *   <ul>
-     *     <li>If the argument is NaN, then the result is NaN.</li>
-     *
-     *     <li>If the argument is infinite, then the result is positive infinity.</li>
-     *
-     *     <li>If the argument is zero, then the result is {@code 1.0}.</li>
-     *   </ul>
-     *</p>
-     *
-     * @param value The number whose hyperbolic cosine is to be returned.
-     *
-     * @returns The hyperbolic cosine of {@code value}.
-     */
-    CesiumMath.cosh = function(value) {
-        var part1 = Math.pow(Math.E, value);
-        var part2 = Math.pow(Math.E, -1.0 * value);
-
-        return (part1 + part2) * 0.5;
-    };
-
-    /**
-     * DOC_TBA
-     */
-    CesiumMath.lerp = function(p, q, time) {
-        return ((1.0 - time) * p) + (time * q);
-    };
-
-    /**
-     * pi
-     *
-     * @type {Number}
-     * @constant
-     * @see czm_pi
-     */
-    CesiumMath.PI = Math.PI;
-
-    /**
-     * 1/pi
-     *
-     * @type {Number}
-     * @constant
-     * @see czm_oneOverPi
-     */
-    CesiumMath.ONE_OVER_PI = 1.0 / Math.PI;
-
-    /**
-     * pi/2
-     *
-     * @type {Number}
-     * @constant
-     * @see czm_piOverTwo
-     */
-    CesiumMath.PI_OVER_TWO = Math.PI * 0.5;
-
-    /**
-     * pi/3
-     *
-     * @type {Number}
-     * @constant
-     * @see czm_piOverThree
-     */
-    CesiumMath.PI_OVER_THREE = Math.PI / 3.0;
-
-    /**
-     * pi/4
-     *
-     * @type {Number}
-     * @constant
-     * @see czm_piOverFour
-     */
-    CesiumMath.PI_OVER_FOUR = Math.PI / 4.0;
-
-    /**
-     * pi/6
-     *
-     * @type {Number}
-     * @constant
-     * @see czm_piOverSix
-     */
-    CesiumMath.PI_OVER_SIX = Math.PI / 6.0;
-
-    /**
-     * 3pi/2
-     *
-     * @type {Number}
-     * @constant
-     * @see czm_threePiOver2
-     */
-    CesiumMath.THREE_PI_OVER_TWO = (3.0 * Math.PI) * 0.5;
-
-    /**
-     * 2pi
-     *
-     * @type {Number}
-     * @constant
-     * @see czm_twoPi
-     */
-    CesiumMath.TWO_PI = 2.0 * Math.PI;
-
-    /**
-     * 1/2pi
-     *
-     * @type {Number}
-     * @constant
-     * @see czm_oneOverTwoPi
-     */
-    CesiumMath.ONE_OVER_TWO_PI = 1.0 / (2.0 * Math.PI);
-
-    /**
-     * The number of radians in a degree.
-     *
-     * @type {Number}
-     * @constant
-     * @default Math.PI / 180.0
-     * @see czm_radiansPerDegree
-     */
-    CesiumMath.RADIANS_PER_DEGREE = Math.PI / 180.0;
-
-    /**
-     * The number of degrees in a radian.
-     *
-     * @type {Number}
-     * @constant
-     * @default 180.0 / Math.PI
-     * @see czm_degreesPerRadian
-     */
-    CesiumMath.DEGREES_PER_RADIAN = 180.0 / Math.PI;
-
-    /**
-     * The number of radians in an arc second.
-     *
-     * @type {Number}
-     * @constant
-     * @default {@link CesiumMath.RADIANS_PER_DEGREE} / 3600.0
-     * @see czm_radiansPerArcSecond
-     */
-    CesiumMath.RADIANS_PER_ARCSECOND = CesiumMath.RADIANS_PER_DEGREE / 3600.0;
-
-    /**
-     * Converts degrees to radians.
-     * @param {Number} degrees The angle to convert in degrees.
-     * @returns {Number} The corresponding angle in radians.
-     */
-    CesiumMath.toRadians = function(degrees) {
-        return degrees * CesiumMath.RADIANS_PER_DEGREE;
-    };
-
-    /**
-     * Converts radians to degrees.
-     * @param {Number} radians The angle to convert in radians.
-     * @returns {Number} The corresponding angle in degrees.
-     */
-    CesiumMath.toDegrees = function(radians) {
-        return radians * CesiumMath.DEGREES_PER_RADIAN;
-    };
-
-    /**
-     * Converts a longitude value, in radians, to the range [<code>-Math.PI</code>, <code>Math.PI</code>).
-     *
-     * @param {Number} angle The longitude value, in radians, to convert to the range [<code>-Math.PI</code>, <code>Math.PI</code>).
-     *
-     * @returns {Number} The equivalent longitude value in the range [<code>-Math.PI</code>, <code>Math.PI</code>).
-     *
-     * @example
-     * // Convert 270 degrees to -90 degrees longitude
-     * var longitude = Cesium.Math.convertLongitudeRange(Cesium.Math.toRadians(270.0));
-     */
-    CesiumMath.convertLongitudeRange = function(angle) {
-        var twoPi = CesiumMath.TWO_PI;
-
-        var simplified = angle - Math.floor(angle / twoPi) * twoPi;
-
-        if (simplified < -Math.PI) {
-            return simplified + twoPi;
-        }
-        if (simplified >= Math.PI) {
-            return simplified - twoPi;
-        }
-
-        return simplified;
-    };
-
-    /**
-     * Produces an angle in the range 0 <= angle <= 2Pi which is equivalent to the provided angle.
-     * @param {Number} angle in radians
-     * @returns {Number} The angle in the range ()<code>-CesiumMath.PI</code>, <code>CesiumMath.PI</code>).
-     */
-    CesiumMath.negativePiToPi = function(x) {
-        var epsilon10 = CesiumMath.EPSILON10;
-        var pi = CesiumMath.PI;
-        var two_pi = CesiumMath.TWO_PI;
-        while (x < -(pi + epsilon10)) {
-            x += two_pi;
-        }
-        if (x < -pi) {
-            return -pi;
-        }
-        while (x > pi + epsilon10) {
-            x -= two_pi;
-        }
-        return x > pi ? pi : x;
-    };
-
-    /**
-     * Produces an angle in the range -Pi <= angle <= Pi which is equivalent to the provided angle.
-     * @param {Number} angle in radians
-     * @returns {Number} The angle in the range (0 , <code>CesiumMath.TWO_PI</code>).
-     */
-    CesiumMath.zeroToTwoPi = function(x) {
-        var value = x % CesiumMath.TWO_PI;
-        // We do a second modules here if we add 2Pi to ensure that we don't have any numerical issues with very
-        // small negative values.
-        return (value < 0.0) ? (value + CesiumMath.TWO_PI) % CesiumMath.TWO_PI : value;
-    };
-
-    /**
-     * DOC_TBA
-     */
-    CesiumMath.equalsEpsilon = function(left, right, epsilon) {
-        epsilon = defaultValue(epsilon, 0.0);
-        return Math.abs(left - right) <= epsilon;
-    };
-
-    var factorials = [1];
-
-    /**
-     * Computes the factorial of the provided number.
-     *
-     * @memberof CesiumMath
-     *
-     * @param {Number} n The number whose factorial is to be computed.
-     *
-     * @returns {Number} The factorial of the provided number or undefined if the number is less than 0.
-     *
-     * @see <a href='http://en.wikipedia.org/wiki/Factorial'>Factorial on Wikipedia</a>.
-     *
-     * @example
-     * //Compute 7!, which is equal to 5040
-     * var computedFactorial = Cesium.Math.factorial(7);
-     *
-     * @exception {DeveloperError} A number greater than or equal to 0 is required.
-     */
-    CesiumMath.factorial = function(n) {
-                if (typeof n !== 'number' || n < 0) {
-            throw new DeveloperError('A number greater than or equal to 0 is required.');
-        }
-        
-        var length = factorials.length;
-        if (n >= length) {
-            var sum = factorials[length - 1];
-            for ( var i = length; i <= n; i++) {
-                factorials.push(sum * i);
-            }
-        }
-        return factorials[n];
-    };
-
-    /**
-     * Increments a number with a wrapping to a minimum value if the number exceeds the maximum value.
-     *
-     * @memberof CesiumMath
-     *
-     * @param {Number} [n] The number to be incremented.
-     * @param {Number} [maximumValue] The maximum incremented value before rolling over to the minimum value.
-     * @param {Number} [minimumValue=0.0] The number reset to after the maximum value has been exceeded.
-     *
-     * @returns {Number} The incremented number.
-     *
-     * @example
-     * var n = Cesium.Math.incrementWrap(5, 10, 0); // returns 6
-     * var n = Cesium.Math.incrementWrap(10, 10, 0); // returns 0
-     *
-     * @exception {DeveloperError} Maximum value must be greater than minimum value.
-     */
-    CesiumMath.incrementWrap = function(n, maximumValue, minimumValue) {
-        minimumValue = defaultValue(minimumValue, 0.0);
-
-                if (maximumValue <= minimumValue) {
-            throw new DeveloperError('Maximum value must be greater than minimum value.');
-        }
-        
-        ++n;
-        if (n > maximumValue) {
-            n = minimumValue;
-        }
-        return n;
-    };
-
-    /**
-     * Determines if a positive integer is a power of two.
-     *
-     * @memberof CesiumMath
-     *
-     * @param {Number} n The positive integer to test.
-     *
-     * @returns {Boolean} <code>true</code> if the number if a power of two; otherwise, <code>false</code>.
-     *
-     * @exception {DeveloperError} A number greater than or equal to 0 is required.
-     *
-     * @example
-     * var t = Cesium.Math.isPowerOfTwo(16); // true
-     * var f = Cesium.Math.isPowerOfTwo(20); // false
-     */
-    CesiumMath.isPowerOfTwo = function(n) {
-                if (typeof n !== 'number' || n < 0) {
-            throw new DeveloperError('A number greater than or equal to 0 is required.');
-        }
-        
-        return (n !== 0) && ((n & (n - 1)) === 0);
-    };
-
-    /**
-     * Computes the next power-of-two integer greater than or equal to the provided positive integer.
-     *
-     * @memberof CesiumMath
-     *
-     * @param {Number} n The positive integer to test.
-     *
-     * @returns {Number} The next power-of-two integer.
-     *
-     * @exception {DeveloperError} A number greater than or equal to 0 is required.
-     *
-     * @example
-     * var n = Cesium.Math.nextPowerOfTwo(29); // 32
-     * var m = Cesium.Math.nextPowerOfTwo(32); // 32
-     */
-    CesiumMath.nextPowerOfTwo = function(n) {
-                if (typeof n !== 'number' || n < 0) {
-            throw new DeveloperError('A number greater than or equal to 0 is required.');
-        }
-        
-        // From http://graphics.stanford.edu/~seander/bithacks.html#RoundUpPowerOf2
-        --n;
-        n |= n >> 1;
-        n |= n >> 2;
-        n |= n >> 4;
-        n |= n >> 8;
-        n |= n >> 16;
-        ++n;
-
-        return n;
-    };
-
-    /**
-     * Constraint a value to lie between two values.
-     *
-     * @memberof CesiumMath
-     *
-     * @param {Number} value The value to constrain.
-     * @param {Number} min The minimum value.
-     * @param {Number} max The maximum value.
-     * @returns The value clamped so that min <= value <= max.
-     */
-    CesiumMath.clamp = function(value, min, max) {
-        return value < min ? min : value > max ? max : value;
-    };
-
-    var randomNumberGenerator = new MersenneTwister();
-
-    /**
-     * Sets the seed used by the random number generator
-     * in {@link CesiumMath#nextRandomNumber}.
-     *
-     * @memberof CesiumMath
-     *
-     * @param {Number} seed An integer used as the seed.
-     */
-    CesiumMath.setRandomNumberSeed = function(seed) {
-                if (!defined(seed)) {
-            throw new DeveloperError('seed is required.');
-        }
-        
-        randomNumberGenerator = new MersenneTwister(seed);
-    };
-
-    /**
-     * Generates a random number in the range of [0.0, 1.0)
-     * using a Mersenne twister.
-     *
-     * @memberof CesiumMath
-     *
-     * @returns A random number in the range of [0.0, 1.0).
-     *
-     * @see CesiumMath#setRandomNumberSeed
-     * @see http://en.wikipedia.org/wiki/Mersenne_twister
-     */
-    CesiumMath.nextRandomNumber = function() {
-        return randomNumberGenerator.random();
-    };
-
-    return CesiumMath;
-});
-
 /*global define*/
 define('Core/Cartographic',[
         './defaultValue',
@@ -1855,21 +2127,25 @@ define('Core/Cartographic',[
 
     /**
      * Creates a new Cartographic instance from longitude and latitude
-     * specified in degrees.  The values in the resulting object will
-     * be in radians.
+     * specified in radians.
      * @memberof Cartographic
      *
-     * @param {Number} [longitude=0.0] The longitude, in degrees.
-     * @param {Number} [latitude=0.0] The latitude, in degrees.
+     * @param {Number} longitude The longitude, in radians.
+     * @param {Number} latitude The latitude, in radians.
      * @param {Number} [height=0.0] The height, in meters, above the ellipsoid.
      * @param {Cartographic} [result] The object onto which to store the result.
      * @returns {Cartographic} The modified result parameter or a new Cartographic instance if one was not provided.
      */
-    Cartographic.fromDegrees = function(longitude, latitude, height, result) {
-        longitude = CesiumMath.toRadians(defaultValue(longitude, 0.0));
-        latitude = CesiumMath.toRadians(defaultValue(latitude, 0.0));
+    Cartographic.fromRadians = function(longitude, latitude, height, result) {
+                if (!defined(longitude)) {
+            throw new DeveloperError('longitude is required.');
+        }
+        if (!defined(latitude)) {
+            throw new DeveloperError('latitude is required.');
+        }
+                
         height = defaultValue(height, 0.0);
-
+        
         if (!defined(result)) {
             return new Cartographic(longitude, latitude, height);
         }
@@ -1878,6 +2154,31 @@ define('Core/Cartographic',[
         result.latitude = latitude;
         result.height = height;
         return result;
+    };
+
+    /**
+     * Creates a new Cartographic instance from longitude and latitude
+     * specified in degrees.  The values in the resulting object will
+     * be in radians.
+     * @memberof Cartographic
+     *
+     * @param {Number} longitude The longitude, in degrees.
+     * @param {Number} latitude The latitude, in degrees.
+     * @param {Number} [height=0.0] The height, in meters, above the ellipsoid.
+     * @param {Cartographic} [result] The object onto which to store the result.
+     * @returns {Cartographic} The modified result parameter or a new Cartographic instance if one was not provided.
+     */
+    Cartographic.fromDegrees = function(longitude, latitude, height, result) {
+                if (!defined(longitude)) {
+            throw new DeveloperError('longitude is required.');
+        }
+        if (!defined(latitude)) {
+            throw new DeveloperError('latitude is required.');
+        }
+                longitude = CesiumMath.toRadians(longitude);
+        latitude = CesiumMath.toRadians(latitude);
+
+        return Cartographic.fromRadians(longitude, latitude, height, result);
     };
 
     /**
@@ -2016,7 +2317,10 @@ define('Core/Cartographic',[
 });
 
 /*global define*/
-define('Core/defineProperties',['./defined'], function(defined) {
+define('Core/defineProperties',[
+        './defined'
+    ], function(
+        defined) {
     "use strict";
 
     var definePropertyWorks = (function() {
@@ -2048,23 +2352,23 @@ define('Core/defineProperties',['./defined'], function(defined) {
 });
 /*global define*/
 define('Core/Ellipsoid',[
-        './freezeObject',
+        './Cartesian3',
+        './Cartographic',
         './defaultValue',
         './defined',
         './defineProperties',
         './DeveloperError',
-        './Math',
-        './Cartesian3',
-        './Cartographic'
-       ], function(
-         freezeObject,
-         defaultValue,
-         defined,
-         defineProperties,
-         DeveloperError,
-         CesiumMath,
-         Cartesian3,
-         Cartographic) {
+        './freezeObject',
+        './Math'
+    ], function(
+        Cartesian3,
+        Cartographic,
+        defaultValue,
+        defined,
+        defineProperties,
+        DeveloperError,
+        freezeObject,
+        CesiumMath) {
     "use strict";
 
     /**
@@ -2363,9 +2667,9 @@ define('Core/Ellipsoid',[
      * Converts the provided array of cartographics to an array of Cartesians.
      * @memberof Ellipsoid
      *
-     * @param {Array} cartographics An array of cartographic positions.
-     * @param {Array} [result] The object onto which to store the result.
-     * @returns {Array} The modified result parameter or a new Array instance if none was provided.
+     * @param {Cartographic[]} cartographics An array of cartographic positions.
+     * @param {Cartesian3[]} [result] The object onto which to store the result.
+     * @returns {Cartesian3[]} The modified result parameter or a new Array instance if none was provided.
      *
      * @example
      * //Convert an array of Cartographics and determine their Cartesian representation on a WGS84 ellipsoid.
@@ -2437,15 +2741,15 @@ define('Core/Ellipsoid',[
      * Converts the provided array of cartesians to an array of cartographics.
      * @memberof Ellipsoid
      *
-     * @param {Array} cartesians An array of Cartesian positions.
-     * @param {Array} [result] The object onto which to store the result.
-     * @returns {Array} The modified result parameter or a new Array instance if none was provided.
+     * @param {Cartesian3[]} cartesians An array of Cartesian positions.
+     * @param {Cartographic[]} [result] The object onto which to store the result.
+     * @returns {Cartographic[]} The modified result parameter or a new Array instance if none was provided.
      *
      * @example
      * //Create an array of Cartesians and determine their Cartographic representation on a WGS84 ellipsoid.
-     * var positions = [new Cesium.Cartesian(17832.12, 83234.52, 952313.73),
-     *                  new Cesium.Cartesian(17832.13, 83234.53, 952313.73),
-     *                  new Cesium.Cartesian(17832.14, 83234.54, 952313.73)]
+     * var positions = [new Cesium.Cartesian3(17832.12, 83234.52, 952313.73),
+     *                  new Cesium.Cartesian3(17832.13, 83234.53, 952313.73),
+     *                  new Cesium.Cartesian3(17832.14, 83234.54, 952313.73)]
      * var cartographicPositions = Cesium.Ellipsoid.WGS84.cartesianArrayToCartographicArray(positions);
      */
     Ellipsoid.prototype.cartesianArrayToCartographicArray = function(cartesians, result) {
@@ -2727,8 +3031,8 @@ define('Workers/createTaskProcessorWorker',[
      * // the resulting function is compatible with TaskProcessor
      *
      * @see TaskProcessor
-     * @see <a href='http://www.w3.org/TR/workers/'>Web Workers</a>
-     * @see <a href='http://www.w3.org/TR/html5/common-dom-interfaces.html#transferable-objects'>Transferable objects</a>
+     * @see {@link http://www.w3.org/TR/workers/|Web Workers}
+     * @see {@link http://www.w3.org/TR/html5/common-dom-interfaces.html#transferable-objects|Transferable objects}
      */
     var createTaskProcessorWorker = function(workerFunction) {
         var postMessage;

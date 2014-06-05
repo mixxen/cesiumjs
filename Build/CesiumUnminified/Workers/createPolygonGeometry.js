@@ -45,7 +45,10 @@ define('Core/defined',[],function() {
 });
 
 /*global define*/
-define('Core/freezeObject',['./defined'], function(defined) {
+define('Core/freezeObject',[
+        './defined'
+    ], function(
+        defined) {
     "use strict";
 
     /**
@@ -98,7 +101,10 @@ define('Core/defaultValue',[
     return defaultValue;
 });
 /*global define*/
-define('Core/DeveloperError',['./defined'], function(defined) {
+define('Core/DeveloperError',[
+        './defined'
+    ], function(
+        defined) {
     "use strict";
 
     /**
@@ -113,7 +119,7 @@ define('Core/DeveloperError',['./defined'], function(defined) {
      *
      * @alias DeveloperError
      *
-     * @param {String} [message=undefined] The error message for this exception.
+     * @param {String} [message] The error message for this exception.
      *
      * @see RuntimeError
      * @constructor
@@ -167,709 +173,6 @@ define('Core/DeveloperError',['./defined'], function(defined) {
     };
 
     return DeveloperError;
-});
-
-/*global define*/
-define('Core/Cartesian2',[
-        './defaultValue',
-        './defined',
-        './DeveloperError',
-        './freezeObject'
-    ], function(
-        defaultValue,
-        defined,
-        DeveloperError,
-        freezeObject) {
-    "use strict";
-
-    /**
-     * A 2D Cartesian point.
-     * @alias Cartesian2
-     * @constructor
-     *
-     * @param {Number} [x=0.0] The X component.
-     * @param {Number} [y=0.0] The Y component.
-     *
-     * @see Packable
-     * @see Cartesian3
-     * @see Cartesian4
-     */
-    var Cartesian2 = function(x, y) {
-        /**
-         * The Y component.
-         * @type {Number}
-         * @default 0.0
-         */
-        this.x = defaultValue(x, 0.0);
-
-        /**
-         * The X component.
-         * @type {Number}
-         * @default 0.0
-         */
-        this.y = defaultValue(y, 0.0);
-    };
-
-    /**
-     * Creates a Cartesian2 instance from x and y coordinates.
-     * @memberof Cartesian2
-     *
-     * @param {Number} x The x coordinate.
-     * @param {Number} y The y coordinate.
-     * @param {Cartesian2} [result] The object onto which to store the result.
-     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
-     */
-    Cartesian2.fromElements = function(x, y, result) {
-        if (!defined(result)) {
-            return new Cartesian2(x, y);
-        }
-
-        result.x = x;
-        result.y = y;
-        return result;
-    };
-
-    /**
-     * Duplicates a Cartesian2 instance.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} cartesian The Cartesian to duplicate.
-     * @param {Cartesian2} [result] The object onto which to store the result.
-     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided. (Returns undefined if cartesian is undefined)
-     */
-    Cartesian2.clone = function(cartesian, result) {
-        if (!defined(cartesian)) {
-            return undefined;
-        }
-
-        if (!defined(result)) {
-            return new Cartesian2(cartesian.x, cartesian.y);
-        }
-
-        result.x = cartesian.x;
-        result.y = cartesian.y;
-        return result;
-    };
-
-    /**
-     * Creates a Cartesian2 instance from an existing Cartesian3.  This simply takes the
-     * x and y properties of the Cartesian3 and drops z.
-     * @memberof Cartesian2
-     * @function
-     *
-     * @param {Cartesian3} cartesian The Cartesian3 instance to create a Cartesian2 instance from.
-     * @param {Cartesian2} [result] The object onto which to store the result.
-     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
-     */
-    Cartesian2.fromCartesian3 = Cartesian2.clone;
-
-    /**
-     * Creates a Cartesian2 instance from an existing Cartesian4.  This simply takes the
-     * x and y properties of the Cartesian4 and drops z and w.
-     * @function
-     *
-     * @param {Cartesian4} cartesian The Cartesian4 instance to create a Cartesian2 instance from.
-     * @param {Cartesian2} [result] The object onto which to store the result.
-     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
-     */
-    Cartesian2.fromCartesian4 = Cartesian2.clone;
-
-    /**
-     * The number of elements used to pack the object into an array.
-     * @Type {Number}
-     */
-    Cartesian2.packedLength = 2;
-
-    /**
-     * Stores the provided instance into the provided array.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} value The value to pack.
-     * @param {Array} array The array to pack into.
-     * @param {Number} [startingIndex=0] The index into the array at which to start packing the elements.
-     */
-    Cartesian2.pack = function(value, array, startingIndex) {
-                if (!defined(value)) {
-            throw new DeveloperError('value is required');
-        }
-
-        if (!defined(array)) {
-            throw new DeveloperError('array is required');
-        }
-        
-        startingIndex = defaultValue(startingIndex, 0);
-
-        array[startingIndex++] = value.x;
-        array[startingIndex] = value.y;
-    };
-
-    /**
-     * Retrieves an instance from a packed array.
-     * @memberof Cartesian2
-     *
-     * @param {Array} array The packed array.
-     * @param {Number} [startingIndex=0] The starting index of the element to be unpacked.
-     * @param {Cartesian2} [result] The object into which to store the result.
-     */
-    Cartesian2.unpack = function(array, startingIndex, result) {
-                if (!defined(array)) {
-            throw new DeveloperError('array is required');
-        }
-        
-        startingIndex = defaultValue(startingIndex, 0);
-
-        if (!defined(result)) {
-            result = new Cartesian2();
-        }
-        result.x = array[startingIndex++];
-        result.y = array[startingIndex];
-        return result;
-    };
-
-    /**
-     * Creates a Cartesian2 from two consecutive elements in an array.
-     * @memberof Cartesian2
-     *
-     * @param {Array} array The array whose two consecutive elements correspond to the x and y components, respectively.
-     * @param {Number} [startingIndex=0] The offset into the array of the first element, which corresponds to the x component.
-     * @param {Cartesian2} [result] The object onto which to store the result.
-     *
-     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
-     *
-     * @example
-     * // Create a Cartesian2 with (1.0, 2.0)
-     * var v = [1.0, 2.0];
-     * var p = Cesium.Cartesian2.fromArray(v);
-     *
-     * // Create a Cartesian2 with (1.0, 2.0) using an offset into an array
-     * var v2 = [0.0, 0.0, 1.0, 2.0];
-     * var p2 = Cesium.Cartesian2.fromArray(v2, 2);
-     */
-    Cartesian2.fromArray = Cartesian2.unpack;
-
-    /**
-     * Computes the value of the maximum component for the supplied Cartesian.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} The cartesian to use.
-     * @returns {Number} The value of the maximum component.
-     */
-    Cartesian2.getMaximumComponent = function(cartesian) {
-                if (!defined(cartesian)) {
-            throw new DeveloperError('cartesian is required');
-        }
-        
-        return Math.max(cartesian.x, cartesian.y);
-    };
-
-    /**
-     * Computes the value of the minimum component for the supplied Cartesian.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} The cartesian to use.
-     * @returns {Number} The value of the minimum component.
-     */
-    Cartesian2.getMinimumComponent = function(cartesian) {
-                if (!defined(cartesian)) {
-            throw new DeveloperError('cartesian is required');
-        }
-        
-        return Math.min(cartesian.x, cartesian.y);
-    };
-
-    /**
-     * Compares two Cartesians and computes a Cartesian which contains the minimum components of the supplied Cartesians.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} first A cartesian to compare.
-     * @param {Cartesian2} second A cartesian to compare.
-     * @param {Cartesian2} [result] The object into which to store the result.
-     * @returns {Cartesian2} A cartesian with the minimum components.
-     */
-    Cartesian2.getMinimumByComponent = function(first, second, result) {
-                if (!defined(first)) {
-            throw new DeveloperError('first is required.');
-        }
-        if (!defined(second)) {
-            throw new DeveloperError('second is required.');
-        }
-        
-        if (!defined(result)) {
-            result = new Cartesian2();
-        }
-
-        result.x = Math.min(first.x, second.x);
-        result.y = Math.min(first.y, second.y);
-
-        return result;
-    };
-
-    /**
-     * Compares two Cartesians and computes a Cartesian which contains the maximum components of the supplied Cartesians.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} first A cartesian to compare.
-     * @param {Cartesian2} second A cartesian to compare.
-     * @param {Cartesian2} [result] The object into which to store the result.
-     * @returns {Cartesian2} A cartesian with the maximum components.
-     */
-    Cartesian2.getMaximumByComponent = function(first, second, result) {
-                if (!defined(first)) {
-            throw new DeveloperError('first is required.');
-        }
-        if (!defined(second)) {
-            throw new DeveloperError('second is required.');
-        }
-        
-        if (!defined(result)) {
-            result = new Cartesian2();
-        }
-
-        result.x = Math.max(first.x, second.x);
-        result.y = Math.max(first.y, second.y);
-        return result;
-    };
-
-    /**
-     * Computes the provided Cartesian's squared magnitude.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} cartesian The Cartesian instance whose squared magnitude is to be computed.
-     * @returns {Number} The squared magnitude.
-     */
-    Cartesian2.magnitudeSquared = function(cartesian) {
-                if (!defined(cartesian)) {
-            throw new DeveloperError('cartesian is required');
-        }
-        
-        return cartesian.x * cartesian.x + cartesian.y * cartesian.y;
-    };
-
-    /**
-     * Computes the Cartesian's magnitude (length).
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} cartesian The Cartesian instance whose magnitude is to be computed.
-     * @returns {Number} The magnitude.
-     */
-    Cartesian2.magnitude = function(cartesian) {
-        return Math.sqrt(Cartesian2.magnitudeSquared(cartesian));
-    };
-
-    var distanceScratch = new Cartesian2();
-
-    /**
-     * Computes the distance between two points
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} left The first point to compute the distance from.
-     * @param {Cartesian2} right The second point to compute the distance to.
-     *
-     * @returns {Number} The distance between two points.
-     *
-     * @example
-     * // Returns 1.0
-     * var d = Cesium.Cartesian2.distance(new Cesium.Cartesian2(1.0, 0.0), new Cesium.Cartesian2(2.0, 0.0));
-     */
-    Cartesian2.distance = function(left, right) {
-                if (!defined(left) || !defined(right)) {
-            throw new DeveloperError('left and right are required.');
-        }
-        
-        Cartesian2.subtract(left, right, distanceScratch);
-        return Cartesian2.magnitude(distanceScratch);
-    };
-
-    /**
-     * Computes the normalized form of the supplied Cartesian.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} cartesian The Cartesian to be normalized.
-     * @param {Cartesian2} [result] The object onto which to store the result.
-     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
-     */
-    Cartesian2.normalize = function(cartesian, result) {
-                if (!defined(cartesian)) {
-            throw new DeveloperError('cartesian is required');
-        }
-        
-        var magnitude = Cartesian2.magnitude(cartesian);
-        if (!defined(result)) {
-            return new Cartesian2(cartesian.x / magnitude, cartesian.y / magnitude);
-        }
-        result.x = cartesian.x / magnitude;
-        result.y = cartesian.y / magnitude;
-        return result;
-    };
-
-    /**
-     * Computes the dot (scalar) product of two Cartesians.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} left The first Cartesian.
-     * @param {Cartesian2} right The second Cartesian.
-     * @returns {Number} The dot product.
-     */
-    Cartesian2.dot = function(left, right) {
-                if (!defined(left)) {
-            throw new DeveloperError('left is required');
-        }
-        if (!defined(right)) {
-            throw new DeveloperError('right is required');
-        }
-        
-        return left.x * right.x + left.y * right.y;
-    };
-
-    /**
-     * Computes the componentwise product of two Cartesians.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} left The first Cartesian.
-     * @param {Cartesian2} right The second Cartesian.
-     * @param {Cartesian2} [result] The object onto which to store the result.
-     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
-     */
-    Cartesian2.multiplyComponents = function(left, right, result) {
-                if (!defined(left)) {
-            throw new DeveloperError('left is required');
-        }
-        if (!defined(right)) {
-            throw new DeveloperError('right is required');
-        }
-        
-        if (!defined(result)) {
-            return new Cartesian2(left.x * right.x, left.y * right.y);
-        }
-        result.x = left.x * right.x;
-        result.y = left.y * right.y;
-        return result;
-    };
-
-    /**
-     * Computes the componentwise sum of two Cartesians.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} left The first Cartesian.
-     * @param {Cartesian2} right The second Cartesian.
-     * @param {Cartesian2} [result] The object onto which to store the result.
-     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
-     */
-    Cartesian2.add = function(left, right, result) {
-                if (!defined(left)) {
-            throw new DeveloperError('left is required');
-        }
-        if (!defined(right)) {
-            throw new DeveloperError('right is required');
-        }
-        
-        if (!defined(result)) {
-            return new Cartesian2(left.x + right.x, left.y + right.y);
-        }
-        result.x = left.x + right.x;
-        result.y = left.y + right.y;
-        return result;
-    };
-
-    /**
-     * Computes the componentwise difference of two Cartesians.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} left The first Cartesian.
-     * @param {Cartesian2} right The second Cartesian.
-     * @param {Cartesian2} [result] The object onto which to store the result.
-     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
-     */
-    Cartesian2.subtract = function(left, right, result) {
-                if (!defined(left)) {
-            throw new DeveloperError('left is required');
-        }
-        if (!defined(right)) {
-            throw new DeveloperError('right is required');
-        }
-        
-        if (!defined(result)) {
-            return new Cartesian2(left.x - right.x, left.y - right.y);
-        }
-        result.x = left.x - right.x;
-        result.y = left.y - right.y;
-        return result;
-    };
-
-    /**
-     * Multiplies the provided Cartesian componentwise by the provided scalar.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} cartesian The Cartesian to be scaled.
-     * @param {Number} scalar The scalar to multiply with.
-     * @param {Cartesian2} [result] The object onto which to store the result.
-     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
-     */
-    Cartesian2.multiplyByScalar = function(cartesian, scalar, result) {
-                if (!defined(cartesian)) {
-            throw new DeveloperError('cartesian is required');
-        }
-        if (typeof scalar !== 'number') {
-            throw new DeveloperError('scalar is required and must be a number.');
-        }
-        
-        if (!defined(result)) {
-            return new Cartesian2(cartesian.x * scalar, cartesian.y * scalar);
-        }
-        result.x = cartesian.x * scalar;
-        result.y = cartesian.y * scalar;
-        return result;
-    };
-
-    /**
-     * Divides the provided Cartesian componentwise by the provided scalar.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} cartesian The Cartesian to be divided.
-     * @param {Number} scalar The scalar to divide by.
-     * @param {Cartesian2} [result] The object onto which to store the result.
-     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
-     */
-    Cartesian2.divideByScalar = function(cartesian, scalar, result) {
-                if (!defined(cartesian)) {
-            throw new DeveloperError('cartesian is required');
-        }
-        if (typeof scalar !== 'number') {
-            throw new DeveloperError('scalar is required and must be a number.');
-        }
-        
-        if (!defined(result)) {
-            return new Cartesian2(cartesian.x / scalar, cartesian.y / scalar);
-        }
-        result.x = cartesian.x / scalar;
-        result.y = cartesian.y / scalar;
-        return result;
-    };
-
-    /**
-     * Negates the provided Cartesian.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} cartesian The Cartesian to be negated.
-     * @param {Cartesian2} [result] The object onto which to store the result.
-     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
-     */
-    Cartesian2.negate = function(cartesian, result) {
-                if (!defined(cartesian)) {
-            throw new DeveloperError('cartesian is required');
-        }
-        
-        if (!defined(result)) {
-            return new Cartesian2(-cartesian.x, -cartesian.y);
-        }
-        result.x = -cartesian.x;
-        result.y = -cartesian.y;
-        return result;
-    };
-
-    /**
-     * Computes the absolute value of the provided Cartesian.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} cartesian The Cartesian whose absolute value is to be computed.
-     * @param {Cartesian2} [result] The object onto which to store the result.
-     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
-     */
-    Cartesian2.abs = function(cartesian, result) {
-                if (!defined(cartesian)) {
-            throw new DeveloperError('cartesian is required');
-        }
-        
-        if (!defined(result)) {
-            return new Cartesian2(Math.abs(cartesian.x), Math.abs(cartesian.y));
-        }
-        result.x = Math.abs(cartesian.x);
-        result.y = Math.abs(cartesian.y);
-        return result;
-    };
-
-    var lerpScratch = new Cartesian2();
-    /**
-     * Computes the linear interpolation or extrapolation at t using the provided cartesians.
-     * @memberof Cartesian2
-     *
-     * @param start The value corresponding to t at 0.0.
-     * @param end The value corresponding to t at 1.0.
-     * @param t The point along t at which to interpolate.
-     * @param {Cartesian2} [result] The object onto which to store the result.
-     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
-     */
-    Cartesian2.lerp = function(start, end, t, result) {
-                if (!defined(start)) {
-            throw new DeveloperError('start is required.');
-        }
-        if (!defined(end)) {
-            throw new DeveloperError('end is required.');
-        }
-        if (typeof t !== 'number') {
-            throw new DeveloperError('t is required and must be a number.');
-        }
-        
-        Cartesian2.multiplyByScalar(end, t, lerpScratch);
-        result = Cartesian2.multiplyByScalar(start, 1.0 - t, result);
-        return Cartesian2.add(lerpScratch, result, result);
-    };
-
-    var angleBetweenScratch = new Cartesian2();
-    var angleBetweenScratch2 = new Cartesian2();
-    /**
-     * Returns the angle, in radians, between the provided Cartesians.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} left The first Cartesian.
-     * @param {Cartesian2} right The second Cartesian.
-     * @returns {Number} The angle between the Cartesians.
-     */
-    Cartesian2.angleBetween = function(left, right) {
-                if (!defined(left)) {
-            throw new DeveloperError('left is required');
-        }
-        if (!defined(right)) {
-            throw new DeveloperError('right is required');
-        }
-        
-        Cartesian2.normalize(left, angleBetweenScratch);
-        Cartesian2.normalize(right, angleBetweenScratch2);
-        return Math.acos(Cartesian2.dot(angleBetweenScratch, angleBetweenScratch2));
-    };
-
-    var mostOrthogonalAxisScratch = new Cartesian2();
-    /**
-     * Returns the axis that is most orthogonal to the provided Cartesian.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} cartesian The Cartesian on which to find the most orthogonal axis.
-     * @param {Cartesian2} [result] The object onto which to store the result.
-     * @returns {Cartesian2} The most orthogonal axis.
-     */
-    Cartesian2.mostOrthogonalAxis = function(cartesian, result) {
-                if (!defined(cartesian)) {
-            throw new DeveloperError('cartesian is required.');
-        }
-        
-        var f = Cartesian2.normalize(cartesian, mostOrthogonalAxisScratch);
-        Cartesian2.abs(f, f);
-
-        if (f.x <= f.y) {
-            result = Cartesian2.clone(Cartesian2.UNIT_X, result);
-        } else {
-            result = Cartesian2.clone(Cartesian2.UNIT_Y, result);
-        }
-
-        return result;
-    };
-
-    /**
-     * Compares the provided Cartesians componentwise and returns
-     * <code>true</code> if they are equal, <code>false</code> otherwise.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} [left] The first Cartesian.
-     * @param {Cartesian2} [right] The second Cartesian.
-     * @returns {Boolean} <code>true</code> if left and right are equal, <code>false</code> otherwise.
-     */
-    Cartesian2.equals = function(left, right) {
-        return (left === right) ||
-               ((defined(left)) &&
-                (defined(right)) &&
-                (left.x === right.x) &&
-                (left.y === right.y));
-    };
-
-    /**
-     * Compares the provided Cartesians componentwise and returns
-     * <code>true</code> if they are within the provided epsilon,
-     * <code>false</code> otherwise.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} [left] The first Cartesian.
-     * @param {Cartesian2} [right] The second Cartesian.
-     * @param {Number} epsilon The epsilon to use for equality testing.
-     * @returns {Boolean} <code>true</code> if left and right are within the provided epsilon, <code>false</code> otherwise.
-     */
-    Cartesian2.equalsEpsilon = function(left, right, epsilon) {
-                if (typeof epsilon !== 'number') {
-            throw new DeveloperError('epsilon is required and must be a number.');
-        }
-        
-        return (left === right) ||
-               ((defined(left)) &&
-                (defined(right)) &&
-                (Math.abs(left.x - right.x) <= epsilon) &&
-                (Math.abs(left.y - right.y) <= epsilon));
-    };
-
-    /**
-     * An immutable Cartesian2 instance initialized to (0.0, 0.0).
-     * @memberof Cartesian2
-     */
-    Cartesian2.ZERO = freezeObject(new Cartesian2(0.0, 0.0));
-
-    /**
-     * An immutable Cartesian2 instance initialized to (1.0, 0.0).
-     * @memberof Cartesian2
-     */
-    Cartesian2.UNIT_X = freezeObject(new Cartesian2(1.0, 0.0));
-
-    /**
-     * An immutable Cartesian2 instance initialized to (0.0, 1.0).
-     * @memberof Cartesian2
-     */
-    Cartesian2.UNIT_Y = freezeObject(new Cartesian2(0.0, 1.0));
-
-    /**
-     * Duplicates this Cartesian2 instance.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} [result] The object onto which to store the result.
-     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
-     */
-    Cartesian2.prototype.clone = function(result) {
-        return Cartesian2.clone(this, result);
-    };
-
-    /**
-     * Compares this Cartesian against the provided Cartesian componentwise and returns
-     * <code>true</code> if they are equal, <code>false</code> otherwise.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} [right] The right hand side Cartesian.
-     * @returns {Boolean} <code>true</code> if they are equal, <code>false</code> otherwise.
-     */
-    Cartesian2.prototype.equals = function(right) {
-        return Cartesian2.equals(this, right);
-    };
-
-    /**
-     * Compares this Cartesian against the provided Cartesian componentwise and returns
-     * <code>true</code> if they are within the provided epsilon,
-     * <code>false</code> otherwise.
-     * @memberof Cartesian2
-     *
-     * @param {Cartesian2} [right] The right hand side Cartesian.
-     * @param {Number} epsilon The epsilon to use for equality testing.
-     * @returns {Boolean} <code>true</code> if they are within the provided epsilon, <code>false</code> otherwise.
-     */
-    Cartesian2.prototype.equalsEpsilon = function(right, epsilon) {
-        return Cartesian2.equalsEpsilon(this, right, epsilon);
-    };
-
-    /**
-     * Creates a string representing this Cartesian in the format '(x, y)'.
-     * @memberof Cartesian2
-     *
-     * @returns {String} A string representing the provided Cartesian in the format '(x, y)'.
-     */
-    Cartesian2.prototype.toString = function() {
-        return '(' + this.x + ', ' + this.y + ')';
-    };
-
-    return Cartesian2;
 });
 
 /*
@@ -1077,15 +380,15 @@ return MersenneTwister;
 });
 /*global define*/
 define('Core/Math',[
+        '../ThirdParty/mersenne-twister',
         './defaultValue',
         './defined',
-        './DeveloperError',
-        '../ThirdParty/mersenne-twister'
-       ], function(
-         defaultValue,
-         defined,
-         DeveloperError,
-         MersenneTwister) {
+        './DeveloperError'
+    ], function(
+        MersenneTwister,
+        defaultValue,
+        defined,
+        DeveloperError) {
     "use strict";
 
     /**
@@ -1301,7 +604,7 @@ define('Core/Math',[
      *   </ul>
      *</p>
      *
-     * @param value The number whose hyperbolic sine is to be returned.
+     * @param {Number} value The number whose hyperbolic sine is to be returned.
      *
      * @returns The hyperbolic sine of {@code value}.
      */
@@ -1328,7 +631,7 @@ define('Core/Math',[
      *   </ul>
      *</p>
      *
-     * @param value The number whose hyperbolic cosine is to be returned.
+     * @param {Number} value The number whose hyperbolic cosine is to be returned.
      *
      * @returns The hyperbolic cosine of {@code value}.
      */
@@ -1340,7 +643,15 @@ define('Core/Math',[
     };
 
     /**
-     * DOC_TBA
+     * Computes the linear interpolation of two values.
+     *
+     * @param {Number} p The start value to interpolate.
+     * @param {Number} q The end value to interpolate.
+     * @param {Number} time The time of interpolation generally in the range <code>[0.0, 1.0]</code>.
+     * @returns {Number} The linearly interpolated value.
+     *
+     * @example
+     * var n = Cesium.Math.lerp(0.0, 2.0, 0.5); // returns 1.0
      */
     CesiumMath.lerp = function(p, q, time) {
         return ((1.0 - time) * p) + (time * q);
@@ -1463,7 +774,10 @@ define('Core/Math',[
      * @returns {Number} The corresponding angle in radians.
      */
     CesiumMath.toRadians = function(degrees) {
-        return degrees * CesiumMath.RADIANS_PER_DEGREE;
+                if (!defined(degrees)) {
+            throw new DeveloperError('degrees is required.');
+        }
+                return degrees * CesiumMath.RADIANS_PER_DEGREE;
     };
 
     /**
@@ -1472,7 +786,10 @@ define('Core/Math',[
      * @returns {Number} The corresponding angle in degrees.
      */
     CesiumMath.toDegrees = function(radians) {
-        return radians * CesiumMath.DEGREES_PER_RADIAN;
+                if (!defined(radians)) {
+            throw new DeveloperError('radians is required.');
+        }
+                return radians * CesiumMath.DEGREES_PER_RADIAN;
     };
 
     /**
@@ -1487,7 +804,10 @@ define('Core/Math',[
      * var longitude = Cesium.Math.convertLongitudeRange(Cesium.Math.toRadians(270.0));
      */
     CesiumMath.convertLongitudeRange = function(angle) {
-        var twoPi = CesiumMath.TWO_PI;
+                if (!defined(angle)) {
+            throw new DeveloperError('angle is required.');
+        }
+                var twoPi = CesiumMath.TWO_PI;
 
         var simplified = angle - Math.floor(angle / twoPi) * twoPi;
 
@@ -1507,7 +827,10 @@ define('Core/Math',[
      * @returns {Number} The angle in the range ()<code>-CesiumMath.PI</code>, <code>CesiumMath.PI</code>).
      */
     CesiumMath.negativePiToPi = function(x) {
-        var epsilon10 = CesiumMath.EPSILON10;
+                if (!defined(x)) {
+            throw new DeveloperError('x is required.');
+        }
+                var epsilon10 = CesiumMath.EPSILON10;
         var pi = CesiumMath.PI;
         var two_pi = CesiumMath.TWO_PI;
         while (x < -(pi + epsilon10)) {
@@ -1528,17 +851,37 @@ define('Core/Math',[
      * @returns {Number} The angle in the range (0 , <code>CesiumMath.TWO_PI</code>).
      */
     CesiumMath.zeroToTwoPi = function(x) {
-        var value = x % CesiumMath.TWO_PI;
+                if (!defined(x)) {
+            throw new DeveloperError('x is required.');
+        }
+                var value = x % CesiumMath.TWO_PI;
         // We do a second modules here if we add 2Pi to ensure that we don't have any numerical issues with very
         // small negative values.
         return (value < 0.0) ? (value + CesiumMath.TWO_PI) % CesiumMath.TWO_PI : value;
     };
 
     /**
-     * DOC_TBA
+     * Determines if two values are equal within the provided epsilon.  This is useful
+     * to avoid problems due to roundoff error when comparing floating-point values directly.
+     *
+     * @param {Number} left The first value to compare.
+     * @param {Number} right The other value to compare.
+     * @param {Number} [epsilon=0.0] The maximum inclusive delta between <code>left</code> and <code>right</code> where they will be considered equal.
+     * @returns {Boolean} <code>true</code> if the values are equal within the epsilon; otherwise, <code>false</code>.
+     *
+     * @example
+     * var b = Cesium.Math.equalsEpsilon(0.0, 0.01, Cesium.Math.EPSILON2); // true
+     * var b = Cesium.Math.equalsEpsilon(0.0, 0.1, Cesium.Math.EPSILON2);  // false
      */
     CesiumMath.equalsEpsilon = function(left, right, epsilon) {
-        epsilon = defaultValue(epsilon, 0.0);
+                if (!defined(left)) {
+            throw new DeveloperError('left is required.');
+        }
+
+        if (!defined(right)) {
+            throw new DeveloperError('right is required.');
+        }
+                epsilon = defaultValue(epsilon, 0.0);
         return Math.abs(left - right) <= epsilon;
     };
 
@@ -1553,7 +896,7 @@ define('Core/Math',[
      *
      * @returns {Number} The factorial of the provided number or undefined if the number is less than 0.
      *
-     * @see <a href='http://en.wikipedia.org/wiki/Factorial'>Factorial on Wikipedia</a>.
+     * @see {@link http://en.wikipedia.org/wiki/Factorial|Factorial on Wikipedia}
      *
      * @example
      * //Compute 7!, which is equal to 5040
@@ -1596,8 +939,11 @@ define('Core/Math',[
     CesiumMath.incrementWrap = function(n, maximumValue, minimumValue) {
         minimumValue = defaultValue(minimumValue, 0.0);
 
-                if (maximumValue <= minimumValue) {
-            throw new DeveloperError('Maximum value must be greater than minimum value.');
+                if (!defined(n)) {
+            throw new DeveloperError('n is required.');
+        }
+        if (maximumValue <= minimumValue) {
+            throw new DeveloperError('maximumValue must be greater than minimumValue.');
         }
         
         ++n;
@@ -1673,7 +1019,16 @@ define('Core/Math',[
      * @returns The value clamped so that min <= value <= max.
      */
     CesiumMath.clamp = function(value, min, max) {
-        return value < min ? min : value > max ? max : value;
+                if (!defined(value)) {
+            throw new DeveloperError('value is required');
+        }
+        if (!defined(min)) {
+            throw new DeveloperError('min is required.');
+        }
+        if (!defined(max)) {
+            throw new DeveloperError('max is required.');
+        }
+                return value < min ? min : value > max ? max : value;
     };
 
     var randomNumberGenerator = new MersenneTwister();
@@ -1702,8 +1057,8 @@ define('Core/Math',[
      *
      * @returns A random number in the range of [0.0, 1.0).
      *
-     * @see CesiumMath#setRandomNumberSeed
-     * @see http://en.wikipedia.org/wiki/Mersenne_twister
+     * @see CesiumMath.setRandomNumberSeed
+     * @see {@link http://en.wikipedia.org/wiki/Mersenne_twister|Mersenne twister on Wikipedia}
      */
     CesiumMath.nextRandomNumber = function() {
         return randomNumberGenerator.random();
@@ -1713,7 +1068,7 @@ define('Core/Math',[
 });
 
 /*global define*/
-define('Core/Cartographic',[
+define('Core/Cartesian3',[
         './defaultValue',
         './defined',
         './DeveloperError',
@@ -1725,246 +1080,6 @@ define('Core/Cartographic',[
         DeveloperError,
         freezeObject,
         CesiumMath) {
-    "use strict";
-
-    /**
-     * A position defined by longitude, latitude, and height.
-     * @alias Cartographic
-     * @constructor
-     *
-     * @param {Number} [longitude=0.0] The longitude, in radians.
-     * @param {Number} [latitude=0.0] The latitude, in radians.
-     * @param {Number} [height=0.0] The height, in meters, above the ellipsoid.
-     *
-     * @see Ellipsoid
-     */
-    var Cartographic = function(longitude, latitude, height) {
-        /**
-         * The longitude, in radians.
-         * @type {Number}
-         * @default 0.0
-         */
-        this.longitude = defaultValue(longitude, 0.0);
-
-        /**
-         * The latitude, in radians.
-         * @type {Number}
-         * @default 0.0
-         */
-        this.latitude = defaultValue(latitude, 0.0);
-
-        /**
-         * The height, in meters, above the ellipsoid.
-         * @type {Number}
-         * @default 0.0
-         */
-        this.height = defaultValue(height, 0.0);
-    };
-
-    /**
-     * Creates a new Cartographic instance from longitude and latitude
-     * specified in degrees.  The values in the resulting object will
-     * be in radians.
-     * @memberof Cartographic
-     *
-     * @param {Number} [longitude=0.0] The longitude, in degrees.
-     * @param {Number} [latitude=0.0] The latitude, in degrees.
-     * @param {Number} [height=0.0] The height, in meters, above the ellipsoid.
-     * @param {Cartographic} [result] The object onto which to store the result.
-     * @returns {Cartographic} The modified result parameter or a new Cartographic instance if one was not provided.
-     */
-    Cartographic.fromDegrees = function(longitude, latitude, height, result) {
-        longitude = CesiumMath.toRadians(defaultValue(longitude, 0.0));
-        latitude = CesiumMath.toRadians(defaultValue(latitude, 0.0));
-        height = defaultValue(height, 0.0);
-
-        if (!defined(result)) {
-            return new Cartographic(longitude, latitude, height);
-        }
-
-        result.longitude = longitude;
-        result.latitude = latitude;
-        result.height = height;
-        return result;
-    };
-
-    /**
-     * Duplicates a Cartographic instance.
-     * @memberof Cartographic
-     *
-     * @param {Cartographic} cartographic The cartographic to duplicate.
-     * @param {Cartographic} [result] The object onto which to store the result.
-     * @returns {Cartographic} The modified result parameter or a new Cartographic instance if one was not provided. (Returns undefined if cartographic is undefined)
-     */
-    Cartographic.clone = function(cartographic, result) {
-        if (!defined(cartographic)) {
-            return undefined;
-        }
-        if (!defined(result)) {
-            return new Cartographic(cartographic.longitude, cartographic.latitude, cartographic.height);
-        }
-        result.longitude = cartographic.longitude;
-        result.latitude = cartographic.latitude;
-        result.height = cartographic.height;
-        return result;
-    };
-
-    /**
-     * Compares the provided cartographics componentwise and returns
-     * <code>true</code> if they are equal, <code>false</code> otherwise.
-     * @memberof Cartographic
-     *
-     * @param {Cartographic} [left] The first cartographic.
-     * @param {Cartographic} [right] The second cartographic.
-     * @returns {Boolean} <code>true</code> if left and right are equal, <code>false</code> otherwise.
-     */
-    Cartographic.equals = function(left, right) {
-        return (left === right) ||
-                ((defined(left)) &&
-                 (defined(right)) &&
-                 (left.longitude === right.longitude) &&
-                 (left.latitude === right.latitude) &&
-                 (left.height === right.height));
-    };
-
-    /**
-     * Compares the provided cartographics componentwise and returns
-     * <code>true</code> if they are within the provided epsilon,
-     * <code>false</code> otherwise.
-     * @memberof Cartographic
-     *
-     * @param {Cartographic} [left] The first cartographic.
-     * @param {Cartographic} [right] The second cartographic.
-     * @param {Number} epsilon The epsilon to use for equality testing.
-     * @returns {Boolean} <code>true</code> if left and right are within the provided epsilon, <code>false</code> otherwise.
-     */
-    Cartographic.equalsEpsilon = function(left, right, epsilon) {
-                if (typeof epsilon !== 'number') {
-            throw new DeveloperError('epsilon is required and must be a number.');
-        }
-        
-        return (left === right) ||
-               ((defined(left)) &&
-                (defined(right)) &&
-                (Math.abs(left.longitude - right.longitude) <= epsilon) &&
-                (Math.abs(left.latitude - right.latitude) <= epsilon) &&
-                (Math.abs(left.height - right.height) <= epsilon));
-    };
-
-    /**
-     * Creates a string representing the provided cartographic in the format '(longitude, latitude, height)'.
-     * @memberof Cartographic
-     *
-     * @param {Cartographic} cartographic The cartographic to stringify.
-     * @returns {String} A string representing the provided cartographic in the format '(longitude, latitude, height)'.
-     */
-    Cartographic.toString = function(cartographic) {
-                if (!defined(cartographic)) {
-            throw new DeveloperError('cartographic is required');
-        }
-        
-        return '(' + cartographic.longitude + ', ' + cartographic.latitude + ', ' + cartographic.height + ')';
-    };
-
-    /**
-     * An immutable Cartographic instance initialized to (0.0, 0.0, 0.0).
-     *
-     * @memberof Cartographic
-     */
-    Cartographic.ZERO = freezeObject(new Cartographic(0.0, 0.0, 0.0));
-
-    /**
-     * Duplicates this instance.
-     * @memberof Cartographic
-     *
-     * @param {Cartographic} [result] The object onto which to store the result.
-     * @returns {Cartographic} The modified result parameter or a new Cartographic instance if one was not provided.
-     */
-    Cartographic.prototype.clone = function(result) {
-        return Cartographic.clone(this, result);
-    };
-
-    /**
-     * Compares the provided against this cartographic componentwise and returns
-     * <code>true</code> if they are equal, <code>false</code> otherwise.
-     * @memberof Cartographic
-     *
-     * @param {Cartographic} [right] The second cartographic.
-     * @returns {Boolean} <code>true</code> if left and right are equal, <code>false</code> otherwise.
-     */
-    Cartographic.prototype.equals = function(right) {
-        return Cartographic.equals(this, right);
-    };
-
-    /**
-     * Compares the provided against this cartographic componentwise and returns
-     * <code>true</code> if they are within the provided epsilon,
-     * <code>false</code> otherwise.
-     * @memberof Cartographic
-     *
-     * @param {Cartographic} [right] The second cartographic.
-     * @param {Number} epsilon The epsilon to use for equality testing.
-     * @returns {Boolean} <code>true</code> if left and right are within the provided epsilon, <code>false</code> otherwise.
-     */
-    Cartographic.prototype.equalsEpsilon = function(right, epsilon) {
-        return Cartographic.equalsEpsilon(this, right, epsilon);
-    };
-
-    /**
-     * Creates a string representing this cartographic in the format '(longitude, latitude, height)'.
-     * @memberof Cartographic
-     *
-     * @returns {String} A string representing the provided cartographic in the format '(longitude, latitude, height)'.
-     */
-    Cartographic.prototype.toString = function() {
-        return Cartographic.toString(this);
-    };
-
-    return Cartographic;
-});
-
-/*global define*/
-define('Core/defineProperties',['./defined'], function(defined) {
-    "use strict";
-
-    var definePropertyWorks = (function() {
-        try {
-            return 'x' in Object.defineProperty({}, 'x', {});
-        } catch (e) {
-            return false;
-        }
-    })();
-
-    /**
-     * Defines properties on an object, using Object.defineProperties if available,
-     * otherwise returns the object unchanged.  This function should be used in
-     * setup code to prevent errors from completely halting JavaScript execution
-     * in legacy browsers.
-     *
-     * @private
-     *
-     * @exports defineProperties
-     */
-    var defineProperties = Object.defineProperties;
-    if (!definePropertyWorks || !defined(defineProperties)) {
-        defineProperties = function(o) {
-            return o;
-        };
-    }
-
-    return defineProperties;
-});
-/*global define*/
-define('Core/Cartesian3',[
-        './defaultValue',
-        './defined',
-        './DeveloperError',
-        './freezeObject'
-    ], function(
-        defaultValue,
-        defined,
-        DeveloperError,
-        freezeObject) {
     "use strict";
 
     /**
@@ -2086,7 +1201,7 @@ define('Core/Cartesian3',[
 
     /**
      * The number of elements used to pack the object into an array.
-     * @Type {Number}
+     * @type {Number}
      */
     Cartesian3.packedLength = 3;
 
@@ -2095,7 +1210,7 @@ define('Core/Cartesian3',[
      * @memberof Cartesian3
      *
      * @param {Cartesian3} value The value to pack.
-     * @param {Array} array The array to pack into.
+     * @param {Number[]} array The array to pack into.
      * @param {Number} [startingIndex=0] The index into the array at which to start packing the elements.
      */
     Cartesian3.pack = function(value, array, startingIndex) {
@@ -2118,7 +1233,7 @@ define('Core/Cartesian3',[
      * Retrieves an instance from a packed array.
      * @memberof Cartesian3
      *
-     * @param {Array} array The packed array.
+     * @param {Number[]} array The packed array.
      * @param {Number} [startingIndex=0] The starting index of the element to be unpacked.
      * @param {Cartesian3} [result] The object into which to store the result.
      */
@@ -2142,7 +1257,7 @@ define('Core/Cartesian3',[
      * Creates a Cartesian3 from three consecutive elements in an array.
      * @memberof Cartesian3
      *
-     * @param {Array} array The array whose three consecutive elements correspond to the x, y, and z components, respectively.
+     * @param {Number[]} array The array whose three consecutive elements correspond to the x, y, and z components, respectively.
      * @param {Number} [startingIndex=0] The offset into the array of the first element, which corresponds to the x component.
      * @param {Cartesian3} [result] The object onto which to store the result.
      *
@@ -2163,7 +1278,7 @@ define('Core/Cartesian3',[
      * Computes the value of the maximum component for the supplied Cartesian.
      * @memberof Cartesian3
      *
-     * @param {Cartesian3} The cartesian to use.
+     * @param {Cartesian3} cartesian The cartesian to use.
      * @returns {Number} The value of the maximum component.
      */
     Cartesian3.getMaximumComponent = function(cartesian) {
@@ -2178,7 +1293,7 @@ define('Core/Cartesian3',[
      * Computes the value of the minimum component for the supplied Cartesian.
      * @memberof Cartesian3
      *
-     * @param {Cartesian3} The cartesian to use.
+     * @param {Cartesian3} cartesian The cartesian to use.
      * @returns {Number} The value of the minimum component.
      */
     Cartesian3.getMinimumComponent = function(cartesian) {
@@ -2515,9 +1630,9 @@ define('Core/Cartesian3',[
      * Computes the linear interpolation or extrapolation at t using the provided cartesians.
      * @memberof Cartesian3
      *
-     * @param start The value corresponding to t at 0.0.
-     * @param end The value corresponding to t at 1.0.
-     * @param t The point along t at which to interpolate.
+     * @param {Cartesian3} start The value corresponding to t at 0.0.
+     * @param {Cartesian3} end The value corresponding to t at 1.0.
+     * @param {Number} t The point along t at which to interpolate.
      * @param {Cartesian3} [result] The object onto which to store the result.
      * @returns {Cartesian3} The modified result parameter or a new Cartesian3 instance if one was not provided.
      */
@@ -2676,6 +1791,218 @@ define('Core/Cartesian3',[
     };
 
     /**
+     * Returns a Cartesian3 position from longitude and latitude values given in degrees.
+     * @memberof Cartesian3
+     *
+     * @param {Number} longitude The longitude, in degrees
+     * @param {Number} latitude The latitude, in degrees
+     * @param {Number} [height=0.0] The height, in meters, above the ellipsoid.
+     * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid on which the position lies.
+     * @param {Cartesian3} [result] The object onto which to store the result.
+     *
+     * @returns {Cartesian3} The position
+     *
+     * @example
+     * var position = Cartesian3.fromDegrees(-115.0, 37.0);
+     */
+    Cartesian3.fromDegrees = function(longitude, latitude, height, ellipsoid, result) {
+                if (!defined(longitude)) {
+            throw new DeveloperError('longitude is required');
+        }
+        if (!defined(latitude)) {
+            throw new DeveloperError('latitude is required');
+        }
+        
+        var lon = CesiumMath.toRadians(longitude);
+        var lat = CesiumMath.toRadians(latitude);
+        return Cartesian3.fromRadians(lon, lat, height, ellipsoid, result);
+    };
+
+    var scratchN = new Cartesian3();
+    var scratchK = new Cartesian3();
+    var wgs84RadiiSquared = new Cartesian3(6378137.0 * 6378137.0, 6378137.0 * 6378137.0, 6356752.3142451793 * 6356752.3142451793);
+
+    /**
+     * Returns a Cartesian3 position from longitude and latitude values given in radians.
+     * @memberof Cartesian3
+     *
+     * @param {Number} longitude The longitude, in radians
+     * @param {Number} latitude The latitude, in radians
+     * @param {Number} [height=0.0] The height, in meters, above the ellipsoid.
+     * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid on which the position lies.
+     * @param {Cartesian3} [result] The object onto which to store the result.
+     *
+     * @returns {Cartesian3} The position
+     *
+     * @example
+     * var position = Cartesian3.fromRadians(-2.007, 0.645);
+     */
+    Cartesian3.fromRadians = function(longitude, latitude, height, ellipsoid, result) {
+                if (!defined(longitude)) {
+            throw new DeveloperError('longitude is required');
+        }
+        if (!defined(latitude)) {
+            throw new DeveloperError('latitude is required');
+        }
+        
+        height = defaultValue(height, 0.0);
+        var radiiSquared = defined(ellipsoid) ? ellipsoid.radiiSquared : wgs84RadiiSquared;
+
+        var cosLatitude = Math.cos(latitude);
+        scratchN.x = cosLatitude * Math.cos(longitude);
+        scratchN.y = cosLatitude * Math.sin(longitude);
+        scratchN.z = Math.sin(latitude);
+        scratchN = Cartesian3.normalize(scratchN, scratchN);
+
+        Cartesian3.multiplyComponents(radiiSquared, scratchN, scratchK);
+        var gamma = Math.sqrt(Cartesian3.dot(scratchN, scratchK));
+        scratchK = Cartesian3.divideByScalar(scratchK, gamma, scratchK);
+        scratchN = Cartesian3.multiplyByScalar(scratchN, height, scratchN);
+        return Cartesian3.add(scratchK, scratchN, result);
+    };
+
+    /**
+     * Returns an array of Cartesian3 positions given an array of longitude and latitude values given in degrees.
+     * @memberof Cartesian3
+     *
+     * @param {Number[]} coordinates A list of longitude and latitude values. Values alternate [longitude, latitude, longitude, latitude...].
+     * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid on which the coordinates lie.
+     * @param {Cartesian3[]} [result] An array of Cartesian3 objects to store the result.
+     *
+     * @returns {Cartesian3[]} The array of positions.
+     *
+     * @example
+     * var positions = Cartesian3.fromDegreesArray([-115.0, 37.0, -107.0, 33.0]);
+     */
+    Cartesian3.fromDegreesArray = function(coordinates, ellipsoid, result) {
+                if (!defined(coordinates)) {
+            throw new DeveloperError('positions is required.');
+        }
+        
+        var pos = new Array(coordinates.length);
+        for (var i = 0; i < coordinates.length; i++) {
+            pos[i] = CesiumMath.toRadians(coordinates[i]);
+        }
+
+        return Cartesian3.fromRadiansArray(pos, ellipsoid, result);
+    };
+
+    /**
+     * Returns an array of Cartesian3 positions given an array of longitude and latitude values given in radians.
+     * @memberof Cartesian3
+     *
+     * @param {Number[]} coordinates A list of longitude and latitude values. Values alternate [longitude, latitude, longitude, latitude...].
+     * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid on which the coordinates lie.
+     * @param {Cartesian3[]} [result] An array of Cartesian3 objects to store the result.
+     *
+     * @returns {Cartesian3[]} The array of positions.
+     *
+     * @example
+     * var positions = Cartesian3.fromRadiansArray([-2.007, 0.645, -1.867, .575]);
+     */
+    Cartesian3.fromRadiansArray = function(coordinates, ellipsoid, result) {
+                if (!defined(coordinates)) {
+            throw new DeveloperError('positions is required.');
+        }
+        if (coordinates.length < 2) {
+            throw new DeveloperError('positions length cannot be less than 2.');
+        }
+        if (coordinates.length % 2 !== 0) {
+            throw new DeveloperError('positions length must be a multiple of 2.');
+        }
+        
+        var length = coordinates.length;
+        if (!defined(result)) {
+            result = new Array(length/2);
+        } else {
+            result.length = length/2;
+        }
+
+        for ( var i = 0; i < length; i+=2) {
+            var lon = coordinates[i];
+            var lat = coordinates[i+1];
+            result[i/2] = Cartesian3.fromRadians(lon, lat, 0, ellipsoid, result[i/2]);
+        }
+
+        return result;
+    };
+
+    /**
+     * Returns an array of Cartesian3 positions given an array of longitude, latitude and height values where longitude and latitude are given in degrees.
+     * @memberof Cartesian3
+     *
+     * @param {Number[]} coordinates A list of longitude, latitude and height values. Values alternate [longitude, latitude, height,, longitude, latitude, height...].
+     * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid on which the position lies.
+     * @param {Cartesian3[]} [result] An array of Cartesian3 objects to store the result.
+     *
+     * @returns {Cartesian3[]} The array of positions.
+     *
+     * @example
+     * var positions = Cartesian3.fromDegreesArrayHeights([-115.0, 37.0, 100000.0, -107.0, 33.0, 150000.0]);
+     */
+    Cartesian3.fromDegreesArrayHeights = function(coordinates, ellipsoid, result) {
+                if (!defined(coordinates)) {
+            throw new DeveloperError('positions is required.');
+        }
+        if (coordinates.length < 3) {
+            throw new DeveloperError('positions length cannot be less than 3.');
+        }
+        if (coordinates.length % 3 !== 0) {
+            throw new DeveloperError('positions length must be a multiple of 3.');
+        }
+        
+        var pos = new Array(coordinates.length);
+        for (var i = 0; i < coordinates.length; i+=3) {
+            pos[i] = CesiumMath.toRadians(coordinates[i]);
+            pos[i+1] = CesiumMath.toRadians(coordinates[i+1]);
+            pos[i+2] = coordinates[i+2];
+        }
+
+        return Cartesian3.fromRadiansArrayHeights(pos, ellipsoid, result);
+    };
+
+    /**
+     * Returns an array of Cartesian3 positions given an array of longitude, latitude and height values where longitude and latitude are given in radians.
+     * @memberof Cartesian3
+     *
+     * @param {Number[]} coordinates A list of longitude, latitude and height values. Values alternate [longitude, latitude, height,, longitude, latitude, height...].
+     * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid on which the position lies.
+     * @param {Cartesian3[]} [result] An array of Cartesian3 objects to store the result.
+     *
+     * @returns {Cartesian3[]} The array of positions.
+     *
+     * @example
+     * var positions = Cartesian3.fromradiansArrayHeights([-2.007, 0.645, 100000.0, -1.867, .575, 150000.0]);
+     */
+    Cartesian3.fromRadiansArrayHeights = function(coordinates, ellipsoid, result) {
+                if (!defined(coordinates)) {
+            throw new DeveloperError('positions is required.');
+        }
+        if (coordinates.length < 3) {
+            throw new DeveloperError('positions length cannot be less than 3.');
+        }
+        if (coordinates.length % 3 !== 0) {
+            throw new DeveloperError('positions length must be a multiple of 3.');
+        }
+        
+        var length = coordinates.length;
+        if (!defined(result)) {
+            result = new Array(length/3);
+        } else {
+            result.length = length/3;
+        }
+
+        for ( var i = 0; i < length; i+=3) {
+            var lon = coordinates[i];
+            var lat = coordinates[i+1];
+            var alt = coordinates[i+2];
+            result[i/3] = Cartesian3.fromRadians(lon, lat, alt, ellipsoid, result[i/3]);
+        }
+
+        return result;
+    };
+
+    /**
      * An immutable Cartesian3 instance initialized to (0.0, 0.0, 0.0).
      * @memberof Cartesian3
      */
@@ -2750,24 +2077,298 @@ define('Core/Cartesian3',[
 });
 
 /*global define*/
-define('Core/Ellipsoid',[
+define('Core/Cartographic',[
+        './defaultValue',
+        './defined',
+        './DeveloperError',
         './freezeObject',
+        './Math'
+    ], function(
+        defaultValue,
+        defined,
+        DeveloperError,
+        freezeObject,
+        CesiumMath) {
+    "use strict";
+
+    /**
+     * A position defined by longitude, latitude, and height.
+     * @alias Cartographic
+     * @constructor
+     *
+     * @param {Number} [longitude=0.0] The longitude, in radians.
+     * @param {Number} [latitude=0.0] The latitude, in radians.
+     * @param {Number} [height=0.0] The height, in meters, above the ellipsoid.
+     *
+     * @see Ellipsoid
+     */
+    var Cartographic = function(longitude, latitude, height) {
+        /**
+         * The longitude, in radians.
+         * @type {Number}
+         * @default 0.0
+         */
+        this.longitude = defaultValue(longitude, 0.0);
+
+        /**
+         * The latitude, in radians.
+         * @type {Number}
+         * @default 0.0
+         */
+        this.latitude = defaultValue(latitude, 0.0);
+
+        /**
+         * The height, in meters, above the ellipsoid.
+         * @type {Number}
+         * @default 0.0
+         */
+        this.height = defaultValue(height, 0.0);
+    };
+
+    /**
+     * Creates a new Cartographic instance from longitude and latitude
+     * specified in radians.
+     * @memberof Cartographic
+     *
+     * @param {Number} longitude The longitude, in radians.
+     * @param {Number} latitude The latitude, in radians.
+     * @param {Number} [height=0.0] The height, in meters, above the ellipsoid.
+     * @param {Cartographic} [result] The object onto which to store the result.
+     * @returns {Cartographic} The modified result parameter or a new Cartographic instance if one was not provided.
+     */
+    Cartographic.fromRadians = function(longitude, latitude, height, result) {
+                if (!defined(longitude)) {
+            throw new DeveloperError('longitude is required.');
+        }
+        if (!defined(latitude)) {
+            throw new DeveloperError('latitude is required.');
+        }
+                
+        height = defaultValue(height, 0.0);
+        
+        if (!defined(result)) {
+            return new Cartographic(longitude, latitude, height);
+        }
+
+        result.longitude = longitude;
+        result.latitude = latitude;
+        result.height = height;
+        return result;
+    };
+
+    /**
+     * Creates a new Cartographic instance from longitude and latitude
+     * specified in degrees.  The values in the resulting object will
+     * be in radians.
+     * @memberof Cartographic
+     *
+     * @param {Number} longitude The longitude, in degrees.
+     * @param {Number} latitude The latitude, in degrees.
+     * @param {Number} [height=0.0] The height, in meters, above the ellipsoid.
+     * @param {Cartographic} [result] The object onto which to store the result.
+     * @returns {Cartographic} The modified result parameter or a new Cartographic instance if one was not provided.
+     */
+    Cartographic.fromDegrees = function(longitude, latitude, height, result) {
+                if (!defined(longitude)) {
+            throw new DeveloperError('longitude is required.');
+        }
+        if (!defined(latitude)) {
+            throw new DeveloperError('latitude is required.');
+        }
+                longitude = CesiumMath.toRadians(longitude);
+        latitude = CesiumMath.toRadians(latitude);
+
+        return Cartographic.fromRadians(longitude, latitude, height, result);
+    };
+
+    /**
+     * Duplicates a Cartographic instance.
+     * @memberof Cartographic
+     *
+     * @param {Cartographic} cartographic The cartographic to duplicate.
+     * @param {Cartographic} [result] The object onto which to store the result.
+     * @returns {Cartographic} The modified result parameter or a new Cartographic instance if one was not provided. (Returns undefined if cartographic is undefined)
+     */
+    Cartographic.clone = function(cartographic, result) {
+        if (!defined(cartographic)) {
+            return undefined;
+        }
+        if (!defined(result)) {
+            return new Cartographic(cartographic.longitude, cartographic.latitude, cartographic.height);
+        }
+        result.longitude = cartographic.longitude;
+        result.latitude = cartographic.latitude;
+        result.height = cartographic.height;
+        return result;
+    };
+
+    /**
+     * Compares the provided cartographics componentwise and returns
+     * <code>true</code> if they are equal, <code>false</code> otherwise.
+     * @memberof Cartographic
+     *
+     * @param {Cartographic} [left] The first cartographic.
+     * @param {Cartographic} [right] The second cartographic.
+     * @returns {Boolean} <code>true</code> if left and right are equal, <code>false</code> otherwise.
+     */
+    Cartographic.equals = function(left, right) {
+        return (left === right) ||
+                ((defined(left)) &&
+                 (defined(right)) &&
+                 (left.longitude === right.longitude) &&
+                 (left.latitude === right.latitude) &&
+                 (left.height === right.height));
+    };
+
+    /**
+     * Compares the provided cartographics componentwise and returns
+     * <code>true</code> if they are within the provided epsilon,
+     * <code>false</code> otherwise.
+     * @memberof Cartographic
+     *
+     * @param {Cartographic} [left] The first cartographic.
+     * @param {Cartographic} [right] The second cartographic.
+     * @param {Number} epsilon The epsilon to use for equality testing.
+     * @returns {Boolean} <code>true</code> if left and right are within the provided epsilon, <code>false</code> otherwise.
+     */
+    Cartographic.equalsEpsilon = function(left, right, epsilon) {
+                if (typeof epsilon !== 'number') {
+            throw new DeveloperError('epsilon is required and must be a number.');
+        }
+        
+        return (left === right) ||
+               ((defined(left)) &&
+                (defined(right)) &&
+                (Math.abs(left.longitude - right.longitude) <= epsilon) &&
+                (Math.abs(left.latitude - right.latitude) <= epsilon) &&
+                (Math.abs(left.height - right.height) <= epsilon));
+    };
+
+    /**
+     * Creates a string representing the provided cartographic in the format '(longitude, latitude, height)'.
+     * @memberof Cartographic
+     *
+     * @param {Cartographic} cartographic The cartographic to stringify.
+     * @returns {String} A string representing the provided cartographic in the format '(longitude, latitude, height)'.
+     */
+    Cartographic.toString = function(cartographic) {
+                if (!defined(cartographic)) {
+            throw new DeveloperError('cartographic is required');
+        }
+        
+        return '(' + cartographic.longitude + ', ' + cartographic.latitude + ', ' + cartographic.height + ')';
+    };
+
+    /**
+     * An immutable Cartographic instance initialized to (0.0, 0.0, 0.0).
+     *
+     * @memberof Cartographic
+     */
+    Cartographic.ZERO = freezeObject(new Cartographic(0.0, 0.0, 0.0));
+
+    /**
+     * Duplicates this instance.
+     * @memberof Cartographic
+     *
+     * @param {Cartographic} [result] The object onto which to store the result.
+     * @returns {Cartographic} The modified result parameter or a new Cartographic instance if one was not provided.
+     */
+    Cartographic.prototype.clone = function(result) {
+        return Cartographic.clone(this, result);
+    };
+
+    /**
+     * Compares the provided against this cartographic componentwise and returns
+     * <code>true</code> if they are equal, <code>false</code> otherwise.
+     * @memberof Cartographic
+     *
+     * @param {Cartographic} [right] The second cartographic.
+     * @returns {Boolean} <code>true</code> if left and right are equal, <code>false</code> otherwise.
+     */
+    Cartographic.prototype.equals = function(right) {
+        return Cartographic.equals(this, right);
+    };
+
+    /**
+     * Compares the provided against this cartographic componentwise and returns
+     * <code>true</code> if they are within the provided epsilon,
+     * <code>false</code> otherwise.
+     * @memberof Cartographic
+     *
+     * @param {Cartographic} [right] The second cartographic.
+     * @param {Number} epsilon The epsilon to use for equality testing.
+     * @returns {Boolean} <code>true</code> if left and right are within the provided epsilon, <code>false</code> otherwise.
+     */
+    Cartographic.prototype.equalsEpsilon = function(right, epsilon) {
+        return Cartographic.equalsEpsilon(this, right, epsilon);
+    };
+
+    /**
+     * Creates a string representing this cartographic in the format '(longitude, latitude, height)'.
+     * @memberof Cartographic
+     *
+     * @returns {String} A string representing the provided cartographic in the format '(longitude, latitude, height)'.
+     */
+    Cartographic.prototype.toString = function() {
+        return Cartographic.toString(this);
+    };
+
+    return Cartographic;
+});
+
+/*global define*/
+define('Core/defineProperties',[
+        './defined'
+    ], function(
+        defined) {
+    "use strict";
+
+    var definePropertyWorks = (function() {
+        try {
+            return 'x' in Object.defineProperty({}, 'x', {});
+        } catch (e) {
+            return false;
+        }
+    })();
+
+    /**
+     * Defines properties on an object, using Object.defineProperties if available,
+     * otherwise returns the object unchanged.  This function should be used in
+     * setup code to prevent errors from completely halting JavaScript execution
+     * in legacy browsers.
+     *
+     * @private
+     *
+     * @exports defineProperties
+     */
+    var defineProperties = Object.defineProperties;
+    if (!definePropertyWorks || !defined(defineProperties)) {
+        defineProperties = function(o) {
+            return o;
+        };
+    }
+
+    return defineProperties;
+});
+/*global define*/
+define('Core/Ellipsoid',[
+        './Cartesian3',
+        './Cartographic',
         './defaultValue',
         './defined',
         './defineProperties',
         './DeveloperError',
-        './Math',
-        './Cartesian3',
-        './Cartographic'
-       ], function(
-         freezeObject,
-         defaultValue,
-         defined,
-         defineProperties,
-         DeveloperError,
-         CesiumMath,
-         Cartesian3,
-         Cartographic) {
+        './freezeObject',
+        './Math'
+    ], function(
+        Cartesian3,
+        Cartographic,
+        defaultValue,
+        defined,
+        defineProperties,
+        DeveloperError,
+        freezeObject,
+        CesiumMath) {
     "use strict";
 
     /**
@@ -3066,9 +2667,9 @@ define('Core/Ellipsoid',[
      * Converts the provided array of cartographics to an array of Cartesians.
      * @memberof Ellipsoid
      *
-     * @param {Array} cartographics An array of cartographic positions.
-     * @param {Array} [result] The object onto which to store the result.
-     * @returns {Array} The modified result parameter or a new Array instance if none was provided.
+     * @param {Cartographic[]} cartographics An array of cartographic positions.
+     * @param {Cartesian3[]} [result] The object onto which to store the result.
+     * @returns {Cartesian3[]} The modified result parameter or a new Array instance if none was provided.
      *
      * @example
      * //Convert an array of Cartographics and determine their Cartesian representation on a WGS84 ellipsoid.
@@ -3140,15 +2741,15 @@ define('Core/Ellipsoid',[
      * Converts the provided array of cartesians to an array of cartographics.
      * @memberof Ellipsoid
      *
-     * @param {Array} cartesians An array of Cartesian positions.
-     * @param {Array} [result] The object onto which to store the result.
-     * @returns {Array} The modified result parameter or a new Array instance if none was provided.
+     * @param {Cartesian3[]} cartesians An array of Cartesian positions.
+     * @param {Cartographic[]} [result] The object onto which to store the result.
+     * @returns {Cartographic[]} The modified result parameter or a new Array instance if none was provided.
      *
      * @example
      * //Create an array of Cartesians and determine their Cartographic representation on a WGS84 ellipsoid.
-     * var positions = [new Cesium.Cartesian(17832.12, 83234.52, 952313.73),
-     *                  new Cesium.Cartesian(17832.13, 83234.53, 952313.73),
-     *                  new Cesium.Cartesian(17832.14, 83234.54, 952313.73)]
+     * var positions = [new Cesium.Cartesian3(17832.12, 83234.52, 952313.73),
+     *                  new Cesium.Cartesian3(17832.13, 83234.53, 952313.73),
+     *                  new Cesium.Cartesian3(17832.14, 83234.54, 952313.73)]
      * var cartographicPositions = Cesium.Ellipsoid.WGS84.cartesianArrayToCartographicArray(positions);
      */
     Ellipsoid.prototype.cartesianArrayToCartographicArray = function(cartesians, result) {
@@ -3360,21 +2961,884 @@ define('Core/Ellipsoid',[
 });
 
 /*global define*/
-define('Core/Rectangle',[
-        './freezeObject',
+define('Core/Cartesian2',[
         './defaultValue',
         './defined',
-        './Ellipsoid',
-        './Cartographic',
         './DeveloperError',
-        './Math'
+        './freezeObject'
     ], function(
-        freezeObject,
         defaultValue,
         defined,
-        Ellipsoid,
-        Cartographic,
         DeveloperError,
+        freezeObject) {
+    "use strict";
+
+    /**
+     * A 2D Cartesian point.
+     * @alias Cartesian2
+     * @constructor
+     *
+     * @param {Number} [x=0.0] The X component.
+     * @param {Number} [y=0.0] The Y component.
+     *
+     * @see Packable
+     * @see Cartesian3
+     * @see Cartesian4
+     */
+    var Cartesian2 = function(x, y) {
+        /**
+         * The Y component.
+         * @type {Number}
+         * @default 0.0
+         */
+        this.x = defaultValue(x, 0.0);
+
+        /**
+         * The X component.
+         * @type {Number}
+         * @default 0.0
+         */
+        this.y = defaultValue(y, 0.0);
+    };
+
+    /**
+     * Creates a Cartesian2 instance from x and y coordinates.
+     * @memberof Cartesian2
+     *
+     * @param {Number} x The x coordinate.
+     * @param {Number} y The y coordinate.
+     * @param {Cartesian2} [result] The object onto which to store the result.
+     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
+     */
+    Cartesian2.fromElements = function(x, y, result) {
+        if (!defined(result)) {
+            return new Cartesian2(x, y);
+        }
+
+        result.x = x;
+        result.y = y;
+        return result;
+    };
+
+    /**
+     * Duplicates a Cartesian2 instance.
+     * @memberof Cartesian2
+     *
+     * @param {Cartesian2} cartesian The Cartesian to duplicate.
+     * @param {Cartesian2} [result] The object onto which to store the result.
+     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided. (Returns undefined if cartesian is undefined)
+     */
+    Cartesian2.clone = function(cartesian, result) {
+        if (!defined(cartesian)) {
+            return undefined;
+        }
+
+        if (!defined(result)) {
+            return new Cartesian2(cartesian.x, cartesian.y);
+        }
+
+        result.x = cartesian.x;
+        result.y = cartesian.y;
+        return result;
+    };
+
+    /**
+     * Creates a Cartesian2 instance from an existing Cartesian3.  This simply takes the
+     * x and y properties of the Cartesian3 and drops z.
+     * @memberof Cartesian2
+     * @function
+     *
+     * @param {Cartesian3} cartesian The Cartesian3 instance to create a Cartesian2 instance from.
+     * @param {Cartesian2} [result] The object onto which to store the result.
+     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
+     */
+    Cartesian2.fromCartesian3 = Cartesian2.clone;
+
+    /**
+     * Creates a Cartesian2 instance from an existing Cartesian4.  This simply takes the
+     * x and y properties of the Cartesian4 and drops z and w.
+     * @function
+     *
+     * @param {Cartesian4} cartesian The Cartesian4 instance to create a Cartesian2 instance from.
+     * @param {Cartesian2} [result] The object onto which to store the result.
+     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
+     */
+    Cartesian2.fromCartesian4 = Cartesian2.clone;
+
+    /**
+     * The number of elements used to pack the object into an array.
+     * @type {Number}
+     */
+    Cartesian2.packedLength = 2;
+
+    /**
+     * Stores the provided instance into the provided array.
+     * @memberof Cartesian2
+     *
+     * @param {Cartesian2} value The value to pack.
+     * @param {Number[]} array The array to pack into.
+     * @param {Number} [startingIndex=0] The index into the array at which to start packing the elements.
+     */
+    Cartesian2.pack = function(value, array, startingIndex) {
+                if (!defined(value)) {
+            throw new DeveloperError('value is required');
+        }
+
+        if (!defined(array)) {
+            throw new DeveloperError('array is required');
+        }
+        
+        startingIndex = defaultValue(startingIndex, 0);
+
+        array[startingIndex++] = value.x;
+        array[startingIndex] = value.y;
+    };
+
+    /**
+     * Retrieves an instance from a packed array.
+     * @memberof Cartesian2
+     *
+     * @param {Number[]} array The packed array.
+     * @param {Number} [startingIndex=0] The starting index of the element to be unpacked.
+     * @param {Cartesian2} [result] The object into which to store the result.
+     */
+    Cartesian2.unpack = function(array, startingIndex, result) {
+                if (!defined(array)) {
+            throw new DeveloperError('array is required');
+        }
+        
+        startingIndex = defaultValue(startingIndex, 0);
+
+        if (!defined(result)) {
+            result = new Cartesian2();
+        }
+        result.x = array[startingIndex++];
+        result.y = array[startingIndex];
+        return result;
+    };
+
+    /**
+     * Creates a Cartesian2 from two consecutive elements in an array.
+     * @memberof Cartesian2
+     *
+     * @param {Number[]} array The array whose two consecutive elements correspond to the x and y components, respectively.
+     * @param {Number} [startingIndex=0] The offset into the array of the first element, which corresponds to the x component.
+     * @param {Cartesian2} [result] The object onto which to store the result.
+     *
+     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
+     *
+     * @example
+     * // Create a Cartesian2 with (1.0, 2.0)
+     * var v = [1.0, 2.0];
+     * var p = Cesium.Cartesian2.fromArray(v);
+     *
+     * // Create a Cartesian2 with (1.0, 2.0) using an offset into an array
+     * var v2 = [0.0, 0.0, 1.0, 2.0];
+     * var p2 = Cesium.Cartesian2.fromArray(v2, 2);
+     */
+    Cartesian2.fromArray = Cartesian2.unpack;
+
+    /**
+     * Computes the value of the maximum component for the supplied Cartesian.
+     * @memberof Cartesian2
+     *
+     * @param {Cartesian2} cartesian The cartesian to use.
+     * @returns {Number} The value of the maximum component.
+     */
+    Cartesian2.getMaximumComponent = function(cartesian) {
+                if (!defined(cartesian)) {
+            throw new DeveloperError('cartesian is required');
+        }
+        
+        return Math.max(cartesian.x, cartesian.y);
+    };
+
+    /**
+     * Computes the value of the minimum component for the supplied Cartesian.
+     * @memberof Cartesian2
+     *
+     * @param {Cartesian2} cartesian The cartesian to use.
+     * @returns {Number} The value of the minimum component.
+     */
+    Cartesian2.getMinimumComponent = function(cartesian) {
+                if (!defined(cartesian)) {
+            throw new DeveloperError('cartesian is required');
+        }
+        
+        return Math.min(cartesian.x, cartesian.y);
+    };
+
+    /**
+     * Compares two Cartesians and computes a Cartesian which contains the minimum components of the supplied Cartesians.
+     * @memberof Cartesian2
+     *
+     * @param {Cartesian2} first A cartesian to compare.
+     * @param {Cartesian2} second A cartesian to compare.
+     * @param {Cartesian2} [result] The object into which to store the result.
+     * @returns {Cartesian2} A cartesian with the minimum components.
+     */
+    Cartesian2.getMinimumByComponent = function(first, second, result) {
+                if (!defined(first)) {
+            throw new DeveloperError('first is required.');
+        }
+        if (!defined(second)) {
+            throw new DeveloperError('second is required.');
+        }
+        
+        if (!defined(result)) {
+            result = new Cartesian2();
+        }
+
+        result.x = Math.min(first.x, second.x);
+        result.y = Math.min(first.y, second.y);
+
+        return result;
+    };
+
+    /**
+     * Compares two Cartesians and computes a Cartesian which contains the maximum components of the supplied Cartesians.
+     * @memberof Cartesian2
+     *
+     * @param {Cartesian2} first A cartesian to compare.
+     * @param {Cartesian2} second A cartesian to compare.
+     * @param {Cartesian2} [result] The object into which to store the result.
+     * @returns {Cartesian2} A cartesian with the maximum components.
+     */
+    Cartesian2.getMaximumByComponent = function(first, second, result) {
+                if (!defined(first)) {
+            throw new DeveloperError('first is required.');
+        }
+        if (!defined(second)) {
+            throw new DeveloperError('second is required.');
+        }
+        
+        if (!defined(result)) {
+            result = new Cartesian2();
+        }
+
+        result.x = Math.max(first.x, second.x);
+        result.y = Math.max(first.y, second.y);
+        return result;
+    };
+
+    /**
+     * Computes the provided Cartesian's squared magnitude.
+     * @memberof Cartesian2
+     *
+     * @param {Cartesian2} cartesian The Cartesian instance whose squared magnitude is to be computed.
+     * @returns {Number} The squared magnitude.
+     */
+    Cartesian2.magnitudeSquared = function(cartesian) {
+                if (!defined(cartesian)) {
+            throw new DeveloperError('cartesian is required');
+        }
+        
+        return cartesian.x * cartesian.x + cartesian.y * cartesian.y;
+    };
+
+    /**
+     * Computes the Cartesian's magnitude (length).
+     * @memberof Cartesian2
+     *
+     * @param {Cartesian2} cartesian The Cartesian instance whose magnitude is to be computed.
+     * @returns {Number} The magnitude.
+     */
+    Cartesian2.magnitude = function(cartesian) {
+        return Math.sqrt(Cartesian2.magnitudeSquared(cartesian));
+    };
+
+    var distanceScratch = new Cartesian2();
+
+    /**
+     * Computes the distance between two points
+     * @memberof Cartesian2
+     *
+     * @param {Cartesian2} left The first point to compute the distance from.
+     * @param {Cartesian2} right The second point to compute the distance to.
+     *
+     * @returns {Number} The distance between two points.
+     *
+     * @example
+     * // Returns 1.0
+     * var d = Cesium.Cartesian2.distance(new Cesium.Cartesian2(1.0, 0.0), new Cesium.Cartesian2(2.0, 0.0));
+     */
+    Cartesian2.distance = function(left, right) {
+                if (!defined(left) || !defined(right)) {
+            throw new DeveloperError('left and right are required.');
+        }
+        
+        Cartesian2.subtract(left, right, distanceScratch);
+        return Cartesian2.magnitude(distanceScratch);
+    };
+
+    /**
+     * Computes the normalized form of the supplied Cartesian.
+     * @memberof Cartesian2
+     *
+     * @param {Cartesian2} cartesian The Cartesian to be normalized.
+     * @param {Cartesian2} [result] The object onto which to store the result.
+     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
+     */
+    Cartesian2.normalize = function(cartesian, result) {
+                if (!defined(cartesian)) {
+            throw new DeveloperError('cartesian is required');
+        }
+        
+        var magnitude = Cartesian2.magnitude(cartesian);
+        if (!defined(result)) {
+            return new Cartesian2(cartesian.x / magnitude, cartesian.y / magnitude);
+        }
+        result.x = cartesian.x / magnitude;
+        result.y = cartesian.y / magnitude;
+        return result;
+    };
+
+    /**
+     * Computes the dot (scalar) product of two Cartesians.
+     * @memberof Cartesian2
+     *
+     * @param {Cartesian2} left The first Cartesian.
+     * @param {Cartesian2} right The second Cartesian.
+     * @returns {Number} The dot product.
+     */
+    Cartesian2.dot = function(left, right) {
+                if (!defined(left)) {
+            throw new DeveloperError('left is required');
+        }
+        if (!defined(right)) {
+            throw new DeveloperError('right is required');
+        }
+        
+        return left.x * right.x + left.y * right.y;
+    };
+
+    /**
+     * Computes the componentwise product of two Cartesians.
+     * @memberof Cartesian2
+     *
+     * @param {Cartesian2} left The first Cartesian.
+     * @param {Cartesian2} right The second Cartesian.
+     * @param {Cartesian2} [result] The object onto which to store the result.
+     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
+     */
+    Cartesian2.multiplyComponents = function(left, right, result) {
+                if (!defined(left)) {
+            throw new DeveloperError('left is required');
+        }
+        if (!defined(right)) {
+            throw new DeveloperError('right is required');
+        }
+        
+        if (!defined(result)) {
+            return new Cartesian2(left.x * right.x, left.y * right.y);
+        }
+        result.x = left.x * right.x;
+        result.y = left.y * right.y;
+        return result;
+    };
+
+    /**
+     * Computes the componentwise sum of two Cartesians.
+     * @memberof Cartesian2
+     *
+     * @param {Cartesian2} left The first Cartesian.
+     * @param {Cartesian2} right The second Cartesian.
+     * @param {Cartesian2} [result] The object onto which to store the result.
+     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
+     */
+    Cartesian2.add = function(left, right, result) {
+                if (!defined(left)) {
+            throw new DeveloperError('left is required');
+        }
+        if (!defined(right)) {
+            throw new DeveloperError('right is required');
+        }
+        
+        if (!defined(result)) {
+            return new Cartesian2(left.x + right.x, left.y + right.y);
+        }
+        result.x = left.x + right.x;
+        result.y = left.y + right.y;
+        return result;
+    };
+
+    /**
+     * Computes the componentwise difference of two Cartesians.
+     * @memberof Cartesian2
+     *
+     * @param {Cartesian2} left The first Cartesian.
+     * @param {Cartesian2} right The second Cartesian.
+     * @param {Cartesian2} [result] The object onto which to store the result.
+     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
+     */
+    Cartesian2.subtract = function(left, right, result) {
+                if (!defined(left)) {
+            throw new DeveloperError('left is required');
+        }
+        if (!defined(right)) {
+            throw new DeveloperError('right is required');
+        }
+        
+        if (!defined(result)) {
+            return new Cartesian2(left.x - right.x, left.y - right.y);
+        }
+        result.x = left.x - right.x;
+        result.y = left.y - right.y;
+        return result;
+    };
+
+    /**
+     * Multiplies the provided Cartesian componentwise by the provided scalar.
+     * @memberof Cartesian2
+     *
+     * @param {Cartesian2} cartesian The Cartesian to be scaled.
+     * @param {Number} scalar The scalar to multiply with.
+     * @param {Cartesian2} [result] The object onto which to store the result.
+     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
+     */
+    Cartesian2.multiplyByScalar = function(cartesian, scalar, result) {
+                if (!defined(cartesian)) {
+            throw new DeveloperError('cartesian is required');
+        }
+        if (typeof scalar !== 'number') {
+            throw new DeveloperError('scalar is required and must be a number.');
+        }
+        
+        if (!defined(result)) {
+            return new Cartesian2(cartesian.x * scalar, cartesian.y * scalar);
+        }
+        result.x = cartesian.x * scalar;
+        result.y = cartesian.y * scalar;
+        return result;
+    };
+
+    /**
+     * Divides the provided Cartesian componentwise by the provided scalar.
+     * @memberof Cartesian2
+     *
+     * @param {Cartesian2} cartesian The Cartesian to be divided.
+     * @param {Number} scalar The scalar to divide by.
+     * @param {Cartesian2} [result] The object onto which to store the result.
+     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
+     */
+    Cartesian2.divideByScalar = function(cartesian, scalar, result) {
+                if (!defined(cartesian)) {
+            throw new DeveloperError('cartesian is required');
+        }
+        if (typeof scalar !== 'number') {
+            throw new DeveloperError('scalar is required and must be a number.');
+        }
+        
+        if (!defined(result)) {
+            return new Cartesian2(cartesian.x / scalar, cartesian.y / scalar);
+        }
+        result.x = cartesian.x / scalar;
+        result.y = cartesian.y / scalar;
+        return result;
+    };
+
+    /**
+     * Negates the provided Cartesian.
+     * @memberof Cartesian2
+     *
+     * @param {Cartesian2} cartesian The Cartesian to be negated.
+     * @param {Cartesian2} [result] The object onto which to store the result.
+     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
+     */
+    Cartesian2.negate = function(cartesian, result) {
+                if (!defined(cartesian)) {
+            throw new DeveloperError('cartesian is required');
+        }
+        
+        if (!defined(result)) {
+            return new Cartesian2(-cartesian.x, -cartesian.y);
+        }
+        result.x = -cartesian.x;
+        result.y = -cartesian.y;
+        return result;
+    };
+
+    /**
+     * Computes the absolute value of the provided Cartesian.
+     * @memberof Cartesian2
+     *
+     * @param {Cartesian2} cartesian The Cartesian whose absolute value is to be computed.
+     * @param {Cartesian2} [result] The object onto which to store the result.
+     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
+     */
+    Cartesian2.abs = function(cartesian, result) {
+                if (!defined(cartesian)) {
+            throw new DeveloperError('cartesian is required');
+        }
+        
+        if (!defined(result)) {
+            return new Cartesian2(Math.abs(cartesian.x), Math.abs(cartesian.y));
+        }
+        result.x = Math.abs(cartesian.x);
+        result.y = Math.abs(cartesian.y);
+        return result;
+    };
+
+    var lerpScratch = new Cartesian2();
+    /**
+     * Computes the linear interpolation or extrapolation at t using the provided cartesians.
+     * @memberof Cartesian2
+     *
+     * @param {Cartesian2} start The value corresponding to t at 0.0.
+     * @param {Cartesian2} end The value corresponding to t at 1.0.
+     * @param {Number} t The point along t at which to interpolate.
+     * @param {Cartesian2} [result] The object onto which to store the result.
+     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
+     */
+    Cartesian2.lerp = function(start, end, t, result) {
+                if (!defined(start)) {
+            throw new DeveloperError('start is required.');
+        }
+        if (!defined(end)) {
+            throw new DeveloperError('end is required.');
+        }
+        if (typeof t !== 'number') {
+            throw new DeveloperError('t is required and must be a number.');
+        }
+        
+        Cartesian2.multiplyByScalar(end, t, lerpScratch);
+        result = Cartesian2.multiplyByScalar(start, 1.0 - t, result);
+        return Cartesian2.add(lerpScratch, result, result);
+    };
+
+    var angleBetweenScratch = new Cartesian2();
+    var angleBetweenScratch2 = new Cartesian2();
+    /**
+     * Returns the angle, in radians, between the provided Cartesians.
+     * @memberof Cartesian2
+     *
+     * @param {Cartesian2} left The first Cartesian.
+     * @param {Cartesian2} right The second Cartesian.
+     * @returns {Number} The angle between the Cartesians.
+     */
+    Cartesian2.angleBetween = function(left, right) {
+                if (!defined(left)) {
+            throw new DeveloperError('left is required');
+        }
+        if (!defined(right)) {
+            throw new DeveloperError('right is required');
+        }
+        
+        Cartesian2.normalize(left, angleBetweenScratch);
+        Cartesian2.normalize(right, angleBetweenScratch2);
+        return Math.acos(Cartesian2.dot(angleBetweenScratch, angleBetweenScratch2));
+    };
+
+    var mostOrthogonalAxisScratch = new Cartesian2();
+    /**
+     * Returns the axis that is most orthogonal to the provided Cartesian.
+     * @memberof Cartesian2
+     *
+     * @param {Cartesian2} cartesian The Cartesian on which to find the most orthogonal axis.
+     * @param {Cartesian2} [result] The object onto which to store the result.
+     * @returns {Cartesian2} The most orthogonal axis.
+     */
+    Cartesian2.mostOrthogonalAxis = function(cartesian, result) {
+                if (!defined(cartesian)) {
+            throw new DeveloperError('cartesian is required.');
+        }
+        
+        var f = Cartesian2.normalize(cartesian, mostOrthogonalAxisScratch);
+        Cartesian2.abs(f, f);
+
+        if (f.x <= f.y) {
+            result = Cartesian2.clone(Cartesian2.UNIT_X, result);
+        } else {
+            result = Cartesian2.clone(Cartesian2.UNIT_Y, result);
+        }
+
+        return result;
+    };
+
+    /**
+     * Compares the provided Cartesians componentwise and returns
+     * <code>true</code> if they are equal, <code>false</code> otherwise.
+     * @memberof Cartesian2
+     *
+     * @param {Cartesian2} [left] The first Cartesian.
+     * @param {Cartesian2} [right] The second Cartesian.
+     * @returns {Boolean} <code>true</code> if left and right are equal, <code>false</code> otherwise.
+     */
+    Cartesian2.equals = function(left, right) {
+        return (left === right) ||
+               ((defined(left)) &&
+                (defined(right)) &&
+                (left.x === right.x) &&
+                (left.y === right.y));
+    };
+
+    /**
+     * Compares the provided Cartesians componentwise and returns
+     * <code>true</code> if they are within the provided epsilon,
+     * <code>false</code> otherwise.
+     * @memberof Cartesian2
+     *
+     * @param {Cartesian2} [left] The first Cartesian.
+     * @param {Cartesian2} [right] The second Cartesian.
+     * @param {Number} epsilon The epsilon to use for equality testing.
+     * @returns {Boolean} <code>true</code> if left and right are within the provided epsilon, <code>false</code> otherwise.
+     */
+    Cartesian2.equalsEpsilon = function(left, right, epsilon) {
+                if (typeof epsilon !== 'number') {
+            throw new DeveloperError('epsilon is required and must be a number.');
+        }
+        
+        return (left === right) ||
+               ((defined(left)) &&
+                (defined(right)) &&
+                (Math.abs(left.x - right.x) <= epsilon) &&
+                (Math.abs(left.y - right.y) <= epsilon));
+    };
+
+    /**
+     * An immutable Cartesian2 instance initialized to (0.0, 0.0).
+     * @memberof Cartesian2
+     */
+    Cartesian2.ZERO = freezeObject(new Cartesian2(0.0, 0.0));
+
+    /**
+     * An immutable Cartesian2 instance initialized to (1.0, 0.0).
+     * @memberof Cartesian2
+     */
+    Cartesian2.UNIT_X = freezeObject(new Cartesian2(1.0, 0.0));
+
+    /**
+     * An immutable Cartesian2 instance initialized to (0.0, 1.0).
+     * @memberof Cartesian2
+     */
+    Cartesian2.UNIT_Y = freezeObject(new Cartesian2(0.0, 1.0));
+
+    /**
+     * Duplicates this Cartesian2 instance.
+     * @memberof Cartesian2
+     *
+     * @param {Cartesian2} [result] The object onto which to store the result.
+     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
+     */
+    Cartesian2.prototype.clone = function(result) {
+        return Cartesian2.clone(this, result);
+    };
+
+    /**
+     * Compares this Cartesian against the provided Cartesian componentwise and returns
+     * <code>true</code> if they are equal, <code>false</code> otherwise.
+     * @memberof Cartesian2
+     *
+     * @param {Cartesian2} [right] The right hand side Cartesian.
+     * @returns {Boolean} <code>true</code> if they are equal, <code>false</code> otherwise.
+     */
+    Cartesian2.prototype.equals = function(right) {
+        return Cartesian2.equals(this, right);
+    };
+
+    /**
+     * Compares this Cartesian against the provided Cartesian componentwise and returns
+     * <code>true</code> if they are within the provided epsilon,
+     * <code>false</code> otherwise.
+     * @memberof Cartesian2
+     *
+     * @param {Cartesian2} [right] The right hand side Cartesian.
+     * @param {Number} epsilon The epsilon to use for equality testing.
+     * @returns {Boolean} <code>true</code> if they are within the provided epsilon, <code>false</code> otherwise.
+     */
+    Cartesian2.prototype.equalsEpsilon = function(right, epsilon) {
+        return Cartesian2.equalsEpsilon(this, right, epsilon);
+    };
+
+    /**
+     * Creates a string representing this Cartesian in the format '(x, y)'.
+     * @memberof Cartesian2
+     *
+     * @returns {String} A string representing the provided Cartesian in the format '(x, y)'.
+     */
+    Cartesian2.prototype.toString = function() {
+        return '(' + this.x + ', ' + this.y + ')';
+    };
+
+    return Cartesian2;
+});
+
+/*global define*/
+define('Core/GeographicProjection',[
+        './Cartesian3',
+        './Cartographic',
+        './defaultValue',
+        './defined',
+        './defineProperties',
+        './DeveloperError',
+        './Ellipsoid'
+    ], function(
+        Cartesian3,
+        Cartographic,
+        defaultValue,
+        defined,
+        defineProperties,
+        DeveloperError,
+        Ellipsoid) {
+    "use strict";
+
+    /**
+     * A simple map projection where longitude and latitude are linearly mapped to X and Y by multiplying
+     * them by the {@link Ellipsoid#maximumRadius}.  This projection
+     * is commonly known as geographic, equirectangular, equidistant cylindrical, or plate carrée.  It
+     * is also known as EPSG:4326.
+     *
+     * @alias GeographicProjection
+     * @constructor
+     * @immutable
+     *
+     * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid.
+     *
+     * @see WebMercatorProjection
+     */
+    var GeographicProjection = function(ellipsoid) {
+        this._ellipsoid = defaultValue(ellipsoid, Ellipsoid.WGS84);
+        this._semimajorAxis = this._ellipsoid.maximumRadius;
+        this._oneOverSemimajorAxis = 1.0 / this._semimajorAxis;
+    };
+
+    defineProperties(GeographicProjection.prototype, {
+        /**
+         * Gets the {@link Ellipsoid}.
+         * @memberof GeographicProjection.prototype
+         * @type {Ellipsoid}
+         */
+        ellipsoid : {
+            get : function() {
+                return this._ellipsoid;
+            }
+        }
+    });
+
+    /**
+     * Projects a set of {@link Cartographic} coordinates, in radians, to map coordinates, in meters.
+     * X and Y are the longitude and latitude, respectively, multiplied by the maximum radius of the
+     * ellipsoid.  Z is the unmodified height.
+     *
+     * @memberof GeographicProjection
+     *
+     * @param {Cartographic} cartographic The coordinates to project.
+     * @param {Cartesian3} [result] An instance into which to copy the result.  If this parameter is
+     *        undefined, a new instance is created and returned.
+     * @returns {Cartesian3} The projected coordinates.  If the result parameter is not undefined, the
+     *          coordinates are copied there and that instance is returned.  Otherwise, a new instance is
+     *          created and returned.
+     */
+    GeographicProjection.prototype.project = function(cartographic, result) {
+        // Actually this is the special case of equidistant cylindrical called the plate carree
+        var semimajorAxis = this._semimajorAxis;
+        var x = cartographic.longitude * semimajorAxis;
+        var y = cartographic.latitude * semimajorAxis;
+        var z = cartographic.height;
+
+        if (!defined(result)) {
+            return new Cartesian3(x, y, z);
+        }
+
+        result.x = x;
+        result.y = y;
+        result.z = z;
+        return result;
+    };
+
+    /**
+     * Unprojects a set of projected {@link Cartesian3} coordinates, in meters, to {@link Cartographic}
+     * coordinates, in radians.  Longitude and Latitude are the X and Y coordinates, respectively,
+     * divided by the maximum radius of the ellipsoid.  Height is the unmodified Z coordinate.
+     *
+     * @memberof GeographicProjection
+     *
+     * @param {Cartesian3} cartesian The Cartesian position to unproject with height (z) in meters.
+     * @param {Cartographic} [result] An instance into which to copy the result.  If this parameter is
+     *        undefined, a new instance is created and returned.
+     * @returns {Cartographic} The unprojected coordinates.  If the result parameter is not undefined, the
+     *          coordinates are copied there and that instance is returned.  Otherwise, a new instance is
+     *          created and returned.
+     */
+    GeographicProjection.prototype.unproject = function(cartesian, result) {
+                if (!defined(cartesian)) {
+            throw new DeveloperError('cartesian is required');
+        }
+        
+        var oneOverEarthSemimajorAxis = this._oneOverSemimajorAxis;
+        var longitude = cartesian.x * oneOverEarthSemimajorAxis;
+        var latitude = cartesian.y * oneOverEarthSemimajorAxis;
+        var height = cartesian.z;
+
+        if (!defined(result)) {
+            return new Cartographic(longitude, latitude, height);
+        }
+
+        result.longitude = longitude;
+        result.latitude = latitude;
+        result.height = height;
+        return result;
+    };
+
+    return GeographicProjection;
+});
+
+/*global define*/
+define('Core/Intersect',[],function() {
+    "use strict";
+
+    /**
+     * This enumerated type is used in determining where, relative to the frustum, an
+     * object is located. The object can either be fully contained within the frustum (INSIDE),
+     * partially inside the frustum and partially outside (INTERSECTING), or somwhere entirely
+     * outside of the frustum's 6 planes (OUTSIDE).
+     *
+     * @exports Intersect
+     */
+    var Intersect = {
+        /**
+         * Represents that an object is not contained within the frustum.
+         *
+         * @type {Number}
+         * @constant
+         */
+        OUTSIDE : -1,
+
+        /**
+         * Represents that an object intersects one of the frustum's planes.
+         *
+         * @type {Number}
+         * @constant
+         */
+        INTERSECTING : 0,
+
+        /**
+         * Represents that an object is fully within the frustum.
+         *
+         * @type {Number}
+         * @constant
+         */
+        INSIDE : 1
+    };
+
+    return Intersect;
+});
+/*global define*/
+define('Core/Rectangle',[
+        './Cartographic',
+        './defaultValue',
+        './defined',
+        './DeveloperError',
+        './Ellipsoid',
+        './freezeObject',
+        './Math'
+    ], function(
+        Cartographic,
+        defaultValue,
+        defined,
+        DeveloperError,
+        Ellipsoid,
+        freezeObject,
         CesiumMath) {
     "use strict";
 
@@ -3463,7 +3927,7 @@ define('Core/Rectangle',[
      * Creates the smallest possible Rectangle that encloses all positions in the provided array.
      * @memberof Rectangle
      *
-     * @param {Array} cartographics The list of Cartographic instances.
+     * @param {Cartographic[]} cartographics The list of Cartographic instances.
      * @param {Rectangle} [result] The object onto which to store the result, or undefined if a new instance should be created.
      * @returns {Rectangle} The modified result parameter or a new Rectangle instance if none was provided.
      */
@@ -3498,7 +3962,7 @@ define('Core/Rectangle',[
 
     /**
      * The number of elements used to pack the object into an array.
-     * @Type {Number}
+     * @type {Number}
      */
     Rectangle.packedLength = 4;
 
@@ -3507,7 +3971,7 @@ define('Core/Rectangle',[
      * @memberof Rectangle
      *
      * @param {Rectangle} value The value to pack.
-     * @param {Array} array The array to pack into.
+     * @param {Number[]} array The array to pack into.
      * @param {Number} [startingIndex=0] The index into the array at which to start packing the elements.
      */
     Rectangle.pack = function(value, array, startingIndex) {
@@ -3531,7 +3995,7 @@ define('Core/Rectangle',[
      * Retrieves an instance from a packed array.
      * @memberof Rectangle
      *
-     * @param {Array} array The packed array.
+     * @param {Number[]} array The packed array.
      * @param {Number} [startingIndex=0] The starting index of the element to be unpacked.
      * @param {Rectangle} [result] The object into which to store the result.
      */
@@ -3811,7 +4275,7 @@ define('Core/Rectangle',[
      * @memberof Rectangle
      *
      * @param {Rectangle} rectangle On rectangle to find an intersection
-     * @param otherRectangle Another rectangle to find an intersection
+     * @param {Rectangle} otherRectangle Another rectangle to find an intersection
      * @param {Rectangle} [result] The object onto which to store the result.
      * @returns {Rectangle} The modified result parameter or a new Rectangle instance if none was provided.
      */
@@ -3885,8 +4349,8 @@ define('Core/Rectangle',[
      * @param {Rectangle} rectangle The rectangle to subsample.
      * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid to use.
      * @param {Number} [surfaceHeight=0.0] The height of the rectangle above the ellipsoid.
-     * @param {Array} [result] The array of Cartesians onto which to store the result.
-     * @returns {Array} The modified result parameter or a new Array of Cartesians instances if none was provided.
+     * @param {Cartesian3[]} [result] The array of Cartesians onto which to store the result.
+     * @returns {Cartesian3[]} The modified result parameter or a new Array of Cartesians instances if none was provided.
      */
     Rectangle.subsample = function(rectangle, ellipsoid, surfaceHeight, result) {
                 if (!defined(rectangle)) {
@@ -3966,252 +4430,24 @@ define('Core/Rectangle',[
 });
 
 /*global define*/
-define('Core/GeographicProjection',[
-        './defaultValue',
-        './defined',
-        './defineProperties',
-        './Cartesian3',
-        './Cartographic',
-        './Ellipsoid'
-    ], function(
-        defaultValue,
-        defined,
-        defineProperties,
-        Cartesian3,
-        Cartographic,
-        Ellipsoid) {
-    "use strict";
-
-    /**
-     * A simple map projection where longitude and latitude are linearly mapped to X and Y by multiplying
-     * them by the {@link Ellipsoid#maximumRadius}.  This projection
-     * is commonly known as geographic, equirectangular, equidistant cylindrical, or plate carrée.  It
-     * is also known as EPSG:4326.
-     *
-     * @alias GeographicProjection
-     * @constructor
-     * @immutable
-     *
-     * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid.
-     *
-     * @see WebMercatorProjection
-     */
-    var GeographicProjection = function(ellipsoid) {
-        this._ellipsoid = defaultValue(ellipsoid, Ellipsoid.WGS84);
-        this._semimajorAxis = this._ellipsoid.maximumRadius;
-        this._oneOverSemimajorAxis = 1.0 / this._semimajorAxis;
-    };
-
-    defineProperties(GeographicProjection.prototype, {
-        /**
-         * Gets the {@link Ellipsoid}.
-         * @memberof GeographicProjection.prototype
-         * @type {Ellipsoid}
-         */
-        ellipsoid : {
-            get : function() {
-                return this._ellipsoid;
-            }
-        }
-    });
-
-    /**
-     * Projects a set of {@link Cartographic} coordinates, in radians, to map coordinates, in meters.
-     * X and Y are the longitude and latitude, respectively, multiplied by the maximum radius of the
-     * ellipsoid.  Z is the unmodified height.
-     *
-     * @memberof GeographicProjection
-     *
-     * @param {Cartographic} cartographic The coordinates to project.
-     * @param {Cartesian3} [result] An instance into which to copy the result.  If this parameter is
-     *        undefined, a new instance is created and returned.
-     * @returns {Cartesian3} The projected coordinates.  If the result parameter is not undefined, the
-     *          coordinates are copied there and that instance is returned.  Otherwise, a new instance is
-     *          created and returned.
-     */
-    GeographicProjection.prototype.project = function(cartographic, result) {
-        // Actually this is the special case of equidistant cylindrical called the plate carree
-        var semimajorAxis = this._semimajorAxis;
-        var x = cartographic.longitude * semimajorAxis;
-        var y = cartographic.latitude * semimajorAxis;
-        var z = cartographic.height;
-
-        if (!defined(result)) {
-            return new Cartesian3(x, y, z);
-        }
-
-        result.x = x;
-        result.y = y;
-        result.z = z;
-        return result;
-    };
-
-    /**
-     * Unprojects a set of projected {@link Cartesian3} coordinates, in meters, to {@link Cartographic}
-     * coordinates, in radians.  Longitude and Latitude are the X and Y coordinates, respectively,
-     * divided by the maximum radius of the ellipsoid.  Height is the unmodified Z coordinate.
-     *
-     * @memberof GeographicProjection
-     *
-     * @param {Cartesian3} cartesian The coordinate to unproject.
-     * @param {Cartographic} [result] An instance into which to copy the result.  If this parameter is
-     *        undefined, a new instance is created and returned.
-     * @returns {Cartographic} The unprojected coordinates.  If the result parameter is not undefined, the
-     *          coordinates are copied there and that instance is returned.  Otherwise, a new instance is
-     *          created and returned.
-     */
-    GeographicProjection.prototype.unproject = function(cartesian, result) {
-        var oneOverEarthSemimajorAxis = this._oneOverSemimajorAxis;
-        var longitude = cartesian.x * oneOverEarthSemimajorAxis;
-        var latitude = cartesian.y * oneOverEarthSemimajorAxis;
-        var height = cartesian.z;
-
-        if (!defined(result)) {
-            return new Cartographic(longitude, latitude, height);
-        }
-
-        result.longitude = longitude;
-        result.latitude = latitude;
-        result.height = height;
-        return result;
-    };
-
-    return GeographicProjection;
-});
-
-/*global define*/
-define('Core/Enumeration',['./defined'], function(defined) {
-    "use strict";
-
-    /**
-     * Constructs an enumeration that contains both a numeric value and a name.
-     * This is used so the name of the enumeration is available in the debugger.
-     *
-     * @param {Number} [value=undefined] The numeric value of the enumeration.
-     * @param {String} [name=undefined] The name of the enumeration for debugging purposes.
-     * @param {Object} [properties=undefined] An object containing extra properties to be added to the enumeration.
-     *
-     * @alias Enumeration
-     * @constructor
-     * @example
-     * // Create an object with two enumerations.
-     * var filter = {
-     *     NEAREST : new Cesium.Enumeration(0x2600, 'NEAREST'),
-     *     LINEAR : new Cesium.Enumeration(0x2601, 'LINEAR')
-     * };
-     */
-    var Enumeration = function(value, name, properties) {
-        /**
-         * The numeric value of the enumeration.
-         * @type {Number}
-         * @default undefined
-         */
-        this.value = value;
-
-        /**
-         * The name of the enumeration for debugging purposes.
-         * @type {String}
-         * @default undefined
-         */
-        this.name = name;
-
-        if (defined(properties)) {
-            for ( var propertyName in properties) {
-                if (properties.hasOwnProperty(propertyName)) {
-                    this[propertyName] = properties[propertyName];
-                }
-            }
-        }
-    };
-
-    /**
-     * Returns the numeric value of the enumeration.
-     *
-     * @memberof Enumeration
-     *
-     * @returns {Number} The numeric value of the enumeration.
-     */
-    Enumeration.prototype.valueOf = function() {
-        return this.value;
-    };
-
-    /**
-     * Returns the name of the enumeration for debugging purposes.
-     *
-     * @memberof Enumeration
-     *
-     * @returns {String} The name of the enumeration for debugging purposes.
-     */
-    Enumeration.prototype.toString = function() {
-        return this.name;
-    };
-
-    return Enumeration;
-});
-
-/*global define*/
-define('Core/Intersect',['./Enumeration'], function(Enumeration) {
-    "use strict";
-
-    /**
-     * This enumerated type is used in determining where, relative to the frustum, an
-     * object is located. The object can either be fully contained within the frustum (INSIDE),
-     * partially inside the frustum and partially outside (INTERSECTING), or somwhere entirely
-     * outside of the frustum's 6 planes (OUTSIDE).
-     *
-     * @exports Intersect
-     */
-    var Intersect = {
-        /**
-         * Represents that an object is not contained within the frustum.
-         *
-         * @type {Enumeration}
-         * @constant
-         * @default -1
-         */
-        OUTSIDE : new Enumeration(-1, 'OUTSIDE'),
-
-        /**
-         * Represents that an object intersects one of the frustum's planes.
-         *
-         * @type {Enumeration}
-         * @constant
-         * @default 0
-         */
-        INTERSECTING : new Enumeration(0, 'INTERSECTING'),
-
-        /**
-         * Represents that an object is fully within the frustum.
-         *
-         * @type {Enumeration}
-         * @constant
-         * @default 1
-         */
-        INSIDE : new Enumeration(1, 'INSIDE')
-    };
-
-    return Intersect;
-});
-
-/*global define*/
 define('Core/BoundingRectangle',[
+        './Cartesian2',
+        './Cartographic',
         './defaultValue',
         './defined',
         './DeveloperError',
-        './Cartesian2',
-        './Cartographic',
-        './Rectangle',
         './GeographicProjection',
-        './Intersect'
+        './Intersect',
+        './Rectangle'
     ], function(
+        Cartesian2,
+        Cartographic,
         defaultValue,
         defined,
         DeveloperError,
-        Cartesian2,
-        Cartographic,
-        Rectangle,
         GeographicProjection,
-        Intersect) {
+        Intersect,
+        Rectangle) {
     "use strict";
 
     /**
@@ -4261,7 +4497,7 @@ define('Core/BoundingRectangle',[
      * The rectangle is oriented with the corner at the bottom left.
      * @memberof BoundingRectangle
      *
-     * @param {Array} positions List of points that the bounding rectangle will enclose.  Each point must have <code>x</code> and <code>y</code> properties.
+     * @param {Cartesian2[]} positions List of points that the bounding rectangle will enclose.  Each point must have <code>x</code> and <code>y</code> properties.
      * @param {BoundingRectangle} [result] The object onto which to store the result.
      * @returns {BoundingRectangle} The modified result parameter or a new BoundingRectangle instance if one was not provided.
      */
@@ -4526,7 +4762,10 @@ define('Core/BoundingRectangle',[
 });
 
 /*global define*/
-define('Core/Interval',['./defaultValue'], function(defaultValue) {
+define('Core/Interval',[
+        './defaultValue'
+    ], function(
+        defaultValue) {
     "use strict";
 
     /**
@@ -4687,7 +4926,7 @@ define('Core/Cartesian4',[
 
     /**
      * The number of elements used to pack the object into an array.
-     * @Type {Number}
+     * @type {Number}
      */
     Cartesian4.packedLength = 4;
 
@@ -4696,7 +4935,7 @@ define('Core/Cartesian4',[
      * @memberof Cartesian4
      *
      * @param {Cartesian4} value The value to pack.
-     * @param {Array} array The array to pack into.
+     * @param {Number[]} array The array to pack into.
      * @param {Number} [startingIndex=0] The index into the array at which to start packing the elements.
      */
     Cartesian4.pack = function(value, array, startingIndex) {
@@ -4720,7 +4959,7 @@ define('Core/Cartesian4',[
      * Retrieves an instance from a packed array.
      * @memberof Cartesian4
      *
-     * @param {Array} array The packed array.
+     * @param {Number[]} array The packed array.
      * @param {Number} [startingIndex=0] The starting index of the element to be unpacked.
      * @param {Cartesian4} [result] The object into which to store the result.
      */
@@ -4747,7 +4986,7 @@ define('Core/Cartesian4',[
      * Creates a Cartesian4 from four consecutive elements in an array.
      * @memberof Cartesian4
      *
-     * @param {Array} array The array whose four consecutive elements correspond to the x, y, z, and w components, respectively.
+     * @param {Number[]} array The array whose four consecutive elements correspond to the x, y, z, and w components, respectively.
      * @param {Number} [startingIndex=0] The offset into the array of the first element, which corresponds to the x component.
      * @param {Cartesian4} [result] The object onto which to store the result.
      *
@@ -4768,7 +5007,7 @@ define('Core/Cartesian4',[
      * Computes the value of the maximum component for the supplied Cartesian.
      * @memberof Cartesian4
      *
-     * @param {Cartesian4} The cartesian to use.
+     * @param {Cartesian4} cartesian The cartesian to use.
      * @returns {Number} The value of the maximum component.
      */
     Cartesian4.getMaximumComponent = function(cartesian) {
@@ -4783,7 +5022,7 @@ define('Core/Cartesian4',[
      * Computes the value of the minimum component for the supplied Cartesian.
      * @memberof Cartesian4
      *
-     * @param {Cartesian4} The cartesian to use.
+     * @param {Cartesian4} cartesian The cartesian to use.
      * @returns {Number} The value of the minimum component.
      */
     Cartesian4.getMinimumComponent = function(cartesian) {
@@ -5131,9 +5370,9 @@ define('Core/Cartesian4',[
      * Computes the linear interpolation or extrapolation at t using the provided cartesians.
      * @memberof Cartesian4
      *
-     * @param start The value corresponding to t at 0.0.
-     * @param end The value corresponding to t at 1.0.
-     * @param t The point along t at which to interpolate.
+     * @param {Cartesian4} start The value corresponding to t at 0.0.
+     * @param {Cartesian4}end The value corresponding to t at 1.0.
+     * @param {Number} t The point along t at which to interpolate.
      * @param {Cartesian4} [result] The object onto which to store the result.
      * @returns {Cartesian4} The modified result parameter or a new Cartesian4 instance if one was not provided.
      */
@@ -5409,7 +5648,7 @@ define('Core/Matrix3',[
      * Creates a Matrix3 from 9 consecutive elements in an array.
      * @memberof Matrix3
      *
-     * @param {Array} array The array whose 9 consecutive elements correspond to the positions of the matrix.  Assumes column-major order.
+     * @param {Number[]} array The array whose 9 consecutive elements correspond to the positions of the matrix.  Assumes column-major order.
      * @param {Number} [startingIndex=0] The offset into the array of the first element, which corresponds to first column first row position in the matrix.
      * @param {Matrix3} [result] The object onto which to store the result.
      *
@@ -5457,7 +5696,7 @@ define('Core/Matrix3',[
      * @memberof Matrix3
      * @function
      *
-     * @param {Array} values The column-major order array.
+     * @param {Number[]} values The column-major order array.
      * @param {Matrix3} [result] The object in which the result will be stored, if undefined a new instance will be created.
      * @returns The modified result parameter, or a new Matrix3 instance if one was not provided.
      */
@@ -5474,7 +5713,7 @@ define('Core/Matrix3',[
      * The resulting matrix will be in column-major order.
      * @memberof Matrix3
      *
-     * @param {Array} values The row-major order array.
+     * @param {Number[]} values The row-major order array.
      * @param {Matrix3} [result] The object in which the result will be stored, if undefined a new instance will be created.
      * @returns The modified result parameter, or a new Matrix3 instance if one was not provided.
      */
@@ -5763,8 +6002,8 @@ define('Core/Matrix3',[
      * @memberof Matrix3
      *
      * @param {Matrix3} matrix The matrix to use..
-     * @param {Array} [result] The Array onto which to store the result.
-     * @returns {Array} The modified Array parameter or a new Array instance if one was not provided.
+     * @param {Number[]} [result] The Array onto which to store the result.
+     * @returns {Number[]} The modified Array parameter or a new Array instance if one was not provided.
      */
     Matrix3.toArray = function(matrix, result) {
                 if (!defined(matrix)) {
@@ -6604,7 +6843,10 @@ define('Core/Matrix3',[
 });
 
 /*global define*/
-define('Core/RuntimeError',['./defined'], function(defined) {
+define('Core/RuntimeError',[
+        './defined'
+    ], function(
+        defined) {
     "use strict";
 
     /**
@@ -6618,7 +6860,7 @@ define('Core/RuntimeError',['./defined'], function(defined) {
      *
      * @alias RuntimeError
      *
-     * @param {String} [message=undefined] The error message for this exception.
+     * @param {String} [message] The error message for this exception.
      *
      * @see DeveloperError
      * @constructor
@@ -6755,7 +6997,7 @@ define('Core/Matrix4',[
 
     /**
      * The number of elements used to pack the object into an array.
-     * @Type {Number}
+     * @type {Number}
      */
     Matrix4.packedLength = 16;
 
@@ -6764,7 +7006,7 @@ define('Core/Matrix4',[
      * @memberof Matrix4
      *
      * @param {Matrix4} value The value to pack.
-     * @param {Array} array The array to pack into.
+     * @param {Number[]} array The array to pack into.
      * @param {Number} [startingIndex=0] The index into the array at which to start packing the elements.
      */
     Matrix4.pack = function(value, array, startingIndex) {
@@ -6800,7 +7042,7 @@ define('Core/Matrix4',[
      * Retrieves an instance from a packed array.
      * @memberof Matrix4
      *
-     * @param {Array} array The packed array.
+     * @param {Number[]} array The packed array.
      * @param {Number} [startingIndex=0] The starting index of the element to be unpacked.
      * @param {Matrix4} [result] The object into which to store the result.
      */
@@ -6875,7 +7117,7 @@ define('Core/Matrix4',[
      * Creates a Matrix4 from 16 consecutive elements in an array.
      * @memberof Matrix4
      *
-     * @param {Array} array The array whose 16 consecutive elements correspond to the positions of the matrix.  Assumes column-major order.
+     * @param {Number[]} array The array whose 16 consecutive elements correspond to the positions of the matrix.  Assumes column-major order.
      * @param {Number} [startingIndex=0] The offset into the array of the first element, which corresponds to first column first row position in the matrix.
      * @param {Matrix4} [result] The object onto which to store the result.
      *
@@ -6902,7 +7144,7 @@ define('Core/Matrix4',[
      * @memberof Matrix4
      * @function
      *
-     * @param {Array} values The column-major order array.
+     * @param {Number[]} values The column-major order array.
      * @param {Matrix4} [result] The object in which the result will be stored, if undefined a new instance will be created.
      * @returns The modified result parameter, or a new Matrix4 instance if one was not provided.
      */
@@ -6919,7 +7161,7 @@ define('Core/Matrix4',[
      * The resulting matrix will be in column-major order.
      * @memberof Matrix4
      *
-     * @param {Array} values The row-major order array.
+     * @param {Number[]} values The row-major order array.
      * @param {Matrix4} [result] The object in which the result will be stored, if undefined a new instance will be created.
      * @returns The modified result parameter, or a new Matrix4 instance if one was not provided.
      */
@@ -7554,13 +7796,12 @@ define('Core/Matrix4',[
      * @memberof Matrix4
      *
      * @param {Object}[viewport = { x : 0.0, y : 0.0, width : 0.0, height : 0.0 }] The viewport's corners as shown in Example 1.
-     * @param {Number}[nearDepthRange = 0.0] The near plane distance in window coordinates.
-     * @param {Number}[farDepthRange = 1.0] The far plane distance in window coordinates.
+     * @param {Number}[nearDepthRange=0.0] The near plane distance in window coordinates.
+     * @param {Number}[farDepthRange=1.0] The far plane distance in window coordinates.
      * @param {Matrix4} [result] The object in which the result will be stored, if undefined a new instance will be created.
      * @returns The modified result parameter, or a new Matrix4 instance if one was not provided.
      *
      * @see czm_viewportTransformation
-     * @see Context#getViewport
      *
      * @example
      * // Example 1.  Create viewport transformation using an explicit viewport and depth range.
@@ -7626,8 +7867,8 @@ define('Core/Matrix4',[
      * @memberof Matrix4
      *
      * @param {Matrix4} matrix The matrix to use..
-     * @param {Array} [result] The Array onto which to store the result.
-     * @returns {Array} The modified Array parameter or a new Array instance if one was not provided.
+     * @param {Number[]} [result] The Array onto which to store the result.
+     * @returns {Number[]} The modified Array parameter or a new Array instance if one was not provided.
      *
      * @example
      * //create an array from an instance of Matrix4
@@ -8046,7 +8287,7 @@ define('Core/Matrix4',[
      * column are the translation.  The bottom row is assumed to be [0, 0, 0, 1].
      * The matrix is not verified to be in the proper form.
      * This method is faster than computing the product for general 4x4
-     * matrices using {@link #multiply}.
+     * matrices using {@link Matrix4.multiply}.
      * @memberof Matrix4
      *
      * @param {Matrix4} left The first matrix.
@@ -8808,7 +9049,7 @@ define('Core/Matrix4',[
       * Computes the inverse of the provided matrix using Cramers Rule.
       * If the determinant is zero, the matrix can not be inverted, and an exception is thrown.
       * If the matrix is an affine transformation matrix, it is more efficient
-      * to invert it with {@link #inverseTransformation}.
+      * to invert it with {@link Matrix4.inverseTransformation}.
       * @memberof Matrix4
       *
       * @param {Matrix4} matrix The matrix to invert.
@@ -8933,7 +9174,7 @@ define('Core/Matrix4',[
      * column are the translation.  The bottom row is assumed to be [0, 0, 0, 1].
      * The matrix is not verified to be in the proper form.
      * This method is faster than computing the inverse for a general 4x4
-     * matrix using {@link #inverse}.
+     * matrix using {@link Matrix4.inverse}.
      * @memberof Matrix4
      *
      * @param {Matrix4} matrix The matrix to invert.
@@ -9161,11 +9402,11 @@ define('Core/BoundingSphere',[
         './defined',
         './DeveloperError',
         './Ellipsoid',
-        './Rectangle',
         './GeographicProjection',
         './Intersect',
         './Interval',
-        './Matrix4'
+        './Matrix4',
+        './Rectangle'
     ], function(
         Cartesian3,
         Cartographic,
@@ -9173,11 +9414,11 @@ define('Core/BoundingSphere',[
         defined,
         DeveloperError,
         Ellipsoid,
-        Rectangle,
         GeographicProjection,
         Intersect,
         Interval,
-        Matrix4) {
+        Matrix4,
+        Rectangle) {
     "use strict";
 
     /**
@@ -9227,11 +9468,11 @@ define('Core/BoundingSphere',[
      * Ritter's algorithm. The smaller of the two spheres is used to ensure a tight fit.
      * @memberof BoundingSphere
      *
-     * @param {Array} positions An array of points that the bounding sphere will enclose.  Each point must have <code>x</code>, <code>y</code>, and <code>z</code> properties.
+     * @param {Cartesian3[]} positions An array of points that the bounding sphere will enclose.  Each point must have <code>x</code>, <code>y</code>, and <code>z</code> properties.
      * @param {BoundingSphere} [result] The object onto which to store the result.
      * @returns {BoundingSphere} The modified result parameter or a new BoundingSphere instance if one was not provided.
      *
-     * @see <a href='http://blogs.agi.com/insight3d/index.php/2008/02/04/a-bounding/'>Bounding Sphere computation article</a>
+     * @see {@link http://blogs.agi.com/insight3d/index.php/2008/02/04/a-bounding/|Bounding Sphere computation article}
      */
     BoundingSphere.fromPoints = function(positions, result) {
         if (!defined(result)) {
@@ -9467,7 +9708,7 @@ define('Core/BoundingSphere',[
      *
      * @memberof BoundingSphere
      *
-     * @param {Array} positions An array of points that the bounding sphere will enclose.  Each point
+     * @param {Cartesian3[]} positions An array of points that the bounding sphere will enclose.  Each point
      *        is formed from three elements in the array in the order X, Y, Z.
      * @param {Cartesian3} [center=Cartesian3.ZERO] The position to which the positions are relative, which need not be the
      *        origin of the coordinate system.  This is useful when the positions are to be used for
@@ -9481,7 +9722,7 @@ define('Core/BoundingSphere',[
      * @param {BoundingSphere} [result] The object onto which to store the result.
      * @returns {BoundingSphere} The modified result parameter or a new BoundingSphere instance if one was not provided.
      *
-     * @see <a href='http://blogs.agi.com/insight3d/index.php/2008/02/04/a-bounding/'>Bounding Sphere computation article</a>
+     * @see {@link http://blogs.agi.com/insight3d/index.php/2008/02/04/a-bounding/|Bounding Sphere computation article}
      *
      * @example
      * // Compute the bounding sphere from 3 positions, each specified relative to a center.
@@ -9726,7 +9967,7 @@ define('Core/BoundingSphere',[
 
     /**
      * The number of elements used to pack the object into an array.
-     * @Type {Number}
+     * @type {Number}
      */
     BoundingSphere.packedLength = 4;
 
@@ -9735,7 +9976,7 @@ define('Core/BoundingSphere',[
      * @memberof BoundingSphere
      *
      * @param {BoundingSphere} value The value to pack.
-     * @param {Array} array The array to pack into.
+     * @param {Number[]} array The array to pack into.
      * @param {Number} [startingIndex=0] The index into the array at which to start packing the elements.
      */
     BoundingSphere.pack = function(value, array, startingIndex) {
@@ -9760,7 +10001,7 @@ define('Core/BoundingSphere',[
      * Retrieves an instance from a packed array.
      * @memberof BoundingSphere
      *
-     * @param {Array} array The packed array.
+     * @param {Number[]} array The packed array.
      * @param {Number} [startingIndex=0] The starting index of the element to be unpacked.
      * @param {Cartesian3} [result] The object into which to store the result.
      */
@@ -9858,10 +10099,11 @@ define('Core/BoundingSphere',[
      * @param {BoundingSphere} sphere The bounding sphere to test.
      * @param {Cartesian4} plane The coefficients of the plane in the for ax + by + cz + d = 0
      *                           where the coefficients a, b, c, and d are the components x, y, z,
-     *                           and w of the {Cartesian4}, respectively.
-     * @returns {Intersect} {Intersect.INSIDE} if the entire sphere is on the side of the plane the normal
-     *                     is pointing, {Intersect.OUTSIDE} if the entire sphere is on the opposite side,
-     *                     and {Intersect.INTERSETING} if the sphere intersects the plane.
+     *                           and w of the {@link Cartesian4}, respectively.
+     * @returns {Intersect} {@link Intersect.INSIDE} if the entire sphere is on the side of the plane
+     *                      the normal is pointing, {@link Intersect.OUTSIDE} if the entire sphere is
+     *                      on the opposite side, and {@link Intersect.INTERSECTING} if the sphere
+     *                      intersects the plane.
      */
     BoundingSphere.intersect = function(sphere, plane) {
                 if (!defined(sphere)) {
@@ -9945,7 +10187,7 @@ define('Core/BoundingSphere',[
     /**
      * Applies a 4x4 affine transformation matrix to a bounding sphere where there is no scale
      * The transformation matrix is not verified to have a uniform scale of 1.
-     * This method is faster than computing the general bounding sphere transform using {@link #transform}.
+     * This method is faster than computing the general bounding sphere transform using {@link BoundingSphere.transform}.
      * @memberof BoundingSphere
      *
      * @param {BoundingSphere} sphere The bounding sphere to apply the transformation to.
@@ -10151,10 +10393,11 @@ define('Core/BoundingSphere',[
      *
      * @param {Cartesian4} plane The coefficients of the plane in the for ax + by + cz + d = 0
      *                           where the coefficients a, b, c, and d are the components x, y, z,
-     *                           and w of the {Cartesian4}, respectively.
-     * @returns {Intersect} {Intersect.INSIDE} if the entire sphere is on the side of the plane the normal
-     *                     is pointing, {Intersect.OUTSIDE} if the entire sphere is on the opposite side,
-     *                     and {Intersect.INTERSETING} if the sphere intersects the plane.
+     *                           and w of the {@link Cartesian4}, respectively.
+     * @returns {Intersect} {@link Intersect.INSIDE} if the entire sphere is on the side of the plane
+     *                      the normal is pointing, {@link Intersect.OUTSIDE} if the entire sphere is
+     *                      on the opposite side, and {@link Intersect.INTERSECTING} if the sphere
+     *                      intersects the plane.
      */
     BoundingSphere.prototype.intersect = function(plane) {
         return BoundingSphere.intersect(this, plane);
@@ -10210,7 +10453,7 @@ define('Core/Fullscreen',[
      *
      * @exports Fullscreen
      *
-     * @see <a href='http://dvcs.w3.org/hg/fullscreen/raw-file/tip/Overview.html'>W3C Fullscreen Living Specification</a>
+     * @see {@link http://dvcs.w3.org/hg/fullscreen/raw-file/tip/Overview.html|W3C Fullscreen Living Specification}
      */
     var Fullscreen = {};
 
@@ -10569,7 +10812,7 @@ define('Core/FeatureDetection',[
      * @returns true if the browser supports the full screen standard, false if not.
      *
      * @see Fullscreen
-     * @see <a href='http://dvcs.w3.org/hg/fullscreen/raw-file/tip/Overview.html'>W3C Fullscreen Living Specification</a>
+     * @see {@link http://dvcs.w3.org/hg/fullscreen/raw-file/tip/Overview.html|W3C Fullscreen Living Specification}
      */
     FeatureDetection.supportsFullscreen = function() {
         return Fullscreen.supportsFullscreen();
@@ -10580,7 +10823,7 @@ define('Core/FeatureDetection',[
      *
      * @returns true if the browser supports typed arrays, false if not.
      *
-     * @see <a href='http://www.khronos.org/registry/typedarray/specs/latest/'>Typed Array Specification</a>
+     * @see {@link http://www.khronos.org/registry/typedarray/specs/latest/|Typed Array Specification}
      */
     FeatureDetection.supportsTypedArrays = function() {
         return typeof ArrayBuffer !== 'undefined';
@@ -10593,14 +10836,12 @@ define('Core/ComponentDatatype',[
         './defaultValue',
         './defined',
         './DeveloperError',
-        './FeatureDetection',
-        './Enumeration'
+        './FeatureDetection'
     ], function(
         defaultValue,
         defined,
         DeveloperError,
-        FeatureDetection,
-        Enumeration) {
+        FeatureDetection) {
     "use strict";
 
     // Bail out if the browser doesn't support typed arrays, to prevent the setup function
@@ -10610,110 +10851,109 @@ define('Core/ComponentDatatype',[
     }
 
     /**
-     * Enumerations for WebGL component datatypes.  Components are intrinsics,
+     * WebGL component datatypes.  Components are intrinsics,
      * which form attributes, which form vertices.
      *
      * @alias ComponentDatatype
-     * @enumeration
      */
     var ComponentDatatype = {
         /**
-         * 8-bit signed byte enumeration corresponding to <code>gl.BYTE</code> and the type
+         * 8-bit signed byte corresponding to <code>gl.BYTE</code> and the type
          * of an element in <code>Int8Array</code>.
          *
-         * @type {Enumeration}
+         * @type {Number}
          * @constant
          * @default 0x1400
          */
-        BYTE : new Enumeration(0x1400, 'BYTE', {
-            sizeInBytes : Int8Array.BYTES_PER_ELEMENT
-        }),
+        BYTE : 0x1400,
 
         /**
-         * 8-bit unsigned byte enumeration corresponding to <code>UNSIGNED_BYTE</code> and the type
+         * 8-bit unsigned byte corresponding to <code>UNSIGNED_BYTE</code> and the type
          * of an element in <code>Uint8Array</code>.
          *
-         * @type {Enumeration}
+         * @type {Number}
          * @constant
          * @default 0x1401
          */
-        UNSIGNED_BYTE : new Enumeration(0x1401, 'UNSIGNED_BYTE', {
-            sizeInBytes : Uint8Array.BYTES_PER_ELEMENT
-        }),
+        UNSIGNED_BYTE : 0x1401,
 
         /**
-         * 16-bit signed short enumeration corresponding to <code>SHORT</code> and the type
+         * 16-bit signed short corresponding to <code>SHORT</code> and the type
          * of an element in <code>Int16Array</code>.
          *
-         * @type {Enumeration}
+         * @type {Number}
          * @constant
          * @default 0x1402
          */
-        SHORT : new Enumeration(0x1402, 'SHORT', {
-            sizeInBytes : Int16Array.BYTES_PER_ELEMENT
-        }),
+        SHORT : 0x1402,
 
         /**
-         * 16-bit unsigned short enumeration corresponding to <code>UNSIGNED_SHORT</code> and the type
+         * 16-bit unsigned short corresponding to <code>UNSIGNED_SHORT</code> and the type
          * of an element in <code>Uint16Array</code>.
          *
-         * @type {Enumeration}
+         * @type {Number}
          * @constant
          * @default 0x1403
          */
-        UNSIGNED_SHORT : new Enumeration(0x1403, 'UNSIGNED_SHORT', {
-            sizeInBytes : Uint16Array.BYTES_PER_ELEMENT
-        }),
+        UNSIGNED_SHORT : 0x1403,
 
         /**
-         * 32-bit floating-point enumeration corresponding to <code>FLOAT</code> and the type
+         * 32-bit floating-point corresponding to <code>FLOAT</code> and the type
          * of an element in <code>Float32Array</code>.
          *
-         * @type {Enumeration}
+         * @type {Number}
          * @constant
          * @default 0x1406
          */
-        FLOAT : new Enumeration(0x1406, 'FLOAT', {
-            sizeInBytes : Float32Array.BYTES_PER_ELEMENT
-        }),
+        FLOAT : 0x1406,
 
         /**
-         * 64-bit floating-point enumeration corresponding to <code>gl.DOUBLE</code> (in Desktop OpenGL;
+         * 64-bit floating-point corresponding to <code>gl.DOUBLE</code> (in Desktop OpenGL;
          * this is not supported in WebGL, and is emulated in Cesium via {@link GeometryPipeline.encodeAttribute})
          * and the type of an element in <code>Float64Array</code>.
          *
          * @memberOf ComponentDatatype
          *
-         * @type {Enumeration}
+         * @type {Number}
          * @constant
          * @default 0x140A
          */
-        DOUBLE : new Enumeration(0x140A, 'DOUBLE', {
-            sizeInBytes : Float64Array.BYTES_PER_ELEMENT
-        })
+        DOUBLE : 0x140A
     };
 
     /**
-     * Gets the ComponentDatatype for the provided value.
+     * Returns the size, in bytes, of the corresponding datatype.
      *
-     * @param {Number} value The value.
+     * @param {ComponentDatatype} componentDatatype The component datatype to get the size of.
      *
-     * @returns {ComponentDatatype} The ComponentDatatype for the provided value, or undefined if no enumeration with the provided value exists.
+     * @returns {Number} The size in bytes.
+     *
+     * @exception {DeveloperError} componentDatatype is not a valid value.
+     *
+     * @example
+     * // Returns Int8Array.BYTES_PER_ELEMENT
+     * var size = Cesium.ComponentDatatype.getSizeInBytes(Cesium.ComponentDatatype.BYTE);
      */
-    ComponentDatatype.fromValue = function(value) {
-        switch (value) {
-        case ComponentDatatype.BYTE.value:
-            return ComponentDatatype.BYTE;
-        case ComponentDatatype.UNSIGNED_BYTE.value:
-            return ComponentDatatype.UNSIGNED_BYTE;
-        case ComponentDatatype.SHORT.value:
-            return ComponentDatatype.SHORT;
-        case ComponentDatatype.UNSIGNED_SHORT.value:
-            return ComponentDatatype.UNSIGNED_SHORT;
-        case ComponentDatatype.FLOAT.value:
-            return ComponentDatatype.FLOAT;
-        case ComponentDatatype.DOUBLE.value:
-            return ComponentDatatype.DOUBLE;
+    ComponentDatatype.getSizeInBytes = function(componentDatatype){
+                if (!defined(componentDatatype)) {
+            throw new DeveloperError('value is required.');
+        }
+        
+        switch (componentDatatype) {
+        case ComponentDatatype.BYTE:
+            return Int8Array.BYTES_PER_ELEMENT;
+        case ComponentDatatype.UNSIGNED_BYTE:
+            return Uint8Array.BYTES_PER_ELEMENT;
+        case ComponentDatatype.SHORT:
+            return Int16Array.BYTES_PER_ELEMENT;
+        case ComponentDatatype.UNSIGNED_SHORT:
+            return Uint16Array.BYTES_PER_ELEMENT;
+        case ComponentDatatype.FLOAT:
+            return Float32Array.BYTES_PER_ELEMENT;
+        case ComponentDatatype.DOUBLE:
+            return Float64Array.BYTES_PER_ELEMENT;
+        default:
+            throw new DeveloperError('componentDatatype is not a valid value.');
         }
     };
 
@@ -10750,21 +10990,21 @@ define('Core/ComponentDatatype',[
      *
      * @param {ComponentDatatype} componentDatatype The component datatype to validate.
      *
-     * @returns {Boolean} <code>true</code> if the provided component datatype is a valid enumeration value; otherwise, <code>false</code>.
+     * @returns {Boolean} <code>true</code> if the provided component datatype is a valid value; otherwise, <code>false</code>.
      *
      * @example
      * if (!Cesium.ComponentDatatype.validate(componentDatatype)) {
-     *   throw new Cesium.DeveloperError('componentDatatype must be a valid enumeration value.');
+     *   throw new Cesium.DeveloperError('componentDatatype must be a valid value.');
      * }
      */
     ComponentDatatype.validate = function(componentDatatype) {
-        return defined(componentDatatype) && defined(componentDatatype.value) &&
-               (componentDatatype.value === ComponentDatatype.BYTE.value ||
-                componentDatatype.value === ComponentDatatype.UNSIGNED_BYTE.value ||
-                componentDatatype.value === ComponentDatatype.SHORT.value ||
-                componentDatatype.value === ComponentDatatype.UNSIGNED_SHORT.value ||
-                componentDatatype.value === ComponentDatatype.FLOAT.value ||
-                componentDatatype.value === ComponentDatatype.DOUBLE.value);
+        return defined(componentDatatype) &&
+               (componentDatatype === ComponentDatatype.BYTE ||
+                componentDatatype === ComponentDatatype.UNSIGNED_BYTE ||
+                componentDatatype === ComponentDatatype.SHORT ||
+                componentDatatype === ComponentDatatype.UNSIGNED_SHORT ||
+                componentDatatype === ComponentDatatype.FLOAT ||
+                componentDatatype === ComponentDatatype.DOUBLE);
     };
 
     /**
@@ -10776,7 +11016,7 @@ define('Core/ComponentDatatype',[
      *
      * @returns {Int8Array|Uint8Array|Int16Array|Uint16Array|Float32Array|Float64Array} A typed array.
      *
-     * @exception {DeveloperError} componentDatatype is not a valid enumeration value.
+     * @exception {DeveloperError} componentDatatype is not a valid value.
      *
      * @example
      * // creates a Float32Array with length of 100
@@ -10790,21 +11030,21 @@ define('Core/ComponentDatatype',[
             throw new DeveloperError('valuesOrLength is required.');
         }
         
-        switch (componentDatatype.value) {
-        case ComponentDatatype.BYTE.value:
+        switch (componentDatatype) {
+        case ComponentDatatype.BYTE:
             return new Int8Array(valuesOrLength);
-        case ComponentDatatype.UNSIGNED_BYTE.value:
+        case ComponentDatatype.UNSIGNED_BYTE:
             return new Uint8Array(valuesOrLength);
-        case ComponentDatatype.SHORT.value:
+        case ComponentDatatype.SHORT:
             return new Int16Array(valuesOrLength);
-        case ComponentDatatype.UNSIGNED_SHORT.value:
+        case ComponentDatatype.UNSIGNED_SHORT:
             return new Uint16Array(valuesOrLength);
-        case ComponentDatatype.FLOAT.value:
+        case ComponentDatatype.FLOAT:
             return new Float32Array(valuesOrLength);
-        case ComponentDatatype.DOUBLE.value:
+        case ComponentDatatype.DOUBLE:
             return new Float64Array(valuesOrLength);
         default:
-            throw new DeveloperError('componentDatatype is not a valid enumeration value.');
+            throw new DeveloperError('componentDatatype is not a valid value.');
         }
     };
 
@@ -10819,7 +11059,7 @@ define('Core/ComponentDatatype',[
      *
      * @returns {Int8Array|Uint8Array|Int16Array|Uint16Array|Float32Array|Float64Array} A typed array view of the buffer.
      *
-     * @exception {DeveloperError} componentDatatype is not a valid enumeration value.
+     * @exception {DeveloperError} componentDatatype is not a valid value.
      */
     ComponentDatatype.createArrayBufferView = function(componentDatatype, buffer, byteOffset, length) {
                 if (!defined(componentDatatype)) {
@@ -10830,439 +11070,2468 @@ define('Core/ComponentDatatype',[
         }
         
         byteOffset = defaultValue(byteOffset, 0);
-        length = defaultValue(length, (buffer.byteLength - byteOffset) / componentDatatype.sizeInBytes);
+        length = defaultValue(length, (buffer.byteLength - byteOffset) / ComponentDatatype.getSizeInBytes(componentDatatype));
 
-        switch (componentDatatype.value) {
-        case ComponentDatatype.BYTE.value:
+        switch (componentDatatype) {
+        case ComponentDatatype.BYTE:
             return new Int8Array(buffer, byteOffset, length);
-        case ComponentDatatype.UNSIGNED_BYTE.value:
+        case ComponentDatatype.UNSIGNED_BYTE:
             return new Uint8Array(buffer, byteOffset, length);
-        case ComponentDatatype.SHORT.value:
+        case ComponentDatatype.SHORT:
             return new Int16Array(buffer, byteOffset, length);
-        case ComponentDatatype.UNSIGNED_SHORT.value:
+        case ComponentDatatype.UNSIGNED_SHORT:
             return new Uint16Array(buffer, byteOffset, length);
-        case ComponentDatatype.FLOAT.value:
+        case ComponentDatatype.FLOAT:
             return new Float32Array(buffer, byteOffset, length);
-        case ComponentDatatype.DOUBLE.value:
+        case ComponentDatatype.DOUBLE:
             return new Float64Array(buffer, byteOffset, length);
         default:
-            throw new DeveloperError('componentDatatype is not a valid enumeration value.');
+            throw new DeveloperError('componentDatatype is not a valid value.');
         }
     };
 
     return ComponentDatatype;
 });
 
-/**
- * @fileOverview
- * @license
- *
- * Grauw URI utilities
- *
- * See: http://hg.grauw.nl/grauw-lib/file/tip/src/uri.js
- *
- * @author Laurens Holst (http://www.grauw.nl/)
- *
- *   Copyright 2012 Laurens Holst
- *
- *   Licensed under the Apache License, Version 2.0 (the "License");
- *   you may not use this file except in compliance with the License.
- *   You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
- *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   See the License for the specific language governing permissions and
- *   limitations under the License.
- *
- */
 /*global define*/
-define('ThirdParty/Uri',[],function() {
-
-	/**
-	 * Constructs a URI object.
-	 * @constructor
-	 * @class Implementation of URI parsing and base URI resolving algorithm in RFC 3986.
-	 * @param {string|URI} uri A string or URI object to create the object from.
-	 */
-	function URI(uri) {
-		if (uri instanceof URI) {  // copy constructor
-			this.scheme = uri.scheme;
-			this.authority = uri.authority;
-			this.path = uri.path;
-			this.query = uri.query;
-			this.fragment = uri.fragment;
-		} else if (uri) {  // uri is URI string or cast to string
-			var c = parseRegex.exec(uri);
-			this.scheme = c[1];
-			this.authority = c[2];
-			this.path = c[3];
-			this.query = c[4];
-			this.fragment = c[5];
-		}
-	};
-
-	// Initial values on the prototype
-	URI.prototype.scheme    = null;
-	URI.prototype.authority = null;
-	URI.prototype.path      = '';
-	URI.prototype.query     = null;
-	URI.prototype.fragment  = null;
-
-	// Regular expression from RFC 3986 appendix B
-	var parseRegex = new RegExp('^(?:([^:/?#]+):)?(?://([^/?#]*))?([^?#]*)(?:\\?([^#]*))?(?:#(.*))?$');
-
-	/**
-	 * Returns the scheme part of the URI.
-	 * In "http://example.com:80/a/b?x#y" this is "http".
-	 */
-	URI.prototype.getScheme = function() {
-		return this.scheme;
-	};
-
-	/**
-	 * Returns the authority part of the URI.
-	 * In "http://example.com:80/a/b?x#y" this is "example.com:80".
-	 */
-	URI.prototype.getAuthority = function() {
-		return this.authority;
-	};
-
-	/**
-	 * Returns the path part of the URI.
-	 * In "http://example.com:80/a/b?x#y" this is "/a/b".
-	 * In "mailto:mike@example.com" this is "mike@example.com".
-	 */
-	URI.prototype.getPath = function() {
-		return this.path;
-	};
-
-	/**
-	 * Returns the query part of the URI.
-	 * In "http://example.com:80/a/b?x#y" this is "x".
-	 */
-	URI.prototype.getQuery = function() {
-		return this.query;
-	};
-
-	/**
-	 * Returns the fragment part of the URI.
-	 * In "http://example.com:80/a/b?x#y" this is "y".
-	 */
-	URI.prototype.getFragment = function() {
-		return this.fragment;
-	};
-
-	/**
-	 * Tests whether the URI is an absolute URI.
-	 * See RFC 3986 section 4.3.
-	 */
-	URI.prototype.isAbsolute = function() {
-		return !!this.scheme && !this.fragment;
-	};
-
-	///**
-	//* Extensive validation of the URI against the ABNF in RFC 3986
-	//*/
-	//URI.prototype.validate
-
-	/**
-	 * Tests whether the URI is a same-document reference.
-	 * See RFC 3986 section 4.4.
-	 *
-	 * To perform more thorough comparison, you can normalise the URI objects.
-	 */
-	URI.prototype.isSameDocumentAs = function(uri) {
-		return uri.scheme == this.scheme &&
-		    uri.authority == this.authority &&
-		         uri.path == this.path &&
-		        uri.query == this.query;
-	};
-
-	/**
-	 * Simple String Comparison of two URIs.
-	 * See RFC 3986 section 6.2.1.
-	 *
-	 * To perform more thorough comparison, you can normalise the URI objects.
-	 */
-	URI.prototype.equals = function(uri) {
-		return this.isSameDocumentAs(uri) && uri.fragment == this.fragment;
-	};
-
-	/**
-	 * Normalizes the URI using syntax-based normalization.
-	 * This includes case normalization, percent-encoding normalization and path segment normalization.
-	 * XXX: Percent-encoding normalization does not escape characters that need to be escaped.
-	 *      (Although that would not be a valid URI in the first place. See validate().)
-	 * See RFC 3986 section 6.2.2.
-	 */
-	URI.prototype.normalize = function() {
-		this.removeDotSegments();
-		if (this.scheme)
-			this.scheme = this.scheme.toLowerCase();
-		if (this.authority)
-			this.authority = this.authority.replace(authorityRegex, replaceAuthority).
-									replace(caseRegex, replaceCase);
-		if (this.path)
-			this.path = this.path.replace(caseRegex, replaceCase);
-		if (this.query)
-			this.query = this.query.replace(caseRegex, replaceCase);
-		if (this.fragment)
-			this.fragment = this.fragment.replace(caseRegex, replaceCase);
-	};
-
-	var caseRegex = /%[0-9a-z]{2}/gi;
-	var percentRegex = /[a-zA-Z0-9\-\._~]/;
-	var authorityRegex = /(.*@)?([^@:]*)(:.*)?/;
-
-	function replaceCase(str) {
-		var dec = unescape(str);
-		return percentRegex.test(dec) ? dec : str.toUpperCase();
-	}
-
-	function replaceAuthority(str, p1, p2, p3) {
-		return (p1 || '') + p2.toLowerCase() + (p3 || '');
-	}
-
-	/**
-	 * Resolve a relative URI (this) against a base URI.
-	 * The base URI must be an absolute URI.
-	 * See RFC 3986 section 5.2
-	 */
-	URI.prototype.resolve = function(baseURI) {
-		var uri = new URI();
-		if (this.scheme) {
-			uri.scheme = this.scheme;
-			uri.authority = this.authority;
-			uri.path = this.path;
-			uri.query = this.query;
-		} else {
-			uri.scheme = baseURI.scheme;
-			if (this.authority) {
-				uri.authority = this.authority;
-				uri.path = this.path;
-				uri.query = this.query;
-			} else {
-				uri.authority = baseURI.authority;
-				if (this.path == '') {
-					uri.path = baseURI.path;
-					uri.query = this.query || baseURI.query;
-				} else {
-					if (this.path.charAt(0) == '/') {
-						uri.path = this.path;
-						uri.removeDotSegments();
-					} else {
-						if (baseURI.authority && baseURI.path == '') {
-							uri.path = '/' + this.path;
-						} else {
-							uri.path = baseURI.path.substring(0, baseURI.path.lastIndexOf('/') + 1) + this.path;
-						}
-						uri.removeDotSegments();
-					}
-					uri.query = this.query;
-				}
-			}
-		}
-		uri.fragment = this.fragment;
-		return uri;
-	};
-
-	/**
-	 * Remove dot segments from path.
-	 * See RFC 3986 section 5.2.4
-	 * @private
-	 */
-	URI.prototype.removeDotSegments = function() {
-		var input = this.path.split('/'),
-			output = [],
-			segment,
-			absPath = input[0] == '';
-		if (absPath)
-			input.shift();
-		var sFirst = input[0] == '' ? input.shift() : null;
-		while (input.length) {
-			segment = input.shift();
-			if (segment == '..') {
-				output.pop();
-			} else if (segment != '.') {
-				output.push(segment);
-			}
-		}
-		if (segment == '.' || segment == '..')
-			output.push('');
-		if (absPath)
-			output.unshift('');
-		this.path = output.join('/');
-	};
-
-	// We don't like this function because it builds up a cache that is never cleared.
-//	/**
-//	 * Resolves a relative URI against an absolute base URI.
-//	 * Convenience method.
-//	 * @param {String} uri the relative URI to resolve
-//	 * @param {String} baseURI the base URI (must be absolute) to resolve against
-//	 */
-//	URI.resolve = function(sURI, sBaseURI) {
-//		var uri = cache[sURI] || (cache[sURI] = new URI(sURI));
-//		var baseURI = cache[sBaseURI] || (cache[sBaseURI] = new URI(sBaseURI));
-//		return uri.resolve(baseURI).toString();
-//	};
-
-//	var cache = {};
-
-	/**
-	 * Serialises the URI to a string.
-	 */
-	URI.prototype.toString = function() {
-		var result = '';
-		if (this.scheme)
-			result += this.scheme + ':';
-		if (this.authority)
-			result += '//' + this.authority;
-		result += this.path;
-		if (this.query)
-			result += '?' + this.query;
-		if (this.fragment)
-			result += '#' + this.fragment;
-		return result;
-	};
-
-return URI;
-});
-
-/*global define*/
-define('Core/buildModuleUrl',[
-        'require',
+define('Core/AxisAlignedBoundingBox',[
+        './Cartesian3',
+        './defaultValue',
         './defined',
         './DeveloperError',
-        '../ThirdParty/Uri'
+        './Intersect'
     ], function(
-        require,
+        Cartesian3,
+        defaultValue,
         defined,
         DeveloperError,
-        Uri) {
-    "use strict";
-    /*global CESIUM_BASE_URL*/
-
-    var cesiumScriptRegex = /((?:.*\/)|^)cesium[\w-]*\.js(?:\W|$)/i;
-    function getBaseUrlFromCesiumScript() {
-        var scripts = document.getElementsByTagName('script');
-        for ( var i = 0, len = scripts.length; i < len; ++i) {
-            var src = scripts[i].getAttribute('src');
-            var result = cesiumScriptRegex.exec(src);
-            if (result !== null) {
-                return result[1];
-            }
-        }
-        return undefined;
-    }
-
-    var baseUrl;
-    function getCesiumBaseUrl() {
-        if (defined(baseUrl)) {
-            return baseUrl;
-        }
-
-        var baseUrlString;
-        if (typeof CESIUM_BASE_URL !== 'undefined') {
-            baseUrlString = CESIUM_BASE_URL;
-        } else {
-            baseUrlString = getBaseUrlFromCesiumScript();
-        }
-
-        if (!defined(baseUrlString)) {
-            throw new DeveloperError('Unable to determine Cesium base URL automatically, try defining a global variable called CESIUM_BASE_URL.');
-        }
-
-        baseUrl = new Uri(baseUrlString).resolve(new Uri(document.location.href));
-
-        return baseUrl;
-    }
-
-    function buildModuleUrlFromRequireToUrl(moduleID) {
-        //moduleID will be non-relative, so require it relative to this module, in Core.
-        return require.toUrl('../' + moduleID);
-    }
-
-    function buildModuleUrlFromBaseUrl(moduleID) {
-        return new Uri(moduleID).resolve(getCesiumBaseUrl()).toString();
-    }
-
-    var implementation;
-    var a;
-
-    /**
-     * Given a non-relative moduleID, returns an absolute URL to the file represented by that module ID,
-     * using, in order of preference, require.toUrl, the value of a global CESIUM_BASE_URL, or
-     * the base URL of the Cesium.js script.
-     *
-     * @private
-     */
-    var buildModuleUrl = function(moduleID) {
-        if (!defined(implementation)) {
-            //select implementation
-            if (defined(require.toUrl)) {
-                implementation = buildModuleUrlFromRequireToUrl;
-            } else {
-                implementation = buildModuleUrlFromBaseUrl;
-            }
-        }
-
-        if (!defined(a)) {
-            a = document.createElement('a');
-        }
-
-        var url = implementation(moduleID);
-
-        a.href = url;
-        a.href = a.href; // IE only absolutizes href on get, not set
-
-        return a.href;
-    };
-
-    // exposed for testing
-    buildModuleUrl._cesiumScriptRegex = cesiumScriptRegex;
-
-    return buildModuleUrl;
-});
-/*global define*/
-define('Core/Iau2006XysSample',[],function() {
+        Intersect) {
     "use strict";
 
     /**
-     * An IAU 2006 XYS value sampled at a particular time.
-     *
-     * @alias Iau2006XysSample
+     * Creates an instance of an AxisAlignedBoundingBox from the minimum and maximum points along the x, y, and z axes.
+     * @alias AxisAlignedBoundingBox
      * @constructor
      *
-     * @param {Number} x The X value.
-     * @param {Number} y The Y value.
-     * @param {Number} s The S value.
+     * @param {Cartesian3} [minimum=Cartesian3.ZERO] The minimum point along the x, y, and z axes.
+     * @param {Cartesian3} [maximum=Cartesian3.ZERO] The maximum point along the x, y, and z axes.
+     * @param {Cartesian3} [center] The center of the box; automatically computed if not supplied.
+     *
+     * @see BoundingSphere
      */
-    var Iau2006XysSample = function Iau2006XysSample(x, y, s) {
+    var AxisAlignedBoundingBox = function(minimum, maximum, center) {
         /**
-         * The X value.
-         * @type {Number}
+         * The minimum point defining the bounding box.
+         * @type {Cartesian3}
+         * @default {@link Cartesian3.ZERO}
          */
-        this.x = x;
+        this.minimum = Cartesian3.clone(defaultValue(minimum, Cartesian3.ZERO));
 
         /**
-         * The Y value.
-         * @type {Number}
+         * The maximum point defining the bounding box.
+         * @type {Cartesian3}
+         * @default {@link Cartesian3.ZERO}
          */
-        this.y = y;
+        this.maximum = Cartesian3.clone(defaultValue(maximum, Cartesian3.ZERO));
+
+        //If center was not defined, compute it.
+        if (!defined(center)) {
+            center = Cartesian3.add(this.minimum, this.maximum);
+            Cartesian3.multiplyByScalar(center, 0.5, center);
+        } else {
+            center = Cartesian3.clone(center);
+        }
 
         /**
-         * The S value.
-         * @type {Number}
+         * The center point of the bounding box.
+         * @type {Cartesian3}
          */
-        this.s = s;
+        this.center = center;
     };
 
-    return Iau2006XysSample;
+    /**
+     * Computes an instance of an AxisAlignedBoundingBox. The box is determined by
+     * finding the points spaced the farthest apart on the x, y, and z axes.
+     * @memberof AxisAlignedBoundingBox
+     *
+     * @param {Cartesian3[]} positions List of points that the bounding box will enclose.  Each point must have a <code>x</code>, <code>y</code>, and <code>z</code> properties.
+     * @param {AxisAlignedBoundingBox} [result] The object onto which to store the result.
+     * @returns {AxisAlignedBoundingBox} The modified result parameter or a new AxisAlignedBoundingBox instance if one was not provided.
+     *
+     * @example
+     * // Compute an axis aligned bounding box enclosing two points.
+     * var box = Cesium.AxisAlignedBoundingBox.fromPoints([new Cesium.Cartesian3(2, 0, 0), new Cesium.Cartesian3(-2, 0, 0)]);
+     */
+    AxisAlignedBoundingBox.fromPoints = function(positions, result) {
+        if (!defined(result)) {
+            result = new AxisAlignedBoundingBox();
+        }
+
+        if (!defined(positions) || positions.length === 0) {
+            result.minimum = Cartesian3.clone(Cartesian3.ZERO, result.minimum);
+            result.maximum = Cartesian3.clone(Cartesian3.ZERO, result.maximum);
+            result.center = Cartesian3.clone(Cartesian3.ZERO, result.center);
+            return result;
+        }
+
+        var minimumX = positions[0].x;
+        var minimumY = positions[0].y;
+        var minimumZ = positions[0].z;
+
+        var maximumX = positions[0].x;
+        var maximumY = positions[0].y;
+        var maximumZ = positions[0].z;
+
+        var length = positions.length;
+        for ( var i = 1; i < length; i++) {
+            var p = positions[i];
+            var x = p.x;
+            var y = p.y;
+            var z = p.z;
+
+            minimumX = Math.min(x, minimumX);
+            maximumX = Math.max(x, maximumX);
+            minimumY = Math.min(y, minimumY);
+            maximumY = Math.max(y, maximumY);
+            minimumZ = Math.min(z, minimumZ);
+            maximumZ = Math.max(z, maximumZ);
+        }
+
+        var minimum = result.minimum;
+        minimum.x = minimumX;
+        minimum.y = minimumY;
+        minimum.z = minimumZ;
+
+        var maximum = result.maximum;
+        maximum.x = maximumX;
+        maximum.y = maximumY;
+        maximum.z = maximumZ;
+
+        var center = Cartesian3.add(minimum, maximum, result.center);
+        Cartesian3.multiplyByScalar(center, 0.5, center);
+
+        return result;
+    };
+
+    /**
+     * Duplicates a AxisAlignedBoundingBox instance.
+     * @memberof AxisAlignedBoundingBox
+     *
+     * @param {AxisAlignedBoundingBox} box The bounding box to duplicate.
+     * @param {AxisAlignedBoundingBox} [result] The object onto which to store the result.
+     * @returns {AxisAlignedBoundingBox} The modified result parameter or a new AxisAlignedBoundingBox instance if none was provided. (Returns undefined if box is undefined)
+     */
+    AxisAlignedBoundingBox.clone = function(box, result) {
+        if (!defined(box)) {
+            return undefined;
+        }
+
+        if (!defined(result)) {
+            return new AxisAlignedBoundingBox(box.minimum, box.maximum);
+        }
+
+        result.minimum = Cartesian3.clone(box.minimum, result.minimum);
+        result.maximum = Cartesian3.clone(box.maximum, result.maximum);
+        result.center = Cartesian3.clone(box.center, result.center);
+        return result;
+    };
+
+    /**
+     * Compares the provided AxisAlignedBoundingBox componentwise and returns
+     * <code>true</code> if they are equal, <code>false</code> otherwise.
+     * @memberof AxisAlignedBoundingBox
+     *
+     * @param {AxisAlignedBoundingBox} [left] The first AxisAlignedBoundingBox.
+     * @param {AxisAlignedBoundingBox} [right] The second AxisAlignedBoundingBox.
+     * @returns {Boolean} <code>true</code> if left and right are equal, <code>false</code> otherwise.
+     */
+    AxisAlignedBoundingBox.equals = function(left, right) {
+        return (left === right) ||
+               ((defined(left)) &&
+                (defined(right)) &&
+                Cartesian3.equals(left.center, right.center) &&
+                Cartesian3.equals(left.minimum, right.minimum) &&
+                Cartesian3.equals(left.maximum, right.maximum));
+    };
+
+    var intersectScratch = new Cartesian3();
+    /**
+     * Determines which side of a plane a box is located.
+     * @memberof AxisAlignedBoundingBox
+     *
+     * @param {AxisAlignedBoundingBox} box The bounding box to test.
+     * @param {Cartesian4} plane The coefficients of the plane in the form <code>ax + by + cz + d = 0</code>
+     *                           where the coefficients a, b, c, and d are the components x, y, z, and w
+     *                           of the {@link Cartesian4}, respectively.
+     * @returns {Intersect} {@link Intersect.INSIDE} if the entire box is on the side of the plane
+     *                      the normal is pointing, {@link Intersect.OUTSIDE} if the entire box is
+     *                      on the opposite side, and {@link Intersect.INTERSECTING} if the box
+     *                      intersects the plane.
+     */
+    AxisAlignedBoundingBox.intersect = function(box, plane) {
+                if (!defined(box)) {
+            throw new DeveloperError('box is required.');
+        }
+        if (!defined(plane)) {
+            throw new DeveloperError('plane is required.');
+        }
+        
+        intersectScratch = Cartesian3.subtract(box.maximum, box.minimum, intersectScratch);
+        var h = Cartesian3.multiplyByScalar(intersectScratch, 0.5, intersectScratch); //The positive half diagonal
+        var e = h.x * Math.abs(plane.x) + h.y * Math.abs(plane.y) + h.z * Math.abs(plane.z);
+        var s = Cartesian3.dot(box.center, plane) + plane.w; //signed distance from center
+
+        if (s - e > 0) {
+            return Intersect.INSIDE;
+        }
+
+        if (s + e < 0) {
+            //Not in front because normals point inward
+            return Intersect.OUTSIDE;
+        }
+
+        return Intersect.INTERSECTING;
+    };
+
+    /**
+     * Duplicates this AxisAlignedBoundingBox instance.
+     * @memberof AxisAlignedBoundingBox
+     *
+     * @param {AxisAlignedBoundingBox} [result] The object onto which to store the result.
+     * @returns {AxisAlignedBoundingBox} The modified result parameter or a new AxisAlignedBoundingBox instance if one was not provided.
+     */
+    AxisAlignedBoundingBox.prototype.clone = function(result) {
+        return AxisAlignedBoundingBox.clone(this, result);
+    };
+
+    /**
+     * Determines which side of a plane this box is located.
+     * @memberof AxisAlignedBoundingBox
+     *
+     * @param {Cartesian4} plane The coefficients of the plane in the form <code>ax + by + cz + d = 0</code>
+     *                           where the coefficients a, b, c, and d are the components x, y, z, and w
+     *                           of the {@link Cartesian4}, respectively.
+     * @returns {Intersect} {@link Intersect.INSIDE} if the entire box is on the side of the plane
+     *                      the normal is pointing, {@link Intersect.OUTSIDE} if the entire box is
+     *                      on the opposite side, and {@link Intersect.INTERSECTING} if the box
+     *                      intersects the plane.
+     */
+    AxisAlignedBoundingBox.prototype.intersect = function(plane) {
+        return AxisAlignedBoundingBox.intersect(this, plane);
+    };
+
+    /**
+     * Compares this AxisAlignedBoundingBox against the provided AxisAlignedBoundingBox componentwise and returns
+     * <code>true</code> if they are equal, <code>false</code> otherwise.
+     * @memberof AxisAlignedBoundingBox
+     *
+     * @param {AxisAlignedBoundingBox} [right] The right hand side AxisAlignedBoundingBox.
+     * @returns {Boolean} <code>true</code> if they are equal, <code>false</code> otherwise.
+     */
+    AxisAlignedBoundingBox.prototype.equals = function(right) {
+        return AxisAlignedBoundingBox.equals(this, right);
+    };
+
+    return AxisAlignedBoundingBox;
 });
+
+/*global define*/
+define('Core/QuadraticRealPolynomial',[
+        './DeveloperError',
+        './Math'
+    ], function(
+        DeveloperError,
+        CesiumMath) {
+    "use strict";
+
+    /**
+     * Defines functions for 2nd order polynomial functions of one variable with only real coefficients.
+     *
+     * @exports QuadraticRealPolynomial
+     */
+    var QuadraticRealPolynomial = {};
+
+    /**
+     * Provides the discriminant of the quadratic equation from the supplied coefficients.
+     * @memberof QuadraticRealPolynomial
+     *
+     * @param {Number} a The coefficient of the 2nd order monomial.
+     * @param {Number} b The coefficient of the 1st order monomial.
+     * @param {Number} c The coefficient of the 0th order monomial.
+     * @returns {Number} The value of the discriminant.
+     */
+    QuadraticRealPolynomial.discriminant = function(a, b, c) {
+                if (typeof a !== 'number') {
+            throw new DeveloperError('a is a required number.');
+        }
+        if (typeof b !== 'number') {
+            throw new DeveloperError('b is a required number.');
+        }
+        if (typeof c !== 'number') {
+            throw new DeveloperError('c is a required number.');
+        }
+        
+        var discriminant = b * b - 4.0 * a * c;
+        return discriminant;
+    };
+
+    function addWithCancellationCheck(left, right, tolerance) {
+        var difference = left + right;
+        if ((CesiumMath.sign(left) !== CesiumMath.sign(right)) &&
+                Math.abs(difference / Math.max(Math.abs(left), Math.abs(right))) < tolerance) {
+            return 0.0;
+        }
+
+        return difference;
+    }
+
+    /**
+     * Provides the real valued roots of the quadratic polynomial with the provided coefficients.
+     * @memberof QuadraticRealPolynomial
+     *
+     * @param {Number} a The coefficient of the 2nd order monomial.
+     * @param {Number} b The coefficient of the 1st order monomial.
+     * @param {Number} c The coefficient of the 0th order monomial.
+     * @returns {Number[]} The real valued roots.
+     */
+    QuadraticRealPolynomial.realRoots = function(a, b, c) {
+                if (typeof a !== 'number') {
+            throw new DeveloperError('a is a required number.');
+        }
+        if (typeof b !== 'number') {
+            throw new DeveloperError('b is a required number.');
+        }
+        if (typeof c !== 'number') {
+            throw new DeveloperError('c is a required number.');
+        }
+        
+        var ratio;
+        if (a === 0.0) {
+            if (b === 0.0) {
+                // Constant function: c = 0.
+                return [];
+            }
+
+            // Linear function: b * x + c = 0.
+            return [-c / b];
+        } else if (b === 0.0) {
+            if (c === 0.0) {
+                // 2nd order monomial: a * x^2 = 0.
+                return [0.0, 0.0];
+            }
+
+            var cMagnitude = Math.abs(c);
+            var aMagnitude = Math.abs(a);
+
+            if ((cMagnitude < aMagnitude) && (cMagnitude / aMagnitude < CesiumMath.EPSILON14)) { // c ~= 0.0.
+                // 2nd order monomial: a * x^2 = 0.
+                return [0.0, 0.0];
+            } else if ((cMagnitude > aMagnitude) && (aMagnitude / cMagnitude < CesiumMath.EPSILON14)) { // a ~= 0.0.
+                // Constant function: c = 0.
+                return [];
+            }
+
+            // a * x^2 + c = 0
+            ratio = -c / a;
+
+            if (ratio < 0.0) {
+                // Both roots are complex.
+                return [];
+            }
+
+            // Both roots are real.
+            var root = Math.sqrt(ratio);
+            return [-root, root];
+        } else if (c === 0.0) {
+            // a * x^2 + b * x = 0
+            ratio = -b / a;
+            if (ratio < 0.0) {
+                return [ratio, 0.0];
+            }
+
+            return [0.0, ratio];
+        }
+
+        // a * x^2 + b * x + c = 0
+        var b2 = b * b;
+        var four_ac = 4.0 * a * c;
+        var radicand = addWithCancellationCheck(b2, -four_ac, CesiumMath.EPSILON14);
+
+        if (radicand < 0.0) {
+            // Both roots are complex.
+            return [];
+        }
+
+        var q = -0.5 * addWithCancellationCheck(b, CesiumMath.sign(b) * Math.sqrt(radicand), CesiumMath.EPSILON14);
+        if (b > 0.0) {
+            return [q / a, c / q];
+        }
+
+        return [c / q, q / a];
+    };
+
+    return QuadraticRealPolynomial;
+});
+/*global define*/
+define('Core/CubicRealPolynomial',[
+        './DeveloperError',
+        './QuadraticRealPolynomial'
+    ], function(
+        DeveloperError,
+        QuadraticRealPolynomial) {
+    "use strict";
+
+    /**
+     * Defines functions for 3rd order polynomial functions of one variable with only real coefficients.
+     *
+     * @exports CubicRealPolynomial
+     */
+    var CubicRealPolynomial = {};
+
+    /**
+     * Provides the discriminant of the cubic equation from the supplied coefficients.
+     * @memberof CubicRealPolynomial
+     *
+     * @param {Number} a The coefficient of the 3rd order monomial.
+     * @param {Number} b The coefficient of the 2nd order monomial.
+     * @param {Number} c The coefficient of the 1st order monomial.
+     * @param {Number} d The coefficient of the 0th order monomial.
+     * @returns {Number} The value of the discriminant.
+     */
+    CubicRealPolynomial.discriminant = function(a, b, c, d) {
+                if (typeof a !== 'number') {
+            throw new DeveloperError('a is a required number.');
+        }
+        if (typeof b !== 'number') {
+            throw new DeveloperError('b is a required number.');
+        }
+        if (typeof c !== 'number') {
+            throw new DeveloperError('c is a required number.');
+        }
+        if (typeof d !== 'number') {
+            throw new DeveloperError('d is a required number.');
+        }
+        
+        var a2 = a * a;
+        var b2 = b * b;
+        var c2 = c * c;
+        var d2 = d * d;
+
+        var discriminant = 18.0 * a * b * c * d + b2 * c2 - 27.0 * a2 * d2 - 4.0 * (a * c2 * c + b2 * b * d);
+        return discriminant;
+    };
+
+    function computeRealRoots(a, b, c, d) {
+        var A = a;
+        var B = b / 3.0;
+        var C = c / 3.0;
+        var D = d;
+
+        var AC = A * C;
+        var BD = B * D;
+        var B2 = B * B;
+        var C2 = C * C;
+        var delta1 = A * C - B2;
+        var delta2 = A * D - B * C;
+        var delta3 = B * D - C2;
+
+        var discriminant = 4.0 * delta1 * delta3 - delta2 * delta2;
+        var temp;
+        var temp1;
+
+        if (discriminant < 0.0) {
+            var ABar;
+            var CBar;
+            var DBar;
+
+            if (B2 * BD >= AC * C2) {
+                ABar = A;
+                CBar = delta1;
+                DBar = -2.0 * B * delta1 + A * delta2;
+            } else {
+                ABar = D;
+                CBar = delta3;
+                DBar = -D * delta2 + 2.0 * C * delta3;
+            }
+
+            var s = (DBar < 0.0) ? -1.0 : 1.0; // This is not Math.Sign()!
+            var temp0 = -s * Math.abs(ABar) * Math.sqrt(-discriminant);
+            temp1 = -DBar + temp0;
+
+            var x = temp1 / 2.0;
+            var p = x < 0.0 ? -Math.pow(-x, 1.0 / 3.0) : Math.pow(x, 1.0 / 3.0);
+            var q = (temp1 === temp0) ? -p : -CBar / p;
+
+            temp = (CBar <= 0.0) ? p + q : -DBar / (p * p + q * q + CBar);
+
+            if (B2 * BD >= AC * C2) {
+                return [(temp - B) / A];
+            }
+
+            return [-D / (temp + C)];
+        }
+
+        var CBarA = delta1;
+        var DBarA = -2.0 * B * delta1 + A * delta2;
+
+        var CBarD = delta3;
+        var DBarD = -D * delta2 + 2.0 * C * delta3;
+
+        var squareRootOfDiscriminant = Math.sqrt(discriminant);
+        var halfSquareRootOf3 = Math.sqrt(3.0) / 2.0;
+
+        var theta = Math.abs(Math.atan2(A * squareRootOfDiscriminant, -DBarA) / 3.0);
+        temp = 2.0 * Math.sqrt(-CBarA);
+        var cosine = Math.cos(theta);
+        temp1 = temp * cosine;
+        var temp3 = temp * (-cosine / 2.0 - halfSquareRootOf3 * Math.sin(theta));
+
+        var numeratorLarge = (temp1 + temp3 > 2.0 * B) ? temp1 - B : temp3 - B;
+        var denominatorLarge = A;
+
+        var root1 = numeratorLarge / denominatorLarge;
+
+        theta = Math.abs(Math.atan2(D * squareRootOfDiscriminant, -DBarD) / 3.0);
+        temp = 2.0 * Math.sqrt(-CBarD);
+        cosine = Math.cos(theta);
+        temp1 = temp * cosine;
+        temp3 = temp * (-cosine / 2.0 - halfSquareRootOf3 * Math.sin(theta));
+
+        var numeratorSmall = -D;
+        var denominatorSmall = (temp1 + temp3 < 2.0 * C) ? temp1 + C : temp3 + C;
+
+        var root3 = numeratorSmall / denominatorSmall;
+
+        var E = denominatorLarge * denominatorSmall;
+        var F = -numeratorLarge * denominatorSmall - denominatorLarge * numeratorSmall;
+        var G = numeratorLarge * numeratorSmall;
+
+        var root2 = (C * F - B * G) / (-B * F + C * E);
+
+        if (root1 <= root2) {
+            if (root1 <= root3) {
+                if (root2 <= root3) {
+                    return [root1, root2, root3];
+                }
+                return [root1, root3, root2];
+            }
+            return [root3, root1, root2];
+        }
+        if (root1 <= root3) {
+            return [root2, root1, root3];
+        }
+        if (root2 <= root3) {
+            return [root2, root3, root1];
+        }
+        return [root3, root2, root1];
+    }
+
+    /**
+     * Provides the real valued roots of the cubic polynomial with the provided coefficients.
+     * @memberof CubicRealPolynomial
+     *
+     * @param {Number} a The coefficient of the 3rd order monomial.
+     * @param {Number} b The coefficient of the 2nd order monomial.
+     * @param {Number} c The coefficient of the 1st order monomial.
+     * @param {Number} d The coefficient of the 0th order monomial.
+     * @returns {Number[]} The real valued roots.
+     */
+    CubicRealPolynomial.realRoots = function(a, b, c, d) {
+                if (typeof a !== 'number') {
+            throw new DeveloperError('a is a required number.');
+        }
+        if (typeof b !== 'number') {
+            throw new DeveloperError('b is a required number.');
+        }
+        if (typeof c !== 'number') {
+            throw new DeveloperError('c is a required number.');
+        }
+        if (typeof d !== 'number') {
+            throw new DeveloperError('d is a required number.');
+        }
+        
+        var roots;
+        var ratio;
+        if (a === 0.0) {
+            // Quadratic function: b * x^2 + c * x + d = 0.
+            return QuadraticRealPolynomial.realRoots(b, c, d);
+        } else if (b === 0.0) {
+            if (c === 0.0) {
+                if (d === 0.0) {
+                    // 3rd order monomial: a * x^3 = 0.
+                    return [0.0, 0.0, 0.0];
+                }
+
+                // a * x^3 + d = 0
+                ratio = -d / a;
+                var root = (ratio < 0.0) ? -Math.pow(-ratio, 1.0 / 3.0) : Math.pow(ratio, 1.0 / 3.0);
+                return [root, root, root];
+            } else if (d === 0.0) {
+                // x * (a * x^2 + c) = 0.
+                roots = QuadraticRealPolynomial.realRoots(a, 0, c);
+
+                // Return the roots in ascending order.
+                if (roots.Length === 0) {
+                    return [0.0];
+                }
+                return [roots[0], 0.0, roots[1]];
+            }
+
+            // Deflated cubic polynomial: a * x^3 + c * x + d= 0.
+            return computeRealRoots(a, 0, c, d);
+        } else if (c === 0.0) {
+            if (d === 0.0) {
+                // x^2 * (a * x + b) = 0.
+                ratio = -b / a;
+                if (ratio < 0.0) {
+                    return [ratio, 0.0, 0.0];
+                }
+                return [0.0, 0.0, ratio];
+            }
+            // a * x^3 + b * x^2 + d = 0.
+            return computeRealRoots(a, b, 0, d);
+        } else if (d === 0.0) {
+            // x * (a * x^2 + b * x + c) = 0
+            roots = QuadraticRealPolynomial.realRoots(a, b, c);
+
+            // Return the roots in ascending order.
+            if (roots.length === 0) {
+                return [0.0];
+            } else if (roots[1] <= 0.0) {
+                return [roots[0], roots[1], 0.0];
+            } else if (roots[0] >= 0.0) {
+                return [0.0, roots[0], roots[1]];
+            }
+            return [roots[0], 0.0, roots[1]];
+        }
+
+        return computeRealRoots(a, b, c, d);
+    };
+
+    return CubicRealPolynomial;
+});
+/*global define*/
+define('Core/QuarticRealPolynomial',[
+        './CubicRealPolynomial',
+        './DeveloperError',
+        './Math',
+        './QuadraticRealPolynomial'
+    ], function(
+        CubicRealPolynomial,
+        DeveloperError,
+        CesiumMath,
+        QuadraticRealPolynomial) {
+    "use strict";
+
+    /**
+     * Defines functions for 4th order polynomial functions of one variable with only real coefficients.
+     *
+     * @exports QuarticRealPolynomial
+     */
+    var QuarticRealPolynomial = {};
+
+    /**
+     * Provides the discriminant of the quartic equation from the supplied coefficients.
+     * @memberof QuarticRealPolynomial
+     *
+     * @param {Number} a The coefficient of the 4th order monomial.
+     * @param {Number} b The coefficient of the 3rd order monomial.
+     * @param {Number} c The coefficient of the 2nd order monomial.
+     * @param {Number} d The coefficient of the 1st order monomial.
+     * @param {Number} e The coefficient of the 0th order monomial.
+     * @returns {Number} The value of the discriminant.
+     */
+    QuarticRealPolynomial.discriminant = function(a, b, c, d, e) {
+                if (typeof a !== 'number') {
+            throw new DeveloperError('a is a required number.');
+        }
+        if (typeof b !== 'number') {
+            throw new DeveloperError('b is a required number.');
+        }
+        if (typeof c !== 'number') {
+            throw new DeveloperError('c is a required number.');
+        }
+        if (typeof d !== 'number') {
+            throw new DeveloperError('d is a required number.');
+        }
+        if (typeof e !== 'number') {
+            throw new DeveloperError('e is a required number.');
+        }
+        
+        var a2 = a * a;
+        var a3 = a2 * a;
+        var b2 = b * b;
+        var b3 = b2 * b;
+        var c2 = c * c;
+        var c3 = c2 * c;
+        var d2 = d * d;
+        var d3 = d2 * d;
+        var e2 = e * e;
+        var e3 = e2 * e;
+
+        var discriminant = (b2 * c2 * d2 - 4.0 * b3 * d3 - 4.0 * a * c3 * d2 + 18 * a * b * c * d3 - 27.0 * a2 * d2 * d2 + 256.0 * a3 * e3) +
+            e * (18.0 * b3 * c * d - 4.0 * b2 * c3 + 16.0 * a * c2 * c2 - 80.0 * a * b * c2 * d - 6.0 * a * b2 * d2 + 144.0 * a2 * c * d2) +
+            e2 * (144.0 * a * b2 * c - 27.0 * b2 * b2 - 128.0 * a2 * c2 - 192.0 * a2 * b * d);
+        return discriminant;
+    };
+
+    function original(a3, a2, a1, a0) {
+        var a3Squared = a3 * a3;
+
+        var p = a2 - 3.0 * a3Squared / 8.0;
+        var q = a1 - a2 * a3 / 2.0 + a3Squared * a3 / 8.0;
+        var r = a0 - a1 * a3 / 4.0 + a2 * a3Squared / 16.0 - 3.0 * a3Squared * a3Squared / 256.0;
+
+        // Find the roots of the cubic equations:  h^6 + 2 p h^4 + (p^2 - 4 r) h^2 - q^2 = 0.
+        var cubicRoots = CubicRealPolynomial.realRoots(1.0, 2.0 * p, p * p - 4.0 * r, -q * q);
+
+        if (cubicRoots.length > 0) {
+            var temp = -a3 / 4.0;
+
+            // Use the largest positive root.
+            var hSquared = cubicRoots[cubicRoots.length - 1];
+
+            if (Math.abs(hSquared) < CesiumMath.EPSILON14) {
+                // y^4 + p y^2 + r = 0.
+                var roots = QuadraticRealPolynomial.realRoots(1.0, p, r);
+
+                if (roots.length === 2) {
+                    var root0 = roots[0];
+                    var root1 = roots[1];
+
+                    var y;
+                    if (root0 >= 0.0 && root1 >= 0.0) {
+                        var y0 = Math.sqrt(root0);
+                        var y1 = Math.sqrt(root1);
+
+                        return [temp - y1, temp - y0, temp + y0, temp + y1];
+                    } else if (root0 >= 0.0 && root1 < 0.0) {
+                        y = Math.sqrt(root0);
+                        return [temp - y, temp + y];
+                    } else if (root0 < 0.0 && root1 >= 0.0) {
+                        y = Math.sqrt(root1);
+                        return [temp - y, temp + y];
+                    }
+                }
+                return [];
+            } else if (hSquared > 0.0) {
+                var h = Math.sqrt(hSquared);
+
+                var m = (p + hSquared - q / h) / 2.0;
+                var n = (p + hSquared + q / h) / 2.0;
+
+                // Now solve the two quadratic factors:  (y^2 + h y + m)(y^2 - h y + n);
+                var roots1 = QuadraticRealPolynomial.realRoots(1.0, h, m);
+                var roots2 = QuadraticRealPolynomial.realRoots(1.0, -h, n);
+
+                if (roots1.length !== 0) {
+                    roots1[0] += temp;
+                    roots1[1] += temp;
+
+                    if (roots2.length !== 0) {
+                        roots2[0] += temp;
+                        roots2[1] += temp;
+
+                        if (roots1[1] <= roots2[0]) {
+                            return [roots1[0], roots1[1], roots2[0], roots2[1]];
+                        } else if (roots2[1] <= roots1[0]) {
+                            return [roots2[0], roots2[1], roots1[0], roots1[1]];
+                        } else if (roots1[0] >= roots2[0] && roots1[1] <= roots2[1]) {
+                            return [roots2[0], roots1[0], roots1[1], roots2[1]];
+                        } else if (roots2[0] >= roots1[0] && roots2[1] <= roots1[1]) {
+                            return [roots1[0], roots2[0], roots2[1], roots1[1]];
+                        } else if (roots1[0] > roots2[0] && roots1[0] < roots2[1]) {
+                            return [roots2[0], roots1[0], roots2[1], roots1[1]];
+                        }
+                        return [roots1[0], roots2[0], roots1[1], roots2[1]];
+                    }
+                    return roots1;
+                }
+
+                if (roots2.length !== 0) {
+                    roots2[0] += temp;
+                    roots2[1] += temp;
+
+                    return roots2;
+                }
+                return [];
+            }
+        }
+        return [];
+    }
+
+    function neumark(a3, a2, a1, a0) {
+        var a1Squared = a1 * a1;
+        var a2Squared = a2 * a2;
+        var a3Squared = a3 * a3;
+
+        var p = -2.0 * a2;
+        var q = a1 * a3 + a2Squared - 4.0 * a0;
+        var r = a3Squared * a0 - a1 * a2 * a3 + a1Squared;
+
+        var cubicRoots = CubicRealPolynomial.realRoots(1.0, p, q, r);
+
+        if (cubicRoots.length > 0) {
+            // Use the most positive root
+            var y = cubicRoots[0];
+
+            var temp = (a2 - y);
+            var tempSquared = temp * temp;
+
+            var g1 = a3 / 2.0;
+            var h1 = temp / 2.0;
+
+            var m = tempSquared - 4.0 * a0;
+            var mError = tempSquared + 4.0 * Math.abs(a0);
+
+            var n = a3Squared - 4.0 * y;
+            var nError = a3Squared + 4.0 * Math.abs(y);
+
+            var g2;
+            var h2;
+
+            if (y < 0.0 || (m * nError < n * mError)) {
+                var squareRootOfN = Math.sqrt(n);
+                g2 = squareRootOfN / 2.0;
+                h2 = squareRootOfN === 0.0 ? 0.0 : (a3 * h1 - a1) / squareRootOfN;
+            } else {
+                var squareRootOfM = Math.sqrt(m);
+                g2 = squareRootOfM === 0.0 ? 0.0 : (a3 * h1 - a1) / squareRootOfM;
+                h2 = squareRootOfM / 2.0;
+            }
+
+            var G;
+            var g;
+            if (g1 === 0.0 && g2 === 0.0) {
+                G = 0.0;
+                g = 0.0;
+            } else if (CesiumMath.sign(g1) === CesiumMath.sign(g2)) {
+                G = g1 + g2;
+                g = y / G;
+            } else {
+                g = g1 - g2;
+                G = y / g;
+            }
+
+            var H;
+            var h;
+            if (h1 === 0.0 && h2 === 0.0) {
+                H = 0.0;
+                h = 0.0;
+            } else if (CesiumMath.sign(h1) === CesiumMath.sign(h2)) {
+                H = h1 + h2;
+                h = a0 / H;
+            } else {
+                h = h1 - h2;
+                H = a0 / h;
+            }
+
+            // Now solve the two quadratic factors:  (y^2 + G y + H)(y^2 + g y + h);
+            var roots1 = QuadraticRealPolynomial.realRoots(1.0, G, H);
+            var roots2 = QuadraticRealPolynomial.realRoots(1.0, g, h);
+
+            if (roots1.length !== 0) {
+                if (roots2.length !== 0) {
+                    if (roots1[1] <= roots2[0]) {
+                        return [roots1[0], roots1[1], roots2[0], roots2[1]];
+                    } else if (roots2[1] <= roots1[0]) {
+                        return [roots2[0], roots2[1], roots1[0], roots1[1]];
+                    } else if (roots1[0] >= roots2[0] && roots1[1] <= roots2[1]) {
+                        return [roots2[0], roots1[0], roots1[1], roots2[1]];
+                    } else if (roots2[0] >= roots1[0] && roots2[1] <= roots1[1]) {
+                        return [roots1[0], roots2[0], roots2[1], roots1[1]];
+                    } else if (roots1[0] > roots2[0] && roots1[0] < roots2[1]) {
+                        return [roots2[0], roots1[0], roots2[1], roots1[1]];
+                    } else {
+                        return [roots1[0], roots2[0], roots1[1], roots2[1]];
+                    }
+                }
+                return roots1;
+            }
+            if (roots2.length !== 0) {
+                return roots2;
+            }
+        }
+        return [];
+    }
+
+    /**
+     * Provides the real valued roots of the quartic polynomial with the provided coefficients.
+     * @memberof QuarticRealPolynomial
+     *
+     * @param {Number} a The coefficient of the 4th order monomial.
+     * @param {Number} b The coefficient of the 3rd order monomial.
+     * @param {Number} c The coefficient of the 2nd order monomial.
+     * @param {Number} d The coefficient of the 1st order monomial.
+     * @param {Number} e The coefficient of the 0th order monomial.
+     * @returns {Number[]} The real valued roots.
+     */
+    QuarticRealPolynomial.realRoots = function(a, b, c, d, e) {
+                if (typeof a !== 'number') {
+            throw new DeveloperError('a is a required number.');
+        }
+        if (typeof b !== 'number') {
+            throw new DeveloperError('b is a required number.');
+        }
+        if (typeof c !== 'number') {
+            throw new DeveloperError('c is a required number.');
+        }
+        if (typeof d !== 'number') {
+            throw new DeveloperError('d is a required number.');
+        }
+        if (typeof e !== 'number') {
+            throw new DeveloperError('e is a required number.');
+        }
+        
+        if (Math.abs(a) < CesiumMath.EPSILON15) {
+            return CubicRealPolynomial.realRoots(b, c, d, e);
+        }
+        var a3 = b / a;
+        var a2 = c / a;
+        var a1 = d / a;
+        var a0 = e / a;
+
+        var k = (a3 < 0.0) ? 1 : 0;
+        k += (a2 < 0.0) ? k + 1 : k;
+        k += (a1 < 0.0) ? k + 1 : k;
+        k += (a0 < 0.0) ? k + 1 : k;
+
+        switch (k) {
+        case 0:
+            return original(a3, a2, a1, a0);
+        case 1:
+            return neumark(a3, a2, a1, a0);
+        case 2:
+            return neumark(a3, a2, a1, a0);
+        case 3:
+            return original(a3, a2, a1, a0);
+        case 4:
+            return original(a3, a2, a1, a0);
+        case 5:
+            return neumark(a3, a2, a1, a0);
+        case 6:
+            return original(a3, a2, a1, a0);
+        case 7:
+            return original(a3, a2, a1, a0);
+        case 8:
+            return neumark(a3, a2, a1, a0);
+        case 9:
+            return original(a3, a2, a1, a0);
+        case 10:
+            return original(a3, a2, a1, a0);
+        case 11:
+            return neumark(a3, a2, a1, a0);
+        case 12:
+            return original(a3, a2, a1, a0);
+        case 13:
+            return original(a3, a2, a1, a0);
+        case 14:
+            return original(a3, a2, a1, a0);
+        case 15:
+            return original(a3, a2, a1, a0);
+        default:
+            return undefined;
+        }
+    };
+
+    return QuarticRealPolynomial;
+});
+/*global define*/
+define('Core/IntersectionTests',[
+        './Cartesian3',
+        './Cartographic',
+        './defined',
+        './DeveloperError',
+        './Math',
+        './Matrix3',
+        './QuadraticRealPolynomial',
+        './QuarticRealPolynomial'
+    ], function(
+        Cartesian3,
+        Cartographic,
+        defined,
+        DeveloperError,
+        CesiumMath,
+        Matrix3,
+        QuadraticRealPolynomial,
+        QuarticRealPolynomial) {
+    "use strict";
+
+    /**
+     * Functions for computing the intersection between geometries such as rays, planes, triangles, and ellipsoids.
+     *
+     * @exports IntersectionTests
+     */
+    var IntersectionTests = {};
+
+    /**
+     * Computes the intersection of a ray and a plane.
+     * @memberof IntersectionTests
+     *
+     * @param {Ray} ray The ray.
+     * @param {Plane} plane The plane.
+     * @returns {Cartesian3} The intersection point or undefined if there is no intersections.
+     */
+    IntersectionTests.rayPlane = function(ray, plane, result) {
+                if (!defined(ray)) {
+            throw new DeveloperError('ray is required.');
+        }
+        if (!defined(plane)) {
+            throw new DeveloperError('plane is required.');
+        }
+        
+        var origin = ray.origin;
+        var direction = ray.direction;
+        var normal = plane.normal;
+        var denominator = Cartesian3.dot(normal, direction);
+
+        if (Math.abs(denominator) < CesiumMath.EPSILON15) {
+            // Ray is parallel to plane.  The ray may be in the polygon's plane.
+            return undefined;
+        }
+
+        var t = (-plane.distance - Cartesian3.dot(normal, origin)) / denominator;
+
+        if (t < 0) {
+            return undefined;
+        }
+
+        result = Cartesian3.multiplyByScalar(direction, t, result);
+        return Cartesian3.add(origin, result, result);
+    };
+
+    var scratchQ = new Cartesian3();
+    var scratchW = new Cartesian3();
+
+    /**
+     * Computes the intersection points of a ray with an ellipsoid.
+     * @memberof IntersectionTests
+     *
+     * @param {Ray} ray The ray.
+     * @param {Ellipsoid} ellipsoid The ellipsoid.
+     * @returns {Object} An object with the first (<code>start</code>) and the second (<code>stop</code>) intersection scalars for points along the ray or undefined if there are no intersections.
+     */
+    IntersectionTests.rayEllipsoid = function(ray, ellipsoid) {
+                if (!defined(ray)) {
+            throw new DeveloperError('ray is required.');
+        }
+        if (!defined(ellipsoid)) {
+            throw new DeveloperError('ellipsoid is required.');
+        }
+        
+        var inverseRadii = ellipsoid.oneOverRadii;
+        var q = Cartesian3.multiplyComponents(inverseRadii, ray.origin, scratchQ);
+        var w = Cartesian3.multiplyComponents(inverseRadii, ray.direction, scratchW);
+
+        var q2 = Cartesian3.magnitudeSquared(q);
+        var qw = Cartesian3.dot(q, w);
+
+        var difference, w2, product, discriminant, temp;
+
+        if (q2 > 1.0) {
+            // Outside ellipsoid.
+            if (qw >= 0.0) {
+                // Looking outward or tangent (0 intersections).
+                return undefined;
+            }
+
+            // qw < 0.0.
+            var qw2 = qw * qw;
+            difference = q2 - 1.0; // Positively valued.
+            w2 = Cartesian3.magnitudeSquared(w);
+            product = w2 * difference;
+
+            if (qw2 < product) {
+                // Imaginary roots (0 intersections).
+                return undefined;
+            } else if (qw2 > product) {
+                // Distinct roots (2 intersections).
+                discriminant = qw * qw - product;
+                temp = -qw + Math.sqrt(discriminant); // Avoid cancellation.
+                var root0 = temp / w2;
+                var root1 = difference / temp;
+                if (root0 < root1) {
+                    return {
+                        start : root0,
+                        stop : root1
+                    };
+                }
+
+                return {
+                    start : root1,
+                    stop : root0
+                };
+            } else {
+                // qw2 == product.  Repeated roots (2 intersections).
+                var root = Math.sqrt(difference / w2);
+                return {
+                    start : root,
+                    stop : root
+                };
+            }
+        } else if (q2 < 1.0) {
+            // Inside ellipsoid (2 intersections).
+            difference = q2 - 1.0; // Negatively valued.
+            w2 = Cartesian3.magnitudeSquared(w);
+            product = w2 * difference; // Negatively valued.
+
+            discriminant = qw * qw - product;
+            temp = -qw + Math.sqrt(discriminant); // Positively valued.
+            return {
+                start : 0.0,
+                stop : temp / w2
+            };
+        } else {
+            // q2 == 1.0. On ellipsoid.
+            if (qw < 0.0) {
+                // Looking inward.
+                w2 = Cartesian3.magnitudeSquared(w);
+                return {
+                    start : 0.0,
+                    stop : -qw / w2
+                };
+            }
+
+            // qw >= 0.0.  Looking outward or tangent.
+            return undefined;
+        }
+    };
+
+    function addWithCancellationCheck(left, right, tolerance) {
+        var difference = left + right;
+        if ((CesiumMath.sign(left) !== CesiumMath.sign(right)) &&
+                Math.abs(difference / Math.max(Math.abs(left), Math.abs(right))) < tolerance) {
+            return 0.0;
+        }
+
+        return difference;
+    }
+
+    function quadraticVectorExpression(A, b, c, x, w) {
+        var xSquared = x * x;
+        var wSquared = w * w;
+
+        var l2 = (A[Matrix3.COLUMN1ROW1] - A[Matrix3.COLUMN2ROW2]) * wSquared;
+        var l1 = w * (x * addWithCancellationCheck(A[Matrix3.COLUMN1ROW0], A[Matrix3.COLUMN0ROW1], CesiumMath.EPSILON15) + b.y);
+        var l0 = (A[Matrix3.COLUMN0ROW0] * xSquared + A[Matrix3.COLUMN2ROW2] * wSquared) + x * b.x + c;
+
+        var r1 = wSquared * addWithCancellationCheck(A[Matrix3.COLUMN2ROW1], A[Matrix3.COLUMN1ROW2], CesiumMath.EPSILON15);
+        var r0 = w * (x * addWithCancellationCheck(A[Matrix3.COLUMN2ROW0], A[Matrix3.COLUMN0ROW2]) + b.z);
+
+        var cosines;
+        var solutions = [];
+        if (r0 === 0.0 && r1 === 0.0) {
+            cosines = QuadraticRealPolynomial.realRoots(l2, l1, l0);
+            if (cosines.length === 0) {
+                return solutions;
+            }
+
+            var cosine0 = cosines[0];
+            var sine0 = Math.sqrt(Math.max(1.0 - cosine0 * cosine0, 0.0));
+            solutions.push(new Cartesian3(x, w * cosine0, w * -sine0));
+            solutions.push(new Cartesian3(x, w * cosine0, w * sine0));
+
+            if (cosines.length === 2) {
+                var cosine1 = cosines[1];
+                var sine1 = Math.sqrt(Math.max(1.0 - cosine1 * cosine1, 0.0));
+                solutions.push(new Cartesian3(x, w * cosine1, w * -sine1));
+                solutions.push(new Cartesian3(x, w * cosine1, w * sine1));
+            }
+
+            return solutions;
+        }
+
+        var r0Squared = r0 * r0;
+        var r1Squared = r1 * r1;
+        var l2Squared = l2 * l2;
+        var r0r1 = r0 * r1;
+
+        var c4 = l2Squared + r1Squared;
+        var c3 = 2.0 * (l1 * l2 + r0r1);
+        var c2 = 2.0 * l0 * l2 + l1 * l1 - r1Squared + r0Squared;
+        var c1 = 2.0 * (l0 * l1 - r0r1);
+        var c0 = l0 * l0 - r0Squared;
+
+        if (c4 === 0.0 && c3 === 0.0 && c2 === 0.0 && c1 === 0.0) {
+            return solutions;
+        }
+
+        cosines = QuarticRealPolynomial.realRoots(c4, c3, c2, c1, c0);
+        var length = cosines.length;
+        if (length === 0) {
+            return solutions;
+        }
+
+        for ( var i = 0; i < length; ++i) {
+            var cosine = cosines[i];
+            var cosineSquared = cosine * cosine;
+            var sineSquared = Math.max(1.0 - cosineSquared, 0.0);
+            var sine = Math.sqrt(sineSquared);
+
+            //var left = l2 * cosineSquared + l1 * cosine + l0;
+            var left;
+            if (CesiumMath.sign(l2) === CesiumMath.sign(l0)) {
+                left = addWithCancellationCheck(l2 * cosineSquared + l0, l1 * cosine, CesiumMath.EPSILON12);
+            } else if (CesiumMath.sign(l0) === CesiumMath.sign(l1 * cosine)) {
+                left = addWithCancellationCheck(l2 * cosineSquared, l1 * cosine + l0, CesiumMath.EPSILON12);
+            } else {
+                left = addWithCancellationCheck(l2 * cosineSquared + l1 * cosine, l0, CesiumMath.EPSILON12);
+            }
+
+            var right = addWithCancellationCheck(r1 * cosine, r0, CesiumMath.EPSILON15);
+            var product = left * right;
+
+            if (product < 0.0) {
+                solutions.push(new Cartesian3(x, w * cosine, w * sine));
+            } else if (product > 0.0) {
+                solutions.push(new Cartesian3(x, w * cosine, w * -sine));
+            } else if (sine !== 0.0) {
+                solutions.push(new Cartesian3(x, w * cosine, w * -sine));
+                solutions.push(new Cartesian3(x, w * cosine, w * sine));
+                ++i;
+            } else {
+                solutions.push(new Cartesian3(x, w * cosine, w * sine));
+            }
+        }
+
+        return solutions;
+    }
+
+    /**
+     * Provides the point along the ray which is nearest to the ellipsoid.
+     * @memberof IntersectionTests
+     *
+     * @param {Ray} ray The ray.
+     * @param {Ellipsoid} ellipsoid The ellipsoid.
+     * @returns {Cartesian} The nearest planetodetic point on the ray.
+     */
+    IntersectionTests.grazingAltitudeLocation = function(ray, ellipsoid) {
+                if (!defined(ray)) {
+            throw new DeveloperError('ray is required.');
+        }
+        if (!defined(ellipsoid)) {
+            throw new DeveloperError('ellipsoid is required.');
+        }
+        
+        var position = ray.origin;
+        var direction = ray.direction;
+
+        var normal = ellipsoid.geodeticSurfaceNormal(position);
+
+        if (Cartesian3.dot(direction, normal) >= 0.0) { // The location provided is the closest point in altitude
+            return position;
+        }
+
+        var intersects = defined(this.rayEllipsoid(ray, ellipsoid));
+
+        // Compute the scaled direction vector.
+        var f = ellipsoid.transformPositionToScaledSpace(direction);
+
+        // Constructs a basis from the unit scaled direction vector. Construct its rotation and transpose.
+        var firstAxis = Cartesian3.normalize(f);
+        var reference = Cartesian3.mostOrthogonalAxis(f);
+        var secondAxis = Cartesian3.normalize(Cartesian3.cross(reference, firstAxis));
+        var thirdAxis  = Cartesian3.normalize(Cartesian3.cross(firstAxis, secondAxis));
+        var B = new Matrix3(firstAxis.x, secondAxis.x, thirdAxis.x,
+                            firstAxis.y, secondAxis.y, thirdAxis.y,
+                            firstAxis.z, secondAxis.z, thirdAxis.z);
+        var B_T = Matrix3.transpose(B);
+
+        // Get the scaling matrix and its inverse.
+        var D_I = Matrix3.fromScale(ellipsoid.radii);
+        var D = Matrix3.fromScale(ellipsoid.oneOverRadii);
+
+        var C = new Matrix3(0.0, direction.z, -direction.y,
+                            -direction.z, 0.0, direction.x,
+                            direction.y, -direction.x, 0.0);
+
+        var temp = Matrix3.multiply(Matrix3.multiply(B_T, D), C);
+        var A = Matrix3.multiply(Matrix3.multiply(temp, D_I), B);
+        var b = Matrix3.multiplyByVector(temp, position);
+
+        // Solve for the solutions to the expression in standard form:
+        var solutions = quadraticVectorExpression(A, Cartesian3.negate(b), 0.0, 0.0, 1.0);
+
+        var s;
+        var altitude;
+        var length = solutions.length;
+        if (length > 0) {
+            var closest = Cartesian3.ZERO;
+            var maximumValue = Number.NEGATIVE_INFINITY;
+
+            for ( var i = 0; i < length; ++i) {
+                s = Matrix3.multiplyByVector(D_I, Matrix3.multiplyByVector(B, solutions[i]));
+                var v = Cartesian3.normalize(Cartesian3.subtract(s, position));
+                var dotProduct = Cartesian3.dot(v, direction);
+
+                if (dotProduct > maximumValue) {
+                    maximumValue = dotProduct;
+                    closest = s;
+                }
+            }
+
+            var surfacePoint = ellipsoid.cartesianToCartographic(closest);
+            maximumValue = CesiumMath.clamp(maximumValue, 0.0, 1.0);
+            altitude = Cartesian3.magnitude(Cartesian3.subtract(closest, position)) * Math.sqrt(1.0 - maximumValue * maximumValue);
+            altitude = intersects ? -altitude : altitude;
+            return ellipsoid.cartographicToCartesian(new Cartographic(surfacePoint.longitude, surfacePoint.latitude, altitude));
+        }
+
+        return undefined;
+    };
+
+    var lineSegmentPlaneDifference = new Cartesian3();
+
+    /**
+     * Computes the intersection of a line segment and a plane.
+     * @memberof IntersectionTests
+     *
+     * @param {Cartesian3} endPoint0 An end point of the line segment.
+     * @param {Cartesian3} endPoint1 The other end point of the line segment.
+     * @param {Plane} plane The plane.
+     * @param {Cartesian3} [result] The object onto which to store the result.
+     * @returns {Cartesian3} The intersection point or undefined if there is no intersection.
+     *
+     * @example
+     * var origin = Cesium.Cartesian3.fromDegrees(-75.59777, 40.03883);
+     * var normal = ellipsoid.geodeticSurfaceNormal(origin);
+     * var plane = Cesium.Plane.fromPointNormal(origin, normal);
+     *
+     * var p0 = new Cesium.Cartesian3(...);
+     * var p1 = new Cesium.Cartesian3(...);
+     *
+     * // find the intersection of the line segment from p0 to p1 and the tangent plane at origin.
+     * var intersection = Cesium.IntersectionTests.lineSegmentPlane(p0, p1, plane);
+     */
+    IntersectionTests.lineSegmentPlane = function(endPoint0, endPoint1, plane, result) {
+                if (!defined(endPoint0)) {
+            throw new DeveloperError('endPoint0 is required.');
+        }
+        if (!defined(endPoint1)) {
+            throw new DeveloperError('endPoint1 is required.');
+        }
+        if (!defined(plane)) {
+            throw new DeveloperError('plane is required.');
+        }
+        
+        var difference = Cartesian3.subtract(endPoint1, endPoint0, lineSegmentPlaneDifference);
+        var normal = plane.normal;
+        var nDotDiff = Cartesian3.dot(normal, difference);
+
+        // check if the segment and plane are parallel
+        if (Math.abs(nDotDiff) < CesiumMath.EPSILON6) {
+            return undefined;
+        }
+
+        var nDotP0 = Cartesian3.dot(normal, endPoint0);
+        var t = -(plane.distance + nDotP0) / nDotDiff;
+
+        // intersection only if t is in [0, 1]
+        if (t < 0.0 || t > 1.0) {
+            return undefined;
+        }
+
+        // intersection is endPoint0 + t * (endPoint1 - endPoint0)
+        if (!defined(result)) {
+            result = new Cartesian3();
+        }
+        Cartesian3.multiplyByScalar(difference, t, result);
+        Cartesian3.add(endPoint0, result, result);
+        return result;
+    };
+
+    /**
+     * Computes the intersection of a triangle and a plane
+     * @memberof IntersectionTests
+     *
+     * @param {Cartesian3} p0 First point of the triangle
+     * @param {Cartesian3} p1 Second point of the triangle
+     * @param {Cartesian3} p2 Third point of the triangle
+     * @param {Plane} plane Intersection plane
+     *
+     * @returns {Object} An object with properties <code>positions</code> and <code>indices</code>, which are arrays that represent three triangles that do not cross the plane. (Undefined if no intersection exists)
+     *
+     * @example
+     * var origin = Cesium.Cartesian3.fromDegrees(-75.59777, 40.03883);
+     * var normal = ellipsoid.geodeticSurfaceNormal(origin);
+     * var plane = Cesium.Plane.fromPointNormal(origin, normal);
+     *
+     * var p0 = new Cesium.Cartesian3(...);
+     * var p1 = new Cesium.Cartesian3(...);
+     * var p2 = new Cesium.Cartesian3(...);
+     *
+     * // convert the triangle composed of points (p0, p1, p2) to three triangles that don't cross the plane
+     * var triangles = Cesium.IntersectionTests.trianglePlaneIntersection(p0, p1, p2, plane);
+     */
+    IntersectionTests.trianglePlaneIntersection = function(p0, p1, p2, plane) {
+                if ((!defined(p0)) ||
+            (!defined(p1)) ||
+            (!defined(p2)) ||
+            (!defined(plane))) {
+            throw new DeveloperError('p0, p1, p2, and plane are required.');
+        }
+        
+        var planeNormal = plane.normal;
+        var planeD = plane.distance;
+        var p0Behind = (Cartesian3.dot(planeNormal, p0) + planeD) < 0.0;
+        var p1Behind = (Cartesian3.dot(planeNormal, p1) + planeD) < 0.0;
+        var p2Behind = (Cartesian3.dot(planeNormal, p2) + planeD) < 0.0;
+        // Given these dots products, the calls to lineSegmentPlaneIntersection
+        // always have defined results.
+
+        var numBehind = 0;
+        numBehind += p0Behind ? 1 : 0;
+        numBehind += p1Behind ? 1 : 0;
+        numBehind += p2Behind ? 1 : 0;
+
+        var u1, u2;
+        if (numBehind === 1 || numBehind === 2) {
+            u1 = new Cartesian3();
+            u2 = new Cartesian3();
+        }
+
+        if (numBehind === 1) {
+            if (p0Behind) {
+                IntersectionTests.lineSegmentPlane(p0, p1, plane, u1);
+                IntersectionTests.lineSegmentPlane(p0, p2, plane, u2);
+
+                return {
+                    positions : [p0, p1, p2, u1, u2 ],
+                    indices : [
+                        // Behind
+                        0, 3, 4,
+
+                        // In front
+                        1, 2, 4,
+                        1, 4, 3
+                    ]
+                };
+            } else if (p1Behind) {
+                IntersectionTests.lineSegmentPlane(p1, p2, plane, u1);
+                IntersectionTests.lineSegmentPlane(p1, p0, plane, u2);
+
+                return {
+                    positions : [p0, p1, p2, u1, u2 ],
+                    indices : [
+                        // Behind
+                        1, 3, 4,
+
+                        // In front
+                        2, 0, 4,
+                        2, 4, 3
+                    ]
+                };
+            } else if (p2Behind) {
+                IntersectionTests.lineSegmentPlane(p2, p0, plane, u1);
+                IntersectionTests.lineSegmentPlane(p2, p1, plane, u2);
+
+                return {
+                    positions : [p0, p1, p2, u1, u2 ],
+                    indices : [
+                        // Behind
+                        2, 3, 4,
+
+                        // In front
+                        0, 1, 4,
+                        0, 4, 3
+                    ]
+                };
+            }
+        } else if (numBehind === 2) {
+            if (!p0Behind) {
+                IntersectionTests.lineSegmentPlane(p1, p0, plane, u1);
+                IntersectionTests.lineSegmentPlane(p2, p0, plane, u2);
+
+                return {
+                    positions : [p0, p1, p2, u1, u2 ],
+                    indices : [
+                        // Behind
+                        1, 2, 4,
+                        1, 4, 3,
+
+                        // In front
+                        0, 3, 4
+                    ]
+                };
+            } else if (!p1Behind) {
+                IntersectionTests.lineSegmentPlane(p2, p1, plane, u1);
+                IntersectionTests.lineSegmentPlane(p0, p1, plane, u2);
+
+                return {
+                    positions : [p0, p1, p2, u1, u2 ],
+                    indices : [
+                        // Behind
+                        2, 0, 4,
+                        2, 4, 3,
+
+                        // In front
+                        1, 3, 4
+                    ]
+                };
+            } else if (!p2Behind) {
+                IntersectionTests.lineSegmentPlane(p0, p2, plane, u1);
+                IntersectionTests.lineSegmentPlane(p1, p2, plane, u2);
+
+                return {
+                    positions : [p0, p1, p2, u1, u2 ],
+                    indices : [
+                        // Behind
+                        0, 1, 4,
+                        0, 4, 3,
+
+                        // In front
+                        2, 3, 4
+                    ]
+                };
+            }
+        }
+
+        // if numBehind is 3, the triangle is completely behind the plane;
+        // otherwise, it is completely in front (numBehind is 0).
+        return undefined;
+    };
+
+    return IntersectionTests;
+});
+
+/*global define*/
+define('Core/Plane',[
+        './Cartesian3',
+        './defined',
+        './DeveloperError'
+    ], function(
+        Cartesian3,
+        defined,
+        DeveloperError) {
+    "use strict";
+
+    /**
+     * A plane in Hessian Normal Form defined by
+     * <pre>
+     * ax + by + cz + d = 0
+     * </pre>
+     * where (a, b, c) is the plane's <code>normal</code>, d is the signed
+     * <code>distance</code> to the plane, and (x, y, z) is any point on
+     * the plane.
+     *
+     * @alias Plane
+     * @constructor
+     *
+     * @param {Cartesian3} normal The plane's normal (normalized).
+     * @param {Number} distance The shortest distance from the origin to the plane.  The sign of
+     * <code>distance</code> determines which side of the plane the origin
+     * is on.  If <code>distance</code> is positive, the origin is in the half-space
+     * in the direction of the normal; if negative, the origin is in the half-space
+     * opposite to the normal; if zero, the plane passes through the origin.
+     *
+     * @example
+     * // The plane x=0
+     * var plane = new Cesium.Plane(Cesium.Cartesian3.UNIT_X, 0.0);
+     */
+    var Plane = function(normal, distance) {
+                if (!defined(normal))  {
+            throw new DeveloperError('normal is required.');
+        }
+        if (!defined(distance)) {
+            throw new DeveloperError('distance is required.');
+        }
+        
+        /**
+         * The plane's normal.
+         *
+         * @type {Cartesian3}
+         */
+        this.normal = Cartesian3.clone(normal);
+
+        /**
+         * The shortest distance from the origin to the plane.  The sign of
+         * <code>distance</code> determines which side of the plane the origin
+         * is on.  If <code>distance</code> is positive, the origin is in the half-space
+         * in the direction of the normal; if negative, the origin is in the half-space
+         * opposite to the normal; if zero, the plane passes through the origin.
+         *
+         * @type {Number}
+         */
+        this.distance = distance;
+    };
+
+    /**
+     * Creates a plane from a normal and a point on the plane.
+     * @memberof Plane
+     *
+     * @param {Cartesian3} point The point on the plane.
+     * @param {Cartesian3} normal The plane's normal (normalized).
+     * @param {Plane} [result] The object onto which to store the result.
+     * @returns {Plane} A new plane instance or the modified result parameter.
+     *
+     * @example
+     * var point = Cesium.Cartesian3.fromDegrees(-72.0, 40.0);
+     * var normal = ellipsoid.geodeticSurfaceNormal(point);
+     * var tangentPlane = Cesium.Plane.fromPointNormal(point, normal);
+     */
+    Plane.fromPointNormal = function(point, normal, result) {
+                if (!defined(point)) {
+            throw new DeveloperError('point is required.');
+        }
+        if (!defined(normal)) {
+            throw new DeveloperError('normal is required.');
+        }
+        
+        var distance = -Cartesian3.dot(normal, point);
+
+        if (!defined(result)) {
+            return new Plane(normal, distance);
+        }
+
+        Cartesian3.clone(normal, result.normal);
+        result.distance = distance;
+        return result;
+    };
+
+    /**
+     * Computes the signed shortest distance of a point to a plane.
+     * The sign of the distance determines which side of the plane the point
+     * is on.  If the distance is positive, the point is in the half-space
+     * in the direction of the normal; if negative, the point is in the half-space
+     * opposite to the normal; if zero, the plane passes through the point.
+     * @memberof Plane
+     *
+     * @param {Plane} plane The plane.
+     * @param {Cartesian3} point The point.
+     * @returns {Number} The signed shortest distance of the point to the plane.
+     */
+    Plane.getPointDistance = function(plane, point) {
+                if (!defined(plane)) {
+            throw new DeveloperError('plane is required.');
+        }
+        if (!defined(point)) {
+            throw new DeveloperError('point is required.');
+        }
+        
+        return Cartesian3.dot(plane.normal, point) + plane.distance;
+    };
+
+    return Plane;
+});
+
+/*global define*/
+define('Core/Ray',[
+        './Cartesian3',
+        './defaultValue',
+        './defined',
+        './DeveloperError'
+    ], function(
+        Cartesian3,
+        defaultValue,
+        defined,
+        DeveloperError) {
+    "use strict";
+
+    /**
+     * Represents a ray that extends infinitely from the provided origin in the provided direction.
+     * @alias Ray
+     * @constructor
+     *
+     * @param {Cartesian3} [origin=Cartesian3.ZERO] The origin of the ray.
+     * @param {Cartesian3} [direction=Cartesian3.ZERO] The direction of the ray.
+     */
+    var Ray = function(origin, direction) {
+        direction = Cartesian3.clone(defaultValue(direction, Cartesian3.ZERO));
+        if (!Cartesian3.equals(direction, Cartesian3.ZERO)) {
+            Cartesian3.normalize(direction, direction);
+        }
+
+        /**
+         * The origin of the ray.
+         * @type {Cartesian3}
+         * @default {@link Cartesian3.ZERO}
+         */
+        this.origin = Cartesian3.clone(defaultValue(origin, Cartesian3.ZERO));
+
+        /**
+         * The direction of the ray.
+         * @type {Cartesian3}
+         */
+        this.direction = direction;
+    };
+
+    /**
+     * Computes the point along the ray given by r(t) = o + t*d,
+     * where o is the origin of the ray and d is the direction.
+     * @memberof Ray
+     *
+     * @param {Number} t A scalar value.
+     * @param {Cartesian3} [result] The object in which the result will be stored.
+     * @returns The modified result parameter, or a new instance if none was provided.
+     *
+     * @example
+     * //Get the first intersection point of a ray and an ellipsoid.
+     * var intersection = Cesium.IntersectionTests.rayEllipsoid(ray, ellipsoid);
+     * var point = Ray.getPoint(ray, intersection.start);
+     */
+    Ray.getPoint = function(ray, t, result) {
+                if (!defined(ray)){
+            throw new DeveloperError('ray is requred');
+        }
+        if (typeof t !== 'number') {
+            throw new DeveloperError('t is a required number');
+        }
+        
+        result = Cartesian3.multiplyByScalar(ray.direction, t, result);
+        return Cartesian3.add(ray.origin, result, result);
+    };
+
+    return Ray;
+});
+
+/**
+  @license
+  when.js - https://github.com/cujojs/when
+
+  MIT License (c) copyright B Cavalier & J Hann
+
+ * A lightweight CommonJS Promises/A and when() implementation
+ * when is part of the cujo.js family of libraries (http://cujojs.com/)
+ *
+ * Licensed under the MIT License at:
+ * http://www.opensource.org/licenses/mit-license.php
+ *
+ * @version 1.7.1
+ */
+
+(function(define) { 'use strict';
+define('ThirdParty/when',[],function () {
+	var reduceArray, slice, undef;
+
+	//
+	// Public API
+	//
+
+	when.defer     = defer;     // Create a deferred
+	when.resolve   = resolve;   // Create a resolved promise
+	when.reject    = reject;    // Create a rejected promise
+
+	when.join      = join;      // Join 2 or more promises
+
+	when.all       = all;       // Resolve a list of promises
+	when.map       = map;       // Array.map() for promises
+	when.reduce    = reduce;    // Array.reduce() for promises
+
+	when.any       = any;       // One-winner race
+	when.some      = some;      // Multi-winner race
+
+	when.chain     = chain;     // Make a promise trigger another resolver
+
+	when.isPromise = isPromise; // Determine if a thing is a promise
+
+	/**
+	 * Register an observer for a promise or immediate value.
+	 *
+	 * @param {*} promiseOrValue
+	 * @param {function?} [onFulfilled] callback to be called when promiseOrValue is
+	 *   successfully fulfilled.  If promiseOrValue is an immediate value, callback
+	 *   will be invoked immediately.
+	 * @param {function?} [onRejected] callback to be called when promiseOrValue is
+	 *   rejected.
+	 * @param {function?} [onProgress] callback to be called when progress updates
+	 *   are issued for promiseOrValue.
+	 * @returns {Promise} a new {@link Promise} that will complete with the return
+	 *   value of callback or errback or the completion value of promiseOrValue if
+	 *   callback and/or errback is not supplied.
+	 */
+	function when(promiseOrValue, onFulfilled, onRejected, onProgress) {
+		// Get a trusted promise for the input promiseOrValue, and then
+		// register promise handlers
+		return resolve(promiseOrValue).then(onFulfilled, onRejected, onProgress);
+	}
+
+	/**
+	 * Returns promiseOrValue if promiseOrValue is a {@link Promise}, a new Promise if
+	 * promiseOrValue is a foreign promise, or a new, already-fulfilled {@link Promise}
+	 * whose value is promiseOrValue if promiseOrValue is an immediate value.
+	 *
+	 * @param {*} promiseOrValue
+	 * @returns Guaranteed to return a trusted Promise.  If promiseOrValue is a when.js {@link Promise}
+	 *   returns promiseOrValue, otherwise, returns a new, already-resolved, when.js {@link Promise}
+	 *   whose resolution value is:
+	 *   * the resolution value of promiseOrValue if it's a foreign promise, or
+	 *   * promiseOrValue if it's a value
+	 */
+	function resolve(promiseOrValue) {
+		var promise, deferred;
+
+		if(promiseOrValue instanceof Promise) {
+			// It's a when.js promise, so we trust it
+			promise = promiseOrValue;
+
+		} else {
+			// It's not a when.js promise. See if it's a foreign promise or a value.
+			if(isPromise(promiseOrValue)) {
+				// It's a thenable, but we don't know where it came from, so don't trust
+				// its implementation entirely.  Introduce a trusted middleman when.js promise
+				deferred = defer();
+
+				// IMPORTANT: This is the only place when.js should ever call .then() on an
+				// untrusted promise. Don't expose the return value to the untrusted promise
+				promiseOrValue.then(
+					function(value)  { deferred.resolve(value); },
+					function(reason) { deferred.reject(reason); },
+					function(update) { deferred.progress(update); }
+				);
+
+				promise = deferred.promise;
+
+			} else {
+				// It's a value, not a promise.  Create a resolved promise for it.
+				promise = fulfilled(promiseOrValue);
+			}
+		}
+
+		return promise;
+	}
+
+	/**
+	 * Returns a rejected promise for the supplied promiseOrValue.  The returned
+	 * promise will be rejected with:
+	 * - promiseOrValue, if it is a value, or
+	 * - if promiseOrValue is a promise
+	 *   - promiseOrValue's value after it is fulfilled
+	 *   - promiseOrValue's reason after it is rejected
+	 * @param {*} promiseOrValue the rejected value of the returned {@link Promise}
+	 * @returns {Promise} rejected {@link Promise}
+	 */
+	function reject(promiseOrValue) {
+		return when(promiseOrValue, rejected);
+	}
+
+	/**
+	 * Trusted Promise constructor.  A Promise created from this constructor is
+	 * a trusted when.js promise.  Any other duck-typed promise is considered
+	 * untrusted.
+	 * @constructor
+	 * @name Promise
+	 */
+	function Promise(then) {
+		this.then = then;
+	}
+
+	Promise.prototype = {
+		/**
+		 * Register a callback that will be called when a promise is
+		 * fulfilled or rejected.  Optionally also register a progress handler.
+		 * Shortcut for .then(onFulfilledOrRejected, onFulfilledOrRejected, onProgress)
+		 * @param {function?} [onFulfilledOrRejected]
+		 * @param {function?} [onProgress]
+		 * @returns {Promise}
+		 */
+		always: function(onFulfilledOrRejected, onProgress) {
+			return this.then(onFulfilledOrRejected, onFulfilledOrRejected, onProgress);
+		},
+
+		/**
+		 * Register a rejection handler.  Shortcut for .then(undefined, onRejected)
+		 * @param {function?} onRejected
+		 * @returns {Promise}
+		 */
+		otherwise: function(onRejected) {
+			return this.then(undef, onRejected);
+		},
+
+		/**
+		 * Shortcut for .then(function() { return value; })
+		 * @param  {*} value
+		 * @returns {Promise} a promise that:
+		 *  - is fulfilled if value is not a promise, or
+		 *  - if value is a promise, will fulfill with its value, or reject
+		 *    with its reason.
+		 */
+		yield: function(value) {
+			return this.then(function() {
+				return value;
+			});
+		},
+
+		/**
+		 * Assumes that this promise will fulfill with an array, and arranges
+		 * for the onFulfilled to be called with the array as its argument list
+		 * i.e. onFulfilled.spread(undefined, array).
+		 * @param {function} onFulfilled function to receive spread arguments
+		 * @returns {Promise}
+		 */
+		spread: function(onFulfilled) {
+			return this.then(function(array) {
+				// array may contain promises, so resolve its contents.
+				return all(array, function(array) {
+					return onFulfilled.apply(undef, array);
+				});
+			});
+		}
+	};
+
+	/**
+	 * Create an already-resolved promise for the supplied value
+	 * @private
+	 *
+	 * @param {*} value
+	 * @returns {Promise} fulfilled promise
+	 */
+	function fulfilled(value) {
+		var p = new Promise(function(onFulfilled) {
+			// TODO: Promises/A+ check typeof onFulfilled
+			try {
+				return resolve(onFulfilled ? onFulfilled(value) : value);
+			} catch(e) {
+				return rejected(e);
+			}
+		});
+
+		return p;
+	}
+
+	/**
+	 * Create an already-rejected {@link Promise} with the supplied
+	 * rejection reason.
+	 * @private
+	 *
+	 * @param {*} reason
+	 * @returns {Promise} rejected promise
+	 */
+	function rejected(reason) {
+		var p = new Promise(function(_, onRejected) {
+			// TODO: Promises/A+ check typeof onRejected
+			try {
+				return onRejected ? resolve(onRejected(reason)) : rejected(reason);
+			} catch(e) {
+				return rejected(e);
+			}
+		});
+
+		return p;
+	}
+
+	/**
+	 * Creates a new, Deferred with fully isolated resolver and promise parts,
+	 * either or both of which may be given out safely to consumers.
+	 * The Deferred itself has the full API: resolve, reject, progress, and
+	 * then. The resolver has resolve, reject, and progress.  The promise
+	 * only has then.
+	 *
+	 * @returns {Deferred}
+	 */
+	function defer() {
+		var deferred, promise, handlers, progressHandlers,
+			_then, _progress, _resolve;
+
+		/**
+		 * The promise for the new deferred
+		 * @type {Promise}
+		 */
+		promise = new Promise(then);
+
+		/**
+		 * The full Deferred object, with {@link Promise} and {@link Resolver} parts
+		 * @class Deferred
+		 * @name Deferred
+		 */
+		deferred = {
+			then:     then, // DEPRECATED: use deferred.promise.then
+			resolve:  promiseResolve,
+			reject:   promiseReject,
+			// TODO: Consider renaming progress() to notify()
+			progress: promiseProgress,
+
+			promise:  promise,
+
+			resolver: {
+				resolve:  promiseResolve,
+				reject:   promiseReject,
+				progress: promiseProgress
+			}
+		};
+
+		handlers = [];
+		progressHandlers = [];
+
+		/**
+		 * Pre-resolution then() that adds the supplied callback, errback, and progback
+		 * functions to the registered listeners
+		 * @private
+		 *
+		 * @param {function?} [onFulfilled] resolution handler
+		 * @param {function?} [onRejected] rejection handler
+		 * @param {function?} [onProgress] progress handler
+		 */
+		_then = function(onFulfilled, onRejected, onProgress) {
+			// TODO: Promises/A+ check typeof onFulfilled, onRejected, onProgress
+			var deferred, progressHandler;
+
+			deferred = defer();
+
+			progressHandler = typeof onProgress === 'function'
+				? function(update) {
+					try {
+						// Allow progress handler to transform progress event
+						deferred.progress(onProgress(update));
+					} catch(e) {
+						// Use caught value as progress
+						deferred.progress(e);
+					}
+				}
+				: function(update) { deferred.progress(update); };
+
+			handlers.push(function(promise) {
+				promise.then(onFulfilled, onRejected)
+					.then(deferred.resolve, deferred.reject, progressHandler);
+			});
+
+			progressHandlers.push(progressHandler);
+
+			return deferred.promise;
+		};
+
+		/**
+		 * Issue a progress event, notifying all progress listeners
+		 * @private
+		 * @param {*} update progress event payload to pass to all listeners
+		 */
+		_progress = function(update) {
+			processQueue(progressHandlers, update);
+			return update;
+		};
+
+		/**
+		 * Transition from pre-resolution state to post-resolution state, notifying
+		 * all listeners of the resolution or rejection
+		 * @private
+		 * @param {*} value the value of this deferred
+		 */
+		_resolve = function(value) {
+			value = resolve(value);
+
+			// Replace _then with one that directly notifies with the result.
+			_then = value.then;
+			// Replace _resolve so that this Deferred can only be resolved once
+			_resolve = resolve;
+			// Make _progress a noop, to disallow progress for the resolved promise.
+			_progress = noop;
+
+			// Notify handlers
+			processQueue(handlers, value);
+
+			// Free progressHandlers array since we'll never issue progress events
+			progressHandlers = handlers = undef;
+
+			return value;
+		};
+
+		return deferred;
+
+		/**
+		 * Wrapper to allow _then to be replaced safely
+		 * @param {function?} [onFulfilled] resolution handler
+		 * @param {function?} [onRejected] rejection handler
+		 * @param {function?} [onProgress] progress handler
+		 * @returns {Promise} new promise
+		 */
+		function then(onFulfilled, onRejected, onProgress) {
+			// TODO: Promises/A+ check typeof onFulfilled, onRejected, onProgress
+			return _then(onFulfilled, onRejected, onProgress);
+		}
+
+		/**
+		 * Wrapper to allow _resolve to be replaced
+		 */
+		function promiseResolve(val) {
+			return _resolve(val);
+		}
+
+		/**
+		 * Wrapper to allow _reject to be replaced
+		 */
+		function promiseReject(err) {
+			return _resolve(rejected(err));
+		}
+
+		/**
+		 * Wrapper to allow _progress to be replaced
+		 */
+		function promiseProgress(update) {
+			return _progress(update);
+		}
+	}
+
+	/**
+	 * Determines if promiseOrValue is a promise or not.  Uses the feature
+	 * test from http://wiki.commonjs.org/wiki/Promises/A to determine if
+	 * promiseOrValue is a promise.
+	 *
+	 * @param {*} promiseOrValue anything
+	 * @returns {boolean} true if promiseOrValue is a {@link Promise}
+	 */
+	function isPromise(promiseOrValue) {
+		return promiseOrValue && typeof promiseOrValue.then === 'function';
+	}
+
+	/**
+	 * Initiates a competitive race, returning a promise that will resolve when
+	 * howMany of the supplied promisesOrValues have resolved, or will reject when
+	 * it becomes impossible for howMany to resolve, for example, when
+	 * (promisesOrValues.length - howMany) + 1 input promises reject.
+	 *
+	 * @param {Array} promisesOrValues array of anything, may contain a mix
+	 *      of promises and values
+	 * @param howMany {number} number of promisesOrValues to resolve
+	 * @param {function?} [onFulfilled] resolution handler
+	 * @param {function?} [onRejected] rejection handler
+	 * @param {function?} [onProgress] progress handler
+	 * @returns {Promise} promise that will resolve to an array of howMany values that
+	 * resolved first, or will reject with an array of (promisesOrValues.length - howMany) + 1
+	 * rejection reasons.
+	 */
+	function some(promisesOrValues, howMany, onFulfilled, onRejected, onProgress) {
+
+		checkCallbacks(2, arguments);
+
+		return when(promisesOrValues, function(promisesOrValues) {
+
+			var toResolve, toReject, values, reasons, deferred, fulfillOne, rejectOne, progress, len, i;
+
+			len = promisesOrValues.length >>> 0;
+
+			toResolve = Math.max(0, Math.min(howMany, len));
+			values = [];
+
+			toReject = (len - toResolve) + 1;
+			reasons = [];
+
+			deferred = defer();
+
+			// No items in the input, resolve immediately
+			if (!toResolve) {
+				deferred.resolve(values);
+
+			} else {
+				progress = deferred.progress;
+
+				rejectOne = function(reason) {
+					reasons.push(reason);
+					if(!--toReject) {
+						fulfillOne = rejectOne = noop;
+						deferred.reject(reasons);
+					}
+				};
+
+				fulfillOne = function(val) {
+					// This orders the values based on promise resolution order
+					// Another strategy would be to use the original position of
+					// the corresponding promise.
+					values.push(val);
+
+					if (!--toResolve) {
+						fulfillOne = rejectOne = noop;
+						deferred.resolve(values);
+					}
+				};
+
+				for(i = 0; i < len; ++i) {
+					if(i in promisesOrValues) {
+						when(promisesOrValues[i], fulfiller, rejecter, progress);
+					}
+				}
+			}
+
+			return deferred.then(onFulfilled, onRejected, onProgress);
+
+			function rejecter(reason) {
+				rejectOne(reason);
+			}
+
+			function fulfiller(val) {
+				fulfillOne(val);
+			}
+
+		});
+	}
+
+	/**
+	 * Initiates a competitive race, returning a promise that will resolve when
+	 * any one of the supplied promisesOrValues has resolved or will reject when
+	 * *all* promisesOrValues have rejected.
+	 *
+	 * @param {Array|Promise} promisesOrValues array of anything, may contain a mix
+	 *      of {@link Promise}s and values
+	 * @param {function?} [onFulfilled] resolution handler
+	 * @param {function?} [onRejected] rejection handler
+	 * @param {function?} [onProgress] progress handler
+	 * @returns {Promise} promise that will resolve to the value that resolved first, or
+	 * will reject with an array of all rejected inputs.
+	 */
+	function any(promisesOrValues, onFulfilled, onRejected, onProgress) {
+
+		function unwrapSingleResult(val) {
+			return onFulfilled ? onFulfilled(val[0]) : val[0];
+		}
+
+		return some(promisesOrValues, 1, unwrapSingleResult, onRejected, onProgress);
+	}
+
+	/**
+	 * Return a promise that will resolve only once all the supplied promisesOrValues
+	 * have resolved. The resolution value of the returned promise will be an array
+	 * containing the resolution values of each of the promisesOrValues.
+	 * @memberOf when
+	 *
+	 * @param {Array|Promise} promisesOrValues array of anything, may contain a mix
+	 *      of {@link Promise}s and values
+	 * @param {function?} [onFulfilled] resolution handler
+	 * @param {function?} [onRejected] rejection handler
+	 * @param {function?} [onProgress] progress handler
+	 * @returns {Promise}
+	 */
+	function all(promisesOrValues, onFulfilled, onRejected, onProgress) {
+		checkCallbacks(1, arguments);
+		return map(promisesOrValues, identity).then(onFulfilled, onRejected, onProgress);
+	}
+
+	/**
+	 * Joins multiple promises into a single returned promise.
+	 * @returns {Promise} a promise that will fulfill when *all* the input promises
+	 * have fulfilled, or will reject when *any one* of the input promises rejects.
+	 */
+	function join(/* ...promises */) {
+		return map(arguments, identity);
+	}
+
+	/**
+	 * Traditional map function, similar to `Array.prototype.map()`, but allows
+	 * input to contain {@link Promise}s and/or values, and mapFunc may return
+	 * either a value or a {@link Promise}
+	 *
+	 * @param {Array|Promise} promise array of anything, may contain a mix
+	 *      of {@link Promise}s and values
+	 * @param {function} mapFunc mapping function mapFunc(value) which may return
+	 *      either a {@link Promise} or value
+	 * @returns {Promise} a {@link Promise} that will resolve to an array containing
+	 *      the mapped output values.
+	 */
+	function map(promise, mapFunc) {
+		return when(promise, function(array) {
+			var results, len, toResolve, resolve, i, d;
+
+			// Since we know the resulting length, we can preallocate the results
+			// array to avoid array expansions.
+			toResolve = len = array.length >>> 0;
+			results = [];
+			d = defer();
+
+			if(!toResolve) {
+				d.resolve(results);
+			} else {
+
+				resolve = function resolveOne(item, i) {
+					when(item, mapFunc).then(function(mapped) {
+						results[i] = mapped;
+
+						if(!--toResolve) {
+							d.resolve(results);
+						}
+					}, d.reject);
+				};
+
+				// Since mapFunc may be async, get all invocations of it into flight
+				for(i = 0; i < len; i++) {
+					if(i in array) {
+						resolve(array[i], i);
+					} else {
+						--toResolve;
+					}
+				}
+
+			}
+
+			return d.promise;
+
+		});
+	}
+
+	/**
+	 * Traditional reduce function, similar to `Array.prototype.reduce()`, but
+	 * input may contain promises and/or values, and reduceFunc
+	 * may return either a value or a promise, *and* initialValue may
+	 * be a promise for the starting value.
+	 *
+	 * @param {Array|Promise} promise array or promise for an array of anything,
+	 *      may contain a mix of promises and values.
+	 * @param {function} reduceFunc reduce function reduce(currentValue, nextValue, index, total),
+	 *      where total is the total number of items being reduced, and will be the same
+	 *      in each call to reduceFunc.
+	 * @returns {Promise} that will resolve to the final reduced value
+	 */
+	function reduce(promise, reduceFunc /*, initialValue */) {
+		var args = slice.call(arguments, 1);
+
+		return when(promise, function(array) {
+			var total;
+
+			total = array.length;
+
+			// Wrap the supplied reduceFunc with one that handles promises and then
+			// delegates to the supplied.
+			args[0] = function (current, val, i) {
+				return when(current, function (c) {
+					return when(val, function (value) {
+						return reduceFunc(c, value, i, total);
+					});
+				});
+			};
+
+			return reduceArray.apply(array, args);
+		});
+	}
+
+	/**
+	 * Ensure that resolution of promiseOrValue will trigger resolver with the
+	 * value or reason of promiseOrValue, or instead with resolveValue if it is provided.
+	 *
+	 * @param promiseOrValue
+	 * @param {Object} resolver
+	 * @param {function} resolver.resolve
+	 * @param {function} resolver.reject
+	 * @param {*} [resolveValue]
+	 * @returns {Promise}
+	 */
+	function chain(promiseOrValue, resolver, resolveValue) {
+		var useResolveValue = arguments.length > 2;
+
+		return when(promiseOrValue,
+			function(val) {
+				val = useResolveValue ? resolveValue : val;
+				resolver.resolve(val);
+				return val;
+			},
+			function(reason) {
+				resolver.reject(reason);
+				return rejected(reason);
+			},
+			resolver.progress
+		);
+	}
+
+	//
+	// Utility functions
+	//
+
+	/**
+	 * Apply all functions in queue to value
+	 * @param {Array} queue array of functions to execute
+	 * @param {*} value argument passed to each function
+	 */
+	function processQueue(queue, value) {
+		var handler, i = 0;
+
+		while (handler = queue[i++]) {
+			handler(value);
+		}
+	}
+
+	/**
+	 * Helper that checks arrayOfCallbacks to ensure that each element is either
+	 * a function, or null or undefined.
+	 * @private
+	 * @param {number} start index at which to start checking items in arrayOfCallbacks
+	 * @param {Array} arrayOfCallbacks array to check
+	 * @throws {Error} if any element of arrayOfCallbacks is something other than
+	 * a functions, null, or undefined.
+	 */
+	function checkCallbacks(start, arrayOfCallbacks) {
+		// TODO: Promises/A+ update type checking and docs
+		var arg, i = arrayOfCallbacks.length;
+
+		while(i > start) {
+			arg = arrayOfCallbacks[--i];
+
+			if (arg != null && typeof arg != 'function') {
+				throw new Error('arg '+i+' must be a function');
+			}
+		}
+	}
+
+	/**
+	 * No-Op function used in method replacement
+	 * @private
+	 */
+	function noop() {}
+
+	slice = [].slice;
+
+	// ES5 reduce implementation if native not available
+	// See: http://es5.github.com/#x15.4.4.21 as there are many
+	// specifics and edge cases.
+	reduceArray = [].reduce ||
+		function(reduceFunc /*, initialValue */) {
+			/*jshint maxcomplexity: 7*/
+
+			// ES5 dictates that reduce.length === 1
+
+			// This implementation deviates from ES5 spec in the following ways:
+			// 1. It does not check if reduceFunc is a Callable
+
+			var arr, args, reduced, len, i;
+
+			i = 0;
+			// This generates a jshint warning, despite being valid
+			// "Missing 'new' prefix when invoking a constructor."
+			// See https://github.com/jshint/jshint/issues/392
+			arr = Object(this);
+			len = arr.length >>> 0;
+			args = arguments;
+
+			// If no initialValue, use first item of array (we know length !== 0 here)
+			// and adjust i to start at second item
+			if(args.length <= 1) {
+				// Skip to the first real element in the array
+				for(;;) {
+					if(i in arr) {
+						reduced = arr[i++];
+						break;
+					}
+
+					// If we reached the end of the array without finding any real
+					// elements, it's a TypeError
+					if(++i >= len) {
+						throw new TypeError();
+					}
+				}
+			} else {
+				// If initialValue provided, use it
+				reduced = args[1];
+			}
+
+			// Do the actual reduce
+			for(;i < len; ++i) {
+				// Skip holes
+				if(i in arr) {
+					reduced = reduceFunc(reduced, arr[i], i, arr);
+				}
+			}
+
+			return reduced;
+		};
+
+	function identity(x) {
+		return x;
+	}
+
+	return when;
+});
+})(typeof define == 'function' && define.amd
+	? define
+	: function (factory) { typeof exports === 'object'
+		? (module.exports = factory())
+		: (this.when      = factory());
+	}
+	// Boilerplate for AMD, Node, and browser global
+);
 /*global define*/
 define('Core/binarySearch',[
         './defined',
@@ -11334,316 +13603,55 @@ define('Core/binarySearch',[
     return binarySearch;
 });
 /*global define*/
-define('Core/TimeConstants',[],function() {
+define('Core/EarthOrientationParametersSample',[],function() {
     "use strict";
 
     /**
-     * Constants for time conversions like those done by {@link JulianDate}.
+     * A set of Earth Orientation Parameters (EOP) sampled at a time.
      *
-     * @exports TimeConstants
-     *
-     * @see JulianDate
-     */
-    var TimeConstants = {
-        /**
-         * The number of seconds in one millisecond: <code>0.001</code>
-         * @type {Number}
-         * @constant
-         * @default
-         */
-        SECONDS_PER_MILLISECOND : 0.001,
-
-        /**
-         * The number of seconds in one minute: <code>60</code>.
-         * @type {Number}
-         * @constant
-         * @default
-         */
-        SECONDS_PER_MINUTE : 60.0,
-
-        /**
-         * The number of minutes in one hour: <code>60</code>.
-         * @type {Number}
-         * @constant
-         * @default
-         */
-        MINUTES_PER_HOUR : 60.0,
-
-        /**
-         * The number of hours in one day: <code>24</code>.
-         * @type {Number}
-         * @constant
-         * @default
-         */
-        HOURS_PER_DAY : 24.0,
-
-        /**
-         * The number of seconds in one hour: <code>3600</code>.
-         * @type {Number}
-         * @constant
-         * @default
-         */
-        SECONDS_PER_HOUR : 3600.0,
-
-        /**
-         * The number of minutes in one day: <code>1440</code>.
-         * @type {Number}
-         * @constant
-         * @default
-         */
-        MINUTES_PER_DAY : 1440.0,
-
-        /**
-         * The number of seconds in one day, ignoring leap seconds: <code>86400</code>.
-         * @type {Number}
-         * @constant
-         * @default
-         */
-        SECONDS_PER_DAY : 86400.0,
-
-        /**
-         * The number of days in one Julian century: <code>36525</code>.
-         * @type {Number}
-         * @constant
-         * @default
-         */
-        DAYS_PER_JULIAN_CENTURY : 36525.0,
-
-        /**
-         * One trillionth of a second.
-         * @type {Number}
-         * @constant
-         * @default
-         */
-        PICOSECOND : 0.000000001,
-
-        /**
-         * DOC_TBA
-         * @type {Number}
-         * @constant
-         * @default
-         */
-        MODIFIED_JULIAN_DATE_DIFFERENCE : 2400000.5
-    };
-
-    return TimeConstants;
-});
-
-/*global define*/
-define('Core/isArray',['./defined'
-    ], function(
-        defined) {
-    "use strict";
-
-    /**
-     * Tests an object to see if it is an array.
-     * @exports isArray
-     *
-     * @param {Object} value The value to test.
-     * @returns {Boolean} true if the value is an array, false otherwise.
-     */
-    var isArray = Array.isArray;
-    if (!defined(isArray)) {
-        isArray = function(value) {
-            return Object.prototype.toString.call(value) === '[object Array]';
-        };
-    }
-
-    return isArray;
-});
-/*global define*/
-define('Core/LeapSecond',[
-        './defined',
-        './defineProperties',
-        './DeveloperError',
-        './isArray'
-    ], function(
-        defined,
-        defineProperties,
-        DeveloperError,
-        isArray) {
-    "use strict";
-
-    /**
-     * Describes a single leap second, which is constructed from a {@link JulianDate} and a
-     * numerical offset representing the number of seconds TAI is ahead of the UTC time standard.
-     *
-     * @alias LeapSecond
+     * @alias EarthOrientationParametersSample
      * @constructor
      *
-     * @param {JulianDate} date A Julian date representing the time of the leap second.
-     * @param {Number} offset The cumulative number of seconds, that TAI is ahead of UTC at provided date.
-     *
-     * @see JulianDate
-     * @see TimeStandard
-     *
-     * @example
-     * // Example 1. Construct a LeapSecond using a JulianDate
-     * var date = new Date('January 1, 1990 00:00:00 UTC');
-     * var leapSecond = new Cesium.LeapSecond(Cesium.JulianDate.fromDate(date), 25.0);
-     * var offset = leapSecond.offset;    // 25.0
-     *
-     * //////////////////////////////////////////////////////////////////
-     *
-     * // Example 2. Construct a LeapSecond using a date string
-     * var date = 'January 1, 1990 00:00:00 UTC';
-     * var leapSecond = new LeapSecond(date, 25.0);
+     * @param {Number} xPoleWander The pole wander about the X axis, in radians.
+     * @param {Number} yPoleWander The pole wander about the Y axis, in radians.
+     * @param {Number} xPoleOffset The offset to the Celestial Intermediate Pole (CIP) about the X axis, in radians.
+     * @param {Number} yPoleOffset The offset to the Celestial Intermediate Pole (CIP) about the Y axis, in radians.
+     * @param {Number} ut1MinusUtc The difference in time standards, UT1 - UTC, in seconds.
      */
-    var LeapSecond = function(date, offset) {
-                if (!defined(date)) {
-            throw new DeveloperError('date is required.');
-        }
-        if (offset === null || isNaN(offset)) {
-            throw new DeveloperError('offset is required and must be a number.');
-        }
-        
+    var EarthOrientationParametersSample = function EarthOrientationParametersSample(xPoleWander, yPoleWander, xPoleOffset, yPoleOffset, ut1MinusUtc) {
         /**
-         * The Julian date at which this leap second occurs.
-         *
-         * @type {JulianDate}
-         */
-        this.julianDate = date;
-
-        /**
-         * The cumulative number of seconds between the UTC and TAI time standards at the time
-         * of this leap second.
-         *
+         * The pole wander about the X axis, in radians.
          * @type {Number}
          */
-        this.offset = offset;
-    };
-
-    defineProperties(LeapSecond, {
-        /**
-         * The list of leap seconds used throughout Cesium.
-         * @memberof LeapSecond
-         * @type {Array}
-         */
-        leapSeconds: {
-            get: function() {
-                return LeapSecond._leapSeconds;
-            },
-            set: function(leapSeconds) {
-                                if (!isArray(leapSeconds)) {
-                    throw new DeveloperError("leapSeconds is required and must be an array.");
-                }
-                
-                LeapSecond._leapSeconds = leapSeconds;
-                LeapSecond._leapSeconds.sort(LeapSecond.compareLeapSecondDate);
-            }
-        }
-    });
-
-    /**
-     * Checks whether two leap seconds are equivalent to each other.
-     *
-     * @memberof LeapSecond
-     *
-     * @param {LeapSecond} other The leap second to compare against.
-     *
-     * @returns {Boolean} <code>true</code> if the leap seconds are equal; otherwise, <code>false</code>.
-     *
-     * @example
-     * var date = new Date('January 1, 1990 00:00:00 UTC');
-     * var leapSecond1 = new Cesium.LeapSecond(Cesium.JulianDate.fromDate(date), 25.0);
-     * var leapSecond2 = new Cesium.LeapSecond(Cesium.JulianDate.fromDate(date), 25.0);
-     * leapSecond1.equals(leapSecond2);     // true
-     */
-    LeapSecond.prototype.equals = function(other) {
-        return this.julianDate.equals(other.julianDate) && (this.offset === other.offset);
-    };
-
-    /**
-     * Given two leap seconds, determines which comes before the other by comparing
-     * their respective Julian dates.
-     *
-     * @memberof LeapSecond
-     *
-     * @param {LeapSecond} leapSecond1 The first leap second to be compared.
-     * @param {LeapSecond} leapSecond2 The second leap second to be compared.
-     *
-     * @returns {Number} A negative value if the first leap second is earlier than the second,
-     *                  a positive value if the first leap second is later than the second, or
-     *                  zero if the two leap seconds are equal (ignoring their offsets).
-     *
-     * @see JulianDate#lessThan
-     * @see JulianDate#isAfter
-     *
-     * @example
-     * var date = new Date('January 1, 2006 00:00:00 UTC');
-     * var leapSecond1 = new Cesium.LeapSecond(Cesium.JulianDate.fromDate(date), 33.0);
-     * var leapSecond2 = new Cesium.LeapSecond(Cesium.JulianDate.fromDate(date), 34.0);
-     * Cesium.LeapSecond.compareLeapSecondDate(leapSecond1, leapSecond2);    // returns 0
-     */
-    LeapSecond.compareLeapSecondDate = function(leapSecond1, leapSecond2) {
-        return leapSecond1.julianDate.compareTo(leapSecond2.julianDate);
-    };
-
-    LeapSecond._leapSeconds = [];
-
-    return LeapSecond;
-});
-/*global define*/
-define('Core/TimeStandard',[],function() {
-    "use strict";
-
-    /**
-     * Provides the type of time standards which JulianDate can take as input.
-     *
-     * @exports TimeStandard
-     *
-     * @see JulianDate
-     */
-    var TimeStandard = {
-        /**
-         * Represents the coordinated Universal Time (UTC) time standard.
-         *
-         * UTC is related to TAI according to the relationship
-         * <code>UTC = TAI - deltaT</code> where <code>deltaT</code> is the number of leap
-         * seconds which have been introduced as of the time in TAI.
-         *
-         */
-        UTC : 0,
+        this.xPoleWander = xPoleWander;
 
         /**
-         * Represents the International Atomic Time (TAI) time standard.
-         * TAI is the principal time standard to which the other time standards are related.
+         * The pole wander about the Y axis, in radians.
+         * @type {Number}
          */
-        TAI : 1
+        this.yPoleWander = yPoleWander;
+
+        /**
+         * The offset to the Celestial Intermediate Pole (CIP) about the X axis, in radians.
+         * @type {Number}
+         */
+        this.xPoleOffset = xPoleOffset;
+
+        /**
+         * The offset to the Celestial Intermediate Pole (CIP) about the Y axis, in radians.
+         * @type {Number}
+         */
+        this.yPoleOffset = yPoleOffset;
+
+        /**
+         * The difference in time standards, UT1 - UTC, in seconds.
+         * @type {Number}
+         */
+        this.ut1MinusUtc = ut1MinusUtc;
     };
 
-    return TimeStandard;
+    return EarthOrientationParametersSample;
 });
-/*global define*/
-define('Core/isLeapYear',[
-        './DeveloperError'
-    ], function(
-        DeveloperError) {
-    "use strict";
-
-    /**
-     * Determines if a given date is a leap year.
-     *
-     * @exports isLeapYear
-     *
-     * @param {Number} year The year to be tested.
-     *
-     * @returns {Boolean} True if <code>year</code> is a leap yer.
-     *
-     * @example
-     * var leapYear = Cesium.isLeapYear(2000); // true
-     */
-    function isLeapYear(year) {
-                if (year === null || isNaN(year)) {
-            throw new DeveloperError('year is required and must be a number.');
-        }
-        
-        return ((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0);
-    }
-
-    return isLeapYear;
-});
-
 /**
 @license
 sprintf.js from the php.js project - https://github.com/kvz/phpjs
@@ -11964,26 +13972,330 @@ function sprintf () {
 return sprintf;
 });
 /*global define*/
-define('Core/JulianDate',[
-        './DeveloperError',
-        './binarySearch',
-        './defined',
-        './defaultValue',
-        './TimeConstants',
-        './LeapSecond',
-        './TimeStandard',
-        './isLeapYear',
-        '../ThirdParty/sprintf'
+define('Core/isLeapYear',[
+        './DeveloperError'
     ], function(
-        DeveloperError,
-        binarySearch,
+        DeveloperError) {
+    "use strict";
+
+    /**
+     * Determines if a given date is a leap year.
+     *
+     * @exports isLeapYear
+     *
+     * @param {Number} year The year to be tested.
+     *
+     * @returns {Boolean} True if <code>year</code> is a leap yer.
+     *
+     * @example
+     * var leapYear = Cesium.isLeapYear(2000); // true
+     */
+    function isLeapYear(year) {
+                if (year === null || isNaN(year)) {
+            throw new DeveloperError('year is required and must be a number.');
+        }
+        
+        return ((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0);
+    }
+
+    return isLeapYear;
+});
+
+/*global define*/
+define('Core/isArray',[
+        './defined'
+    ], function(
+        defined) {
+    "use strict";
+
+    /**
+     * Tests an object to see if it is an array.
+     * @exports isArray
+     *
+     * @param {Object} value The value to test.
+     * @returns {Boolean} true if the value is an array, false otherwise.
+     */
+    var isArray = Array.isArray;
+    if (!defined(isArray)) {
+        isArray = function(value) {
+            return Object.prototype.toString.call(value) === '[object Array]';
+        };
+    }
+
+    return isArray;
+});
+/*global define*/
+define('Core/LeapSecond',[
+        './defined',
+        './defineProperties',
+        './DeveloperError',
+        './isArray'
+    ], function(
         defined,
+        defineProperties,
+        DeveloperError,
+        isArray) {
+    "use strict";
+
+    /**
+     * Describes a single leap second, which is constructed from a {@link JulianDate} and a
+     * numerical offset representing the number of seconds TAI is ahead of the UTC time standard.
+     *
+     * @alias LeapSecond
+     * @constructor
+     *
+     * @param {JulianDate} date A Julian date representing the time of the leap second.
+     * @param {Number} offset The cumulative number of seconds, that TAI is ahead of UTC at provided date.
+     *
+     * @see JulianDate
+     * @see TimeStandard
+     *
+     * @example
+     * // Example 1. Construct a LeapSecond using a JulianDate
+     * var date = new Date('January 1, 1990 00:00:00 UTC');
+     * var leapSecond = new Cesium.LeapSecond(Cesium.JulianDate.fromDate(date), 25.0);
+     * var offset = leapSecond.offset;    // 25.0
+     *
+     * //////////////////////////////////////////////////////////////////
+     *
+     * // Example 2. Construct a LeapSecond using a date string
+     * var date = 'January 1, 1990 00:00:00 UTC';
+     * var leapSecond = new LeapSecond(date, 25.0);
+     */
+    var LeapSecond = function(date, offset) {
+                if (!defined(date)) {
+            throw new DeveloperError('date is required.');
+        }
+        if (offset === null || isNaN(offset)) {
+            throw new DeveloperError('offset is required and must be a number.');
+        }
+        
+        /**
+         * The Julian date at which this leap second occurs.
+         *
+         * @type {JulianDate}
+         */
+        this.julianDate = date;
+
+        /**
+         * The cumulative number of seconds between the UTC and TAI time standards at the time
+         * of this leap second.
+         *
+         * @type {Number}
+         */
+        this.offset = offset;
+    };
+
+    defineProperties(LeapSecond, {
+        /**
+         * The list of leap seconds used throughout Cesium.
+         * @memberof LeapSecond
+         * @type {LeapSecond[]}
+         */
+        leapSeconds: {
+            get: function() {
+                return LeapSecond._leapSeconds;
+            },
+            set: function(leapSeconds) {
+                                if (!isArray(leapSeconds)) {
+                    throw new DeveloperError("leapSeconds is required and must be an array.");
+                }
+                
+                LeapSecond._leapSeconds = leapSeconds;
+                LeapSecond._leapSeconds.sort(LeapSecond.compareLeapSecondDate);
+            }
+        }
+    });
+
+    /**
+     * Checks whether two leap seconds are equivalent to each other.
+     *
+     * @memberof LeapSecond
+     *
+     * @param {LeapSecond} other The leap second to compare against.
+     *
+     * @returns {Boolean} <code>true</code> if the leap seconds are equal; otherwise, <code>false</code>.
+     *
+     * @example
+     * var date = new Date('January 1, 1990 00:00:00 UTC');
+     * var leapSecond1 = new Cesium.LeapSecond(Cesium.JulianDate.fromDate(date), 25.0);
+     * var leapSecond2 = new Cesium.LeapSecond(Cesium.JulianDate.fromDate(date), 25.0);
+     * leapSecond1.equals(leapSecond2);     // true
+     */
+    LeapSecond.prototype.equals = function(other) {
+        return this.julianDate.equals(other.julianDate) && (this.offset === other.offset);
+    };
+
+    /**
+     * Given two leap seconds, determines which comes before the other by comparing
+     * their respective Julian dates.
+     *
+     * @memberof LeapSecond
+     *
+     * @param {LeapSecond} leapSecond1 The first leap second to be compared.
+     * @param {LeapSecond} leapSecond2 The second leap second to be compared.
+     *
+     * @returns {Number} A negative value if the first leap second is earlier than the second,
+     *                  a positive value if the first leap second is later than the second, or
+     *                  zero if the two leap seconds are equal (ignoring their offsets).
+     *
+     * @see JulianDate#lessThan
+     * @see JulianDate#isAfter
+     *
+     * @example
+     * var date = new Date('January 1, 2006 00:00:00 UTC');
+     * var leapSecond1 = new Cesium.LeapSecond(Cesium.JulianDate.fromDate(date), 33.0);
+     * var leapSecond2 = new Cesium.LeapSecond(Cesium.JulianDate.fromDate(date), 34.0);
+     * Cesium.LeapSecond.compareLeapSecondDate(leapSecond1, leapSecond2);    // returns 0
+     */
+    LeapSecond.compareLeapSecondDate = function(leapSecond1, leapSecond2) {
+        return leapSecond1.julianDate.compareTo(leapSecond2.julianDate);
+    };
+
+    LeapSecond._leapSeconds = [];
+
+    return LeapSecond;
+});
+/*global define*/
+define('Core/TimeConstants',[],function() {
+    "use strict";
+
+    /**
+     * Constants for time conversions like those done by {@link JulianDate}.
+     *
+     * @exports TimeConstants
+     *
+     * @see JulianDate
+     */
+    var TimeConstants = {
+        /**
+         * The number of seconds in one millisecond: <code>0.001</code>
+         * @type {Number}
+         * @constant
+         */
+        SECONDS_PER_MILLISECOND : 0.001,
+
+        /**
+         * The number of seconds in one minute: <code>60</code>.
+         * @type {Number}
+         * @constant
+         */
+        SECONDS_PER_MINUTE : 60.0,
+
+        /**
+         * The number of minutes in one hour: <code>60</code>.
+         * @type {Number}
+         * @constant
+         */
+        MINUTES_PER_HOUR : 60.0,
+
+        /**
+         * The number of hours in one day: <code>24</code>.
+         * @type {Number}
+         * @constant
+         */
+        HOURS_PER_DAY : 24.0,
+
+        /**
+         * The number of seconds in one hour: <code>3600</code>.
+         * @type {Number}
+         * @constant
+         */
+        SECONDS_PER_HOUR : 3600.0,
+
+        /**
+         * The number of minutes in one day: <code>1440</code>.
+         * @type {Number}
+         * @constant
+         */
+        MINUTES_PER_DAY : 1440.0,
+
+        /**
+         * The number of seconds in one day, ignoring leap seconds: <code>86400</code>.
+         * @type {Number}
+         * @constant
+         */
+        SECONDS_PER_DAY : 86400.0,
+
+        /**
+         * The number of days in one Julian century: <code>36525</code>.
+         * @type {Number}
+         * @constant
+         */
+        DAYS_PER_JULIAN_CENTURY : 36525.0,
+
+        /**
+         * One trillionth of a second.
+         * @type {Number}
+         * @constant
+         */
+        PICOSECOND : 0.000000001,
+
+        /**
+         * The number of days to subtract from a Julian date to determine the
+         * modified Julian date, which gives the number of days since midnight
+         * on November 17, 1858.
+         * @type {Number}
+         * @constant
+         */
+        MODIFIED_JULIAN_DATE_DIFFERENCE : 2400000.5
+    };
+
+    return TimeConstants;
+});
+
+/*global define*/
+define('Core/TimeStandard',[],function() {
+    "use strict";
+
+    /**
+     * Provides the type of time standards which JulianDate can take as input.
+     *
+     * @exports TimeStandard
+     *
+     * @see JulianDate
+     */
+    var TimeStandard = {
+        /**
+         * Represents the coordinated Universal Time (UTC) time standard.
+         *
+         * UTC is related to TAI according to the relationship
+         * <code>UTC = TAI - deltaT</code> where <code>deltaT</code> is the number of leap
+         * seconds which have been introduced as of the time in TAI.
+         *
+         */
+        UTC : 0,
+
+        /**
+         * Represents the International Atomic Time (TAI) time standard.
+         * TAI is the principal time standard to which the other time standards are related.
+         */
+        TAI : 1
+    };
+
+    return TimeStandard;
+});
+/*global define*/
+define('Core/JulianDate',[
+        '../ThirdParty/sprintf',
+        './binarySearch',
+        './defaultValue',
+        './defined',
+        './DeveloperError',
+        './isLeapYear',
+        './LeapSecond',
+        './TimeConstants',
+        './TimeStandard'
+    ], function(
+        sprintf,
+        binarySearch,
         defaultValue,
-        TimeConstants,
-        LeapSecond,
-        TimeStandard,
+        defined,
+        DeveloperError,
         isLeapYear,
-        sprintf) {
+        LeapSecond,
+        TimeConstants,
+        TimeStandard) {
     "use strict";
 
     /**
@@ -12195,7 +14507,7 @@ define('Core/JulianDate',[
      *
      * @param {Number} julianDayNumber The Julian Day Number representing the number of whole days.  Fractional days will also be handled correctly.
      * @param {Number} julianSecondsOfDay The number of seconds into the current Julian Day Number.  Fractional seconds, negative seconds and seconds greater than a day will be handled correctly.
-     * @param {TimeStandard} [timeStandard = TimeStandard.UTC] The time standard in which the first two parameters are defined.
+     * @param {TimeStandard} [timeStandard=TimeStandard.UTC] The time standard in which the first two parameters are defined.
      *
      * @exception {DeveloperError} timeStandard is not a known TimeStandard.
      *
@@ -12282,7 +14594,7 @@ define('Core/JulianDate',[
      * @memberof JulianDate
      *
      * @param {Date} date The JavaScript Date object representing the time to be converted to a JulianDate.
-     * @param {TimeStandard} [timeStandard = TimeStandard.UTC] Indicates the time standard in which this JulianDate is represented.
+     * @param {TimeStandard} [timeStandard=TimeStandard.UTC] Indicates the time standard in which this JulianDate is represented.
      *
      * @returns {JulianDate} The new {@Link JulianDate} instance.
      *
@@ -12293,8 +14605,6 @@ define('Core/JulianDate',[
      * @see JulianDate.fromIso8601
      * @see TimeStandard
      * @see LeapSecond
-     * @see <a href='http://www.w3schools.com/js/js_obj_date.asp'>JavaScript Date Object on w3schools</a>.
-     * @see <a href='http://www.w3schools.com/jsref/jsref_obj_date.asp'>JavaScript Date Object Reference on w3schools</a>.
      *
      * @example
      * // Construct a JulianDate specifying the UTC time standard
@@ -12327,7 +14637,7 @@ define('Core/JulianDate',[
      * @see JulianDate.fromTotalDays
      * @see JulianDate.fromDate
      * @see LeapSecond
-     * @see <a href='http://en.wikipedia.org/wiki/ISO_8601'>ISO 8601 on Wikipedia</a>.
+     * @see {@link http://en.wikipedia.org/wiki/ISO_8601|ISO 8601 on Wikipedia}
      *
      * @example
      * // Example 1. Construct a JulianDate in UTC at April 24th, 2012 6:08PM UTC
@@ -12582,7 +14892,7 @@ define('Core/JulianDate',[
      * @memberof JulianDate
      *
      * @param {Number} totalDays The combined Julian Day Number and fractional day.
-     * @param {TimeStandard} [timeStandard = TimeStandard.UTC] Indicates the time standard in which the first parameter is defined.
+     * @param {TimeStandard} [timeStandard=TimeStandard.UTC] Indicates the time standard in which the first parameter is defined.
      *
      * @returns {JulianDate} The new {@Link JulianDate} instance.
      *
@@ -13388,767 +15698,19 @@ define('Core/RequestErrorEvent',[
 
     return RequestErrorEvent;
 });
-/**
-  @license
-  when.js - https://github.com/cujojs/when
-
-  MIT License (c) copyright B Cavalier & J Hann
-
- * A lightweight CommonJS Promises/A and when() implementation
- * when is part of the cujo.js family of libraries (http://cujojs.com/)
- *
- * Licensed under the MIT License at:
- * http://www.opensource.org/licenses/mit-license.php
- *
- * @version 1.7.1
- */
-
-(function(define) { 'use strict';
-define('ThirdParty/when',[],function () {
-	var reduceArray, slice, undef;
-
-	//
-	// Public API
-	//
-
-	when.defer     = defer;     // Create a deferred
-	when.resolve   = resolve;   // Create a resolved promise
-	when.reject    = reject;    // Create a rejected promise
-
-	when.join      = join;      // Join 2 or more promises
-
-	when.all       = all;       // Resolve a list of promises
-	when.map       = map;       // Array.map() for promises
-	when.reduce    = reduce;    // Array.reduce() for promises
-
-	when.any       = any;       // One-winner race
-	when.some      = some;      // Multi-winner race
-
-	when.chain     = chain;     // Make a promise trigger another resolver
-
-	when.isPromise = isPromise; // Determine if a thing is a promise
-
-	/**
-	 * Register an observer for a promise or immediate value.
-	 *
-	 * @param {*} promiseOrValue
-	 * @param {function?} [onFulfilled] callback to be called when promiseOrValue is
-	 *   successfully fulfilled.  If promiseOrValue is an immediate value, callback
-	 *   will be invoked immediately.
-	 * @param {function?} [onRejected] callback to be called when promiseOrValue is
-	 *   rejected.
-	 * @param {function?} [onProgress] callback to be called when progress updates
-	 *   are issued for promiseOrValue.
-	 * @returns {Promise} a new {@link Promise} that will complete with the return
-	 *   value of callback or errback or the completion value of promiseOrValue if
-	 *   callback and/or errback is not supplied.
-	 */
-	function when(promiseOrValue, onFulfilled, onRejected, onProgress) {
-		// Get a trusted promise for the input promiseOrValue, and then
-		// register promise handlers
-		return resolve(promiseOrValue).then(onFulfilled, onRejected, onProgress);
-	}
-
-	/**
-	 * Returns promiseOrValue if promiseOrValue is a {@link Promise}, a new Promise if
-	 * promiseOrValue is a foreign promise, or a new, already-fulfilled {@link Promise}
-	 * whose value is promiseOrValue if promiseOrValue is an immediate value.
-	 *
-	 * @param {*} promiseOrValue
-	 * @returns Guaranteed to return a trusted Promise.  If promiseOrValue is a when.js {@link Promise}
-	 *   returns promiseOrValue, otherwise, returns a new, already-resolved, when.js {@link Promise}
-	 *   whose resolution value is:
-	 *   * the resolution value of promiseOrValue if it's a foreign promise, or
-	 *   * promiseOrValue if it's a value
-	 */
-	function resolve(promiseOrValue) {
-		var promise, deferred;
-
-		if(promiseOrValue instanceof Promise) {
-			// It's a when.js promise, so we trust it
-			promise = promiseOrValue;
-
-		} else {
-			// It's not a when.js promise. See if it's a foreign promise or a value.
-			if(isPromise(promiseOrValue)) {
-				// It's a thenable, but we don't know where it came from, so don't trust
-				// its implementation entirely.  Introduce a trusted middleman when.js promise
-				deferred = defer();
-
-				// IMPORTANT: This is the only place when.js should ever call .then() on an
-				// untrusted promise. Don't expose the return value to the untrusted promise
-				promiseOrValue.then(
-					function(value)  { deferred.resolve(value); },
-					function(reason) { deferred.reject(reason); },
-					function(update) { deferred.progress(update); }
-				);
-
-				promise = deferred.promise;
-
-			} else {
-				// It's a value, not a promise.  Create a resolved promise for it.
-				promise = fulfilled(promiseOrValue);
-			}
-		}
-
-		return promise;
-	}
-
-	/**
-	 * Returns a rejected promise for the supplied promiseOrValue.  The returned
-	 * promise will be rejected with:
-	 * - promiseOrValue, if it is a value, or
-	 * - if promiseOrValue is a promise
-	 *   - promiseOrValue's value after it is fulfilled
-	 *   - promiseOrValue's reason after it is rejected
-	 * @param {*} promiseOrValue the rejected value of the returned {@link Promise}
-	 * @returns {Promise} rejected {@link Promise}
-	 */
-	function reject(promiseOrValue) {
-		return when(promiseOrValue, rejected);
-	}
-
-	/**
-	 * Trusted Promise constructor.  A Promise created from this constructor is
-	 * a trusted when.js promise.  Any other duck-typed promise is considered
-	 * untrusted.
-	 * @constructor
-	 * @name Promise
-	 */
-	function Promise(then) {
-		this.then = then;
-	}
-
-	Promise.prototype = {
-		/**
-		 * Register a callback that will be called when a promise is
-		 * fulfilled or rejected.  Optionally also register a progress handler.
-		 * Shortcut for .then(onFulfilledOrRejected, onFulfilledOrRejected, onProgress)
-		 * @param {function?} [onFulfilledOrRejected]
-		 * @param {function?} [onProgress]
-		 * @returns {Promise}
-		 */
-		always: function(onFulfilledOrRejected, onProgress) {
-			return this.then(onFulfilledOrRejected, onFulfilledOrRejected, onProgress);
-		},
-
-		/**
-		 * Register a rejection handler.  Shortcut for .then(undefined, onRejected)
-		 * @param {function?} onRejected
-		 * @returns {Promise}
-		 */
-		otherwise: function(onRejected) {
-			return this.then(undef, onRejected);
-		},
-
-		/**
-		 * Shortcut for .then(function() { return value; })
-		 * @param  {*} value
-		 * @returns {Promise} a promise that:
-		 *  - is fulfilled if value is not a promise, or
-		 *  - if value is a promise, will fulfill with its value, or reject
-		 *    with its reason.
-		 */
-		yield: function(value) {
-			return this.then(function() {
-				return value;
-			});
-		},
-
-		/**
-		 * Assumes that this promise will fulfill with an array, and arranges
-		 * for the onFulfilled to be called with the array as its argument list
-		 * i.e. onFulfilled.spread(undefined, array).
-		 * @param {function} onFulfilled function to receive spread arguments
-		 * @returns {Promise}
-		 */
-		spread: function(onFulfilled) {
-			return this.then(function(array) {
-				// array may contain promises, so resolve its contents.
-				return all(array, function(array) {
-					return onFulfilled.apply(undef, array);
-				});
-			});
-		}
-	};
-
-	/**
-	 * Create an already-resolved promise for the supplied value
-	 * @private
-	 *
-	 * @param {*} value
-	 * @returns {Promise} fulfilled promise
-	 */
-	function fulfilled(value) {
-		var p = new Promise(function(onFulfilled) {
-			// TODO: Promises/A+ check typeof onFulfilled
-			try {
-				return resolve(onFulfilled ? onFulfilled(value) : value);
-			} catch(e) {
-				return rejected(e);
-			}
-		});
-
-		return p;
-	}
-
-	/**
-	 * Create an already-rejected {@link Promise} with the supplied
-	 * rejection reason.
-	 * @private
-	 *
-	 * @param {*} reason
-	 * @returns {Promise} rejected promise
-	 */
-	function rejected(reason) {
-		var p = new Promise(function(_, onRejected) {
-			// TODO: Promises/A+ check typeof onRejected
-			try {
-				return onRejected ? resolve(onRejected(reason)) : rejected(reason);
-			} catch(e) {
-				return rejected(e);
-			}
-		});
-
-		return p;
-	}
-
-	/**
-	 * Creates a new, Deferred with fully isolated resolver and promise parts,
-	 * either or both of which may be given out safely to consumers.
-	 * The Deferred itself has the full API: resolve, reject, progress, and
-	 * then. The resolver has resolve, reject, and progress.  The promise
-	 * only has then.
-	 *
-	 * @returns {Deferred}
-	 */
-	function defer() {
-		var deferred, promise, handlers, progressHandlers,
-			_then, _progress, _resolve;
-
-		/**
-		 * The promise for the new deferred
-		 * @type {Promise}
-		 */
-		promise = new Promise(then);
-
-		/**
-		 * The full Deferred object, with {@link Promise} and {@link Resolver} parts
-		 * @class Deferred
-		 * @name Deferred
-		 */
-		deferred = {
-			then:     then, // DEPRECATED: use deferred.promise.then
-			resolve:  promiseResolve,
-			reject:   promiseReject,
-			// TODO: Consider renaming progress() to notify()
-			progress: promiseProgress,
-
-			promise:  promise,
-
-			resolver: {
-				resolve:  promiseResolve,
-				reject:   promiseReject,
-				progress: promiseProgress
-			}
-		};
-
-		handlers = [];
-		progressHandlers = [];
-
-		/**
-		 * Pre-resolution then() that adds the supplied callback, errback, and progback
-		 * functions to the registered listeners
-		 * @private
-		 *
-		 * @param {function?} [onFulfilled] resolution handler
-		 * @param {function?} [onRejected] rejection handler
-		 * @param {function?} [onProgress] progress handler
-		 */
-		_then = function(onFulfilled, onRejected, onProgress) {
-			// TODO: Promises/A+ check typeof onFulfilled, onRejected, onProgress
-			var deferred, progressHandler;
-
-			deferred = defer();
-
-			progressHandler = typeof onProgress === 'function'
-				? function(update) {
-					try {
-						// Allow progress handler to transform progress event
-						deferred.progress(onProgress(update));
-					} catch(e) {
-						// Use caught value as progress
-						deferred.progress(e);
-					}
-				}
-				: function(update) { deferred.progress(update); };
-
-			handlers.push(function(promise) {
-				promise.then(onFulfilled, onRejected)
-					.then(deferred.resolve, deferred.reject, progressHandler);
-			});
-
-			progressHandlers.push(progressHandler);
-
-			return deferred.promise;
-		};
-
-		/**
-		 * Issue a progress event, notifying all progress listeners
-		 * @private
-		 * @param {*} update progress event payload to pass to all listeners
-		 */
-		_progress = function(update) {
-			processQueue(progressHandlers, update);
-			return update;
-		};
-
-		/**
-		 * Transition from pre-resolution state to post-resolution state, notifying
-		 * all listeners of the resolution or rejection
-		 * @private
-		 * @param {*} value the value of this deferred
-		 */
-		_resolve = function(value) {
-			value = resolve(value);
-
-			// Replace _then with one that directly notifies with the result.
-			_then = value.then;
-			// Replace _resolve so that this Deferred can only be resolved once
-			_resolve = resolve;
-			// Make _progress a noop, to disallow progress for the resolved promise.
-			_progress = noop;
-
-			// Notify handlers
-			processQueue(handlers, value);
-
-			// Free progressHandlers array since we'll never issue progress events
-			progressHandlers = handlers = undef;
-
-			return value;
-		};
-
-		return deferred;
-
-		/**
-		 * Wrapper to allow _then to be replaced safely
-		 * @param {function?} [onFulfilled] resolution handler
-		 * @param {function?} [onRejected] rejection handler
-		 * @param {function?} [onProgress] progress handler
-		 * @returns {Promise} new promise
-		 */
-		function then(onFulfilled, onRejected, onProgress) {
-			// TODO: Promises/A+ check typeof onFulfilled, onRejected, onProgress
-			return _then(onFulfilled, onRejected, onProgress);
-		}
-
-		/**
-		 * Wrapper to allow _resolve to be replaced
-		 */
-		function promiseResolve(val) {
-			return _resolve(val);
-		}
-
-		/**
-		 * Wrapper to allow _reject to be replaced
-		 */
-		function promiseReject(err) {
-			return _resolve(rejected(err));
-		}
-
-		/**
-		 * Wrapper to allow _progress to be replaced
-		 */
-		function promiseProgress(update) {
-			return _progress(update);
-		}
-	}
-
-	/**
-	 * Determines if promiseOrValue is a promise or not.  Uses the feature
-	 * test from http://wiki.commonjs.org/wiki/Promises/A to determine if
-	 * promiseOrValue is a promise.
-	 *
-	 * @param {*} promiseOrValue anything
-	 * @returns {boolean} true if promiseOrValue is a {@link Promise}
-	 */
-	function isPromise(promiseOrValue) {
-		return promiseOrValue && typeof promiseOrValue.then === 'function';
-	}
-
-	/**
-	 * Initiates a competitive race, returning a promise that will resolve when
-	 * howMany of the supplied promisesOrValues have resolved, or will reject when
-	 * it becomes impossible for howMany to resolve, for example, when
-	 * (promisesOrValues.length - howMany) + 1 input promises reject.
-	 *
-	 * @param {Array} promisesOrValues array of anything, may contain a mix
-	 *      of promises and values
-	 * @param howMany {number} number of promisesOrValues to resolve
-	 * @param {function?} [onFulfilled] resolution handler
-	 * @param {function?} [onRejected] rejection handler
-	 * @param {function?} [onProgress] progress handler
-	 * @returns {Promise} promise that will resolve to an array of howMany values that
-	 * resolved first, or will reject with an array of (promisesOrValues.length - howMany) + 1
-	 * rejection reasons.
-	 */
-	function some(promisesOrValues, howMany, onFulfilled, onRejected, onProgress) {
-
-		checkCallbacks(2, arguments);
-
-		return when(promisesOrValues, function(promisesOrValues) {
-
-			var toResolve, toReject, values, reasons, deferred, fulfillOne, rejectOne, progress, len, i;
-
-			len = promisesOrValues.length >>> 0;
-
-			toResolve = Math.max(0, Math.min(howMany, len));
-			values = [];
-
-			toReject = (len - toResolve) + 1;
-			reasons = [];
-
-			deferred = defer();
-
-			// No items in the input, resolve immediately
-			if (!toResolve) {
-				deferred.resolve(values);
-
-			} else {
-				progress = deferred.progress;
-
-				rejectOne = function(reason) {
-					reasons.push(reason);
-					if(!--toReject) {
-						fulfillOne = rejectOne = noop;
-						deferred.reject(reasons);
-					}
-				};
-
-				fulfillOne = function(val) {
-					// This orders the values based on promise resolution order
-					// Another strategy would be to use the original position of
-					// the corresponding promise.
-					values.push(val);
-
-					if (!--toResolve) {
-						fulfillOne = rejectOne = noop;
-						deferred.resolve(values);
-					}
-				};
-
-				for(i = 0; i < len; ++i) {
-					if(i in promisesOrValues) {
-						when(promisesOrValues[i], fulfiller, rejecter, progress);
-					}
-				}
-			}
-
-			return deferred.then(onFulfilled, onRejected, onProgress);
-
-			function rejecter(reason) {
-				rejectOne(reason);
-			}
-
-			function fulfiller(val) {
-				fulfillOne(val);
-			}
-
-		});
-	}
-
-	/**
-	 * Initiates a competitive race, returning a promise that will resolve when
-	 * any one of the supplied promisesOrValues has resolved or will reject when
-	 * *all* promisesOrValues have rejected.
-	 *
-	 * @param {Array|Promise} promisesOrValues array of anything, may contain a mix
-	 *      of {@link Promise}s and values
-	 * @param {function?} [onFulfilled] resolution handler
-	 * @param {function?} [onRejected] rejection handler
-	 * @param {function?} [onProgress] progress handler
-	 * @returns {Promise} promise that will resolve to the value that resolved first, or
-	 * will reject with an array of all rejected inputs.
-	 */
-	function any(promisesOrValues, onFulfilled, onRejected, onProgress) {
-
-		function unwrapSingleResult(val) {
-			return onFulfilled ? onFulfilled(val[0]) : val[0];
-		}
-
-		return some(promisesOrValues, 1, unwrapSingleResult, onRejected, onProgress);
-	}
-
-	/**
-	 * Return a promise that will resolve only once all the supplied promisesOrValues
-	 * have resolved. The resolution value of the returned promise will be an array
-	 * containing the resolution values of each of the promisesOrValues.
-	 * @memberOf when
-	 *
-	 * @param {Array|Promise} promisesOrValues array of anything, may contain a mix
-	 *      of {@link Promise}s and values
-	 * @param {function?} [onFulfilled] resolution handler
-	 * @param {function?} [onRejected] rejection handler
-	 * @param {function?} [onProgress] progress handler
-	 * @returns {Promise}
-	 */
-	function all(promisesOrValues, onFulfilled, onRejected, onProgress) {
-		checkCallbacks(1, arguments);
-		return map(promisesOrValues, identity).then(onFulfilled, onRejected, onProgress);
-	}
-
-	/**
-	 * Joins multiple promises into a single returned promise.
-	 * @returns {Promise} a promise that will fulfill when *all* the input promises
-	 * have fulfilled, or will reject when *any one* of the input promises rejects.
-	 */
-	function join(/* ...promises */) {
-		return map(arguments, identity);
-	}
-
-	/**
-	 * Traditional map function, similar to `Array.prototype.map()`, but allows
-	 * input to contain {@link Promise}s and/or values, and mapFunc may return
-	 * either a value or a {@link Promise}
-	 *
-	 * @param {Array|Promise} promise array of anything, may contain a mix
-	 *      of {@link Promise}s and values
-	 * @param {function} mapFunc mapping function mapFunc(value) which may return
-	 *      either a {@link Promise} or value
-	 * @returns {Promise} a {@link Promise} that will resolve to an array containing
-	 *      the mapped output values.
-	 */
-	function map(promise, mapFunc) {
-		return when(promise, function(array) {
-			var results, len, toResolve, resolve, i, d;
-
-			// Since we know the resulting length, we can preallocate the results
-			// array to avoid array expansions.
-			toResolve = len = array.length >>> 0;
-			results = [];
-			d = defer();
-
-			if(!toResolve) {
-				d.resolve(results);
-			} else {
-
-				resolve = function resolveOne(item, i) {
-					when(item, mapFunc).then(function(mapped) {
-						results[i] = mapped;
-
-						if(!--toResolve) {
-							d.resolve(results);
-						}
-					}, d.reject);
-				};
-
-				// Since mapFunc may be async, get all invocations of it into flight
-				for(i = 0; i < len; i++) {
-					if(i in array) {
-						resolve(array[i], i);
-					} else {
-						--toResolve;
-					}
-				}
-
-			}
-
-			return d.promise;
-
-		});
-	}
-
-	/**
-	 * Traditional reduce function, similar to `Array.prototype.reduce()`, but
-	 * input may contain promises and/or values, and reduceFunc
-	 * may return either a value or a promise, *and* initialValue may
-	 * be a promise for the starting value.
-	 *
-	 * @param {Array|Promise} promise array or promise for an array of anything,
-	 *      may contain a mix of promises and values.
-	 * @param {function} reduceFunc reduce function reduce(currentValue, nextValue, index, total),
-	 *      where total is the total number of items being reduced, and will be the same
-	 *      in each call to reduceFunc.
-	 * @returns {Promise} that will resolve to the final reduced value
-	 */
-	function reduce(promise, reduceFunc /*, initialValue */) {
-		var args = slice.call(arguments, 1);
-
-		return when(promise, function(array) {
-			var total;
-
-			total = array.length;
-
-			// Wrap the supplied reduceFunc with one that handles promises and then
-			// delegates to the supplied.
-			args[0] = function (current, val, i) {
-				return when(current, function (c) {
-					return when(val, function (value) {
-						return reduceFunc(c, value, i, total);
-					});
-				});
-			};
-
-			return reduceArray.apply(array, args);
-		});
-	}
-
-	/**
-	 * Ensure that resolution of promiseOrValue will trigger resolver with the
-	 * value or reason of promiseOrValue, or instead with resolveValue if it is provided.
-	 *
-	 * @param promiseOrValue
-	 * @param {Object} resolver
-	 * @param {function} resolver.resolve
-	 * @param {function} resolver.reject
-	 * @param {*} [resolveValue]
-	 * @returns {Promise}
-	 */
-	function chain(promiseOrValue, resolver, resolveValue) {
-		var useResolveValue = arguments.length > 2;
-
-		return when(promiseOrValue,
-			function(val) {
-				val = useResolveValue ? resolveValue : val;
-				resolver.resolve(val);
-				return val;
-			},
-			function(reason) {
-				resolver.reject(reason);
-				return rejected(reason);
-			},
-			resolver.progress
-		);
-	}
-
-	//
-	// Utility functions
-	//
-
-	/**
-	 * Apply all functions in queue to value
-	 * @param {Array} queue array of functions to execute
-	 * @param {*} value argument passed to each function
-	 */
-	function processQueue(queue, value) {
-		var handler, i = 0;
-
-		while (handler = queue[i++]) {
-			handler(value);
-		}
-	}
-
-	/**
-	 * Helper that checks arrayOfCallbacks to ensure that each element is either
-	 * a function, or null or undefined.
-	 * @private
-	 * @param {number} start index at which to start checking items in arrayOfCallbacks
-	 * @param {Array} arrayOfCallbacks array to check
-	 * @throws {Error} if any element of arrayOfCallbacks is something other than
-	 * a functions, null, or undefined.
-	 */
-	function checkCallbacks(start, arrayOfCallbacks) {
-		// TODO: Promises/A+ update type checking and docs
-		var arg, i = arrayOfCallbacks.length;
-
-		while(i > start) {
-			arg = arrayOfCallbacks[--i];
-
-			if (arg != null && typeof arg != 'function') {
-				throw new Error('arg '+i+' must be a function');
-			}
-		}
-	}
-
-	/**
-	 * No-Op function used in method replacement
-	 * @private
-	 */
-	function noop() {}
-
-	slice = [].slice;
-
-	// ES5 reduce implementation if native not available
-	// See: http://es5.github.com/#x15.4.4.21 as there are many
-	// specifics and edge cases.
-	reduceArray = [].reduce ||
-		function(reduceFunc /*, initialValue */) {
-			/*jshint maxcomplexity: 7*/
-
-			// ES5 dictates that reduce.length === 1
-
-			// This implementation deviates from ES5 spec in the following ways:
-			// 1. It does not check if reduceFunc is a Callable
-
-			var arr, args, reduced, len, i;
-
-			i = 0;
-			// This generates a jshint warning, despite being valid
-			// "Missing 'new' prefix when invoking a constructor."
-			// See https://github.com/jshint/jshint/issues/392
-			arr = Object(this);
-			len = arr.length >>> 0;
-			args = arguments;
-
-			// If no initialValue, use first item of array (we know length !== 0 here)
-			// and adjust i to start at second item
-			if(args.length <= 1) {
-				// Skip to the first real element in the array
-				for(;;) {
-					if(i in arr) {
-						reduced = arr[i++];
-						break;
-					}
-
-					// If we reached the end of the array without finding any real
-					// elements, it's a TypeError
-					if(++i >= len) {
-						throw new TypeError();
-					}
-				}
-			} else {
-				// If initialValue provided, use it
-				reduced = args[1];
-			}
-
-			// Do the actual reduce
-			for(;i < len; ++i) {
-				// Skip holes
-				if(i in arr) {
-					reduced = reduceFunc(reduced, arr[i], i, arr);
-				}
-			}
-
-			return reduced;
-		};
-
-	function identity(x) {
-		return x;
-	}
-
-	return when;
-});
-})(typeof define == 'function' && define.amd
-	? define
-	: function (factory) { typeof exports === 'object'
-		? (module.exports = factory())
-		: (this.when      = factory());
-	}
-	// Boilerplate for AMD, Node, and browser global
-);
 /*global define*/
 define('Core/loadWithXhr',[
-        './defined',
+        '../ThirdParty/when',
         './defaultValue',
+        './defined',
         './DeveloperError',
-        './RequestErrorEvent',
-        '../ThirdParty/when'
+        './RequestErrorEvent'
     ], function(
-        defined,
+        when,
         defaultValue,
+        defined,
         DeveloperError,
-        RequestErrorEvent,
-        when) {
+        RequestErrorEvent) {
     "use strict";
 
     /**
@@ -14169,8 +15731,8 @@ define('Core/loadWithXhr',[
      *
      * @returns {Promise} a promise that will resolve to the requested data when loaded.
      *
-     * @see <a href='http://www.w3.org/TR/cors/'>Cross-Origin Resource Sharing</a>
-     * @see <a href='http://wiki.commonjs.org/wiki/Promises/A'>CommonJS Promises/A</a>
+     * @see {@link http://www.w3.org/TR/cors/|Cross-Origin Resource Sharing}
+     * @see {@link http://wiki.commonjs.org/wiki/Promises/A|CommonJS Promises/A}
      *
      * @see loadArrayBuffer
      * @see loadBlob
@@ -14333,9 +15895,9 @@ define('Core/loadText',[
      *     // an error occurred
      * });
      *
-     * @see <a href="http://en.wikipedia.org/wiki/XMLHttpRequest">XMLHttpRequest</a>
-     * @see <a href='http://www.w3.org/TR/cors/'>Cross-Origin Resource Sharing</a>
-     * @see <a href='http://wiki.commonjs.org/wiki/Promises/A'>CommonJS Promises/A</a>
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest|XMLHttpRequest}
+     * @see {@link http://www.w3.org/TR/cors/|Cross-Origin Resource Sharing}
+     * @see {@link http://wiki.commonjs.org/wiki/Promises/A|CommonJS Promises/A}
      */
     var loadText = function(url, headers) {
         return loadWithXhr({
@@ -14350,13 +15912,13 @@ define('Core/loadText',[
 define('Core/loadJson',[
         './clone',
         './defined',
-        './loadText',
-        './DeveloperError'
+        './DeveloperError',
+        './loadText'
     ], function(
         clone,
         defined,
-        loadText,
-        DeveloperError) {
+        DeveloperError,
+        loadText) {
     "use strict";
 
     var defaultHeaders = {
@@ -14388,8 +15950,8 @@ define('Core/loadJson',[
      * });
      *
      * @see loadText
-     * @see <a href='http://www.w3.org/TR/cors/'>Cross-Origin Resource Sharing</a>
-     * @see <a href='http://wiki.commonjs.org/wiki/Promises/A'>CommonJS Promises/A</a>
+     * @see {@link http://www.w3.org/TR/cors/|Cross-Origin Resource Sharing}
+     * @see {@link http://wiki.commonjs.org/wiki/Promises/A|CommonJS Promises/A}
      */
     var loadJson = function loadJson(url, headers) {
                 if (!defined(url)) {
@@ -14412,349 +15974,32 @@ define('Core/loadJson',[
     return loadJson;
 });
 /*global define*/
-define('Core/Iau2006XysData',[
-        './buildModuleUrl',
-        './defaultValue',
-        './defined',
-        './Iau2006XysSample',
-        './JulianDate',
-        './loadJson',
-        './TimeStandard',
-        '../ThirdParty/when'
-    ], function(
-        buildModuleUrl,
-        defaultValue,
-        defined,
-        Iau2006XysSample,
-        JulianDate,
-        loadJson,
-        TimeStandard,
-        when) {
-    "use strict";
-
-    /**
-     * A set of IAU2006 XYS data that is used to evaluate the transformation between the International
-     * Celestial Reference Frame (ICRF) and the International Terrestrial Reference Frame (ITRF).
-     *
-     * @alias Iau2006XysData
-     * @constructor
-     *
-     * @param {String} [description.xysFileUrlTemplate='Assets/IAU2006_XYS/IAU2006_XYS_{0}.json'] A template URL for obtaining the XYS data.  In the template,
-     *                 `{0}` will be replaced with the file index.
-     * @param {Number} [description.interpolationOrder=9] The order of interpolation to perform on the XYS data.
-     * @param {Number} [description.sampleZeroJulianEphemerisDate=2442396.5] The Julian ephemeris date (JED) of the
-     *                 first XYS sample.
-     * @param {Number} [description.stepSizeDays=1.0] The step size, in days, between successive XYS samples.
-     * @param {Number} [description.samplesPerXysFile=1000] The number of samples in each XYS file.
-     * @param {Number} [description.totalSamples=27426] The total number of samples in all XYS files.
-     */
-    var Iau2006XysData = function Iau2006XysData(description) {
-        description = defaultValue(description, defaultValue.EMPTY_OBJECT);
-
-        this._xysFileUrlTemplate = description.xysFileUrlTemplate;
-        this._interpolationOrder = defaultValue(description.interpolationOrder, 9);
-        this._sampleZeroJulianEphemerisDate = defaultValue(description.sampleZeroJulianEphemerisDate, 2442396.5);
-        this._sampleZeroDateTT = new JulianDate(this._sampleZeroJulianEphemerisDate, 0.0, TimeStandard.TAI);
-        this._stepSizeDays = defaultValue(description.stepSizeDays, 1.0);
-        this._samplesPerXysFile = defaultValue(description.samplesPerXysFile, 1000);
-        this._totalSamples = defaultValue(description.totalSamples, 27426);
-        this._samples = new Array(this._totalSamples * 3);
-        this._chunkDownloadsInProgress = [];
-
-        var order = this._interpolationOrder;
-
-        // Compute denominators and X values for interpolation.
-        var denom = this._denominators = new Array(order + 1);
-        var xTable = this._xTable = new Array(order + 1);
-
-        var stepN = Math.pow(this._stepSizeDays, order);
-
-        for ( var i = 0; i <= order; ++i) {
-            denom[i] = stepN;
-            xTable[i] = i * this._stepSizeDays;
-
-            for ( var j = 0; j <= order; ++j) {
-                if (j !== i) {
-                    denom[i] *= (i - j);
-                }
-            }
-
-            denom[i] = 1.0 / denom[i];
-        }
-
-        // Allocate scratch arrays for interpolation.
-        this._work = new Array(order + 1);
-        this._coef = new Array(order + 1);
-    };
-
-    var julianDateScratch = new JulianDate(0, 0.0, TimeStandard.TAI);
-
-    function getDaysSinceEpoch(xys, dayTT, secondTT) {
-        var dateTT = julianDateScratch;
-        dateTT._julianDayNumber = dayTT;
-        dateTT._secondsOfDay = secondTT;
-        return xys._sampleZeroDateTT.getDaysDifference(dateTT);
-    }
-
-    /**
-     * Preloads XYS data for a specified date range.
-     *
-     * @memberof Iau2006XysData
-     *
-     * @param {Number} startDayTT The Julian day number of the beginning of the interval to preload, expressed in
-     *                 the Terrestrial Time (TT) time standard.
-     * @param {Number} startSecondTT The seconds past noon of the beginning of the interval to preload, expressed in
-     *                 the Terrestrial Time (TT) time standard.
-     * @param {Number} stopDayTT The Julian day number of the end of the interval to preload, expressed in
-     *                 the Terrestrial Time (TT) time standard.
-     * @param {Number} stopSecondTT The seconds past noon of the end of the interval to preload, expressed in
-     *                 the Terrestrial Time (TT) time standard.
-
-     * @returns {Promise} A promise that, when resolved, indicates that the requested interval has been
-     *                    preloaded.
-     */
-    Iau2006XysData.prototype.preload = function(startDayTT, startSecondTT, stopDayTT, stopSecondTT) {
-        var startDaysSinceEpoch = getDaysSinceEpoch(this, startDayTT, startSecondTT);
-        var stopDaysSinceEpoch = getDaysSinceEpoch(this, stopDayTT, stopSecondTT);
-
-        var startIndex = (startDaysSinceEpoch / this._stepSizeDays - this._interpolationOrder / 2) | 0;
-        if (startIndex < 0) {
-            startIndex = 0;
-        }
-
-        var stopIndex = (stopDaysSinceEpoch / this._stepSizeDays - this._interpolationOrder / 2) | 0 + this._interpolationOrder;
-        if (stopIndex >= this._totalSamples) {
-            stopIndex = this._totalSamples - 1;
-        }
-
-        var startChunk = (startIndex / this._samplesPerXysFile) | 0;
-        var stopChunk = (stopIndex / this._samplesPerXysFile) | 0;
-
-        var promises = [];
-        for ( var i = startChunk; i <= stopChunk; ++i) {
-            promises.push(requestXysChunk(this, i));
-        }
-
-        return when.all(promises);
-    };
-
-    /**
-     * Computes the XYS values for a given date by interpolating.  If the required data is not yet downloaded,
-     * this method will return undefined.
-     *
-     * @memberof Iau2006XysData
-     *
-     * @param {Number} dayTT The Julian day number for which to compute the XYS value, expressed in
-     *                 the Terrestrial Time (TT) time standard.
-     * @param {Number} secondTT The seconds past noon of the date for which to compute the XYS value, expressed in
-     *                 the Terrestrial Time (TT) time standard.
-     * @param {Iau2006XysSample} [result] The instance to which to copy the interpolated result.  If this parameter
-     *                           is undefined, a new instance is allocated and returned.
-     * @returns {Iau2006XysSample} The interpolated XYS values, or undefined if the required data for this
-     *                             computation has not yet been downloaded.
-     *
-     * @see Iau2006XysData#preload
-     */
-    Iau2006XysData.prototype.computeXysRadians = function(dayTT, secondTT, result) {
-        var daysSinceEpoch = getDaysSinceEpoch(this, dayTT, secondTT);
-        if (daysSinceEpoch < 0.0) {
-            // Can't evaluate prior to the epoch of the data.
-            return undefined;
-        }
-
-        var centerIndex = (daysSinceEpoch / this._stepSizeDays) | 0;
-        if (centerIndex >= this._totalSamples) {
-            // Can't evaluate after the last sample in the data.
-            return undefined;
-        }
-
-        var degree = this._interpolationOrder;
-
-        var firstIndex = centerIndex - ((degree / 2) | 0);
-        if (firstIndex < 0) {
-            firstIndex = 0;
-        }
-        var lastIndex = firstIndex + degree;
-        if (lastIndex >= this._totalSamples) {
-            lastIndex = this._totalSamples - 1;
-            firstIndex = lastIndex - degree;
-            if (firstIndex < 0) {
-                firstIndex = 0;
-            }
-        }
-
-        // Are all the samples we need present?
-        // We can assume so if the first and last are present
-        var isDataMissing = false;
-        var samples = this._samples;
-        if (!defined(samples[firstIndex * 3])) {
-            requestXysChunk(this, (firstIndex / this._samplesPerXysFile) | 0);
-            isDataMissing = true;
-        }
-
-        if (!defined(samples[lastIndex * 3])) {
-            requestXysChunk(this, (lastIndex / this._samplesPerXysFile) | 0);
-            isDataMissing = true;
-        }
-
-        if (isDataMissing) {
-            return undefined;
-        }
-
-        if (!defined(result)) {
-            result = new Iau2006XysSample(0.0, 0.0, 0.0);
-        } else {
-            result.x = 0.0;
-            result.y = 0.0;
-            result.s = 0.0;
-        }
-
-        var x = daysSinceEpoch - firstIndex * this._stepSizeDays;
-
-        var work = this._work;
-        var denom = this._denominators;
-        var coef = this._coef;
-        var xTable = this._xTable;
-
-        var i, j;
-        for (i = 0; i <= degree; ++i) {
-            work[i] = x - xTable[i];
-        }
-
-        for (i = 0; i <= degree; ++i) {
-            coef[i] = 1.0;
-
-            for (j = 0; j <= degree; ++j) {
-                if (j !== i) {
-                    coef[i] *= work[j];
-                }
-            }
-
-            coef[i] *= denom[i];
-
-            var sampleIndex = (firstIndex + i) * 3;
-            result.x += coef[i] * samples[sampleIndex++];
-            result.y += coef[i] * samples[sampleIndex++];
-            result.s += coef[i] * samples[sampleIndex];
-        }
-
-        return result;
-    };
-
-    function requestXysChunk(xysData, chunkIndex) {
-        if (xysData._chunkDownloadsInProgress[chunkIndex]) {
-            // Chunk has already been requested.
-            return xysData._chunkDownloadsInProgress[chunkIndex];
-        }
-
-        var deferred = when.defer();
-
-        xysData._chunkDownloadsInProgress[chunkIndex] = deferred;
-
-        var chunkUrl;
-        var xysFileUrlTemplate = xysData._xysFileUrlTemplate;
-        if (defined(xysFileUrlTemplate)) {
-            chunkUrl = xysFileUrlTemplate.replace('{0}', chunkIndex);
-        } else {
-            chunkUrl = buildModuleUrl('Assets/IAU2006_XYS/IAU2006_XYS_' + chunkIndex + '.json');
-        }
-
-        when(loadJson(chunkUrl), function(chunk) {
-            xysData._chunkDownloadsInProgress[chunkIndex] = false;
-
-            var samples = xysData._samples;
-            var newSamples = chunk.samples;
-            var startIndex = chunkIndex * xysData._samplesPerXysFile * 3;
-
-            for ( var i = 0, len = newSamples.length; i < len; ++i) {
-                samples[startIndex + i] = newSamples[i];
-            }
-
-            deferred.resolve();
-        });
-
-        return deferred.promise;
-    }
-
-    return Iau2006XysData;
-});
-/*global define*/
-define('Core/EarthOrientationParametersSample',[],function() {
-    "use strict";
-
-    /**
-     * A set of Earth Orientation Parameters (EOP) sampled at a time.
-     *
-     * @alias EarthOrientationParametersSample
-     * @constructor
-     *
-     * @param {Number} xPoleWander The pole wander about the X axis, in radians.
-     * @param {Number} yPoleWander The pole wander about the Y axis, in radians.
-     * @param {Number} xPoleOffset The offset to the Celestial Intermediate Pole (CIP) about the X axis, in radians.
-     * @param {Number} yPoleOffset The offset to the Celestial Intermediate Pole (CIP) about the Y axis, in radians.
-     * @param {Number} ut1MinusUtc The difference in time standards, UT1 - UTC, in seconds.
-     */
-    var EarthOrientationParametersSample = function EarthOrientationParametersSample(xPoleWander, yPoleWander, xPoleOffset, yPoleOffset, ut1MinusUtc) {
-        /**
-         * The pole wander about the X axis, in radians.
-         * @type {Number}
-         */
-        this.xPoleWander = xPoleWander;
-
-        /**
-         * The pole wander about the Y axis, in radians.
-         * @type {Number}
-         */
-        this.yPoleWander = yPoleWander;
-
-        /**
-         * The offset to the Celestial Intermediate Pole (CIP) about the X axis, in radians.
-         * @type {Number}
-         */
-        this.xPoleOffset = xPoleOffset;
-
-        /**
-         * The offset to the Celestial Intermediate Pole (CIP) about the Y axis, in radians.
-         * @type {Number}
-         */
-        this.yPoleOffset = yPoleOffset;
-
-        /**
-         * The difference in time standards, UT1 - UTC, in seconds.
-         * @type {Number}
-         */
-        this.ut1MinusUtc = ut1MinusUtc;
-    };
-
-    return EarthOrientationParametersSample;
-});
-/*global define*/
 define('Core/EarthOrientationParameters',[
+        '../ThirdParty/when',
         './binarySearch',
         './defaultValue',
         './defined',
         './EarthOrientationParametersSample',
         './freezeObject',
-        './loadJson',
         './JulianDate',
         './LeapSecond',
+        './loadJson',
         './RuntimeError',
         './TimeConstants',
-        './TimeStandard',
-        '../ThirdParty/when'
+        './TimeStandard'
     ], function(
+        when,
         binarySearch,
         defaultValue,
         defined,
         EarthOrientationParametersSample,
         freezeObject,
-        loadJson,
         JulianDate,
         LeapSecond,
+        loadJson,
         RuntimeError,
         TimeConstants,
-        TimeStandard,
-        when) {
+        TimeStandard) {
     "use strict";
 
     /**
@@ -14766,14 +16011,14 @@ define('Core/EarthOrientationParameters',[
      * @alias EarthOrientationParameters
      * @constructor
      *
-     * @param {String} [description.url] The URL from which to obtain EOP data.  If neither this
-     *                 parameter nor description.data is specified, all EOP values are assumed
-     *                 to be 0.0.  If description.data is specified, this parameter is
+     * @param {String} [options.url] The URL from which to obtain EOP data.  If neither this
+     *                 parameter nor options.data is specified, all EOP values are assumed
+     *                 to be 0.0.  If options.data is specified, this parameter is
      *                 ignored.
-     * @param {Object} [description.data] The actual EOP data.  If neither this
-     *                 parameter nor description.data is specified, all EOP values are assumed
+     * @param {Object} [options.data] The actual EOP data.  If neither this
+     *                 parameter nor options.data is specified, all EOP values are assumed
      *                 to be 0.0.
-     * @param {Boolean} [description.addNewLeapSeconds=true] True if leap seconds that
+     * @param {Boolean} [options.addNewLeapSeconds=true] True if leap seconds that
      *                  are specified in the EOP data but not in {@link LeapSecond#getLeapSeconds}
      *                  should be added to {@link LeapSecond#getLeapSeconds}.  False if
      *                  new leap seconds should be handled correctly in the context
@@ -14795,8 +16040,8 @@ define('Core/EarthOrientationParameters',[
      * var eop = new Cesium.EarthOrientationParameters({ url : 'Data/EOP.json' });
      * Cesium.Transforms.earthOrientationParameters = eop;
      */
-    var EarthOrientationParameters = function EarthOrientationParameters(description) {
-        description = defaultValue(description, defaultValue.EMPTY_OBJECT);
+    var EarthOrientationParameters = function EarthOrientationParameters(options) {
+        options = defaultValue(options, defaultValue.EMPTY_OBJECT);
 
         this._dates = undefined;
         this._samples = undefined;
@@ -14815,18 +16060,18 @@ define('Core/EarthOrientationParameters',[
         this._downloadPromise = undefined;
         this._dataError = undefined;
 
-        this._addNewLeapSeconds = defaultValue(description.addNewLeapSeconds, true);
+        this._addNewLeapSeconds = defaultValue(options.addNewLeapSeconds, true);
 
-        if (defined(description.data)) {
+        if (defined(options.data)) {
             // Use supplied EOP data.
-            onDataReady(this, description.data);
-        } else if (defined(description.url)) {
+            onDataReady(this, options.data);
+        } else if (defined(options.url)) {
             // Download EOP data.
             var that = this;
-            this._downloadPromise = when(loadJson(description.url), function(eopData) {
+            this._downloadPromise = when(loadJson(options.url), function(eopData) {
                 onDataReady(that, eopData);
             }, function() {
-                that._dataError = 'An error occurred while retrieving the EOP data from the URL ' + description.url + '.';
+                that._dataError = 'An error occurred while retrieving the EOP data from the URL ' + options.url + '.';
             });
         } else {
             // Use all zeros for EOP data.
@@ -15112,42 +16357,717 @@ define('Core/EarthOrientationParameters',[
 
     return EarthOrientationParameters;
 });
+/**
+ * @license
+ *
+ * Grauw URI utilities
+ *
+ * See: http://hg.grauw.nl/grauw-lib/file/tip/src/uri.js
+ *
+ * @author Laurens Holst (http://www.grauw.nl/)
+ *
+ *   Copyright 2012 Laurens Holst
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ *
+ */
+/*global define*/
+define('ThirdParty/Uri',[],function() {
+
+	/**
+	 * Constructs a URI object.
+	 * @constructor
+	 * @class Implementation of URI parsing and base URI resolving algorithm in RFC 3986.
+	 * @param {string|URI} uri A string or URI object to create the object from.
+	 */
+	function URI(uri) {
+		if (uri instanceof URI) {  // copy constructor
+			this.scheme = uri.scheme;
+			this.authority = uri.authority;
+			this.path = uri.path;
+			this.query = uri.query;
+			this.fragment = uri.fragment;
+		} else if (uri) {  // uri is URI string or cast to string
+			var c = parseRegex.exec(uri);
+			this.scheme = c[1];
+			this.authority = c[2];
+			this.path = c[3];
+			this.query = c[4];
+			this.fragment = c[5];
+		}
+	};
+
+	// Initial values on the prototype
+	URI.prototype.scheme    = null;
+	URI.prototype.authority = null;
+	URI.prototype.path      = '';
+	URI.prototype.query     = null;
+	URI.prototype.fragment  = null;
+
+	// Regular expression from RFC 3986 appendix B
+	var parseRegex = new RegExp('^(?:([^:/?#]+):)?(?://([^/?#]*))?([^?#]*)(?:\\?([^#]*))?(?:#(.*))?$');
+
+	/**
+	 * Returns the scheme part of the URI.
+	 * In "http://example.com:80/a/b?x#y" this is "http".
+	 */
+	URI.prototype.getScheme = function() {
+		return this.scheme;
+	};
+
+	/**
+	 * Returns the authority part of the URI.
+	 * In "http://example.com:80/a/b?x#y" this is "example.com:80".
+	 */
+	URI.prototype.getAuthority = function() {
+		return this.authority;
+	};
+
+	/**
+	 * Returns the path part of the URI.
+	 * In "http://example.com:80/a/b?x#y" this is "/a/b".
+	 * In "mailto:mike@example.com" this is "mike@example.com".
+	 */
+	URI.prototype.getPath = function() {
+		return this.path;
+	};
+
+	/**
+	 * Returns the query part of the URI.
+	 * In "http://example.com:80/a/b?x#y" this is "x".
+	 */
+	URI.prototype.getQuery = function() {
+		return this.query;
+	};
+
+	/**
+	 * Returns the fragment part of the URI.
+	 * In "http://example.com:80/a/b?x#y" this is "y".
+	 */
+	URI.prototype.getFragment = function() {
+		return this.fragment;
+	};
+
+	/**
+	 * Tests whether the URI is an absolute URI.
+	 * See RFC 3986 section 4.3.
+	 */
+	URI.prototype.isAbsolute = function() {
+		return !!this.scheme && !this.fragment;
+	};
+
+	///**
+	//* Extensive validation of the URI against the ABNF in RFC 3986
+	//*/
+	//URI.prototype.validate
+
+	/**
+	 * Tests whether the URI is a same-document reference.
+	 * See RFC 3986 section 4.4.
+	 *
+	 * To perform more thorough comparison, you can normalise the URI objects.
+	 */
+	URI.prototype.isSameDocumentAs = function(uri) {
+		return uri.scheme == this.scheme &&
+		    uri.authority == this.authority &&
+		         uri.path == this.path &&
+		        uri.query == this.query;
+	};
+
+	/**
+	 * Simple String Comparison of two URIs.
+	 * See RFC 3986 section 6.2.1.
+	 *
+	 * To perform more thorough comparison, you can normalise the URI objects.
+	 */
+	URI.prototype.equals = function(uri) {
+		return this.isSameDocumentAs(uri) && uri.fragment == this.fragment;
+	};
+
+	/**
+	 * Normalizes the URI using syntax-based normalization.
+	 * This includes case normalization, percent-encoding normalization and path segment normalization.
+	 * XXX: Percent-encoding normalization does not escape characters that need to be escaped.
+	 *      (Although that would not be a valid URI in the first place. See validate().)
+	 * See RFC 3986 section 6.2.2.
+	 */
+	URI.prototype.normalize = function() {
+		this.removeDotSegments();
+		if (this.scheme)
+			this.scheme = this.scheme.toLowerCase();
+		if (this.authority)
+			this.authority = this.authority.replace(authorityRegex, replaceAuthority).
+									replace(caseRegex, replaceCase);
+		if (this.path)
+			this.path = this.path.replace(caseRegex, replaceCase);
+		if (this.query)
+			this.query = this.query.replace(caseRegex, replaceCase);
+		if (this.fragment)
+			this.fragment = this.fragment.replace(caseRegex, replaceCase);
+	};
+
+	var caseRegex = /%[0-9a-z]{2}/gi;
+	var percentRegex = /[a-zA-Z0-9\-\._~]/;
+	var authorityRegex = /(.*@)?([^@:]*)(:.*)?/;
+
+	function replaceCase(str) {
+		var dec = unescape(str);
+		return percentRegex.test(dec) ? dec : str.toUpperCase();
+	}
+
+	function replaceAuthority(str, p1, p2, p3) {
+		return (p1 || '') + p2.toLowerCase() + (p3 || '');
+	}
+
+	/**
+	 * Resolve a relative URI (this) against a base URI.
+	 * The base URI must be an absolute URI.
+	 * See RFC 3986 section 5.2
+	 */
+	URI.prototype.resolve = function(baseURI) {
+		var uri = new URI();
+		if (this.scheme) {
+			uri.scheme = this.scheme;
+			uri.authority = this.authority;
+			uri.path = this.path;
+			uri.query = this.query;
+		} else {
+			uri.scheme = baseURI.scheme;
+			if (this.authority) {
+				uri.authority = this.authority;
+				uri.path = this.path;
+				uri.query = this.query;
+			} else {
+				uri.authority = baseURI.authority;
+				if (this.path == '') {
+					uri.path = baseURI.path;
+					uri.query = this.query || baseURI.query;
+				} else {
+					if (this.path.charAt(0) == '/') {
+						uri.path = this.path;
+						uri.removeDotSegments();
+					} else {
+						if (baseURI.authority && baseURI.path == '') {
+							uri.path = '/' + this.path;
+						} else {
+							uri.path = baseURI.path.substring(0, baseURI.path.lastIndexOf('/') + 1) + this.path;
+						}
+						uri.removeDotSegments();
+					}
+					uri.query = this.query;
+				}
+			}
+		}
+		uri.fragment = this.fragment;
+		return uri;
+	};
+
+	/**
+	 * Remove dot segments from path.
+	 * See RFC 3986 section 5.2.4
+	 * @private
+	 */
+	URI.prototype.removeDotSegments = function() {
+		var input = this.path.split('/'),
+			output = [],
+			segment,
+			absPath = input[0] == '';
+		if (absPath)
+			input.shift();
+		var sFirst = input[0] == '' ? input.shift() : null;
+		while (input.length) {
+			segment = input.shift();
+			if (segment == '..') {
+				output.pop();
+			} else if (segment != '.') {
+				output.push(segment);
+			}
+		}
+		if (segment == '.' || segment == '..')
+			output.push('');
+		if (absPath)
+			output.unshift('');
+		this.path = output.join('/');
+	};
+
+	// We don't like this function because it builds up a cache that is never cleared.
+//	/**
+//	 * Resolves a relative URI against an absolute base URI.
+//	 * Convenience method.
+//	 * @param {String} uri the relative URI to resolve
+//	 * @param {String} baseURI the base URI (must be absolute) to resolve against
+//	 */
+//	URI.resolve = function(sURI, sBaseURI) {
+//		var uri = cache[sURI] || (cache[sURI] = new URI(sURI));
+//		var baseURI = cache[sBaseURI] || (cache[sBaseURI] = new URI(sBaseURI));
+//		return uri.resolve(baseURI).toString();
+//	};
+
+//	var cache = {};
+
+	/**
+	 * Serialises the URI to a string.
+	 */
+	URI.prototype.toString = function() {
+		var result = '';
+		if (this.scheme)
+			result += this.scheme + ':';
+		if (this.authority)
+			result += '//' + this.authority;
+		result += this.path;
+		if (this.query)
+			result += '?' + this.query;
+		if (this.fragment)
+			result += '#' + this.fragment;
+		return result;
+	};
+
+return URI;
+});
+
+/*global define*/
+define('Core/buildModuleUrl',[
+        '../ThirdParty/Uri',
+        './defined',
+        './DeveloperError',
+        'require'
+    ], function(
+        Uri,
+        defined,
+        DeveloperError,
+        require) {
+    "use strict";
+    /*global CESIUM_BASE_URL*/
+
+    var cesiumScriptRegex = /((?:.*\/)|^)cesium[\w-]*\.js(?:\W|$)/i;
+    function getBaseUrlFromCesiumScript() {
+        var scripts = document.getElementsByTagName('script');
+        for ( var i = 0, len = scripts.length; i < len; ++i) {
+            var src = scripts[i].getAttribute('src');
+            var result = cesiumScriptRegex.exec(src);
+            if (result !== null) {
+                return result[1];
+            }
+        }
+        return undefined;
+    }
+
+    var baseUrl;
+    function getCesiumBaseUrl() {
+        if (defined(baseUrl)) {
+            return baseUrl;
+        }
+
+        var baseUrlString;
+        if (typeof CESIUM_BASE_URL !== 'undefined') {
+            baseUrlString = CESIUM_BASE_URL;
+        } else {
+            baseUrlString = getBaseUrlFromCesiumScript();
+        }
+
+        if (!defined(baseUrlString)) {
+            throw new DeveloperError('Unable to determine Cesium base URL automatically, try defining a global variable called CESIUM_BASE_URL.');
+        }
+
+        baseUrl = new Uri(baseUrlString).resolve(new Uri(document.location.href));
+
+        return baseUrl;
+    }
+
+    function buildModuleUrlFromRequireToUrl(moduleID) {
+        //moduleID will be non-relative, so require it relative to this module, in Core.
+        return require.toUrl('../' + moduleID);
+    }
+
+    function buildModuleUrlFromBaseUrl(moduleID) {
+        return new Uri(moduleID).resolve(getCesiumBaseUrl()).toString();
+    }
+
+    var implementation;
+    var a;
+
+    /**
+     * Given a non-relative moduleID, returns an absolute URL to the file represented by that module ID,
+     * using, in order of preference, require.toUrl, the value of a global CESIUM_BASE_URL, or
+     * the base URL of the Cesium.js script.
+     *
+     * @private
+     */
+    var buildModuleUrl = function(moduleID) {
+        if (!defined(implementation)) {
+            //select implementation
+            if (defined(require.toUrl)) {
+                implementation = buildModuleUrlFromRequireToUrl;
+            } else {
+                implementation = buildModuleUrlFromBaseUrl;
+            }
+        }
+
+        if (!defined(a)) {
+            a = document.createElement('a');
+        }
+
+        var url = implementation(moduleID);
+
+        a.href = url;
+        a.href = a.href; // IE only absolutizes href on get, not set
+
+        return a.href;
+    };
+
+    // exposed for testing
+    buildModuleUrl._cesiumScriptRegex = cesiumScriptRegex;
+
+    return buildModuleUrl;
+});
+/*global define*/
+define('Core/Iau2006XysSample',[],function() {
+    "use strict";
+
+    /**
+     * An IAU 2006 XYS value sampled at a particular time.
+     *
+     * @alias Iau2006XysSample
+     * @constructor
+     *
+     * @param {Number} x The X value.
+     * @param {Number} y The Y value.
+     * @param {Number} s The S value.
+     */
+    var Iau2006XysSample = function Iau2006XysSample(x, y, s) {
+        /**
+         * The X value.
+         * @type {Number}
+         */
+        this.x = x;
+
+        /**
+         * The Y value.
+         * @type {Number}
+         */
+        this.y = y;
+
+        /**
+         * The S value.
+         * @type {Number}
+         */
+        this.s = s;
+    };
+
+    return Iau2006XysSample;
+});
+/*global define*/
+define('Core/Iau2006XysData',[
+        '../ThirdParty/when',
+        './buildModuleUrl',
+        './defaultValue',
+        './defined',
+        './Iau2006XysSample',
+        './JulianDate',
+        './loadJson',
+        './TimeStandard'
+    ], function(
+        when,
+        buildModuleUrl,
+        defaultValue,
+        defined,
+        Iau2006XysSample,
+        JulianDate,
+        loadJson,
+        TimeStandard) {
+    "use strict";
+
+    /**
+     * A set of IAU2006 XYS data that is used to evaluate the transformation between the International
+     * Celestial Reference Frame (ICRF) and the International Terrestrial Reference Frame (ITRF).
+     *
+     * @alias Iau2006XysData
+     * @constructor
+     *
+     * @param {String} [options.xysFileUrlTemplate='Assets/IAU2006_XYS/IAU2006_XYS_{0}.json'] A template URL for obtaining the XYS data.  In the template,
+     *                 `{0}` will be replaced with the file index.
+     * @param {Number} [options.interpolationOrder=9] The order of interpolation to perform on the XYS data.
+     * @param {Number} [options.sampleZeroJulianEphemerisDate=2442396.5] The Julian ephemeris date (JED) of the
+     *                 first XYS sample.
+     * @param {Number} [options.stepSizeDays=1.0] The step size, in days, between successive XYS samples.
+     * @param {Number} [options.samplesPerXysFile=1000] The number of samples in each XYS file.
+     * @param {Number} [options.totalSamples=27426] The total number of samples in all XYS files.
+     */
+    var Iau2006XysData = function Iau2006XysData(options) {
+        options = defaultValue(options, defaultValue.EMPTY_OBJECT);
+
+        this._xysFileUrlTemplate = options.xysFileUrlTemplate;
+        this._interpolationOrder = defaultValue(options.interpolationOrder, 9);
+        this._sampleZeroJulianEphemerisDate = defaultValue(options.sampleZeroJulianEphemerisDate, 2442396.5);
+        this._sampleZeroDateTT = new JulianDate(this._sampleZeroJulianEphemerisDate, 0.0, TimeStandard.TAI);
+        this._stepSizeDays = defaultValue(options.stepSizeDays, 1.0);
+        this._samplesPerXysFile = defaultValue(options.samplesPerXysFile, 1000);
+        this._totalSamples = defaultValue(options.totalSamples, 27426);
+        this._samples = new Array(this._totalSamples * 3);
+        this._chunkDownloadsInProgress = [];
+
+        var order = this._interpolationOrder;
+
+        // Compute denominators and X values for interpolation.
+        var denom = this._denominators = new Array(order + 1);
+        var xTable = this._xTable = new Array(order + 1);
+
+        var stepN = Math.pow(this._stepSizeDays, order);
+
+        for ( var i = 0; i <= order; ++i) {
+            denom[i] = stepN;
+            xTable[i] = i * this._stepSizeDays;
+
+            for ( var j = 0; j <= order; ++j) {
+                if (j !== i) {
+                    denom[i] *= (i - j);
+                }
+            }
+
+            denom[i] = 1.0 / denom[i];
+        }
+
+        // Allocate scratch arrays for interpolation.
+        this._work = new Array(order + 1);
+        this._coef = new Array(order + 1);
+    };
+
+    var julianDateScratch = new JulianDate(0, 0.0, TimeStandard.TAI);
+
+    function getDaysSinceEpoch(xys, dayTT, secondTT) {
+        var dateTT = julianDateScratch;
+        dateTT._julianDayNumber = dayTT;
+        dateTT._secondsOfDay = secondTT;
+        return xys._sampleZeroDateTT.getDaysDifference(dateTT);
+    }
+
+    /**
+     * Preloads XYS data for a specified date range.
+     *
+     * @memberof Iau2006XysData
+     *
+     * @param {Number} startDayTT The Julian day number of the beginning of the interval to preload, expressed in
+     *                 the Terrestrial Time (TT) time standard.
+     * @param {Number} startSecondTT The seconds past noon of the beginning of the interval to preload, expressed in
+     *                 the Terrestrial Time (TT) time standard.
+     * @param {Number} stopDayTT The Julian day number of the end of the interval to preload, expressed in
+     *                 the Terrestrial Time (TT) time standard.
+     * @param {Number} stopSecondTT The seconds past noon of the end of the interval to preload, expressed in
+     *                 the Terrestrial Time (TT) time standard.
+
+     * @returns {Promise} A promise that, when resolved, indicates that the requested interval has been
+     *                    preloaded.
+     */
+    Iau2006XysData.prototype.preload = function(startDayTT, startSecondTT, stopDayTT, stopSecondTT) {
+        var startDaysSinceEpoch = getDaysSinceEpoch(this, startDayTT, startSecondTT);
+        var stopDaysSinceEpoch = getDaysSinceEpoch(this, stopDayTT, stopSecondTT);
+
+        var startIndex = (startDaysSinceEpoch / this._stepSizeDays - this._interpolationOrder / 2) | 0;
+        if (startIndex < 0) {
+            startIndex = 0;
+        }
+
+        var stopIndex = (stopDaysSinceEpoch / this._stepSizeDays - this._interpolationOrder / 2) | 0 + this._interpolationOrder;
+        if (stopIndex >= this._totalSamples) {
+            stopIndex = this._totalSamples - 1;
+        }
+
+        var startChunk = (startIndex / this._samplesPerXysFile) | 0;
+        var stopChunk = (stopIndex / this._samplesPerXysFile) | 0;
+
+        var promises = [];
+        for ( var i = startChunk; i <= stopChunk; ++i) {
+            promises.push(requestXysChunk(this, i));
+        }
+
+        return when.all(promises);
+    };
+
+    /**
+     * Computes the XYS values for a given date by interpolating.  If the required data is not yet downloaded,
+     * this method will return undefined.
+     *
+     * @memberof Iau2006XysData
+     *
+     * @param {Number} dayTT The Julian day number for which to compute the XYS value, expressed in
+     *                 the Terrestrial Time (TT) time standard.
+     * @param {Number} secondTT The seconds past noon of the date for which to compute the XYS value, expressed in
+     *                 the Terrestrial Time (TT) time standard.
+     * @param {Iau2006XysSample} [result] The instance to which to copy the interpolated result.  If this parameter
+     *                           is undefined, a new instance is allocated and returned.
+     * @returns {Iau2006XysSample} The interpolated XYS values, or undefined if the required data for this
+     *                             computation has not yet been downloaded.
+     *
+     * @see Iau2006XysData#preload
+     */
+    Iau2006XysData.prototype.computeXysRadians = function(dayTT, secondTT, result) {
+        var daysSinceEpoch = getDaysSinceEpoch(this, dayTT, secondTT);
+        if (daysSinceEpoch < 0.0) {
+            // Can't evaluate prior to the epoch of the data.
+            return undefined;
+        }
+
+        var centerIndex = (daysSinceEpoch / this._stepSizeDays) | 0;
+        if (centerIndex >= this._totalSamples) {
+            // Can't evaluate after the last sample in the data.
+            return undefined;
+        }
+
+        var degree = this._interpolationOrder;
+
+        var firstIndex = centerIndex - ((degree / 2) | 0);
+        if (firstIndex < 0) {
+            firstIndex = 0;
+        }
+        var lastIndex = firstIndex + degree;
+        if (lastIndex >= this._totalSamples) {
+            lastIndex = this._totalSamples - 1;
+            firstIndex = lastIndex - degree;
+            if (firstIndex < 0) {
+                firstIndex = 0;
+            }
+        }
+
+        // Are all the samples we need present?
+        // We can assume so if the first and last are present
+        var isDataMissing = false;
+        var samples = this._samples;
+        if (!defined(samples[firstIndex * 3])) {
+            requestXysChunk(this, (firstIndex / this._samplesPerXysFile) | 0);
+            isDataMissing = true;
+        }
+
+        if (!defined(samples[lastIndex * 3])) {
+            requestXysChunk(this, (lastIndex / this._samplesPerXysFile) | 0);
+            isDataMissing = true;
+        }
+
+        if (isDataMissing) {
+            return undefined;
+        }
+
+        if (!defined(result)) {
+            result = new Iau2006XysSample(0.0, 0.0, 0.0);
+        } else {
+            result.x = 0.0;
+            result.y = 0.0;
+            result.s = 0.0;
+        }
+
+        var x = daysSinceEpoch - firstIndex * this._stepSizeDays;
+
+        var work = this._work;
+        var denom = this._denominators;
+        var coef = this._coef;
+        var xTable = this._xTable;
+
+        var i, j;
+        for (i = 0; i <= degree; ++i) {
+            work[i] = x - xTable[i];
+        }
+
+        for (i = 0; i <= degree; ++i) {
+            coef[i] = 1.0;
+
+            for (j = 0; j <= degree; ++j) {
+                if (j !== i) {
+                    coef[i] *= work[j];
+                }
+            }
+
+            coef[i] *= denom[i];
+
+            var sampleIndex = (firstIndex + i) * 3;
+            result.x += coef[i] * samples[sampleIndex++];
+            result.y += coef[i] * samples[sampleIndex++];
+            result.s += coef[i] * samples[sampleIndex];
+        }
+
+        return result;
+    };
+
+    function requestXysChunk(xysData, chunkIndex) {
+        if (xysData._chunkDownloadsInProgress[chunkIndex]) {
+            // Chunk has already been requested.
+            return xysData._chunkDownloadsInProgress[chunkIndex];
+        }
+
+        var deferred = when.defer();
+
+        xysData._chunkDownloadsInProgress[chunkIndex] = deferred;
+
+        var chunkUrl;
+        var xysFileUrlTemplate = xysData._xysFileUrlTemplate;
+        if (defined(xysFileUrlTemplate)) {
+            chunkUrl = xysFileUrlTemplate.replace('{0}', chunkIndex);
+        } else {
+            chunkUrl = buildModuleUrl('Assets/IAU2006_XYS/IAU2006_XYS_' + chunkIndex + '.json');
+        }
+
+        when(loadJson(chunkUrl), function(chunk) {
+            xysData._chunkDownloadsInProgress[chunkIndex] = false;
+
+            var samples = xysData._samples;
+            var newSamples = chunk.samples;
+            var startIndex = chunkIndex * xysData._samplesPerXysFile * 3;
+
+            for ( var i = 0, len = newSamples.length; i < len; ++i) {
+                samples[startIndex + i] = newSamples[i];
+            }
+
+            deferred.resolve();
+        });
+
+        return deferred.promise;
+    }
+
+    return Iau2006XysData;
+});
 /*global define*/
 define('Core/Transforms',[
+        '../ThirdParty/when',
+        './Cartesian2',
+        './Cartesian3',
+        './Cartesian4',
         './defaultValue',
         './defined',
         './DeveloperError',
+        './EarthOrientationParameters',
+        './EarthOrientationParametersSample',
+        './Ellipsoid',
         './Iau2006XysData',
         './Iau2006XysSample',
         './Math',
         './Matrix3',
         './Matrix4',
-        './Cartesian2',
-        './Cartesian3',
-        './Cartesian4',
-        './TimeConstants',
-        './Ellipsoid',
-        './EarthOrientationParameters',
-        './EarthOrientationParametersSample',
-        '../ThirdParty/when'
-    ],
-    function(
+        './TimeConstants'
+    ], function(
+        when,
+        Cartesian2,
+        Cartesian3,
+        Cartesian4,
         defaultValue,
         defined,
         DeveloperError,
+        EarthOrientationParameters,
+        EarthOrientationParametersSample,
+        Ellipsoid,
         Iau2006XysData,
         Iau2006XysSample,
         CesiumMath,
         Matrix3,
         Matrix4,
-        Cartesian2,
-        Cartesian3,
-        Cartesian4,
-        TimeConstants,
-        Ellipsoid,
-        EarthOrientationParameters,
-        EarthOrientationParametersSample,
-        when) {
+        TimeConstants) {
     "use strict";
 
     /**
@@ -15380,14 +17300,10 @@ define('Core/Transforms',[
      *
      * @example
      * //Set the view to in the inertial frame.
-     * function updateAndRender() {
-     *     var now = new Cesium.JulianDate();
-     *     scene.initializeFrame();
-     *     scene.camera.transform = Cesium.Matrix4.fromRotationTranslation(Cesium.Transforms.computeTemeToPseudoFixedMatrix(now), Cesium.Cartesian3.ZERO);
-     *     scene.render();
-     *     Cesium.requestAnimationFrame(updateAndRender);
-     * }
-     * updateAndRender();
+     * scene.preRender.addEventListener(function(scene, time) {
+     *   var now = new Cesium.JulianDate();
+     *   scene.camera.transform = Cesium.Matrix4.fromRotationTranslation(Cesium.Transforms.computeTemeToPseudoFixedMatrix(now), Cesium.Cartesian3.ZERO);
+     * });
      */
     Transforms.computeTemeToPseudoFixedMatrix = function (date, result) {
                 if (!defined(date)) {
@@ -15682,9 +17598,7 @@ define('Core/Transforms',[
      * @param {Cartesian2} [result] The object onto which to store the result.
      * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if none was provided.
      *
-     * @see UniformState#modelViewProjection
      * @see czm_modelViewProjection
-     * @see UniformState#viewportTransformation
      * @see czm_viewportTransformation
      */
     Transforms.pointToWindowCoordinates = function (modelViewProjectionMatrix, viewportTransformation, point, result) {
@@ -15712,1726 +17626,34 @@ define('Core/Transforms',[
 });
 
 /*global define*/
-define('Core/AxisAlignedBoundingBox',[
-        './defaultValue',
-        './defined',
-        './DeveloperError',
-        './Cartesian3',
-        './Intersect'
-    ], function(
-        defaultValue,
-        defined,
-        DeveloperError,
-        Cartesian3,
-        Intersect) {
-    "use strict";
-
-    /**
-     * Creates an instance of an AxisAlignedBoundingBox from the minimum and maximum points along the x, y, and z axes.
-     * @alias AxisAlignedBoundingBox
-     * @constructor
-     *
-     * @param {Cartesian3} [minimum=Cartesian3.ZERO] The minimum point along the x, y, and z axes.
-     * @param {Cartesian3} [maximum=Cartesian3.ZERO] The maximum point along the x, y, and z axes.
-     * @param {Cartesian3} [center] The center of the box; automatically computed if not supplied.
-     *
-     * @see BoundingSphere
-     */
-    var AxisAlignedBoundingBox = function(minimum, maximum, center) {
-        /**
-         * The minimum point defining the bounding box.
-         * @type {Cartesian3}
-         * @default {@link Cartesian3.ZERO}
-         */
-        this.minimum = Cartesian3.clone(defaultValue(minimum, Cartesian3.ZERO));
-
-        /**
-         * The maximum point defining the bounding box.
-         * @type {Cartesian3}
-         * @default {@link Cartesian3.ZERO}
-         */
-        this.maximum = Cartesian3.clone(defaultValue(maximum, Cartesian3.ZERO));
-
-        //If center was not defined, compute it.
-        if (!defined(center)) {
-            center = Cartesian3.add(this.minimum, this.maximum);
-            Cartesian3.multiplyByScalar(center, 0.5, center);
-        } else {
-            center = Cartesian3.clone(center);
-        }
-
-        /**
-         * The center point of the bounding box.
-         * @type {Cartesian3}
-         */
-        this.center = center;
-    };
-
-    /**
-     * Computes an instance of an AxisAlignedBoundingBox. The box is determined by
-     * finding the points spaced the farthest apart on the x, y, and z axes.
-     * @memberof AxisAlignedBoundingBox
-     *
-     * @param {Array} positions List of points that the bounding box will enclose.  Each point must have a <code>x</code>, <code>y</code>, and <code>z</code> properties.
-     * @param {AxisAlignedBoundingBox} [result] The object onto which to store the result.
-     * @returns {AxisAlignedBoundingBox} The modified result parameter or a new AxisAlignedBoundingBox instance if one was not provided.
-     *
-     * @example
-     * // Compute an axis aligned bounding box enclosing two points.
-     * var box = Cesium.AxisAlignedBoundingBox.fromPoints([new Cesium.Cartesian3(2, 0, 0), new Cesium.Cartesian3(-2, 0, 0)]);
-     */
-    AxisAlignedBoundingBox.fromPoints = function(positions, result) {
-        if (!defined(result)) {
-            result = new AxisAlignedBoundingBox();
-        }
-
-        if (!defined(positions) || positions.length === 0) {
-            result.minimum = Cartesian3.clone(Cartesian3.ZERO, result.minimum);
-            result.maximum = Cartesian3.clone(Cartesian3.ZERO, result.maximum);
-            result.center = Cartesian3.clone(Cartesian3.ZERO, result.center);
-            return result;
-        }
-
-        var minimumX = positions[0].x;
-        var minimumY = positions[0].y;
-        var minimumZ = positions[0].z;
-
-        var maximumX = positions[0].x;
-        var maximumY = positions[0].y;
-        var maximumZ = positions[0].z;
-
-        var length = positions.length;
-        for ( var i = 1; i < length; i++) {
-            var p = positions[i];
-            var x = p.x;
-            var y = p.y;
-            var z = p.z;
-
-            minimumX = Math.min(x, minimumX);
-            maximumX = Math.max(x, maximumX);
-            minimumY = Math.min(y, minimumY);
-            maximumY = Math.max(y, maximumY);
-            minimumZ = Math.min(z, minimumZ);
-            maximumZ = Math.max(z, maximumZ);
-        }
-
-        var minimum = result.minimum;
-        minimum.x = minimumX;
-        minimum.y = minimumY;
-        minimum.z = minimumZ;
-
-        var maximum = result.maximum;
-        maximum.x = maximumX;
-        maximum.y = maximumY;
-        maximum.z = maximumZ;
-
-        var center = Cartesian3.add(minimum, maximum, result.center);
-        Cartesian3.multiplyByScalar(center, 0.5, center);
-
-        return result;
-    };
-
-    /**
-     * Duplicates a AxisAlignedBoundingBox instance.
-     * @memberof AxisAlignedBoundingBox
-     *
-     * @param {AxisAlignedBoundingBox} box The bounding box to duplicate.
-     * @param {AxisAlignedBoundingBox} [result] The object onto which to store the result.
-     * @returns {AxisAlignedBoundingBox} The modified result parameter or a new AxisAlignedBoundingBox instance if none was provided. (Returns undefined if box is undefined)
-     */
-    AxisAlignedBoundingBox.clone = function(box, result) {
-        if (!defined(box)) {
-            return undefined;
-        }
-
-        if (!defined(result)) {
-            return new AxisAlignedBoundingBox(box.minimum, box.maximum);
-        }
-
-        result.minimum = Cartesian3.clone(box.minimum, result.minimum);
-        result.maximum = Cartesian3.clone(box.maximum, result.maximum);
-        result.center = Cartesian3.clone(box.center, result.center);
-        return result;
-    };
-
-    /**
-     * Compares the provided AxisAlignedBoundingBox componentwise and returns
-     * <code>true</code> if they are equal, <code>false</code> otherwise.
-     * @memberof AxisAlignedBoundingBox
-     *
-     * @param {AxisAlignedBoundingBox} [left] The first AxisAlignedBoundingBox.
-     * @param {AxisAlignedBoundingBox} [right] The second AxisAlignedBoundingBox.
-     * @returns {Boolean} <code>true</code> if left and right are equal, <code>false</code> otherwise.
-     */
-    AxisAlignedBoundingBox.equals = function(left, right) {
-        return (left === right) ||
-               ((defined(left)) &&
-                (defined(right)) &&
-                Cartesian3.equals(left.center, right.center) &&
-                Cartesian3.equals(left.minimum, right.minimum) &&
-                Cartesian3.equals(left.maximum, right.maximum));
-    };
-
-    var intersectScratch = new Cartesian3();
-    /**
-     * Determines which side of a plane a box is located.
-     * @memberof AxisAlignedBoundingBox
-     *
-     * @param {AxisAlignedBoundingBox} box The bounding box to test.
-     * @param {Cartesian4} plane The coefficients of the plane in the form <code>ax + by + cz + d = 0</code>
-     *                           where the coefficients a, b, c, and d are the components x, y, z, and w
-     *                           of the {Cartesian4}, respectively.
-     * @returns {Intersect} {Intersect.INSIDE} if the entire box is on the side of the plane the normal is pointing,
-     *                     {Intersect.OUTSIDE} if the entire box is on the opposite side, and {Intersect.INTERSETING}
-     *                     if the box intersects the plane.
-     */
-    AxisAlignedBoundingBox.intersect = function(box, plane) {
-                if (!defined(box)) {
-            throw new DeveloperError('box is required.');
-        }
-        if (!defined(plane)) {
-            throw new DeveloperError('plane is required.');
-        }
-        
-        intersectScratch = Cartesian3.subtract(box.maximum, box.minimum, intersectScratch);
-        var h = Cartesian3.multiplyByScalar(intersectScratch, 0.5, intersectScratch); //The positive half diagonal
-        var e = h.x * Math.abs(plane.x) + h.y * Math.abs(plane.y) + h.z * Math.abs(plane.z);
-        var s = Cartesian3.dot(box.center, plane) + plane.w; //signed distance from center
-
-        if (s - e > 0) {
-            return Intersect.INSIDE;
-        }
-
-        if (s + e < 0) {
-            //Not in front because normals point inward
-            return Intersect.OUTSIDE;
-        }
-
-        return Intersect.INTERSECTING;
-    };
-
-    /**
-     * Duplicates this AxisAlignedBoundingBox instance.
-     * @memberof AxisAlignedBoundingBox
-     *
-     * @param {AxisAlignedBoundingBox} [result] The object onto which to store the result.
-     * @returns {AxisAlignedBoundingBox} The modified result parameter or a new AxisAlignedBoundingBox instance if one was not provided.
-     */
-    AxisAlignedBoundingBox.prototype.clone = function(result) {
-        return AxisAlignedBoundingBox.clone(this, result);
-    };
-
-    /**
-     * Determines which side of a plane this box is located.
-     * @memberof AxisAlignedBoundingBox
-     *
-     * @param {Cartesian4} plane The coefficients of the plane in the form <code>ax + by + cz + d = 0</code>
-     *                           where the coefficients a, b, c, and d are the components x, y, z, and w
-     *                           of the {Cartesian4}, respectively.
-     * @returns {Intersect} {Intersect.INSIDE} if the entire box is on the side of the plane the normal is pointing,
-     *                     {Intersect.OUTSIDE} if the entire box is on the opposite side, and {Intersect.INTERSETING}
-     *                     if the box intersects the plane.
-     */
-    AxisAlignedBoundingBox.prototype.intersect = function(plane) {
-        return AxisAlignedBoundingBox.intersect(this, plane);
-    };
-
-    /**
-     * Compares this AxisAlignedBoundingBox against the provided AxisAlignedBoundingBox componentwise and returns
-     * <code>true</code> if they are equal, <code>false</code> otherwise.
-     * @memberof AxisAlignedBoundingBox
-     *
-     * @param {AxisAlignedBoundingBox} [right] The right hand side AxisAlignedBoundingBox.
-     * @returns {Boolean} <code>true</code> if they are equal, <code>false</code> otherwise.
-     */
-    AxisAlignedBoundingBox.prototype.equals = function(right) {
-        return AxisAlignedBoundingBox.equals(this, right);
-    };
-
-    return AxisAlignedBoundingBox;
-});
-
-/*global define*/
-define('Core/QuadraticRealPolynomial',[
-        './DeveloperError',
-        './Math'
-    ],
-    function(
-        DeveloperError,
-        CesiumMath) {
-    "use strict";
-
-    /**
-     * Defines functions for 2nd order polynomial functions of one variable with only real coefficients.
-     *
-     * @exports QuadraticRealPolynomial
-     */
-    var QuadraticRealPolynomial = {};
-
-    /**
-     * Provides the discriminant of the quadratic equation from the supplied coefficients.
-     * @memberof QuadraticRealPolynomial
-     *
-     * @param {Number} a The coefficient of the 2nd order monomial.
-     * @param {Number} b The coefficient of the 1st order monomial.
-     * @param {Number} c The coefficient of the 0th order monomial.
-     * @returns {Number} The value of the discriminant.
-     */
-    QuadraticRealPolynomial.discriminant = function(a, b, c) {
-                if (typeof a !== 'number') {
-            throw new DeveloperError('a is a required number.');
-        }
-        if (typeof b !== 'number') {
-            throw new DeveloperError('b is a required number.');
-        }
-        if (typeof c !== 'number') {
-            throw new DeveloperError('c is a required number.');
-        }
-        
-        var discriminant = b * b - 4.0 * a * c;
-        return discriminant;
-    };
-
-    function addWithCancellationCheck(left, right, tolerance) {
-        var difference = left + right;
-        if ((CesiumMath.sign(left) !== CesiumMath.sign(right)) &&
-                Math.abs(difference / Math.max(Math.abs(left), Math.abs(right))) < tolerance) {
-            return 0.0;
-        }
-
-        return difference;
-    }
-
-    /**
-     * Provides the real valued roots of the quadratic polynomial with the provided coefficients.
-     * @memberof QuadraticRealPolynomial
-     *
-     * @param {Number} a The coefficient of the 2nd order monomial.
-     * @param {Number} b The coefficient of the 1st order monomial.
-     * @param {Number} c The coefficient of the 0th order monomial.
-     * @returns {Array} The real valued roots.
-     */
-    QuadraticRealPolynomial.realRoots = function(a, b, c) {
-                if (typeof a !== 'number') {
-            throw new DeveloperError('a is a required number.');
-        }
-        if (typeof b !== 'number') {
-            throw new DeveloperError('b is a required number.');
-        }
-        if (typeof c !== 'number') {
-            throw new DeveloperError('c is a required number.');
-        }
-        
-        var ratio;
-        if (a === 0.0) {
-            if (b === 0.0) {
-                // Constant function: c = 0.
-                return [];
-            }
-
-            // Linear function: b * x + c = 0.
-            return [-c / b];
-        } else if (b === 0.0) {
-            if (c === 0.0) {
-                // 2nd order monomial: a * x^2 = 0.
-                return [0.0, 0.0];
-            }
-
-            var cMagnitude = Math.abs(c);
-            var aMagnitude = Math.abs(a);
-
-            if ((cMagnitude < aMagnitude) && (cMagnitude / aMagnitude < CesiumMath.EPSILON14)) { // c ~= 0.0.
-                // 2nd order monomial: a * x^2 = 0.
-                return [0.0, 0.0];
-            } else if ((cMagnitude > aMagnitude) && (aMagnitude / cMagnitude < CesiumMath.EPSILON14)) { // a ~= 0.0.
-                // Constant function: c = 0.
-                return [];
-            }
-
-            // a * x^2 + c = 0
-            ratio = -c / a;
-
-            if (ratio < 0.0) {
-                // Both roots are complex.
-                return [];
-            }
-
-            // Both roots are real.
-            var root = Math.sqrt(ratio);
-            return [-root, root];
-        } else if (c === 0.0) {
-            // a * x^2 + b * x = 0
-            ratio = -b / a;
-            if (ratio < 0.0) {
-                return [ratio, 0.0];
-            }
-
-            return [0.0, ratio];
-        }
-
-        // a * x^2 + b * x + c = 0
-        var b2 = b * b;
-        var four_ac = 4.0 * a * c;
-        var radicand = addWithCancellationCheck(b2, -four_ac, CesiumMath.EPSILON14);
-
-        if (radicand < 0.0) {
-            // Both roots are complex.
-            return [];
-        }
-
-        var q = -0.5 * addWithCancellationCheck(b, CesiumMath.sign(b) * Math.sqrt(radicand), CesiumMath.EPSILON14);
-        if (b > 0.0) {
-            return [q / a, c / q];
-        }
-
-        return [c / q, q / a];
-    };
-
-    return QuadraticRealPolynomial;
-});
-/*global define*/
-define('Core/CubicRealPolynomial',[
-        './DeveloperError',
-        './QuadraticRealPolynomial'
-    ], function(
-        DeveloperError,
-        QuadraticRealPolynomial) {
-    "use strict";
-
-    /**
-     * Defines functions for 3rd order polynomial functions of one variable with only real coefficients.
-     *
-     * @exports CubicRealPolynomial
-     */
-    var CubicRealPolynomial = {};
-
-    /**
-     * Provides the discriminant of the cubic equation from the supplied coefficients.
-     * @memberof CubicRealPolynomial
-     *
-     * @param {Number} a The coefficient of the 3rd order monomial.
-     * @param {Number} b The coefficient of the 2nd order monomial.
-     * @param {Number} c The coefficient of the 1st order monomial.
-     * @param {Number} d The coefficient of the 0th order monomial.
-     * @returns {Number} The value of the discriminant.
-     */
-    CubicRealPolynomial.discriminant = function(a, b, c, d) {
-                if (typeof a !== 'number') {
-            throw new DeveloperError('a is a required number.');
-        }
-        if (typeof b !== 'number') {
-            throw new DeveloperError('b is a required number.');
-        }
-        if (typeof c !== 'number') {
-            throw new DeveloperError('c is a required number.');
-        }
-        if (typeof d !== 'number') {
-            throw new DeveloperError('d is a required number.');
-        }
-        
-        var a2 = a * a;
-        var b2 = b * b;
-        var c2 = c * c;
-        var d2 = d * d;
-
-        var discriminant = 18.0 * a * b * c * d + b2 * c2 - 27.0 * a2 * d2 - 4.0 * (a * c2 * c + b2 * b * d);
-        return discriminant;
-    };
-
-    function computeRealRoots(a, b, c, d) {
-        var A = a;
-        var B = b / 3.0;
-        var C = c / 3.0;
-        var D = d;
-
-        var AC = A * C;
-        var BD = B * D;
-        var B2 = B * B;
-        var C2 = C * C;
-        var delta1 = A * C - B2;
-        var delta2 = A * D - B * C;
-        var delta3 = B * D - C2;
-
-        var discriminant = 4.0 * delta1 * delta3 - delta2 * delta2;
-        var temp;
-        var temp1;
-
-        if (discriminant < 0.0) {
-            var ABar;
-            var CBar;
-            var DBar;
-
-            if (B2 * BD >= AC * C2) {
-                ABar = A;
-                CBar = delta1;
-                DBar = -2.0 * B * delta1 + A * delta2;
-            } else {
-                ABar = D;
-                CBar = delta3;
-                DBar = -D * delta2 + 2.0 * C * delta3;
-            }
-
-            var s = (DBar < 0.0) ? -1.0 : 1.0; // This is not Math.Sign()!
-            var temp0 = -s * Math.abs(ABar) * Math.sqrt(-discriminant);
-            temp1 = -DBar + temp0;
-
-            var x = temp1 / 2.0;
-            var p = x < 0.0 ? -Math.pow(-x, 1.0 / 3.0) : Math.pow(x, 1.0 / 3.0);
-            var q = (temp1 === temp0) ? -p : -CBar / p;
-
-            temp = (CBar <= 0.0) ? p + q : -DBar / (p * p + q * q + CBar);
-
-            if (B2 * BD >= AC * C2) {
-                return [(temp - B) / A];
-            }
-
-            return [-D / (temp + C)];
-        }
-
-        var CBarA = delta1;
-        var DBarA = -2.0 * B * delta1 + A * delta2;
-
-        var CBarD = delta3;
-        var DBarD = -D * delta2 + 2.0 * C * delta3;
-
-        var squareRootOfDiscriminant = Math.sqrt(discriminant);
-        var halfSquareRootOf3 = Math.sqrt(3.0) / 2.0;
-
-        var theta = Math.abs(Math.atan2(A * squareRootOfDiscriminant, -DBarA) / 3.0);
-        temp = 2.0 * Math.sqrt(-CBarA);
-        var cosine = Math.cos(theta);
-        temp1 = temp * cosine;
-        var temp3 = temp * (-cosine / 2.0 - halfSquareRootOf3 * Math.sin(theta));
-
-        var numeratorLarge = (temp1 + temp3 > 2.0 * B) ? temp1 - B : temp3 - B;
-        var denominatorLarge = A;
-
-        var root1 = numeratorLarge / denominatorLarge;
-
-        theta = Math.abs(Math.atan2(D * squareRootOfDiscriminant, -DBarD) / 3.0);
-        temp = 2.0 * Math.sqrt(-CBarD);
-        cosine = Math.cos(theta);
-        temp1 = temp * cosine;
-        temp3 = temp * (-cosine / 2.0 - halfSquareRootOf3 * Math.sin(theta));
-
-        var numeratorSmall = -D;
-        var denominatorSmall = (temp1 + temp3 < 2.0 * C) ? temp1 + C : temp3 + C;
-
-        var root3 = numeratorSmall / denominatorSmall;
-
-        var E = denominatorLarge * denominatorSmall;
-        var F = -numeratorLarge * denominatorSmall - denominatorLarge * numeratorSmall;
-        var G = numeratorLarge * numeratorSmall;
-
-        var root2 = (C * F - B * G) / (-B * F + C * E);
-
-        if (root1 <= root2) {
-            if (root1 <= root3) {
-                if (root2 <= root3) {
-                    return [root1, root2, root3];
-                }
-                return [root1, root3, root2];
-            }
-            return [root3, root1, root2];
-        }
-        if (root1 <= root3) {
-            return [root2, root1, root3];
-        }
-        if (root2 <= root3) {
-            return [root2, root3, root1];
-        }
-        return [root3, root2, root1];
-    }
-
-    /**
-     * Provides the real valued roots of the cubic polynomial with the provided coefficients.
-     * @memberof CubicRealPolynomial
-     *
-     * @param {Number} a The coefficient of the 3rd order monomial.
-     * @param {Number} b The coefficient of the 2nd order monomial.
-     * @param {Number} c The coefficient of the 1st order monomial.
-     * @param {Number} d The coefficient of the 0th order monomial.
-     * @returns {Array} The real valued roots.
-     */
-    CubicRealPolynomial.realRoots = function(a, b, c, d) {
-                if (typeof a !== 'number') {
-            throw new DeveloperError('a is a required number.');
-        }
-        if (typeof b !== 'number') {
-            throw new DeveloperError('b is a required number.');
-        }
-        if (typeof c !== 'number') {
-            throw new DeveloperError('c is a required number.');
-        }
-        if (typeof d !== 'number') {
-            throw new DeveloperError('d is a required number.');
-        }
-        
-        var roots;
-        var ratio;
-        if (a === 0.0) {
-            // Quadratic function: b * x^2 + c * x + d = 0.
-            return QuadraticRealPolynomial.realRoots(b, c, d);
-        } else if (b === 0.0) {
-            if (c === 0.0) {
-                if (d === 0.0) {
-                    // 3rd order monomial: a * x^3 = 0.
-                    return [0.0, 0.0, 0.0];
-                }
-
-                // a * x^3 + d = 0
-                ratio = -d / a;
-                var root = (ratio < 0.0) ? -Math.pow(-ratio, 1.0 / 3.0) : Math.pow(ratio, 1.0 / 3.0);
-                return [root, root, root];
-            } else if (d === 0.0) {
-                // x * (a * x^2 + c) = 0.
-                roots = QuadraticRealPolynomial.realRoots(a, 0, c);
-
-                // Return the roots in ascending order.
-                if (roots.Length === 0) {
-                    return [0.0];
-                }
-                return [roots[0], 0.0, roots[1]];
-            }
-
-            // Deflated cubic polynomial: a * x^3 + c * x + d= 0.
-            return computeRealRoots(a, 0, c, d);
-        } else if (c === 0.0) {
-            if (d === 0.0) {
-                // x^2 * (a * x + b) = 0.
-                ratio = -b / a;
-                if (ratio < 0.0) {
-                    return [ratio, 0.0, 0.0];
-                }
-                return [0.0, 0.0, ratio];
-            }
-            // a * x^3 + b * x^2 + d = 0.
-            return computeRealRoots(a, b, 0, d);
-        } else if (d === 0.0) {
-            // x * (a * x^2 + b * x + c) = 0
-            roots = QuadraticRealPolynomial.realRoots(a, b, c);
-
-            // Return the roots in ascending order.
-            if (roots.length === 0) {
-                return [0.0];
-            } else if (roots[1] <= 0.0) {
-                return [roots[0], roots[1], 0.0];
-            } else if (roots[0] >= 0.0) {
-                return [0.0, roots[0], roots[1]];
-            }
-            return [roots[0], 0.0, roots[1]];
-        }
-
-        return computeRealRoots(a, b, c, d);
-    };
-
-    return CubicRealPolynomial;
-});
-/*global define*/
-define('Core/QuarticRealPolynomial',[
-        './DeveloperError',
-        './Math',
-        './CubicRealPolynomial',
-        './QuadraticRealPolynomial'
-    ],
-    function(
-        DeveloperError,
-        CesiumMath,
-        CubicRealPolynomial,
-        QuadraticRealPolynomial) {
-    "use strict";
-
-    /**
-     * Defines functions for 4th order polynomial functions of one variable with only real coefficients.
-     *
-     * @exports QuarticRealPolynomial
-     */
-    var QuarticRealPolynomial = {};
-
-    /**
-     * Provides the discriminant of the quartic equation from the supplied coefficients.
-     * @memberof QuarticRealPolynomial
-     *
-     * @param {Number} a The coefficient of the 4th order monomial.
-     * @param {Number} b The coefficient of the 3rd order monomial.
-     * @param {Number} c The coefficient of the 2nd order monomial.
-     * @param {Number} d The coefficient of the 1st order monomial.
-     * @param {Number} e The coefficient of the 0th order monomial.
-     * @returns {Number} The value of the discriminant.
-     */
-    QuarticRealPolynomial.discriminant = function(a, b, c, d, e) {
-                if (typeof a !== 'number') {
-            throw new DeveloperError('a is a required number.');
-        }
-        if (typeof b !== 'number') {
-            throw new DeveloperError('b is a required number.');
-        }
-        if (typeof c !== 'number') {
-            throw new DeveloperError('c is a required number.');
-        }
-        if (typeof d !== 'number') {
-            throw new DeveloperError('d is a required number.');
-        }
-        if (typeof e !== 'number') {
-            throw new DeveloperError('e is a required number.');
-        }
-        
-        var a2 = a * a;
-        var a3 = a2 * a;
-        var b2 = b * b;
-        var b3 = b2 * b;
-        var c2 = c * c;
-        var c3 = c2 * c;
-        var d2 = d * d;
-        var d3 = d2 * d;
-        var e2 = e * e;
-        var e3 = e2 * e;
-
-        var discriminant = (b2 * c2 * d2 - 4.0 * b3 * d3 - 4.0 * a * c3 * d2 + 18 * a * b * c * d3 - 27.0 * a2 * d2 * d2 + 256.0 * a3 * e3) +
-            e * (18.0 * b3 * c * d - 4.0 * b2 * c3 + 16.0 * a * c2 * c2 - 80.0 * a * b * c2 * d - 6.0 * a * b2 * d2 + 144.0 * a2 * c * d2) +
-            e2 * (144.0 * a * b2 * c - 27.0 * b2 * b2 - 128.0 * a2 * c2 - 192.0 * a2 * b * d);
-        return discriminant;
-    };
-
-    function original(a3, a2, a1, a0) {
-        var a3Squared = a3 * a3;
-
-        var p = a2 - 3.0 * a3Squared / 8.0;
-        var q = a1 - a2 * a3 / 2.0 + a3Squared * a3 / 8.0;
-        var r = a0 - a1 * a3 / 4.0 + a2 * a3Squared / 16.0 - 3.0 * a3Squared * a3Squared / 256.0;
-
-        // Find the roots of the cubic equations:  h^6 + 2 p h^4 + (p^2 - 4 r) h^2 - q^2 = 0.
-        var cubicRoots = CubicRealPolynomial.realRoots(1.0, 2.0 * p, p * p - 4.0 * r, -q * q);
-
-        if (cubicRoots.length > 0) {
-            var temp = -a3 / 4.0;
-
-            // Use the largest positive root.
-            var hSquared = cubicRoots[cubicRoots.length - 1];
-
-            if (Math.abs(hSquared) < CesiumMath.EPSILON14) {
-                // y^4 + p y^2 + r = 0.
-                var roots = QuadraticRealPolynomial.realRoots(1.0, p, r);
-
-                if (roots.length === 2) {
-                    var root0 = roots[0];
-                    var root1 = roots[1];
-
-                    var y;
-                    if (root0 >= 0.0 && root1 >= 0.0) {
-                        var y0 = Math.sqrt(root0);
-                        var y1 = Math.sqrt(root1);
-
-                        return [temp - y1, temp - y0, temp + y0, temp + y1];
-                    } else if (root0 >= 0.0 && root1 < 0.0) {
-                        y = Math.sqrt(root0);
-                        return [temp - y, temp + y];
-                    } else if (root0 < 0.0 && root1 >= 0.0) {
-                        y = Math.sqrt(root1);
-                        return [temp - y, temp + y];
-                    }
-                }
-                return [];
-            } else if (hSquared > 0.0) {
-                var h = Math.sqrt(hSquared);
-
-                var m = (p + hSquared - q / h) / 2.0;
-                var n = (p + hSquared + q / h) / 2.0;
-
-                // Now solve the two quadratic factors:  (y^2 + h y + m)(y^2 - h y + n);
-                var roots1 = QuadraticRealPolynomial.realRoots(1.0, h, m);
-                var roots2 = QuadraticRealPolynomial.realRoots(1.0, -h, n);
-
-                if (roots1.length !== 0) {
-                    roots1[0] += temp;
-                    roots1[1] += temp;
-
-                    if (roots2.length !== 0) {
-                        roots2[0] += temp;
-                        roots2[1] += temp;
-
-                        if (roots1[1] <= roots2[0]) {
-                            return [roots1[0], roots1[1], roots2[0], roots2[1]];
-                        } else if (roots2[1] <= roots1[0]) {
-                            return [roots2[0], roots2[1], roots1[0], roots1[1]];
-                        } else if (roots1[0] >= roots2[0] && roots1[1] <= roots2[1]) {
-                            return [roots2[0], roots1[0], roots1[1], roots2[1]];
-                        } else if (roots2[0] >= roots1[0] && roots2[1] <= roots1[1]) {
-                            return [roots1[0], roots2[0], roots2[1], roots1[1]];
-                        } else if (roots1[0] > roots2[0] && roots1[0] < roots2[1]) {
-                            return [roots2[0], roots1[0], roots2[1], roots1[1]];
-                        }
-                        return [roots1[0], roots2[0], roots1[1], roots2[1]];
-                    }
-                    return roots1;
-                }
-
-                if (roots2.length !== 0) {
-                    roots2[0] += temp;
-                    roots2[1] += temp;
-
-                    return roots2;
-                }
-                return [];
-            }
-        }
-        return [];
-    }
-
-    function neumark(a3, a2, a1, a0) {
-        var a1Squared = a1 * a1;
-        var a2Squared = a2 * a2;
-        var a3Squared = a3 * a3;
-
-        var p = -2.0 * a2;
-        var q = a1 * a3 + a2Squared - 4.0 * a0;
-        var r = a3Squared * a0 - a1 * a2 * a3 + a1Squared;
-
-        var cubicRoots = CubicRealPolynomial.realRoots(1.0, p, q, r);
-
-        if (cubicRoots.length > 0) {
-            // Use the most positive root
-            var y = cubicRoots[0];
-
-            var temp = (a2 - y);
-            var tempSquared = temp * temp;
-
-            var g1 = a3 / 2.0;
-            var h1 = temp / 2.0;
-
-            var m = tempSquared - 4.0 * a0;
-            var mError = tempSquared + 4.0 * Math.abs(a0);
-
-            var n = a3Squared - 4.0 * y;
-            var nError = a3Squared + 4.0 * Math.abs(y);
-
-            var g2;
-            var h2;
-
-            if (y < 0.0 || (m * nError < n * mError)) {
-                var squareRootOfN = Math.sqrt(n);
-                g2 = squareRootOfN / 2.0;
-                h2 = squareRootOfN === 0.0 ? 0.0 : (a3 * h1 - a1) / squareRootOfN;
-            } else {
-                var squareRootOfM = Math.sqrt(m);
-                g2 = squareRootOfM === 0.0 ? 0.0 : (a3 * h1 - a1) / squareRootOfM;
-                h2 = squareRootOfM / 2.0;
-            }
-
-            var G;
-            var g;
-            if (g1 === 0.0 && g2 === 0.0) {
-                G = 0.0;
-                g = 0.0;
-            } else if (CesiumMath.sign(g1) === CesiumMath.sign(g2)) {
-                G = g1 + g2;
-                g = y / G;
-            } else {
-                g = g1 - g2;
-                G = y / g;
-            }
-
-            var H;
-            var h;
-            if (h1 === 0.0 && h2 === 0.0) {
-                H = 0.0;
-                h = 0.0;
-            } else if (CesiumMath.sign(h1) === CesiumMath.sign(h2)) {
-                H = h1 + h2;
-                h = a0 / H;
-            } else {
-                h = h1 - h2;
-                H = a0 / h;
-            }
-
-            // Now solve the two quadratic factors:  (y^2 + G y + H)(y^2 + g y + h);
-            var roots1 = QuadraticRealPolynomial.realRoots(1.0, G, H);
-            var roots2 = QuadraticRealPolynomial.realRoots(1.0, g, h);
-
-            if (roots1.length !== 0) {
-                if (roots2.length !== 0) {
-                    if (roots1[1] <= roots2[0]) {
-                        return [roots1[0], roots1[1], roots2[0], roots2[1]];
-                    } else if (roots2[1] <= roots1[0]) {
-                        return [roots2[0], roots2[1], roots1[0], roots1[1]];
-                    } else if (roots1[0] >= roots2[0] && roots1[1] <= roots2[1]) {
-                        return [roots2[0], roots1[0], roots1[1], roots2[1]];
-                    } else if (roots2[0] >= roots1[0] && roots2[1] <= roots1[1]) {
-                        return [roots1[0], roots2[0], roots2[1], roots1[1]];
-                    } else if (roots1[0] > roots2[0] && roots1[0] < roots2[1]) {
-                        return [roots2[0], roots1[0], roots2[1], roots1[1]];
-                    } else {
-                        return [roots1[0], roots2[0], roots1[1], roots2[1]];
-                    }
-                }
-                return roots1;
-            }
-            if (roots2.length !== 0) {
-                return roots2;
-            }
-        }
-        return [];
-    }
-
-    /**
-     * Provides the real valued roots of the quartic polynomial with the provided coefficients.
-     * @memberof QuarticRealPolynomial
-     *
-     * @param {Number} a The coefficient of the 4th order monomial.
-     * @param {Number} b The coefficient of the 3rd order monomial.
-     * @param {Number} c The coefficient of the 2nd order monomial.
-     * @param {Number} d The coefficient of the 1st order monomial.
-     * @param {Number} e The coefficient of the 0th order monomial.
-     * @returns {Array} The real valued roots.
-     */
-    QuarticRealPolynomial.realRoots = function(a, b, c, d, e) {
-                if (typeof a !== 'number') {
-            throw new DeveloperError('a is a required number.');
-        }
-        if (typeof b !== 'number') {
-            throw new DeveloperError('b is a required number.');
-        }
-        if (typeof c !== 'number') {
-            throw new DeveloperError('c is a required number.');
-        }
-        if (typeof d !== 'number') {
-            throw new DeveloperError('d is a required number.');
-        }
-        if (typeof e !== 'number') {
-            throw new DeveloperError('e is a required number.');
-        }
-        
-        if (Math.abs(a) < CesiumMath.EPSILON15) {
-            return CubicRealPolynomial.realRoots(b, c, d, e);
-        }
-        var a3 = b / a;
-        var a2 = c / a;
-        var a1 = d / a;
-        var a0 = e / a;
-
-        var k = (a3 < 0.0) ? 1 : 0;
-        k += (a2 < 0.0) ? k + 1 : k;
-        k += (a1 < 0.0) ? k + 1 : k;
-        k += (a0 < 0.0) ? k + 1 : k;
-
-        switch (k) {
-        case 0:
-            return original(a3, a2, a1, a0);
-        case 1:
-            return neumark(a3, a2, a1, a0);
-        case 2:
-            return neumark(a3, a2, a1, a0);
-        case 3:
-            return original(a3, a2, a1, a0);
-        case 4:
-            return original(a3, a2, a1, a0);
-        case 5:
-            return neumark(a3, a2, a1, a0);
-        case 6:
-            return original(a3, a2, a1, a0);
-        case 7:
-            return original(a3, a2, a1, a0);
-        case 8:
-            return neumark(a3, a2, a1, a0);
-        case 9:
-            return original(a3, a2, a1, a0);
-        case 10:
-            return original(a3, a2, a1, a0);
-        case 11:
-            return neumark(a3, a2, a1, a0);
-        case 12:
-            return original(a3, a2, a1, a0);
-        case 13:
-            return original(a3, a2, a1, a0);
-        case 14:
-            return original(a3, a2, a1, a0);
-        case 15:
-            return original(a3, a2, a1, a0);
-        default:
-            return undefined;
-        }
-    };
-
-    return QuarticRealPolynomial;
-});
-/*global define*/
-define('Core/IntersectionTests',[
-        './defined',
-        './DeveloperError',
-        './Math',
-        './Cartesian3',
-        './Cartographic',
-        './Matrix3',
-        './QuadraticRealPolynomial',
-        './QuarticRealPolynomial'
-    ],
-    function(
-        defined,
-        DeveloperError,
-        CesiumMath,
-        Cartesian3,
-        Cartographic,
-        Matrix3,
-        QuadraticRealPolynomial,
-        QuarticRealPolynomial) {
-    "use strict";
-
-    /**
-     * DOC_TBA
-     *
-     * @exports IntersectionTests
-     */
-    var IntersectionTests = {};
-
-    /**
-     * Computes the intersection of a ray and a plane.
-     * @memberof IntersectionTests
-     *
-     * @param {Ray} ray The ray.
-     * @param {Plane} plane The plane.
-     * @returns {Cartesian3} The intersection point or undefined if there is no intersections.
-     */
-    IntersectionTests.rayPlane = function(ray, plane, result) {
-                if (!defined(ray)) {
-            throw new DeveloperError('ray is required.');
-        }
-        if (!defined(plane)) {
-            throw new DeveloperError('plane is required.');
-        }
-        
-        var origin = ray.origin;
-        var direction = ray.direction;
-        var normal = plane.normal;
-        var denominator = Cartesian3.dot(normal, direction);
-
-        if (Math.abs(denominator) < CesiumMath.EPSILON15) {
-            // Ray is parallel to plane.  The ray may be in the polygon's plane.
-            return undefined;
-        }
-
-        var t = (-plane.distance - Cartesian3.dot(normal, origin)) / denominator;
-
-        if (t < 0) {
-            return undefined;
-        }
-
-        result = Cartesian3.multiplyByScalar(direction, t, result);
-        return Cartesian3.add(origin, result, result);
-    };
-
-    var scratchQ = new Cartesian3();
-    var scratchW = new Cartesian3();
-
-    /**
-     * Computes the intersection points of a ray with an ellipsoid.
-     * @memberof IntersectionTests
-     *
-     * @param {Ray} ray The ray.
-     * @param {Ellipsoid} ellipsoid The ellipsoid.
-     * @returns {Object} An object with the first (<code>start</code>) and the second (<code>stop</code>) intersection scalars for points along the ray or undefined if there are no intersections.
-     */
-    IntersectionTests.rayEllipsoid = function(ray, ellipsoid) {
-                if (!defined(ray)) {
-            throw new DeveloperError('ray is required.');
-        }
-        if (!defined(ellipsoid)) {
-            throw new DeveloperError('ellipsoid is required.');
-        }
-        
-        var inverseRadii = ellipsoid.oneOverRadii;
-        var q = Cartesian3.multiplyComponents(inverseRadii, ray.origin, scratchQ);
-        var w = Cartesian3.multiplyComponents(inverseRadii, ray.direction, scratchW);
-
-        var q2 = Cartesian3.magnitudeSquared(q);
-        var qw = Cartesian3.dot(q, w);
-
-        var difference, w2, product, discriminant, temp;
-
-        if (q2 > 1.0) {
-            // Outside ellipsoid.
-            if (qw >= 0.0) {
-                // Looking outward or tangent (0 intersections).
-                return undefined;
-            }
-
-            // qw < 0.0.
-            var qw2 = qw * qw;
-            difference = q2 - 1.0; // Positively valued.
-            w2 = Cartesian3.magnitudeSquared(w);
-            product = w2 * difference;
-
-            if (qw2 < product) {
-                // Imaginary roots (0 intersections).
-                return undefined;
-            } else if (qw2 > product) {
-                // Distinct roots (2 intersections).
-                discriminant = qw * qw - product;
-                temp = -qw + Math.sqrt(discriminant); // Avoid cancellation.
-                var root0 = temp / w2;
-                var root1 = difference / temp;
-                if (root0 < root1) {
-                    return {
-                        start : root0,
-                        stop : root1
-                    };
-                }
-
-                return {
-                    start : root1,
-                    stop : root0
-                };
-            } else {
-                // qw2 == product.  Repeated roots (2 intersections).
-                var root = Math.sqrt(difference / w2);
-                return {
-                    start : root,
-                    stop : root
-                };
-            }
-        } else if (q2 < 1.0) {
-            // Inside ellipsoid (2 intersections).
-            difference = q2 - 1.0; // Negatively valued.
-            w2 = Cartesian3.magnitudeSquared(w);
-            product = w2 * difference; // Negatively valued.
-
-            discriminant = qw * qw - product;
-            temp = -qw + Math.sqrt(discriminant); // Positively valued.
-            return {
-                start : 0.0,
-                stop : temp / w2
-            };
-        } else {
-            // q2 == 1.0. On ellipsoid.
-            if (qw < 0.0) {
-                // Looking inward.
-                w2 = Cartesian3.magnitudeSquared(w);
-                return {
-                    start : 0.0,
-                    stop : -qw / w2
-                };
-            }
-
-            // qw >= 0.0.  Looking outward or tangent.
-            return undefined;
-        }
-    };
-
-    function addWithCancellationCheck(left, right, tolerance) {
-        var difference = left + right;
-        if ((CesiumMath.sign(left) !== CesiumMath.sign(right)) &&
-                Math.abs(difference / Math.max(Math.abs(left), Math.abs(right))) < tolerance) {
-            return 0.0;
-        }
-
-        return difference;
-    }
-
-    function quadraticVectorExpression(A, b, c, x, w) {
-        var xSquared = x * x;
-        var wSquared = w * w;
-
-        var l2 = (A[Matrix3.COLUMN1ROW1] - A[Matrix3.COLUMN2ROW2]) * wSquared;
-        var l1 = w * (x * addWithCancellationCheck(A[Matrix3.COLUMN1ROW0], A[Matrix3.COLUMN0ROW1], CesiumMath.EPSILON15) + b.y);
-        var l0 = (A[Matrix3.COLUMN0ROW0] * xSquared + A[Matrix3.COLUMN2ROW2] * wSquared) + x * b.x + c;
-
-        var r1 = wSquared * addWithCancellationCheck(A[Matrix3.COLUMN2ROW1], A[Matrix3.COLUMN1ROW2], CesiumMath.EPSILON15);
-        var r0 = w * (x * addWithCancellationCheck(A[Matrix3.COLUMN2ROW0], A[Matrix3.COLUMN0ROW2]) + b.z);
-
-        var cosines;
-        var solutions = [];
-        if (r0 === 0.0 && r1 === 0.0) {
-            cosines = QuadraticRealPolynomial.realRoots(l2, l1, l0);
-            if (cosines.length === 0) {
-                return solutions;
-            }
-
-            var cosine0 = cosines[0];
-            var sine0 = Math.sqrt(Math.max(1.0 - cosine0 * cosine0, 0.0));
-            solutions.push(new Cartesian3(x, w * cosine0, w * -sine0));
-            solutions.push(new Cartesian3(x, w * cosine0, w * sine0));
-
-            if (cosines.length === 2) {
-                var cosine1 = cosines[1];
-                var sine1 = Math.sqrt(Math.max(1.0 - cosine1 * cosine1, 0.0));
-                solutions.push(new Cartesian3(x, w * cosine1, w * -sine1));
-                solutions.push(new Cartesian3(x, w * cosine1, w * sine1));
-            }
-
-            return solutions;
-        }
-
-        var r0Squared = r0 * r0;
-        var r1Squared = r1 * r1;
-        var l2Squared = l2 * l2;
-        var r0r1 = r0 * r1;
-
-        var c4 = l2Squared + r1Squared;
-        var c3 = 2.0 * (l1 * l2 + r0r1);
-        var c2 = 2.0 * l0 * l2 + l1 * l1 - r1Squared + r0Squared;
-        var c1 = 2.0 * (l0 * l1 - r0r1);
-        var c0 = l0 * l0 - r0Squared;
-
-        if (c4 === 0.0 && c3 === 0.0 && c2 === 0.0 && c1 === 0.0) {
-            return solutions;
-        }
-
-        cosines = QuarticRealPolynomial.realRoots(c4, c3, c2, c1, c0);
-        var length = cosines.length;
-        if (length === 0) {
-            return solutions;
-        }
-
-        for ( var i = 0; i < length; ++i) {
-            var cosine = cosines[i];
-            var cosineSquared = cosine * cosine;
-            var sineSquared = Math.max(1.0 - cosineSquared, 0.0);
-            var sine = Math.sqrt(sineSquared);
-
-            //var left = l2 * cosineSquared + l1 * cosine + l0;
-            var left;
-            if (CesiumMath.sign(l2) === CesiumMath.sign(l0)) {
-                left = addWithCancellationCheck(l2 * cosineSquared + l0, l1 * cosine, CesiumMath.EPSILON12);
-            } else if (CesiumMath.sign(l0) === CesiumMath.sign(l1 * cosine)) {
-                left = addWithCancellationCheck(l2 * cosineSquared, l1 * cosine + l0, CesiumMath.EPSILON12);
-            } else {
-                left = addWithCancellationCheck(l2 * cosineSquared + l1 * cosine, l0, CesiumMath.EPSILON12);
-            }
-
-            var right = addWithCancellationCheck(r1 * cosine, r0, CesiumMath.EPSILON15);
-            var product = left * right;
-
-            if (product < 0.0) {
-                solutions.push(new Cartesian3(x, w * cosine, w * sine));
-            } else if (product > 0.0) {
-                solutions.push(new Cartesian3(x, w * cosine, w * -sine));
-            } else if (sine !== 0.0) {
-                solutions.push(new Cartesian3(x, w * cosine, w * -sine));
-                solutions.push(new Cartesian3(x, w * cosine, w * sine));
-                ++i;
-            } else {
-                solutions.push(new Cartesian3(x, w * cosine, w * sine));
-            }
-        }
-
-        return solutions;
-    }
-
-    /**
-     * Provides the point along the ray which is nearest to the ellipsoid.
-     * @memberof IntersectionTests
-     *
-     * @param {Ray} ray The ray.
-     * @param {Ellipsoid} ellipsoid The ellipsoid.
-     * @returns {Cartesian} The nearest planetodetic point on the ray.
-     */
-    IntersectionTests.grazingAltitudeLocation = function(ray, ellipsoid) {
-                if (!defined(ray)) {
-            throw new DeveloperError('ray is required.');
-        }
-        if (!defined(ellipsoid)) {
-            throw new DeveloperError('ellipsoid is required.');
-        }
-        
-        var position = ray.origin;
-        var direction = ray.direction;
-
-        var normal = ellipsoid.geodeticSurfaceNormal(position);
-
-        if (Cartesian3.dot(direction, normal) >= 0.0) { // The location provided is the closest point in altitude
-            return position;
-        }
-
-        var intersects = defined(this.rayEllipsoid(ray, ellipsoid));
-
-        // Compute the scaled direction vector.
-        var f = ellipsoid.transformPositionToScaledSpace(direction);
-
-        // Constructs a basis from the unit scaled direction vector. Construct its rotation and transpose.
-        var firstAxis = Cartesian3.normalize(f);
-        var reference = Cartesian3.mostOrthogonalAxis(f);
-        var secondAxis = Cartesian3.normalize(Cartesian3.cross(reference, firstAxis));
-        var thirdAxis  = Cartesian3.normalize(Cartesian3.cross(firstAxis, secondAxis));
-        var B = new Matrix3(firstAxis.x, secondAxis.x, thirdAxis.x,
-                            firstAxis.y, secondAxis.y, thirdAxis.y,
-                            firstAxis.z, secondAxis.z, thirdAxis.z);
-        var B_T = Matrix3.transpose(B);
-
-        // Get the scaling matrix and its inverse.
-        var D_I = Matrix3.fromScale(ellipsoid.radii);
-        var D = Matrix3.fromScale(ellipsoid.oneOverRadii);
-
-        var C = new Matrix3(0.0, direction.z, -direction.y,
-                            -direction.z, 0.0, direction.x,
-                            direction.y, -direction.x, 0.0);
-
-        var temp = Matrix3.multiply(Matrix3.multiply(B_T, D), C);
-        var A = Matrix3.multiply(Matrix3.multiply(temp, D_I), B);
-        var b = Matrix3.multiplyByVector(temp, position);
-
-        // Solve for the solutions to the expression in standard form:
-        var solutions = quadraticVectorExpression(A, Cartesian3.negate(b), 0.0, 0.0, 1.0);
-
-        var s;
-        var altitude;
-        var length = solutions.length;
-        if (length > 0) {
-            var closest = Cartesian3.ZERO;
-            var maximumValue = Number.NEGATIVE_INFINITY;
-
-            for ( var i = 0; i < length; ++i) {
-                s = Matrix3.multiplyByVector(D_I, Matrix3.multiplyByVector(B, solutions[i]));
-                var v = Cartesian3.normalize(Cartesian3.subtract(s, position));
-                var dotProduct = Cartesian3.dot(v, direction);
-
-                if (dotProduct > maximumValue) {
-                    maximumValue = dotProduct;
-                    closest = s;
-                }
-            }
-
-            var surfacePoint = ellipsoid.cartesianToCartographic(closest);
-            maximumValue = CesiumMath.clamp(maximumValue, 0.0, 1.0);
-            altitude = Cartesian3.magnitude(Cartesian3.subtract(closest, position)) * Math.sqrt(1.0 - maximumValue * maximumValue);
-            altitude = intersects ? -altitude : altitude;
-            return ellipsoid.cartographicToCartesian(new Cartographic(surfacePoint.longitude, surfacePoint.latitude, altitude));
-        }
-
-        return undefined;
-    };
-
-    var lineSegmentPlaneDifference = new Cartesian3();
-
-    /**
-     * Computes the intersection of a line segment and a plane.
-     * @memberof IntersectionTests
-     *
-     * @param {Cartesian3} endPoint0 An end point of the line segment.
-     * @param {Cartesian3} endPoint1 The other end point of the line segment.
-     * @param {Plane} plane The plane.
-     * @param {Cartesian3} [result] The object onto which to store the result.
-     * @returns {Cartesian3} The intersection point or undefined if there is no intersection.
-     *
-     * @example
-     * var origin = ellipsoid.cartographicToCartesian(Cesium.Cartographic.fromDegrees(-75.59777, 40.03883, 0.0));
-     * var normal = ellipsoid.geodeticSurfaceNormal(origin);
-     * var plane = Cesium.Plane.fromPointNormal(origin, normal);
-     *
-     * var p0 = new Cesium.Cartesian3(...);
-     * var p1 = new Cesium.Cartesian3(...);
-     *
-     * // find the intersection of the line segment from p0 to p1 and the tangent plane at origin.
-     * var intersection = Cesium.IntersectionTests.lineSegmentPlane(p0, p1, plane);
-     */
-    IntersectionTests.lineSegmentPlane = function(endPoint0, endPoint1, plane, result) {
-                if (!defined(endPoint0)) {
-            throw new DeveloperError('endPoint0 is required.');
-        }
-        if (!defined(endPoint1)) {
-            throw new DeveloperError('endPoint1 is required.');
-        }
-        if (!defined(plane)) {
-            throw new DeveloperError('plane is required.');
-        }
-        
-        var difference = Cartesian3.subtract(endPoint1, endPoint0, lineSegmentPlaneDifference);
-        var normal = plane.normal;
-        var nDotDiff = Cartesian3.dot(normal, difference);
-
-        // check if the segment and plane are parallel
-        if (Math.abs(nDotDiff) < CesiumMath.EPSILON6) {
-            return undefined;
-        }
-
-        var nDotP0 = Cartesian3.dot(normal, endPoint0);
-        var t = -(plane.distance + nDotP0) / nDotDiff;
-
-        // intersection only if t is in [0, 1]
-        if (t < 0.0 || t > 1.0) {
-            return undefined;
-        }
-
-        // intersection is endPoint0 + t * (endPoint1 - endPoint0)
-        if (!defined(result)) {
-            result = new Cartesian3();
-        }
-        Cartesian3.multiplyByScalar(difference, t, result);
-        Cartesian3.add(endPoint0, result, result);
-        return result;
-    };
-
-    /**
-     * Computes the intersection of a triangle and a plane
-     * @memberof IntersectionTests
-     *
-     * @param {Cartesian3} p0 First point of the triangle
-     * @param {Cartesian3} p1 Second point of the triangle
-     * @param {Cartesian3} p2 Third point of the triangle
-     * @param {Plane} plane Intersection plane
-     *
-     * @returns {Object} An object with properties <code>positions</code> and <code>indices</code>, which are arrays that represent three triangles that do not cross the plane. (Undefined if no intersection exists)
-     *
-     * @example
-     * var origin = ellipsoid.cartographicToCartesian(Cesium.Cartographic.fromDegrees(-75.59777, 40.03883, 0.0));
-     * var normal = ellipsoid.geodeticSurfaceNormal(origin);
-     * var plane = Cesium.Plane.fromPointNormal(origin, normal);
-     *
-     * var p0 = new Cesium.Cartesian3(...);
-     * var p1 = new Cesium.Cartesian3(...);
-     * var p2 = new Cesium.Cartesian3(...);
-     *
-     * // convert the triangle composed of points (p0, p1, p2) to three triangles that don't cross the plane
-     * var triangles = Cesium.IntersectionTests.lineSegmentPlane(p0, p1, p2, plane);
-     */
-    IntersectionTests.trianglePlaneIntersection = function(p0, p1, p2, plane) {
-                if ((!defined(p0)) ||
-            (!defined(p1)) ||
-            (!defined(p2)) ||
-            (!defined(plane))) {
-            throw new DeveloperError('p0, p1, p2, and plane are required.');
-        }
-        
-        var planeNormal = plane.normal;
-        var planeD = plane.distance;
-        var p0Behind = (Cartesian3.dot(planeNormal, p0) + planeD) < 0.0;
-        var p1Behind = (Cartesian3.dot(planeNormal, p1) + planeD) < 0.0;
-        var p2Behind = (Cartesian3.dot(planeNormal, p2) + planeD) < 0.0;
-        // Given these dots products, the calls to lineSegmentPlaneIntersection
-        // always have defined results.
-
-        var numBehind = 0;
-        numBehind += p0Behind ? 1 : 0;
-        numBehind += p1Behind ? 1 : 0;
-        numBehind += p2Behind ? 1 : 0;
-
-        var u1, u2;
-        if (numBehind === 1 || numBehind === 2) {
-            u1 = new Cartesian3();
-            u2 = new Cartesian3();
-        }
-
-        if (numBehind === 1) {
-            if (p0Behind) {
-                IntersectionTests.lineSegmentPlane(p0, p1, plane, u1);
-                IntersectionTests.lineSegmentPlane(p0, p2, plane, u2);
-
-                return {
-                    positions : [p0, p1, p2, u1, u2 ],
-                    indices : [
-                        // Behind
-                        0, 3, 4,
-
-                        // In front
-                        1, 2, 4,
-                        1, 4, 3
-                    ]
-                };
-            } else if (p1Behind) {
-                IntersectionTests.lineSegmentPlane(p1, p2, plane, u1);
-                IntersectionTests.lineSegmentPlane(p1, p0, plane, u2);
-
-                return {
-                    positions : [p0, p1, p2, u1, u2 ],
-                    indices : [
-                        // Behind
-                        1, 3, 4,
-
-                        // In front
-                        2, 0, 4,
-                        2, 4, 3
-                    ]
-                };
-            } else if (p2Behind) {
-                IntersectionTests.lineSegmentPlane(p2, p0, plane, u1);
-                IntersectionTests.lineSegmentPlane(p2, p1, plane, u2);
-
-                return {
-                    positions : [p0, p1, p2, u1, u2 ],
-                    indices : [
-                        // Behind
-                        2, 3, 4,
-
-                        // In front
-                        0, 1, 4,
-                        0, 4, 3
-                    ]
-                };
-            }
-        } else if (numBehind === 2) {
-            if (!p0Behind) {
-                IntersectionTests.lineSegmentPlane(p1, p0, plane, u1);
-                IntersectionTests.lineSegmentPlane(p2, p0, plane, u2);
-
-                return {
-                    positions : [p0, p1, p2, u1, u2 ],
-                    indices : [
-                        // Behind
-                        1, 2, 4,
-                        1, 4, 3,
-
-                        // In front
-                        0, 3, 4
-                    ]
-                };
-            } else if (!p1Behind) {
-                IntersectionTests.lineSegmentPlane(p2, p1, plane, u1);
-                IntersectionTests.lineSegmentPlane(p0, p1, plane, u2);
-
-                return {
-                    positions : [p0, p1, p2, u1, u2 ],
-                    indices : [
-                        // Behind
-                        2, 0, 4,
-                        2, 4, 3,
-
-                        // In front
-                        1, 3, 4
-                    ]
-                };
-            } else if (!p2Behind) {
-                IntersectionTests.lineSegmentPlane(p0, p2, plane, u1);
-                IntersectionTests.lineSegmentPlane(p1, p2, plane, u2);
-
-                return {
-                    positions : [p0, p1, p2, u1, u2 ],
-                    indices : [
-                        // Behind
-                        0, 1, 4,
-                        0, 4, 3,
-
-                        // In front
-                        2, 3, 4
-                    ]
-                };
-            }
-        }
-
-        // if numBehind is 3, the triangle is completely behind the plane;
-        // otherwise, it is completely in front (numBehind is 0).
-        return undefined;
-    };
-
-    return IntersectionTests;
-});
-
-/*global define*/
-define('Core/Ray',[
-        './DeveloperError',
-        './defined',
-        './defaultValue',
-        './Cartesian3'
-       ], function(
-         DeveloperError,
-         defined,
-         defaultValue,
-         Cartesian3) {
-    "use strict";
-
-    /**
-     * Represents a ray that extends infinitely from the provided origin in the provided direction.
-     * @alias Ray
-     * @constructor
-     *
-     * @param {Cartesian3} [origin=Cartesian3.ZERO] The origin of the ray.
-     * @param {Cartesian3} [direction=Cartesian3.ZERO] The direction of the ray.
-     */
-    var Ray = function(origin, direction) {
-        direction = Cartesian3.clone(defaultValue(direction, Cartesian3.ZERO));
-        if (!Cartesian3.equals(direction, Cartesian3.ZERO)) {
-            Cartesian3.normalize(direction, direction);
-        }
-
-        /**
-         * The origin of the ray.
-         * @type {Cartesian3}
-         * @default {@link Cartesian3.ZERO}
-         */
-        this.origin = Cartesian3.clone(defaultValue(origin, Cartesian3.ZERO));
-
-        /**
-         * The direction of the ray.
-         * @type {Cartesian3}
-         */
-        this.direction = direction;
-    };
-
-    /**
-     * Computes the point along the ray given by r(t) = o + t*d,
-     * where o is the origin of the ray and d is the direction.
-     * @memberof Ray
-     *
-     * @param {Number} t A scalar value.
-     * @param {Cartesian3} [result] The object in which the result will be stored.
-     * @returns The modified result parameter, or a new instance if none was provided.
-     *
-     * @example
-     * //Get the first intersection point of a ray and an ellipsoid.
-     * var intersection = Cesium.IntersectionTests.rayEllipsoid(ray, ellipsoid);
-     * var point = Ray.getPoint(ray, intersection.start);
-     */
-    Ray.getPoint = function(ray, t, result) {
-                if (!defined(ray)){
-            throw new DeveloperError('ray is requred');
-        }
-        if (typeof t !== 'number') {
-            throw new DeveloperError('t is a required number');
-        }
-        
-        result = Cartesian3.multiplyByScalar(ray.direction, t, result);
-        return Cartesian3.add(ray.origin, result, result);
-    };
-
-    return Ray;
-});
-
-/*global define*/
-define('Core/Plane',[
-        './Cartesian3',
-        './defined',
-        './DeveloperError'
-    ], function(
-        Cartesian3,
-        defined,
-        DeveloperError) {
-    "use strict";
-
-    /**
-     * A plane in Hessian Normal Form defined by
-     * <pre>
-     * ax + by + cz + d = 0
-     * </pre>
-     * where (a, b, c) is the plane's <code>normal</code>, d is the signed
-     * <code>distance</code> to the plane, and (x, y, z) is any point on
-     * the plane.
-     *
-     * @alias Plane
-     * @constructor
-     *
-     * @param {Cartesian3} normal The plane's normal (normalized).
-     * @param {Number} distance The shortest distance from the origin to the plane.  The sign of
-     * <code>distance</code> determines which side of the plane the origin
-     * is on.  If <code>distance</code> is positive, the origin is in the half-space
-     * in the direction of the normal; if negative, the origin is in the half-space
-     * opposite to the normal; if zero, the plane passes through the origin.
-     *
-     * @example
-     * // The plane x=0
-     * var plane = new Cesium.Plane(Cesium.Cartesian3.UNIT_X, 0.0);
-     */
-    var Plane = function(normal, distance) {
-                if (!defined(normal))  {
-            throw new DeveloperError('normal is required.');
-        }
-        if (!defined(distance)) {
-            throw new DeveloperError('distance is required.');
-        }
-        
-        /**
-         * The plane's normal.
-         *
-         * @type {Cartesian3}
-         */
-        this.normal = Cartesian3.clone(normal);
-
-        /**
-         * The shortest distance from the origin to the plane.  The sign of
-         * <code>distance</code> determines which side of the plane the origin
-         * is on.  If <code>distance</code> is positive, the origin is in the half-space
-         * in the direction of the normal; if negative, the origin is in the half-space
-         * opposite to the normal; if zero, the plane passes through the origin.
-         *
-         * @type {Number}
-         */
-        this.distance = distance;
-    };
-
-    /**
-     * Creates a plane from a normal and a point on the plane.
-     * @memberof Plane
-     *
-     * @param {Cartesian3} point The point on the plane.
-     * @param {Cartesian3} normal The plane's normal (normalized).
-     * @param {Plane} [result] The object onto which to store the result.
-     * @returns {Plane} A new plane instance or the modified result parameter.
-     *
-     * @example
-     * var point = ellipsoid.cartographicToCartesian(Cesium.Cartographic.fromDegrees(-72.0, 40.0));
-     * var normal = ellipsoid.geodeticSurfaceNormal(point);
-     * var tangentPlane = Cesium.Plane.fromPointNormal(point, normal);
-     */
-    Plane.fromPointNormal = function(point, normal, result) {
-                if (!defined(point)) {
-            throw new DeveloperError('point is required.');
-        }
-        if (!defined(normal)) {
-            throw new DeveloperError('normal is required.');
-        }
-        
-        var distance = -Cartesian3.dot(normal, point);
-
-        if (!defined(result)) {
-            return new Plane(normal, distance);
-        }
-
-        Cartesian3.clone(normal, result.normal);
-        result.distance = distance;
-        return result;
-    };
-
-    /**
-     * Computes the signed shortest distance of a point to a plane.
-     * The sign of the distance determines which side of the plane the point
-     * is on.  If the distance is positive, the point is in the half-space
-     * in the direction of the normal; if negative, the point is in the half-space
-     * opposite to the normal; if zero, the plane passes through the point.
-     * @memberof Plane
-     *
-     * @param {Plane} plane The plane.
-     * @param {Cartesian3} point The point.
-     * @returns {Number} The signed shortest distance of the point to the plane.
-     */
-    Plane.getPointDistance = function(plane, point) {
-                if (!defined(plane)) {
-            throw new DeveloperError('plane is required.');
-        }
-        if (!defined(point)) {
-            throw new DeveloperError('point is required.');
-        }
-        
-        return Cartesian3.dot(plane.normal, point) + plane.distance;
-    };
-
-    return Plane;
-});
-
-/*global define*/
 define('Core/EllipsoidTangentPlane',[
+        './AxisAlignedBoundingBox',
+        './Cartesian2',
+        './Cartesian3',
         './defaultValue',
         './defined',
         './defineProperties',
         './DeveloperError',
-        './Transforms',
-        './AxisAlignedBoundingBox',
-        './IntersectionTests',
-        './Cartesian2',
-        './Cartesian3',
         './Ellipsoid',
+        './IntersectionTests',
         './Matrix4',
+        './Plane',
         './Ray',
-        './Plane'
+        './Transforms'
     ], function(
+        AxisAlignedBoundingBox,
+        Cartesian2,
+        Cartesian3,
         defaultValue,
         defined,
         defineProperties,
         DeveloperError,
-        Transforms,
-        AxisAlignedBoundingBox,
-        IntersectionTests,
-        Cartesian2,
-        Cartesian3,
         Ellipsoid,
+        IntersectionTests,
         Matrix4,
+        Plane,
         Ray,
-        Plane) {
+        Transforms) {
     "use strict";
 
     /**
@@ -17555,9 +17777,9 @@ define('Core/EllipsoidTangentPlane',[
      * Computes the projection of the provided 3D positions onto the 2D plane.
      * @memberof EllipsoidTangentPlane
      *
-     * @param {Array} cartesians The array of points to project.
-     * @param {Array} [result] The array of Cartesian2 instances onto which to store results.
-     * @returns {Array} The modified result parameter or a new array of Cartesian2 instances if none was provided.
+     * @param {Cartesian3[]} cartesians The array of points to project.
+     * @param {Cartesian2[]} [result] The array of Cartesian2 instances onto which to store results.
+     * @returns {Cartesian2[]} The modified result parameter or a new array of Cartesian2 instances if none was provided.
      */
     EllipsoidTangentPlane.prototype.projectPointsOntoPlane = function(cartesians, result) {
                 if (!defined(cartesians)) {
@@ -17587,9 +17809,9 @@ define('Core/EllipsoidTangentPlane',[
      * Computes the projection of the provided 2D positions onto the 3D ellipsoid.
      * @memberof EllipsoidTangentPlane
      *
-     * @param {Array} cartesians The array of points to project.
-     * @param {Array} [result] The array of Cartesian3 instances onto which to store results.
-     * @returns {Array} The modified result parameter or a new array of Cartesian3 instances if none was provided.
+     * @param {Cartesian2[]} cartesians The array of points to project.
+     * @param {Cartesian3[]} [result] The array of Cartesian3 instances onto which to store results.
+     * @returns {Cartesian3[]} The modified result parameter or a new array of Cartesian3 instances if none was provided.
      */
     EllipsoidTangentPlane.prototype.projectPointsOntoEllipsoid = function(cartesians, result) {
                 if (!defined(cartesians)) {
@@ -17641,10 +17863,6 @@ define('Core/Geometry',[
      * can be assigned to a {@link Primitive} for visualization.  A <code>Primitive</code> can
      * be created from many heterogeneous - in many cases - geometries for performance.
      * <p>
-     * In low-level rendering code, a vertex array can be created from a geometry using
-     * {@link Context#createVertexArrayFromGeometry}.
-     * </p>
-     * <p>
      * Geometries can be transformed and optimized using functions in {@link GeometryPipeline}.
      * </p>
      *
@@ -17653,7 +17871,7 @@ define('Core/Geometry',[
      *
      * @param {GeometryAttributes} options.attributes Attributes, which make up the geometry's vertices.
      * @param {PrimitiveType} options.primitiveType The type of primitives in the geometry.
-     * @param {Array} [options.indices] Optional index data that determines the primitives in the geometry.
+     * @param {Uint16Array|Uint32Array} [options.indices] Optional index data that determines the primitives in the geometry.
      * @param {BoundingSphere} [options.boundingSphere] An optional bounding sphere that fully enclosed the geometry.
 
      *
@@ -17678,7 +17896,7 @@ define('Core/Geometry',[
      *   boundingSphere : Cesium.BoundingSphere.fromVertices(positions)
      * });
      *
-     * @demo <a href="http://cesiumjs.org/Cesium/Apps/Sandcastle/index.html?src=Geometry%20and%20Appearances.html">Geometry and Appearances Demo</a>
+     * @demo {@link http://cesiumjs.org/Cesium/Apps/Sandcastle/index.html?src=Geometry%20and%20Appearances.html|Geometry and Appearances Demo}
      *
      * @see PolygonGeometry
      * @see RectangleGeometry
@@ -17703,9 +17921,7 @@ define('Core/Geometry',[
          * Attributes, which make up the geometry's vertices.  Each property in this object corresponds to a
          * {@link GeometryAttribute} containing the attribute's data.
          * <p>
-         * Attributes are always stored non-interleaved in a Geometry.  When geometry is prepared for rendering
-         * with {@link Context#createVertexArrayFromGeometry}, attributes are generally written interleaved
-         * into the vertex buffer for better rendering performance.
+         * Attributes are always stored non-interleaved in a Geometry.
          * </p>
          * <p>
          * There are reserved attribute names with well-known semantics.  The following attributes
@@ -17728,7 +17944,7 @@ define('Core/Geometry',[
          *    <li><code>position3DHigh</code> - High 32 bits for encoded 64-bit 2D (Columbus view) position computed with {@link GeometryPipeline.encodeAttribute}.  32-bit floating-point.  4 components per attribute.</li>
          *    <li><code>position2DLow</code> - Low 32 bits for encoded 64-bit 2D (Columbus view) position computed with {@link GeometryPipeline.encodeAttribute}.  32-bit floating-point.  4 components per attribute.</li>
          *    <li><code>color</code> - RGBA color (normalized) usually from {@link GeometryInstance#color}.  32-bit floating-point.  4 components per attribute.</li>
-         *    <li><code>pickColor</code> - RGBA color used for picking, created from {@link Context#createPickId}.  32-bit floating-point.  4 components per attribute.</li>
+         *    <li><code>pickColor</code> - RGBA color used for picking.  32-bit floating-point.  4 components per attribute.</li>
          * </ul>
          * </p>
          *
@@ -17837,10 +18053,10 @@ define('Core/GeometryAttribute',[
      * @alias GeometryAttribute
      * @constructor
      *
-     * @param {ComponentDatatype} [options.componentDatatype=undefined] The datatype of each component in the attribute, e.g., individual elements in values.
-     * @param {Number} [options.componentsPerAttribute=undefined] A number between 1 and 4 that defines the number of components in an attributes.
+     * @param {ComponentDatatype} [options.componentDatatype] The datatype of each component in the attribute, e.g., individual elements in values.
+     * @param {Number} [options.componentsPerAttribute] A number between 1 and 4 that defines the number of components in an attributes.
      * @param {Boolean} [options.normalize=false] When <code>true</code> and <code>componentDatatype</code> is an integer format, indicate that the components should be mapped to the range [0, 1] (unsigned) or [-1, 1] (signed) when they are accessed as floating-point for rendering.
-     * @param {Array} [options.values=undefined] The values for the attributes stored in a typed array.
+     * @param {Number[]} [options.values] The values for the attributes stored in a typed array.
      *
      * @exception {DeveloperError} options.componentsPerAttribute must be between 1 and 4.
      *
@@ -17958,16 +18174,17 @@ define('Core/GeometryAttribute',[
 });
 
 /*global define*/
-define('Core/GeometryAttributes',['./defaultValue'], function(defaultValue) {
+define('Core/GeometryAttributes',[
+        './defaultValue'
+    ], function(
+        defaultValue) {
     "use strict";
 
     /**
      * Attributes, which make up a geometry's vertices.  Each property in this object corresponds to a
      * {@link GeometryAttribute} containing the attribute's data.
      * <p>
-     * Attributes are always stored non-interleaved in a Geometry.  When geometry is prepared for rendering
-     * with {@link Context#createVertexArrayFromGeometry}, attributes are generally written interleaved
-     * into the vertex buffer for better rendering performance.
+     * Attributes are always stored non-interleaved in a Geometry.
      * </p>
      *
      * @alias GeometryAttributes
@@ -18075,7 +18292,7 @@ define('Core/GeometryInstance',[
      *
      * @param {Geometry} options.geometry The geometry to instance.
      * @param {Matrix4} [options.modelMatrix=Matrix4.IDENTITY] The model matrix that transforms to transform the geometry from model to world coordinates.
-     * @param {Object} [options.id=undefined] A user-defined object to return when the instance is picked with {@link Scene#pick} or get/set per-instance attributes with {@link Primitive#getGeometryInstanceAttributes}.
+     * @param {Object} [options.id] A user-defined object to return when the instance is picked with {@link Scene#pick} or get/set per-instance attributes with {@link Primitive#getGeometryInstanceAttributes}.
      * @param {Object} [options.attributes] Per-instance attributes like a show or color attribute shown in the example below.
      *
      * @example
@@ -18089,7 +18306,7 @@ define('Core/GeometryInstance',[
      * var instanceBottom = new Cesium.GeometryInstance({
      *   geometry : geometry,
      *   modelMatrix : Cesium.Matrix4.multiplyByTranslation(Cesium.Transforms.eastNorthUpToFixedFrame(
-     *     ellipsoid.cartographicToCartesian(Cesium.Cartographic.fromDegrees(-75.59777, 40.03883))), new Cesium.Cartesian3(0.0, 0.0, 1000000.0)),
+     *     Cesium.Cartesian3.fromDegrees(-75.59777, 40.03883)), new Cesium.Cartesian3(0.0, 0.0, 1000000.0)),
      *   attributes : {
      *     color : new Cesium.ColorGeometryInstanceAttribute(Cesium.Color.AQUA)
      *   }
@@ -18098,7 +18315,7 @@ define('Core/GeometryInstance',[
      * var instanceTop = new Cesium.GeometryInstance({
      *   geometry : geometry,
      *   modelMatrix : Cesium.Matrix4.multiplyByTranslation(Cesium.Transforms.eastNorthUpToFixedFrame(
-     *     ellipsoid.cartographicToCartesian(Cesium.Cartographic.fromDegrees(-75.59777, 40.03883))), new Cesium.Cartesian3(0.0, 0.0, 3000000.0)),
+     *     Cesium.Cartesian3.fromDegrees(-75.59777, 40.03883)), new Cesium.Cartesian3(0.0, 0.0, 3000000.0)),
      *   attributes : {
      *     color : new Cesium.ColorGeometryInstanceAttribute(Cesium.Color.AQUA)
      *   }
@@ -18268,7 +18485,7 @@ define('Core/EncodedCartesian3',[
      * values that, when converted to 32-bit floating-point and added, approximate the original input.
      * <p>
      * This is used to encode positions in vertex buffers for rendering without jittering artifacts
-     * as described in <a href="http://blogs.agi.com/insight3d/index.php/2008/09/03/precisions-precisions/">Precisions, Precisions</a>.
+     * as described in {@link http://blogs.agi.com/insight3d/index.php/2008/09/03/precisions-precisions/|Precisions, Precisions}.
      * </p>
      *
      * @alias EncodedCartesian3
@@ -18306,7 +18523,7 @@ define('Core/EncodedCartesian3',[
      * 32-bit floating-point and added, approximate the original input.  The returned object
      * has <code>high</code> and <code>low</code> properties for the high and low bits, respectively.
      * <p>
-     * The fixed-point encoding follows <a href="http://blogs.agi.com/insight3d/index.php/2008/09/03/precisions-precisions/">Precisions, Precisions</a>.
+     * The fixed-point encoding follows {@link http://blogs.agi.com/insight3d/index.php/2008/09/03/precisions-precisions/|Precisions, Precisions}.
      * </p>
      * @memberof EncodedCartesian3
      *
@@ -18354,7 +18571,7 @@ define('Core/EncodedCartesian3',[
      * Encodes a {@link Cartesian3} with 64-bit floating-point components as two {@link Cartesian3}
      * values that, when converted to 32-bit floating-point and added, approximate the original input.
      * <p>
-     * The fixed-point encoding follows <a href="http://blogs.agi.com/insight3d/index.php/2008/09/03/precisions-precisions/">Precisions, Precisions</a>.
+     * The fixed-point encoding follows {@link http://blogs.agi.com/insight3d/index.php/2008/09/03/precisions-precisions/|Precisions, Precisions}.
      * </p>
      * @memberof EncodedCartesian3
      *
@@ -18403,7 +18620,7 @@ define('Core/EncodedCartesian3',[
      * </p>
      *
      * @param {Cartesian3} cartesian The cartesian to encode.
-     * @param {Array} cartesianArray The array to write to.
+     * @param {Number[]} cartesianArray The array to write to.
      * @param {Number} index The index into the array to start writing.  Six elements will be written.
      *
      * @exception {DeveloperError} index must be a number greater than or equal to 0.
@@ -18459,10 +18676,9 @@ define('Core/IndexDatatype',[
 
     /**
      * Constants for WebGL index datatypes.  These corresponds to the
-     * <code>type</code> parameter of <a href="http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDrawElements.xml">drawElements</a>.
+     * <code>type</code> parameter of {@link http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDrawElements.xml|drawElements}.
      *
      * @alias IndexDatatype
-     * @enumeration
      */
     var IndexDatatype = {
         /**
@@ -18543,7 +18759,7 @@ define('Core/IndexDatatype',[
      * @param {Number} numberOfVertices Number of vertices that the indices will reference.
      * @param {Any} indicesLengthOrArray Passed through to the typed array constructor.
      *
-     * @returns {Array} A <code>Uint16Array</code> or <code>Uint32Array</code> constructed with <code>indicesLengthOrArray</code>.
+     * @returns {Uint16Aray|Uint32Array} A <code>Uint16Array</code> or <code>Uint32Array</code> constructed with <code>indicesLengthOrArray</code>.
      *
      * @example
      * this.indices = Cesium.IndexDatatype.createTypedArray(positions.length / 3, numberOfIndices);
@@ -18568,7 +18784,7 @@ define('Core/PrimitiveType',[],function() {
     "use strict";
 
     /**
-     * DOC_TBA
+     * The type of a geometric primitive, i.e., points, lines, and triangles.
      *
      * @exports PrimitiveType
      */
@@ -18628,11 +18844,7 @@ define('Core/PrimitiveType',[],function() {
         TRIANGLE_FAN : 0x0006,
 
         /**
-         * DOC_TBA
-         *
-         * @param {PrimitiveType} primitiveType
-         *
-         * @returns {Boolean}
+         * @private
          */
         validate : function(primitiveType) {
             return ((primitiveType === PrimitiveType.POINTS) ||
@@ -18670,17 +18882,19 @@ define('Core/Tipsify',[
      * @see <a href='http://gfx.cs.princeton.edu/pubs/Sander_2007_%3ETR/tipsy.pdf'>
      * Fast Triangle Reordering for Vertex Locality and Reduced Overdraw</a>
      * by Sander, Nehab, and Barczak
+     *
+     * @private
      */
     var Tipsify = {};
 
     /**
      * Calculates the average cache miss ratio (ACMR) for a given set of indices.
      *
-     * @param {Array} description.indices Lists triads of numbers corresponding to the indices of the vertices
+     * @param {Number[]} options.indices Lists triads of numbers corresponding to the indices of the vertices
      *                        in the vertex buffer that define the geometry's triangles.
-     * @param {Number} [description.maximumIndex] The maximum value of the elements in <code>args.indices</code>.
+     * @param {Number} [options.maximumIndex] The maximum value of the elements in <code>args.indices</code>.
      *                                     If not supplied, this value will be computed.
-     * @param {Number} [description.cacheSize=24] The number of vertices that can be stored in the cache at any one time.
+     * @param {Number} [options.cacheSize=24] The number of vertices that can be stored in the cache at any one time.
      *
      * @exception {DeveloperError} indices length must be a multiple of three.
      * @exception {DeveloperError} cacheSize must be greater than two.
@@ -18693,11 +18907,11 @@ define('Core/Tipsify',[
      * var cacheSize = 3;
      * var acmr = Cesium.Tipsify.calculateACMR({indices : indices, maxIndex : maxIndex, cacheSize : cacheSize});
      */
-    Tipsify.calculateACMR = function(description) {
-        description = defaultValue(description, defaultValue.EMPTY_OBJECT);
-        var indices = description.indices;
-        var maximumIndex = description.maximumIndex;
-        var cacheSize = defaultValue(description.cacheSize, 24);
+    Tipsify.calculateACMR = function(options) {
+        options = defaultValue(options, defaultValue.EMPTY_OBJECT);
+        var indices = options.indices;
+        var maximumIndex = options.maximumIndex;
+        var cacheSize = defaultValue(options.cacheSize, 24);
 
                 if (!defined(indices)) {
             throw new DeveloperError('indices is required.');
@@ -18750,16 +18964,16 @@ define('Core/Tipsify',[
     /**
      * Optimizes triangles for the post-vertex shader cache.
      *
-     * @param {Array} description.indices Lists triads of numbers corresponding to the indices of the vertices
+     * @param {Number[]} options.indices Lists triads of numbers corresponding to the indices of the vertices
      *                        in the vertex buffer that define the geometry's triangles.
-     * @param {Number} [description.maximumIndex] The maximum value of the elements in <code>args.indices</code>.
+     * @param {Number} [options.maximumIndex] The maximum value of the elements in <code>args.indices</code>.
      *                                     If not supplied, this value will be computed.
-     * @param {Number} [description.cacheSize=24] The number of vertices that can be stored in the cache at any one time.
+     * @param {Number} [options.cacheSize=24] The number of vertices that can be stored in the cache at any one time.
      *
      * @exception {DeveloperError} indices length must be a multiple of three.
      * @exception {DeveloperError} cacheSize must be greater than two.
      *
-     * @returns {Array} A list of the input indices in an optimized order.
+     * @returns {Number[]} A list of the input indices in an optimized order.
      *
      * @example
      * var indices = [0, 1, 2, 3, 4, 5];
@@ -18767,11 +18981,11 @@ define('Core/Tipsify',[
      * var cacheSize = 3;
      * var reorderedIndices = Cesium.Tipsify.tipsify({indices : indices, maxIndex : maxIndex, cacheSize : cacheSize});
      */
-    Tipsify.tipsify = function(description) {
-        description = defaultValue(description, defaultValue.EMPTY_OBJECT);
-        var indices = description.indices;
-        var maximumIndex = description.maximumIndex;
-        var cacheSize = defaultValue(description.cacheSize, 24);
+    Tipsify.tipsify = function(options) {
+        options = defaultValue(options, defaultValue.EMPTY_OBJECT);
+        var indices = options.indices;
+        var maximumIndex = options.maximumIndex;
+        var cacheSize = defaultValue(options.cacheSize, 24);
 
         var cursor;
 
@@ -18943,52 +19157,52 @@ define('Core/Tipsify',[
 /*global define*/
 define('Core/GeometryPipeline',[
         './barycentricCoordinates',
-        './defaultValue',
-        './defined',
-        './DeveloperError',
+        './BoundingSphere',
         './Cartesian2',
         './Cartesian3',
         './Cartesian4',
         './Cartographic',
+        './ComponentDatatype',
+        './defaultValue',
+        './defined',
+        './DeveloperError',
         './EncodedCartesian3',
+        './GeographicProjection',
+        './Geometry',
+        './GeometryAttribute',
+        './IndexDatatype',
         './Intersect',
         './IntersectionTests',
         './Math',
         './Matrix3',
         './Matrix4',
         './Plane',
-        './GeographicProjection',
-        './ComponentDatatype',
-        './IndexDatatype',
         './PrimitiveType',
-        './Tipsify',
-        './BoundingSphere',
-        './Geometry',
-        './GeometryAttribute'
+        './Tipsify'
     ], function(
         barycentricCoordinates,
-        defaultValue,
-        defined,
-        DeveloperError,
+        BoundingSphere,
         Cartesian2,
         Cartesian3,
         Cartesian4,
         Cartographic,
+        ComponentDatatype,
+        defaultValue,
+        defined,
+        DeveloperError,
         EncodedCartesian3,
+        GeographicProjection,
+        Geometry,
+        GeometryAttribute,
+        IndexDatatype,
         Intersect,
         IntersectionTests,
         CesiumMath,
         Matrix3,
         Matrix4,
         Plane,
-        GeographicProjection,
-        ComponentDatatype,
-        IndexDatatype,
         PrimitiveType,
-        Tipsify,
-        BoundingSphere,
-        Geometry,
-        GeometryAttribute) {
+        Tipsify) {
     "use strict";
 
     /**
@@ -18997,7 +19211,6 @@ define('Core/GeometryPipeline',[
      * @exports GeometryPipeline
      *
      * @see Geometry
-     * @see Context#createVertexArrayFromGeometry
      */
     var GeometryPipeline = {};
 
@@ -19188,9 +19401,6 @@ define('Core/GeometryPipeline',[
      * //   'position' : 0,
      * //   'normal' : 1
      * // }
-     *
-     * @see Context#createVertexArrayFromGeometry
-     * @see ShaderCache
      */
     GeometryPipeline.createAttributeLocations = function(geometry) {
                 if (!defined(geometry)) {
@@ -19343,8 +19553,7 @@ define('Core/GeometryPipeline',[
      * geometry = Cesium.GeometryPipeline.reorderForPostVertexCache(geometry);
      *
      * @see GeometryPipeline.reorderForPreVertexCache
-     * @see <a href='http://gfx.cs.princeton.edu/pubs/Sander_2007_%3ETR/tipsy.pdf'>
-     * Fast Triangle Reordering for Vertex Locality and Reduced Overdraw</a>
+     * @see {@link http://gfx.cs.princeton.edu/pubs/Sander_2007_%3ETR/tipsy.pdf|Fast Triangle Reordering for Vertex Locality and Reduced Overdraw}
      * by Sander, Nehab, and Barczak
      */
     GeometryPipeline.reorderForPostVertexCache = function(geometry, cacheCapacity) {
@@ -19410,14 +19619,14 @@ define('Core/GeometryPipeline',[
     /**
      * Splits a geometry into multiple geometries, if necessary, to ensure that indices in the
      * <code>indices</code> fit into unsigned shorts.  This is used to meet the WebGL requirements
-     * when {@link Context#getElementIndexUint} is <code>false</code>.
+     * when unsigned int indices are not supported.
      * <p>
      * If the geometry does not have any <code>indices</code>, this function has no effect.
      * </p>
      *
      * @param {Geometry} geometry The geometry to be split into multiple geometries.
      *
-     * @returns {Array} An array of geometries, each with indices that fit into unsigned shorts.
+     * @returns {Geometry[]} An array of geometries, each with indices that fit into unsigned shorts.
      *
      * @exception {DeveloperError} geometry.primitiveType must equal to PrimitiveType.TRIANGLES, PrimitiveType.LINES, or PrimitiveType.POINTS
      * @exception {DeveloperError} All geometry attribute lists must have the same number of attributes.
@@ -19545,7 +19754,7 @@ define('Core/GeometryPipeline',[
         if (!defined(geometry.attributes[attributeName])) {
             throw new DeveloperError('geometry must have attribute matching the attributeName argument: ' + attributeName + '.');
         }
-        if (geometry.attributes[attributeName].componentDatatype.value !== ComponentDatatype.DOUBLE.value) {
+        if (geometry.attributes[attributeName].componentDatatype !== ComponentDatatype.DOUBLE) {
             throw new DeveloperError('The attribute componentDatatype must be ComponentDatatype.DOUBLE.');
         }
         
@@ -19630,7 +19839,7 @@ define('Core/GeometryPipeline',[
         if (!defined(geometry.attributes[attributeName])) {
             throw new DeveloperError('geometry must have attribute matching the attributeName argument: ' + attributeName + '.');
         }
-        if (geometry.attributes[attributeName].componentDatatype.value !== ComponentDatatype.DOUBLE.value) {
+        if (geometry.attributes[attributeName].componentDatatype !== ComponentDatatype.DOUBLE) {
             throw new DeveloperError('The attribute componentDatatype must be ComponentDatatype.DOUBLE.');
         }
         
@@ -19777,7 +19986,7 @@ define('Core/GeometryPipeline',[
                     var otherAttribute = instances[i].geometry.attributes[name];
 
                     if ((!defined(otherAttribute)) ||
-                        (attribute.componentDatatype.value !== otherAttribute.componentDatatype.value) ||
+                        (attribute.componentDatatype !== otherAttribute.componentDatatype) ||
                         (attribute.componentsPerAttribute !== otherAttribute.componentsPerAttribute) ||
                         (attribute.normalize !== otherAttribute.normalize)) {
 
@@ -19814,7 +20023,7 @@ define('Core/GeometryPipeline',[
      * This is used by {@link Primitive} to efficiently render a large amount of static data.
      * </p>
      *
-     * @param {Array} [instances] The array of {@link GeometryInstance} objects whose geometry will be combined.
+     * @param {GeometryInstance[]} [instances] The array of {@link GeometryInstance} objects whose geometry will be combined.
      *
      * @returns {Geometry} A single geometry created from the provided geometry instances.
      *
@@ -20817,17 +21026,16 @@ define('Core/GeometryPipeline',[
 
     return GeometryPipeline;
 });
-
 /*global define*/
 define('Core/PolygonGeometryLibrary',[
+        './Cartesian3',
         './defaultValue',
         './defined',
-        './Cartesian3',
         './Ellipsoid'
     ], function(
+        Cartesian3,
         defaultValue,
         defined,
-        Cartesian3,
         Ellipsoid) {
     "use strict";
 
@@ -21020,7 +21228,7 @@ define('Core/Queue',[],function() {
     /**
      * Check whether this queue contains the specified item.
      *
-     * @param {Object} the item to search for.
+     * @param {Object} item the item to search for.
      * @memberof Queue
      */
     Queue.prototype.contains = function(item) {
@@ -21054,38 +21262,32 @@ define('Core/Queue',[],function() {
     return Queue;
 });
 /*global define*/
-define('Core/WindingOrder',['./Enumeration'], function(Enumeration) {
+define('Core/WindingOrder',[],function() {
     "use strict";
 
     /**
-     * DOC_TBA
+     * Winding order defines the order of vertices for a triangle to be considered front-facing.
      *
      * @exports WindingOrder
      */
     var WindingOrder = {
         /**
-         * DOC_TBA
+         * 0x0900. Vertices are in clockwise order.
          *
-         * @type {Enumeration}
+         * @type {Number}
          * @constant
-         * @default 0x0900
          */
-        CLOCKWISE : new Enumeration(0x0900, 'CLOCKWISE'), // WebGL: CW
+        CLOCKWISE : 0x0900, // WebGL: CW
         /**
-         * DOC_TBA
+         * 0x0901. Vertices are in counter-clockwise order.
          *
-         * @type {Enumeration}
+         * @type {Number}
          * @constant
-         * @default 0x901
          */
-        COUNTER_CLOCKWISE : new Enumeration(0x0901, 'COUNTER_CLOCKWISE'), // WebGL CCW
+        COUNTER_CLOCKWISE : 0x0901, // WebGL: CCW
 
         /**
-         * DOC_TBA
-         *
-         * @param {WindingOrder} windingOrder
-         *
-         * @returns {Boolean}
+         * @private
          */
         validate : function(windingOrder) {
             return ((windingOrder === WindingOrder.CLOCKWISE) ||
@@ -21095,37 +21297,36 @@ define('Core/WindingOrder',['./Enumeration'], function(Enumeration) {
 
     return WindingOrder;
 });
-
 /*global define*/
 define('Core/PolygonPipeline',[
-        './DeveloperError',
-        './Math',
         './Cartesian2',
         './Cartesian3',
+        './ComponentDatatype',
+        './defaultValue',
         './defined',
-        './Geometry',
-        './GeometryAttribute',
+        './DeveloperError',
         './Ellipsoid',
         './EllipsoidTangentPlane',
-        './defaultValue',
+        './Geometry',
+        './GeometryAttribute',
+        './Math',
         './pointInsideTriangle',
-        './ComponentDatatype',
         './PrimitiveType',
         './Queue',
         './WindingOrder'
     ], function(
-        DeveloperError,
-        CesiumMath,
         Cartesian2,
         Cartesian3,
+        ComponentDatatype,
+        defaultValue,
         defined,
-        Geometry,
-        GeometryAttribute,
+        DeveloperError,
         Ellipsoid,
         EllipsoidTangentPlane,
-        defaultValue,
+        Geometry,
+        GeometryAttribute,
+        CesiumMath,
         pointInsideTriangle,
-        ComponentDatatype,
         PrimitiveType,
         Queue,
         WindingOrder) {
@@ -21142,7 +21343,7 @@ define('Core/PolygonPipeline',[
     /**
      * Returns the index of the vertex with the maximum X value.
      *
-     * @param {Array} positions An array of the Cartesian points defining the polygon's vertices.
+     * @param {Cartesian2[]} positions An array of the Cartesian points defining the polygon's vertices.
      * @returns {Number} The index of the positions with the maximum X value.
      *
      * @private
@@ -21162,7 +21363,7 @@ define('Core/PolygonPipeline',[
     /**
      * Returns the index of the ring that contains the rightmost vertex.
      *
-     * @param {Array} rings An array of arrays of Cartesians. Each array contains the vertices defining a polygon.
+     * @param {Cartesian2[]} rings An array of arrays of Cartesians. Each array contains the vertices defining a polygon.
      * @returns {Number} The index of the ring containing the rightmost vertex.
      *
      * @private
@@ -21184,8 +21385,8 @@ define('Core/PolygonPipeline',[
     /**
      * Returns a list containing the reflex vertices for a given polygon.
      *
-     * @param {Array} polygon An array of Cartesian elements defining the polygon.
-     * @returns {Array}
+     * @param {Cartesian2[]} polygon An array of Cartesian elements defining the polygon.
+     * @returns {Cartesian2[]}
      *
      * @private
      */
@@ -21206,7 +21407,7 @@ define('Core/PolygonPipeline',[
     /**
      * Returns true if the given point is contained in the list of positions.
      *
-     * @param {Array} positions A list of Cartesian elements defining a polygon.
+     * @param {Cartesian2[]} positions A list of Cartesian elements defining a polygon.
      * @param {Cartesian2} point The point to check.
      * @returns {Number} The index of <code>point</code> in <code>positions</code> or -1 if it was not found.
      *
@@ -21225,8 +21426,8 @@ define('Core/PolygonPipeline',[
      * Given a point inside a polygon, find the nearest point directly to the right that lies on one of the polygon's edges.
      *
      * @param {Cartesian2} point A point inside the polygon defined by <code>ring</code>.
-     * @param {Array} ring A list of Cartesian points defining a polygon.
-     * @param {Array} [edgeIndices]  An array containing the indices two endpoints of the edge containing the intersection.
+     * @param {Cartesian2[]} ring A list of Cartesian points defining a polygon.
+     * @param {Number[]} [edgeIndices]  An array containing the indices two endpoints of the edge containing the intersection.
      *
      * @returns {Cartesian2} The intersection point.
      *
@@ -21286,8 +21487,8 @@ define('Core/PolygonPipeline',[
      * Given an outer ring and multiple inner rings, determine the point on the outer ring that is visible
      * to the rightmost vertex of the rightmost inner ring.
      *
-     * @param {Array} outerRing An array of Cartesian points defining the outer boundary of the polygon.
-     * @param {Array} innerRings An array of arrays of Cartesian points, where each array represents a hole in the polygon.
+     * @param {Cartesian2[]} outerRing An array of Cartesian points defining the outer boundary of the polygon.
+     * @param {Cartesian2[]} innerRings An array of arrays of Cartesian points, where each array represents a hole in the polygon.
      * @returns {Number} The index of the vertex in <code>outerRing</code> that is mutually visible to the rightmost vertex in <code>inenrRing</code>.
      *
      * @private
@@ -21350,10 +21551,10 @@ define('Core/PolygonPipeline',[
      * Given a polygon defined by an outer ring with one or more inner rings (holes), return a single list of points representing
      * a polygon with the rightmost hole added to it. The added hole is removed from <code>innerRings</code>.
      *
-     * @param {Array} outerRing An array of Cartesian points defining the outer boundary of the polygon.
-     * @param {Array} innerRings An array of arrays of Cartesian points, where each array represents a hole in the polygon.
+     * @param {Cartesian2[]} outerRing An array of Cartesian points defining the outer boundary of the polygon.
+     * @param {Cartesian2[]} innerRings An array of arrays of Cartesian points, where each array represents a hole in the polygon.
      *
-     * @returns {Array} A single list of Cartesian points defining the polygon, including the eliminated inner ring.
+     * @returns {Cartesian2[]} A single list of Cartesian points defining the polygon, including the eliminated inner ring.
      *
      * @private
      */
@@ -21785,9 +21986,9 @@ define('Core/PolygonPipeline',[
      * Do not include number === n1 or number === n2.
      * Do include n1 === n2 === number.
      *
-     * @param {number} number The number tested.
-     * @param {number} n1 First bound.
-     * @param {number} n2 Secound bound.
+     * @param {Number} number The number tested.
+     * @param {Number} n1 First bound.
+     * @param {Number} n2 Secound bound.
      * @returns {Boolean} number is between n1 and n2.
      *
      * @private
@@ -21802,7 +22003,7 @@ define('Core/PolygonPipeline',[
      * then continues to "chop" the two resulting polygons.
      *
      * @param {Array} nodeArray Array of <code>{ position, index }</code> objects representing polygon
-     * @returns {Array} Index array representing triangles that fill the polygon
+     * @returns {Number[]} Index array representing triangles that fill the polygon
      *
      * @exception {DeveloperError} Invalid polygon: must have at least three vertices.
      *
@@ -21874,14 +22075,10 @@ define('Core/PolygonPipeline',[
     var scaleToGeodeticHeightP = new Cartesian3();
 
     /**
-     * DOC_TBA
-     *
-     * @exports PolygonPipeline
+     * @private
      */
     var PolygonPipeline = {
         /**
-         * DOC_TBA
-         *
          * Cleans up a simple polygon by removing duplicate adjacent positions and making
          * the first position not equal the last position.
          *
@@ -21912,8 +22109,6 @@ define('Core/PolygonPipeline',[
         },
 
         /**
-         * DOC_TBA
-         *
          * @exception {DeveloperError} At least three positions are required.
          */
         computeArea2D : function(positions) {
@@ -21938,9 +22133,7 @@ define('Core/PolygonPipeline',[
         },
 
         /**
-         * DOC_TBA
-         *
-         * @returns {WindingOrder} DOC_TBA
+         * @returns {WindingOrder} The winding order.
          *
          * @exception {DeveloperError} At least three positions are required.
          */
@@ -21952,8 +22145,8 @@ define('Core/PolygonPipeline',[
         /**
          * Triangulate a polygon
          *
-         * @param {Array} positions - Cartesian2 array containing the vertices of the polygon
-         * @returns {Array} - Index array representing triangles that fill the polygon
+         * @param {Cartesian2[]} positions - Cartesian2 array containing the vertices of the polygon
+         * @returns {Number[]} - Index array representing triangles that fill the polygon
          *
          * @exception {DeveloperError} At least three positions are required.
          */
@@ -21991,8 +22184,8 @@ define('Core/PolygonPipeline',[
         /**
          * Subdivides positions and raises points to the surface of the ellipsoid.
          *
-         * @param {Array} positions An array of {@link Cartesian3} positions of the polygon.
-         * @param {Array} indices An array of indices that determines the triangles in the polygon.
+         * @param {Cartesian3[]} positions An array of {@link Cartesian3} positions of the polygon.
+         * @param {Number[]} indices An array of indices that determines the triangles in the polygon.
          * @param {Number} [granularity=CesiumMath.RADIANS_PER_DEGREE] The distance, in radians, between each latitude and longitude. Determines the number of positions in the buffer.
          *
          * @exception {DeveloperError} At least three indices are required.
@@ -22202,8 +22395,8 @@ define('Core/PolygonPipeline',[
          * Given a polygon defined by an outer ring with one or more inner rings (holes), return a single list of points representing
          * a polygon defined by the outer ring with the inner holes removed.
          *
-         * @param {Array} outerRing An array of Cartesian points defining the outer boundary of the polygon.
-         * @param {Array} innerRings An array of arrays of Cartesian points, where each array represents a hole in the polygon.
+         * @param {Cartesian2[]} outerRing An array of Cartesian points defining the outer boundary of the polygon.
+         * @param {Cartesian2[]} innerRings An array of arrays of Cartesian points, where each array represents a hole in the polygon.
          *
          * @returns A single list of Cartesian points defining the polygon, including the eliminated inner ring.
          *
@@ -22430,7 +22623,7 @@ define('Core/Quaternion',[
 
     /**
      * The number of elements used to pack the object into an array.
-     * @Type {Number}
+     * @type {Number}
      */
     Quaternion.packedLength = 4;
 
@@ -22439,7 +22632,7 @@ define('Core/Quaternion',[
      * @memberof Quaternion
      *
      * @param {Quaternion} value The value to pack.
-     * @param {Array} array The array to pack into.
+     * @param {Number[]} array The array to pack into.
      * @param {Number} [startingIndex=0] The index into the array at which to start packing the elements.
      */
     Quaternion.pack = function(value, array, startingIndex) {
@@ -22463,7 +22656,7 @@ define('Core/Quaternion',[
      * Retrieves an instance from a packed array.
      * @memberof Quaternion
      *
-     * @param {Array} array The packed array.
+     * @param {Number[]} array The packed array.
      * @param {Number} [startingIndex=0] The starting index of the element to be unpacked.
      * @param {Quaternion} [result] The object into which to store the result.
      */
@@ -22486,7 +22679,7 @@ define('Core/Quaternion',[
 
     /**
      * The number of elements used to store the object into an array in its interpolatable form.
-     * @Type {Number}
+     * @type {Number}
      */
     Quaternion.packedInterpolationLength = 3;
 
@@ -22494,10 +22687,10 @@ define('Core/Quaternion',[
      * Converts a packed array into a form suitable for interpolation.
      * @memberof Quaternion
      *
-     * @param {Array} packedArray The packed array.
+     * @param {Number[]} packedArray The packed array.
      * @param {Number} [startingIndex=0] The index of the first element to be converted.
      * @param {Number} [lastIndex=packedArray.length] The index of the last element to be converted.
-     * @param {Array} [result] The object into which to store the result.
+     * @param {Number[]} [result] The object into which to store the result.
      */
     Quaternion.convertPackedArrayForInterpolation = function(packedArray, startingIndex, lastIndex, result) {
         Quaternion.unpack(packedArray, lastIndex * 4, sampledQuaternionQuaternion0Conjugate);
@@ -22525,8 +22718,8 @@ define('Core/Quaternion',[
      * Retrieves an instance from a packed array converted with {@link convertPackedArrayForInterpolation}.
      * @memberof Quaternion
      *
-     * @param {Array} array The original packed array.
-     * @param {Array} sourceArray The converted array.
+     * @param {Number[]} array The original packed array.
+     * @param {Number[]} sourceArray The converted array.
      * @param {Number} [startingIndex=0] The startingIndex used to convert the array.
      * @param {Number} [lastIndex=packedArray.length] The lastIndex used to convert the array.
      * @param {Quaternion} [result] The object into which to store the result.
@@ -23341,7 +23534,7 @@ define('Core/VertexFormat',[
      * to a {@link Geometry} to request that certain properties be computed, e.g., just position,
      * position and normal, etc.
      *
-     * @param {Object} [options=undefined] An object with boolean properties corresponding to VertexFormat properties as shown in the code example.
+     * @param {Object} [options] An object with boolean properties corresponding to VertexFormat properties as shown in the code example.
      *
      * @alias VertexFormat
      * @constructor
@@ -23511,12 +23704,12 @@ define('Core/VertexFormat',[
 });
 /*global define*/
 define('Core/PolygonGeometry',[
-        './defaultValue',
         './BoundingRectangle',
         './BoundingSphere',
         './Cartesian2',
         './Cartesian3',
         './ComponentDatatype',
+        './defaultValue',
         './defined',
         './DeveloperError',
         './Ellipsoid',
@@ -23537,12 +23730,12 @@ define('Core/PolygonGeometry',[
         './VertexFormat',
         './WindingOrder'
     ], function(
-        defaultValue,
         BoundingRectangle,
         BoundingSphere,
         Cartesian2,
         Cartesian3,
         ComponentDatatype,
+        defaultValue,
         defined,
         DeveloperError,
         Ellipsoid,
@@ -24001,65 +24194,65 @@ define('Core/PolygonGeometry',[
      * @example
      * // 1. create a polygon from points
      * var polygon = new Cesium.PolygonGeometry({
-     *     polygonHierarchy : {
-     *         positions : ellipsoid.cartographicArrayToCartesianArray([
-     *             Cesium.Cartographic.fromDegrees(-72.0, 40.0),
-     *             Cesium.Cartographic.fromDegrees(-70.0, 35.0),
-     *             Cesium.Cartographic.fromDegrees(-75.0, 30.0),
-     *             Cesium.Cartographic.fromDegrees(-70.0, 30.0),
-     *             Cesium.Cartographic.fromDegrees(-68.0, 40.0)
-     *         ])
-     *     }
+     *   polygonHierarchy : {
+     *     positions : Cesium.Cartesian3.fromDegreesArray([
+     *       -72.0, 40.0,
+     *       -70.0, 35.0,
+     *       -75.0, 30.0,
+     *       -70.0, 30.0,
+     *       -68.0, 40.0
+     *     ])
+     *   }
      * });
      * var geometry = Cesium.PolygonGeometry.createGeometry(polygon);
      *
      * // 2. create a nested polygon with holes
      * var polygonWithHole = new Cesium.PolygonGeometry({
-     *     polygonHierarchy : {
-     *         positions : ellipsoid.cartographicArrayToCartesianArray([
-     *             Cesium.Cartographic.fromDegrees(-109.0, 30.0),
-     *             Cesium.Cartographic.fromDegrees(-95.0, 30.0),
-     *             Cesium.Cartographic.fromDegrees(-95.0, 40.0),
-     *             Cesium.Cartographic.fromDegrees(-109.0, 40.0)
+     *   polygonHierarchy : {
+     *     positions : Cesium.Cartesian3.fromDegreesArray([
+     *       -109.0, 30.0,
+     *       -95.0, 30.0,
+     *       -95.0, 40.0,
+     *       -109.0, 40.0
+     *     ]),
+     *     holes : [{
+     *       positions : Cesium.Cartesian3.fromDegreesArray([
+     *         -107.0, 31.0,
+     *         -107.0, 39.0,
+     *         -97.0, 39.0,
+     *         -97.0, 31.0
+     *       ]),
+     *       holes : [{
+     *         positions : Cesium.Cartesian3.fromDegreesArray([
+     *           -105.0, 33.0,
+     *           -99.0, 33.0,
+     *           -99.0, 37.0,
+     *           -105.0, 37.0
      *         ]),
      *         holes : [{
-     *             positions : ellipsoid.cartographicArrayToCartesianArray([
-     *                 Cesium.Cartographic.fromDegrees(-107.0, 31.0),
-     *                 Cesium.Cartographic.fromDegrees(-107.0, 39.0),
-     *                 Cesium.Cartographic.fromDegrees(-97.0, 39.0),
-     *                 Cesium.Cartographic.fromDegrees(-97.0, 31.0)
-     *             ]),
-     *             holes : [{
-     *                 positions : ellipsoid.cartographicArrayToCartesianArray([
-     *                     Cesium.Cartographic.fromDegrees(-105.0, 33.0),
-     *                     Cesium.Cartographic.fromDegrees(-99.0, 33.0),
-     *                     Cesium.Cartographic.fromDegrees(-99.0, 37.0),
-     *                     Cesium.Cartographic.fromDegrees(-105.0, 37.0)
-     *                     ]),
-     *                 holes : [{
-     *                     positions : ellipsoid.cartographicArrayToCartesianArray([
-     *                         Cesium.Cartographic.fromDegrees(-103.0, 34.0),
-     *                         Cesium.Cartographic.fromDegrees(-101.0, 34.0),
-     *                         Cesium.Cartographic.fromDegrees(-101.0, 36.0),
-     *                         Cesium.Cartographic.fromDegrees(-103.0, 36.0)
-     *                     ])
-     *                 }]
-     *              }]
+     *           positions : Cesium.Cartesian3.fromDegreesArray([
+     *             -103.0, 34.0,
+     *             -101.0, 34.0,
+     *             -101.0, 36.0,
+     *             -103.0, 36.0
+     *           ])
      *         }]
-     *     }
+     *       }]
+     *     }]
+     *   }
      * });
      * var geometry = PolygonGeometry.createGeometry(polygonWithHole);
      *
      * // 3. create extruded polygon
      * var extrudedPolygon = new PolygonGeometry({
-     *     positions : ellipsoid.cartographicArrayToCartesianArray([
-     *         Cesium.Cartographic.fromDegrees(-72.0, 40.0),
-     *         Cesium.Cartographic.fromDegrees(-70.0, 35.0),
-     *         Cesium.Cartographic.fromDegrees(-75.0, 30.0),
-     *         Cesium.Cartographic.fromDegrees(-70.0, 30.0),
-     *         Cesium.Cartographic.fromDegrees(-68.0, 40.0)
-     *     ]),
-     *     extrudedHeight: 300000
+     *   positions : Cesium.Cartesian3.fromDegreesArray([
+     *     -72.0, 40.0,
+     *     -70.0, 35.0,
+     *     -75.0, 30.0,
+     *     -70.0, 30.0,
+     *     -68.0, 40.0
+     *   ]),
+     *   extrudedHeight: 300000
      * });
      * var geometry = PolygonGeometry.createGeometry(extrudedPolygon);
      */
@@ -24103,7 +24296,7 @@ define('Core/PolygonGeometry',[
      *
      * @memberof PolygonGeometry
      *
-     * @param {Array} options.positions An array of positions that defined the corner points of the polygon.
+     * @param {Cartesian3[]} options.positions An array of positions that defined the corner points of the polygon.
      * @param {Number} [options.height=0.0] The height of the polygon.
      * @param {Number} [options.extrudedHeight] The height of the polygon extrusion.
      * @param {VertexFormat} [options.vertexFormat=VertexFormat.DEFAULT] The vertex attributes to be computed.
@@ -24117,13 +24310,13 @@ define('Core/PolygonGeometry',[
      * @example
      * // create a polygon from points
      * var polygon = Cesium.PolygonGeometry.fromPositions({
-     *     positions : ellipsoid.cartographicArrayToCartesianArray([
-     *         Cesium.Cartographic.fromDegrees(-72.0, 40.0),
-     *         Cesium.Cartographic.fromDegrees(-70.0, 35.0),
-     *         Cesium.Cartographic.fromDegrees(-75.0, 30.0),
-     *         Cesium.Cartographic.fromDegrees(-70.0, 30.0),
-     *         Cesium.Cartographic.fromDegrees(-68.0, 40.0)
-     *     ])
+     *   positions : Cesium.Cartesian3.fromDegreesArray([
+     *     -72.0, 40.0,
+     *     -70.0, 35.0,
+     *     -75.0, 30.0,
+     *     -70.0, 30.0,
+     *     -68.0, 40.0
+     *   ])
      * });
      * var geometry = Cesium.PolygonGeometry.createGeometry(polygon);
      */
@@ -24284,11 +24477,12 @@ define('Core/PolygonGeometry',[
 });
 
 /*global define*/
-define('Workers/createPolygonGeometry',['../Core/PolygonGeometry',
-        '../Core/Ellipsoid'
+define('Workers/createPolygonGeometry',[
+        '../Core/Ellipsoid',
+        '../Core/PolygonGeometry'
     ], function(
-        PolygonGeometry,
-        Ellipsoid) {
+        Ellipsoid,
+        PolygonGeometry) {
     "use strict";
 
     function createPolygonGeometry(polygonGeometry) {

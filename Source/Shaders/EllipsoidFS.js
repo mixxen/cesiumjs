@@ -102,8 +102,8 @@ void main()\n\
     vec4 positionCC = czm_projection * vec4(positionEC, 1.0);\n\
     float z = positionCC.z / positionCC.w;\n\
     \n\
-    float n = gl_DepthRange.near;\n\
-    float f = gl_DepthRange.far;\n\
+    float n = czm_depthRange.near;\n\
+    float f = czm_depthRange.far;\n\
     \n\
     gl_FragDepthEXT = (z * (f - n) + f + n) * 0.5;\n\
 #endif\n\

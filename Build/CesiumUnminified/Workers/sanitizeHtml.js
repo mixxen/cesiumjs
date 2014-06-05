@@ -45,7 +45,10 @@ define('Core/defined',[],function() {
 });
 
 /*global define*/
-define('Core/RuntimeError',['./defined'], function(defined) {
+define('Core/RuntimeError',[
+        './defined'
+    ], function(
+        defined) {
     "use strict";
 
     /**
@@ -59,7 +62,7 @@ define('Core/RuntimeError',['./defined'], function(defined) {
      *
      * @alias RuntimeError
      *
-     * @param {String} [message=undefined] The error message for this exception.
+     * @param {String} [message] The error message for this exception.
      *
      * @see DeveloperError
      * @constructor
@@ -110,7 +113,10 @@ define('Core/RuntimeError',['./defined'], function(defined) {
 });
 
 /*global define*/
-define('Core/freezeObject',['./defined'], function(defined) {
+define('Core/freezeObject',[
+        './defined'
+    ], function(
+        defined) {
     "use strict";
 
     /**
@@ -233,8 +239,8 @@ define('Workers/createTaskProcessorWorker',[
      * // the resulting function is compatible with TaskProcessor
      *
      * @see TaskProcessor
-     * @see <a href='http://www.w3.org/TR/workers/'>Web Workers</a>
-     * @see <a href='http://www.w3.org/TR/html5/common-dom-interfaces.html#transferable-objects'>Transferable objects</a>
+     * @see {@link http://www.w3.org/TR/workers/|Web Workers}
+     * @see {@link http://www.w3.org/TR/html5/common-dom-interfaces.html#transferable-objects|Transferable objects}
      */
     var createTaskProcessorWorker = function(workerFunction) {
         var postMessage;
@@ -312,7 +318,7 @@ define('Workers/sanitizeHtml',[
      * @exports sanitize
      *
      * @see TaskProcessor
-     * @see <a href='http://www.w3.org/TR/workers/'>Web Workers</a>
+     * @see {@link http://www.w3.org/TR/workers/|Web Workers}
      */
     var sanitizeHtml = function(html) {
         if (!defined(html_sanitize)) {

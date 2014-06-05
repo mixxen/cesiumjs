@@ -2,6 +2,7 @@
 /*global define*/
 define([
         './Constants/degreesPerRadian',
+        './Constants/depthRange',
         './Constants/epsilon1',
         './Constants/epsilon2',
         './Constants/epsilon3',
@@ -26,6 +27,7 @@ define([
         './Constants/threePiOver2',
         './Constants/twoPi',
         './Constants/webMercatorMaxLatitude',
+        './Structs/depthRangeStruct',
         './Structs/ellipsoid',
         './Structs/material',
         './Structs/materialInput',
@@ -68,6 +70,7 @@ define([
         './Functions/windowToEyeCoordinates'
     ], function(
         czm_degreesPerRadian,
+        czm_depthRange,
         czm_epsilon1,
         czm_epsilon2,
         czm_epsilon3,
@@ -92,6 +95,7 @@ define([
         czm_threePiOver2,
         czm_twoPi,
         czm_webMercatorMaxLatitude,
+        czm_depthRangeStruct,
         czm_ellipsoid,
         czm_material,
         czm_materialInput,
@@ -135,6 +139,7 @@ define([
     "use strict";
     return {
         czm_degreesPerRadian : czm_degreesPerRadian,
+        czm_depthRange : czm_depthRange,
         czm_epsilon1 : czm_epsilon1,
         czm_epsilon2 : czm_epsilon2,
         czm_epsilon3 : czm_epsilon3,
@@ -159,6 +164,7 @@ define([
         czm_threePiOver2 : czm_threePiOver2,
         czm_twoPi : czm_twoPi,
         czm_webMercatorMaxLatitude : czm_webMercatorMaxLatitude,
+        czm_depthRangeStruct : czm_depthRangeStruct,
         czm_ellipsoid : czm_ellipsoid,
         czm_material : czm_material,
         czm_materialInput : czm_materialInput,

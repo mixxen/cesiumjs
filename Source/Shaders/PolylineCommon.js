@@ -2,9 +2,7 @@
     /*global define*/
     define(function() {
     "use strict";
-    return "const vec2 czm_highResolutionSnapScale = vec2(1.0, 1.0);    // TODO\n\
-\n\
-void clipLineSegmentToNearPlane(\n\
+    return "void clipLineSegmentToNearPlane(\n\
     vec3 p0,\n\
     vec3 p1,\n\
     out vec4 positionWC,\n\
@@ -92,7 +90,7 @@ vec4 getPolylineWindowCoordinates(vec4 position, vec4 previous, vec4 next, float
         expandWidth = clamp(expandWidth / sinAngle, 0.0, width * 2.0);\n\
     }\n\
 \n\
-    vec2 offset = direction * expandDirection * expandWidth * czm_highResolutionSnapScale;\n\
+    vec2 offset = direction * expandDirection * expandWidth * czm_resolutionScale;\n\
     return vec4(endPointWC.xy + offset, -endPointWC.z, 1.0);\n\
 }\n\
 ";

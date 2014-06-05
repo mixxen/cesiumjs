@@ -16,9 +16,12 @@ vec4 czm_translucentPhong(vec3 toEye, czm_material material)\n\
     float specular = czm_getSpecular(czm_sunDirectionEC, toEye, material.normal, material.shininess);\n\
     specular += czm_getSpecular(czm_moonDirectionEC, toEye, material.normal, material.shininess);\n\
 \n\
-    vec3 ambient = vec3(0.0);\n\
+    // Temporary workaround for adding ambient.\n\
+    vec3 materialDiffuse = material.diffuse * 0.5;\n\
+\n\
+    vec3 ambient = materialDiffuse;\n\
     vec3 color = ambient + material.emission;\n\
-    color += material.diffuse * diffuse;\n\
+    color += materialDiffuse * diffuse;\n\
     color += material.specular * specular;\n\
 \n\
     return vec4(color, material.alpha);\n\
