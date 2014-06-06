@@ -14,8 +14,9 @@
     "bower_components",
     "test",
     "tests",
-    "Apps",
-    "Specs",
-    "ThirdParty"
+    "/Apps",
+    "/Specs",
+    "/ThirdParty",
+    "/Build/Documentation"
   ]
 }
