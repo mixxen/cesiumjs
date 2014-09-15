@@ -118,24 +118,24 @@ define('Core/DeveloperError',[
      * to catch.
      *
      * @alias DeveloperError
+     * @constructor
      *
      * @param {String} [message] The error message for this exception.
      *
      * @see RuntimeError
-     * @constructor
      */
     var DeveloperError = function(message) {
         /**
          * 'DeveloperError' indicating that this exception was thrown due to a developer error.
          * @type {String}
-         * @constant
+         * @readonly
          */
         this.name = 'DeveloperError';
 
         /**
          * The explanation for why this exception was thrown.
          * @type {String}
-         * @constant
+         * @readonly
          */
         this.message = message;
 
@@ -150,7 +150,7 @@ define('Core/DeveloperError',[
         /**
          * The stack trace of this exception, if available.
          * @type {String}
-         * @constant
+         * @readonly
          */
         this.stack = stack;
     };
@@ -393,7 +393,9 @@ define('Core/Math',[
 
     /**
      * Math functions.
-     * @exports CesiumMath
+     *
+     * @namespace
+     * @alias CesiumMath
      */
     var CesiumMath = {};
 
@@ -572,7 +574,6 @@ define('Core/Math',[
      * negative, or 0 if the value is 0.
      *
      * @param {Number} value The value to return the sign of.
-     *
      * @returns {Number} The sign of value.
      */
     CesiumMath.sign = function(value) {
@@ -587,7 +588,40 @@ define('Core/Math',[
     };
 
     /**
-     * Returns the hyperbolic sine of a {@code Number}.
+     * Returns 1.0 if the given value is positive or zero, and -1.0 if it is negative.
+     * This is similar to {@link CesiumMath#sign} except that returns 1.0 instead of
+     * 0.0 when the input value is 0.0.
+     * @param {Number} value The value to return the sign of.
+     * @returns {Number} The sign of value.
+     */
+    CesiumMath.signNotZero = function(value) {
+        return value < 0.0 ? -1.0 : 1.0;
+    };
+
+    /**
+     * Converts a scalar value in the range [-1.0, 1.0] to a 8-bit 2's complement number.
+     * @param {Number} value The scalar value in the range [-1.0, 1.0]
+     * @returns {Number} The 8-bit 2's complement number, where 0 maps to -1.0 and 255 maps to 1.0.
+     *
+     * @see CesiumMath.fromSNorm
+     */
+    CesiumMath.toSNorm = function(value) {
+        return Math.round((CesiumMath.clamp(value, -1.0, 1.0) * 0.5 + 0.5) * 255.0);
+    };
+
+    /**
+     * Converts a SNORM value in the range [0, 255] to a scalar in the range [-1.0, 1.0].
+     * @param {Number} value SNORM value in the range [0, 255]
+     * @returns {Number} Scalar in the range [-1.0, 1.0].
+     *
+     * @see CesiumMath.toSNorm
+     */
+    CesiumMath.fromSNorm = function(value) {
+        return CesiumMath.clamp(value, 0.0, 255.0) / 255.0 * 2.0 - 1.0;
+    };
+
+    /**
+     * Returns the hyperbolic sine of a number.
      * The hyperbolic sine of <em>value</em> is defined to be
      * (<em>e<sup>x</sup>&nbsp;-&nbsp;e<sup>-x</sup></em>)/2.0
      * where <i>e</i> is Euler's number, approximately 2.71828183.
@@ -605,8 +639,7 @@ define('Core/Math',[
      *</p>
      *
      * @param {Number} value The number whose hyperbolic sine is to be returned.
-     *
-     * @returns The hyperbolic sine of {@code value}.
+     * @returns The hyperbolic sine of <code>value</code>.
      */
     CesiumMath.sinh = function(value) {
         var part1 = Math.pow(Math.E, value);
@@ -616,7 +649,7 @@ define('Core/Math',[
     };
 
     /**
-     * Returns the hyperbolic cosine of a {@code Number}.
+     * Returns the hyperbolic cosine of a number.
      * The hyperbolic cosine of <strong>value</strong> is defined to be
      * (<em>e<sup>x</sup>&nbsp;+&nbsp;e<sup>-x</sup></em>)/2.0
      * where <i>e</i> is Euler's number, approximately 2.71828183.
@@ -627,13 +660,12 @@ define('Core/Math',[
      *
      *     <li>If the argument is infinite, then the result is positive infinity.</li>
      *
-     *     <li>If the argument is zero, then the result is {@code 1.0}.</li>
+     *     <li>If the argument is zero, then the result is 1.0.</li>
      *   </ul>
      *</p>
      *
      * @param {Number} value The number whose hyperbolic cosine is to be returned.
-     *
-     * @returns The hyperbolic cosine of {@code value}.
+     * @returns The hyperbolic cosine of <code>value</code>.
      */
     CesiumMath.cosh = function(value) {
         var part1 = Math.pow(Math.E, value);
@@ -662,7 +694,6 @@ define('Core/Math',[
      *
      * @type {Number}
      * @constant
-     * @see czm_pi
      */
     CesiumMath.PI = Math.PI;
 
@@ -671,7 +702,6 @@ define('Core/Math',[
      *
      * @type {Number}
      * @constant
-     * @see czm_oneOverPi
      */
     CesiumMath.ONE_OVER_PI = 1.0 / Math.PI;
 
@@ -680,7 +710,6 @@ define('Core/Math',[
      *
      * @type {Number}
      * @constant
-     * @see czm_piOverTwo
      */
     CesiumMath.PI_OVER_TWO = Math.PI * 0.5;
 
@@ -689,7 +718,6 @@ define('Core/Math',[
      *
      * @type {Number}
      * @constant
-     * @see czm_piOverThree
      */
     CesiumMath.PI_OVER_THREE = Math.PI / 3.0;
 
@@ -698,7 +726,6 @@ define('Core/Math',[
      *
      * @type {Number}
      * @constant
-     * @see czm_piOverFour
      */
     CesiumMath.PI_OVER_FOUR = Math.PI / 4.0;
 
@@ -707,7 +734,6 @@ define('Core/Math',[
      *
      * @type {Number}
      * @constant
-     * @see czm_piOverSix
      */
     CesiumMath.PI_OVER_SIX = Math.PI / 6.0;
 
@@ -716,7 +742,6 @@ define('Core/Math',[
      *
      * @type {Number}
      * @constant
-     * @see czm_threePiOver2
      */
     CesiumMath.THREE_PI_OVER_TWO = (3.0 * Math.PI) * 0.5;
 
@@ -725,7 +750,6 @@ define('Core/Math',[
      *
      * @type {Number}
      * @constant
-     * @see czm_twoPi
      */
     CesiumMath.TWO_PI = 2.0 * Math.PI;
 
@@ -734,7 +758,6 @@ define('Core/Math',[
      *
      * @type {Number}
      * @constant
-     * @see czm_oneOverTwoPi
      */
     CesiumMath.ONE_OVER_TWO_PI = 1.0 / (2.0 * Math.PI);
 
@@ -744,7 +767,6 @@ define('Core/Math',[
      * @type {Number}
      * @constant
      * @default Math.PI / 180.0
-     * @see czm_radiansPerDegree
      */
     CesiumMath.RADIANS_PER_DEGREE = Math.PI / 180.0;
 
@@ -754,7 +776,6 @@ define('Core/Math',[
      * @type {Number}
      * @constant
      * @default 180.0 / Math.PI
-     * @see czm_degreesPerRadian
      */
     CesiumMath.DEGREES_PER_RADIAN = 180.0 / Math.PI;
 
@@ -764,7 +785,6 @@ define('Core/Math',[
      * @type {Number}
      * @constant
      * @default {@link CesiumMath.RADIANS_PER_DEGREE} / 3600.0
-     * @see czm_radiansPerArcSecond
      */
     CesiumMath.RADIANS_PER_ARCSECOND = CesiumMath.RADIANS_PER_DEGREE / 3600.0;
 
@@ -796,7 +816,6 @@ define('Core/Math',[
      * Converts a longitude value, in radians, to the range [<code>-Math.PI</code>, <code>Math.PI</code>).
      *
      * @param {Number} angle The longitude value, in radians, to convert to the range [<code>-Math.PI</code>, <code>Math.PI</code>).
-     *
      * @returns {Number} The equivalent longitude value in the range [<code>-Math.PI</code>, <code>Math.PI</code>).
      *
      * @example
@@ -822,9 +841,10 @@ define('Core/Math',[
     };
 
     /**
-     * Produces an angle in the range 0 <= angle <= 2Pi which is equivalent to the provided angle.
+     * Produces an angle in the range -Pi <= angle <= Pi which is equivalent to the provided angle.
+     *
      * @param {Number} angle in radians
-     * @returns {Number} The angle in the range ()<code>-CesiumMath.PI</code>, <code>CesiumMath.PI</code>).
+     * @returns {Number} The angle in the range [<code>-CesiumMath.PI</code>, <code>CesiumMath.PI</code>].
      */
     CesiumMath.negativePiToPi = function(x) {
                 if (!defined(x)) {
@@ -846,9 +866,10 @@ define('Core/Math',[
     };
 
     /**
-     * Produces an angle in the range -Pi <= angle <= Pi which is equivalent to the provided angle.
+     * Produces an angle in the range 0 <= angle <= 2Pi which is equivalent to the provided angle.
+     *
      * @param {Number} angle in radians
-     * @returns {Number} The angle in the range (0 , <code>CesiumMath.TWO_PI</code>).
+     * @returns {Number} The angle in the range [0, <code>CesiumMath.TWO_PI</code>].
      */
     CesiumMath.zeroToTwoPi = function(x) {
                 if (!defined(x)) {
@@ -890,19 +911,16 @@ define('Core/Math',[
     /**
      * Computes the factorial of the provided number.
      *
-     * @memberof CesiumMath
-     *
      * @param {Number} n The number whose factorial is to be computed.
-     *
      * @returns {Number} The factorial of the provided number or undefined if the number is less than 0.
+     *
+     * @exception {DeveloperError} A number greater than or equal to 0 is required.
      *
      * @see {@link http://en.wikipedia.org/wiki/Factorial|Factorial on Wikipedia}
      *
      * @example
      * //Compute 7!, which is equal to 5040
      * var computedFactorial = Cesium.Math.factorial(7);
-     *
-     * @exception {DeveloperError} A number greater than or equal to 0 is required.
      */
     CesiumMath.factorial = function(n) {
                 if (typeof n !== 'number' || n < 0) {
@@ -912,7 +930,7 @@ define('Core/Math',[
         var length = factorials.length;
         if (n >= length) {
             var sum = factorials[length - 1];
-            for ( var i = length; i <= n; i++) {
+            for (var i = length; i <= n; i++) {
                 factorials.push(sum * i);
             }
         }
@@ -922,19 +940,16 @@ define('Core/Math',[
     /**
      * Increments a number with a wrapping to a minimum value if the number exceeds the maximum value.
      *
-     * @memberof CesiumMath
-     *
      * @param {Number} [n] The number to be incremented.
      * @param {Number} [maximumValue] The maximum incremented value before rolling over to the minimum value.
      * @param {Number} [minimumValue=0.0] The number reset to after the maximum value has been exceeded.
-     *
      * @returns {Number} The incremented number.
+     *
+     * @exception {DeveloperError} Maximum value must be greater than minimum value.
      *
      * @example
      * var n = Cesium.Math.incrementWrap(5, 10, 0); // returns 6
      * var n = Cesium.Math.incrementWrap(10, 10, 0); // returns 0
-     *
-     * @exception {DeveloperError} Maximum value must be greater than minimum value.
      */
     CesiumMath.incrementWrap = function(n, maximumValue, minimumValue) {
         minimumValue = defaultValue(minimumValue, 0.0);
@@ -956,10 +971,7 @@ define('Core/Math',[
     /**
      * Determines if a positive integer is a power of two.
      *
-     * @memberof CesiumMath
-     *
      * @param {Number} n The positive integer to test.
-     *
      * @returns {Boolean} <code>true</code> if the number if a power of two; otherwise, <code>false</code>.
      *
      * @exception {DeveloperError} A number greater than or equal to 0 is required.
@@ -979,10 +991,7 @@ define('Core/Math',[
     /**
      * Computes the next power-of-two integer greater than or equal to the provided positive integer.
      *
-     * @memberof CesiumMath
-     *
      * @param {Number} n The positive integer to test.
-     *
      * @returns {Number} The next power-of-two integer.
      *
      * @exception {DeveloperError} A number greater than or equal to 0 is required.
@@ -1011,8 +1020,6 @@ define('Core/Math',[
     /**
      * Constraint a value to lie between two values.
      *
-     * @memberof CesiumMath
-     *
      * @param {Number} value The value to constrain.
      * @param {Number} min The minimum value.
      * @param {Number} max The maximum value.
@@ -1037,8 +1044,6 @@ define('Core/Math',[
      * Sets the seed used by the random number generator
      * in {@link CesiumMath#nextRandomNumber}.
      *
-     * @memberof CesiumMath
-     *
      * @param {Number} seed An integer used as the seed.
      */
     CesiumMath.setRandomNumberSeed = function(seed) {
@@ -1053,8 +1058,6 @@ define('Core/Math',[
      * Generates a random number in the range of [0.0, 1.0)
      * using a Mersenne twister.
      *
-     * @memberof CesiumMath
-     *
      * @returns A random number in the range of [0.0, 1.0).
      *
      * @see CesiumMath.setRandomNumberSeed
@@ -1062,6 +1065,30 @@ define('Core/Math',[
      */
     CesiumMath.nextRandomNumber = function() {
         return randomNumberGenerator.random();
+    };
+
+    /**
+     * Computes <code>Math.acos(value)</acode>, but first clamps <code>value</code> to the range [-1.0, 1.0]
+     * so that the function will never return NaN.
+     *
+     * @param value The value for which to compute acos.
+     * @returns {number} The acos of the value if the value is in the range [-1.0, 1.0], or the acos of -1.0 or 1.0,
+     *          whichever is closer, if the value is outside the range.
+     */
+    CesiumMath.acosClamped = function(value) {
+        return Math.acos(CesiumMath.clamp(value, -1.0, 1.0));
+    };
+
+    /**
+     * Computes <code>Math.asin(value)</acode>, but first clamps <code>value</code> to the range [-1.0, 1.0]
+     * so that the function will never return NaN.
+     *
+     * @param value The value for which to compute asin.
+     * @returns {number} The asin of the value if the value is in the range [-1.0, 1.0], or the asin of -1.0 or 1.0,
+     *          whichever is closer, if the value is outside the range.
+     */
+    CesiumMath.asinClamped = function(value) {
+        return Math.asin(CesiumMath.clamp(value, -1.0, 1.0));
     };
 
     return CesiumMath;
@@ -1120,7 +1147,6 @@ define('Core/Cartesian3',[
 
     /**
      * Converts the provided Spherical into Cartesian3 coordinates.
-     * @memberof Cartesian3
      *
      * @param {Spherical} spherical The Spherical to be converted to Cartesian3.
      * @param {Cartesian3} [result] The object onto which to store the result.
@@ -1134,6 +1160,7 @@ define('Core/Cartesian3',[
         if (!defined(result)) {
             result = new Cartesian3();
         }
+
         var clock = spherical.clock;
         var cone = spherical.cone;
         var magnitude = defaultValue(spherical.magnitude, 1.0);
@@ -1146,7 +1173,6 @@ define('Core/Cartesian3',[
 
     /**
      * Creates a Cartesian3 instance from x, y and z coordinates.
-     * @memberof Cartesian3
      *
      * @param {Number} x The x coordinate.
      * @param {Number} y The y coordinate.
@@ -1167,7 +1193,6 @@ define('Core/Cartesian3',[
 
     /**
      * Duplicates a Cartesian3 instance.
-     * @memberof Cartesian3
      *
      * @param {Cartesian3} cartesian The Cartesian to duplicate.
      * @param {Cartesian3} [result] The object onto which to store the result.
@@ -1177,7 +1202,6 @@ define('Core/Cartesian3',[
         if (!defined(cartesian)) {
             return undefined;
         }
-
         if (!defined(result)) {
             return new Cartesian3(cartesian.x, cartesian.y, cartesian.z);
         }
@@ -1207,7 +1231,6 @@ define('Core/Cartesian3',[
 
     /**
      * Stores the provided instance into the provided array.
-     * @memberof Cartesian3
      *
      * @param {Cartesian3} value The value to pack.
      * @param {Number[]} array The array to pack into.
@@ -1231,7 +1254,6 @@ define('Core/Cartesian3',[
 
     /**
      * Retrieves an instance from a packed array.
-     * @memberof Cartesian3
      *
      * @param {Number[]} array The packed array.
      * @param {Number} [startingIndex=0] The starting index of the element to be unpacked.
@@ -1255,12 +1277,11 @@ define('Core/Cartesian3',[
 
     /**
      * Creates a Cartesian3 from three consecutive elements in an array.
-     * @memberof Cartesian3
+     * @function
      *
      * @param {Number[]} array The array whose three consecutive elements correspond to the x, y, and z components, respectively.
      * @param {Number} [startingIndex=0] The offset into the array of the first element, which corresponds to the x component.
      * @param {Cartesian3} [result] The object onto which to store the result.
-     *
      * @returns {Cartesian3} The modified result parameter or a new Cartesian3 instance if one was not provided.
      *
      * @example
@@ -1276,12 +1297,11 @@ define('Core/Cartesian3',[
 
     /**
      * Computes the value of the maximum component for the supplied Cartesian.
-     * @memberof Cartesian3
      *
      * @param {Cartesian3} cartesian The cartesian to use.
      * @returns {Number} The value of the maximum component.
      */
-    Cartesian3.getMaximumComponent = function(cartesian) {
+    Cartesian3.maximumComponent = function(cartesian) {
                 if (!defined(cartesian)) {
             throw new DeveloperError('cartesian is required');
         }
@@ -1291,12 +1311,11 @@ define('Core/Cartesian3',[
 
     /**
      * Computes the value of the minimum component for the supplied Cartesian.
-     * @memberof Cartesian3
      *
      * @param {Cartesian3} cartesian The cartesian to use.
      * @returns {Number} The value of the minimum component.
      */
-    Cartesian3.getMinimumComponent = function(cartesian) {
+    Cartesian3.minimumComponent = function(cartesian) {
                 if (!defined(cartesian)) {
             throw new DeveloperError('cartesian is required');
         }
@@ -1306,25 +1325,23 @@ define('Core/Cartesian3',[
 
     /**
      * Compares two Cartesians and computes a Cartesian which contains the minimum components of the supplied Cartesians.
-     * @memberof Cartesian3
      *
      * @param {Cartesian3} first A cartesian to compare.
      * @param {Cartesian3} second A cartesian to compare.
-     * @param {Cartesian3} [result] The object into which to store the result.
+     * @param {Cartesian3} result The object into which to store the result.
      * @returns {Cartesian3} A cartesian with the minimum components.
      */
-    Cartesian3.getMinimumByComponent = function(first, second, result) {
+    Cartesian3.minimumByComponent = function(first, second, result) {
                 if (!defined(first)) {
             throw new DeveloperError('first is required.');
         }
         if (!defined(second)) {
             throw new DeveloperError('second is required.');
         }
-        
         if (!defined(result)) {
-            result = new Cartesian3();
+            throw new DeveloperError('result is required.');
         }
-
+        
         result.x = Math.min(first.x, second.x);
         result.y = Math.min(first.y, second.y);
         result.z = Math.min(first.z, second.z);
@@ -1334,25 +1351,23 @@ define('Core/Cartesian3',[
 
     /**
      * Compares two Cartesians and computes a Cartesian which contains the maximum components of the supplied Cartesians.
-     * @memberof Cartesian3
      *
      * @param {Cartesian3} first A cartesian to compare.
      * @param {Cartesian3} second A cartesian to compare.
-     * @param {Cartesian3} [result] The object into which to store the result.
+     * @param {Cartesian3} result The object into which to store the result.
      * @returns {Cartesian3} A cartesian with the maximum components.
      */
-    Cartesian3.getMaximumByComponent = function(first, second, result) {
+    Cartesian3.maximumByComponent = function(first, second, result) {
                 if (!defined(first)) {
             throw new DeveloperError('first is required.');
         }
         if (!defined(second)) {
             throw new DeveloperError('second is required.');
         }
-        
         if (!defined(result)) {
-            result = new Cartesian3();
+            throw new DeveloperError('result is required.');
         }
-
+        
         result.x = Math.max(first.x, second.x);
         result.y = Math.max(first.y, second.y);
         result.z = Math.max(first.z, second.z);
@@ -1361,7 +1376,6 @@ define('Core/Cartesian3',[
 
     /**
      * Computes the provided Cartesian's squared magnitude.
-     * @memberof Cartesian3
      *
      * @param {Cartesian3} cartesian The Cartesian instance whose squared magnitude is to be computed.
      * @returns {Number} The squared magnitude.
@@ -1376,7 +1390,6 @@ define('Core/Cartesian3',[
 
     /**
      * Computes the Cartesian's magnitude (length).
-     * @memberof Cartesian3
      *
      * @param {Cartesian3} cartesian The Cartesian instance whose magnitude is to be computed.
      * @returns {Number} The magnitude.
@@ -1389,11 +1402,9 @@ define('Core/Cartesian3',[
 
     /**
      * Computes the distance between two points
-     * @memberof Cartesian3
      *
      * @param {Cartesian3} left The first point to compute the distance from.
      * @param {Cartesian3} right The second point to compute the distance to.
-     *
      * @returns {Number} The distance between two points.
      *
      * @example
@@ -1411,21 +1422,21 @@ define('Core/Cartesian3',[
 
     /**
      * Computes the normalized form of the supplied Cartesian.
-     * @memberof Cartesian3
      *
      * @param {Cartesian3} cartesian The Cartesian to be normalized.
-     * @param {Cartesian3} [result] The object onto which to store the result.
-     * @returns {Cartesian3} The modified result parameter or a new Cartesian3 instance if one was not provided.
+     * @param {Cartesian3} result The object onto which to store the result.
+     * @returns {Cartesian3} The modified result parameter.
      */
     Cartesian3.normalize = function(cartesian, result) {
                 if (!defined(cartesian)) {
             throw new DeveloperError('cartesian is required');
         }
+        if (!defined(result)) {
+            throw new DeveloperError('result is required');
+        }
         
         var magnitude = Cartesian3.magnitude(cartesian);
-        if (!defined(result)) {
-            return new Cartesian3(cartesian.x / magnitude, cartesian.y / magnitude, cartesian.z / magnitude);
-        }
+
         result.x = cartesian.x / magnitude;
         result.y = cartesian.y / magnitude;
         result.z = cartesian.z / magnitude;
@@ -1434,7 +1445,6 @@ define('Core/Cartesian3',[
 
     /**
      * Computes the dot (scalar) product of two Cartesians.
-     * @memberof Cartesian3
      *
      * @param {Cartesian3} left The first Cartesian.
      * @param {Cartesian3} right The second Cartesian.
@@ -1453,12 +1463,11 @@ define('Core/Cartesian3',[
 
     /**
      * Computes the componentwise product of two Cartesians.
-     * @memberof Cartesian3
      *
      * @param {Cartesian3} left The first Cartesian.
      * @param {Cartesian3} right The second Cartesian.
-     * @param {Cartesian3} [result] The object onto which to store the result.
-     * @returns {Cartesian3} The modified result parameter or a new Cartesian3 instance if one was not provided.
+     * @param {Cartesian3} result The object onto which to store the result.
+     * @returns {Cartesian3} The modified result parameter.
      */
     Cartesian3.multiplyComponents = function(left, right, result) {
                 if (!defined(left)) {
@@ -1467,10 +1476,10 @@ define('Core/Cartesian3',[
         if (!defined(right)) {
             throw new DeveloperError('right is required');
         }
-        
         if (!defined(result)) {
-            return new Cartesian3(left.x * right.x, left.y * right.y, left.z * right.z);
+            throw new DeveloperError('result is required');
         }
+        
         result.x = left.x * right.x;
         result.y = left.y * right.y;
         result.z = left.z * right.z;
@@ -1479,12 +1488,11 @@ define('Core/Cartesian3',[
 
     /**
      * Computes the componentwise sum of two Cartesians.
-     * @memberof Cartesian3
      *
      * @param {Cartesian3} left The first Cartesian.
      * @param {Cartesian3} right The second Cartesian.
-     * @param {Cartesian3} [result] The object onto which to store the result.
-     * @returns {Cartesian3} The modified result parameter or a new Cartesian3 instance if one was not provided.
+     * @param {Cartesian3} result The object onto which to store the result.
+     * @returns {Cartesian3} The modified result parameter.
      */
     Cartesian3.add = function(left, right, result) {
                 if (!defined(left)) {
@@ -1493,10 +1501,10 @@ define('Core/Cartesian3',[
         if (!defined(right)) {
             throw new DeveloperError('right is required');
         }
-        
         if (!defined(result)) {
-            return new Cartesian3(left.x + right.x, left.y + right.y, left.z + right.z);
+            throw new DeveloperError('result is required');
         }
+        
         result.x = left.x + right.x;
         result.y = left.y + right.y;
         result.z = left.z + right.z;
@@ -1505,12 +1513,11 @@ define('Core/Cartesian3',[
 
     /**
      * Computes the componentwise difference of two Cartesians.
-     * @memberof Cartesian3
      *
      * @param {Cartesian3} left The first Cartesian.
      * @param {Cartesian3} right The second Cartesian.
-     * @param {Cartesian3} [result] The object onto which to store the result.
-     * @returns {Cartesian3} The modified result parameter or a new Cartesian3 instance if one was not provided.
+     * @param {Cartesian3} result The object onto which to store the result.
+     * @returns {Cartesian3} The modified result parameter.
      */
     Cartesian3.subtract = function(left, right, result) {
                 if (!defined(left)) {
@@ -1519,10 +1526,10 @@ define('Core/Cartesian3',[
         if (!defined(right)) {
             throw new DeveloperError('right is required');
         }
-        
         if (!defined(result)) {
-            return new Cartesian3(left.x - right.x, left.y - right.y, left.z - right.z);
+            throw new DeveloperError('result is required');
         }
+        
         result.x = left.x - right.x;
         result.y = left.y - right.y;
         result.z = left.z - right.z;
@@ -1531,12 +1538,11 @@ define('Core/Cartesian3',[
 
     /**
      * Multiplies the provided Cartesian componentwise by the provided scalar.
-     * @memberof Cartesian3
      *
      * @param {Cartesian3} cartesian The Cartesian to be scaled.
      * @param {Number} scalar The scalar to multiply with.
-     * @param {Cartesian3} [result] The object onto which to store the result.
-     * @returns {Cartesian3} The modified result parameter or a new Cartesian3 instance if one was not provided.
+     * @param {Cartesian3} result The object onto which to store the result.
+     * @returns {Cartesian3} The modified result parameter.
      */
     Cartesian3.multiplyByScalar = function(cartesian, scalar, result) {
                 if (!defined(cartesian)) {
@@ -1545,10 +1551,10 @@ define('Core/Cartesian3',[
         if (typeof scalar !== 'number') {
             throw new DeveloperError('scalar is required and must be a number.');
         }
-        
         if (!defined(result)) {
-            return new Cartesian3(cartesian.x * scalar, cartesian.y * scalar, cartesian.z * scalar);
+            throw new DeveloperError('result is required');
         }
+        
         result.x = cartesian.x * scalar;
         result.y = cartesian.y * scalar;
         result.z = cartesian.z * scalar;
@@ -1557,12 +1563,11 @@ define('Core/Cartesian3',[
 
     /**
      * Divides the provided Cartesian componentwise by the provided scalar.
-     * @memberof Cartesian3
      *
      * @param {Cartesian3} cartesian The Cartesian to be divided.
      * @param {Number} scalar The scalar to divide by.
-     * @param {Cartesian3} [result] The object onto which to store the result.
-     * @returns {Cartesian3} The modified result parameter or a new Cartesian3 instance if one was not provided.
+     * @param {Cartesian3} result The object onto which to store the result.
+     * @returns {Cartesian3} The modified result parameter.
      */
     Cartesian3.divideByScalar = function(cartesian, scalar, result) {
                 if (!defined(cartesian)) {
@@ -1571,10 +1576,10 @@ define('Core/Cartesian3',[
         if (typeof scalar !== 'number') {
             throw new DeveloperError('scalar is required and must be a number.');
         }
-        
         if (!defined(result)) {
-            return new Cartesian3(cartesian.x / scalar, cartesian.y / scalar, cartesian.z / scalar);
+            throw new DeveloperError('result is required');
         }
+        
         result.x = cartesian.x / scalar;
         result.y = cartesian.y / scalar;
         result.z = cartesian.z / scalar;
@@ -1583,20 +1588,19 @@ define('Core/Cartesian3',[
 
     /**
      * Negates the provided Cartesian.
-     * @memberof Cartesian3
      *
      * @param {Cartesian3} cartesian The Cartesian to be negated.
-     * @param {Cartesian3} [result] The object onto which to store the result.
-     * @returns {Cartesian3} The modified result parameter or a new Cartesian3 instance if one was not provided.
+     * @param {Cartesian3} result The object onto which to store the result.
+     * @returns {Cartesian3} The modified result parameter.
      */
     Cartesian3.negate = function(cartesian, result) {
                 if (!defined(cartesian)) {
             throw new DeveloperError('cartesian is required');
         }
-        
         if (!defined(result)) {
-            return new Cartesian3(-cartesian.x, -cartesian.y, -cartesian.z);
+            throw new DeveloperError('result is required');
         }
+        
         result.x = -cartesian.x;
         result.y = -cartesian.y;
         result.z = -cartesian.z;
@@ -1605,20 +1609,19 @@ define('Core/Cartesian3',[
 
     /**
      * Computes the absolute value of the provided Cartesian.
-     * @memberof Cartesian3
      *
      * @param {Cartesian3} cartesian The Cartesian whose absolute value is to be computed.
-     * @param {Cartesian3} [result] The object onto which to store the result.
-     * @returns {Cartesian3} The modified result parameter or a new Cartesian3 instance if one was not provided.
+     * @param {Cartesian3} result The object onto which to store the result.
+     * @returns {Cartesian3} The modified result parameter.
      */
     Cartesian3.abs = function(cartesian, result) {
                 if (!defined(cartesian)) {
             throw new DeveloperError('cartesian is required');
         }
-        
         if (!defined(result)) {
-            return new Cartesian3(Math.abs(cartesian.x), Math.abs(cartesian.y), Math.abs(cartesian.z));
+            throw new DeveloperError('result is required');
         }
+        
         result.x = Math.abs(cartesian.x);
         result.y = Math.abs(cartesian.y);
         result.z = Math.abs(cartesian.z);
@@ -1628,13 +1631,12 @@ define('Core/Cartesian3',[
     var lerpScratch = new Cartesian3();
     /**
      * Computes the linear interpolation or extrapolation at t using the provided cartesians.
-     * @memberof Cartesian3
      *
      * @param {Cartesian3} start The value corresponding to t at 0.0.
      * @param {Cartesian3} end The value corresponding to t at 1.0.
      * @param {Number} t The point along t at which to interpolate.
-     * @param {Cartesian3} [result] The object onto which to store the result.
-     * @returns {Cartesian3} The modified result parameter or a new Cartesian3 instance if one was not provided.
+     * @param {Cartesian3} result The object onto which to store the result.
+     * @returns {Cartesian3} The modified result parameter.
      */
     Cartesian3.lerp = function(start, end, t, result) {
                 if (!defined(start)) {
@@ -1646,6 +1648,9 @@ define('Core/Cartesian3',[
         if (typeof t !== 'number') {
             throw new DeveloperError('t is required and must be a number.');
         }
+        if (!defined(result)) {
+            throw new DeveloperError('result is required.');
+        }
         
         Cartesian3.multiplyByScalar(end, t, lerpScratch);
         result = Cartesian3.multiplyByScalar(start, 1.0 - t, result);
@@ -1656,7 +1661,6 @@ define('Core/Cartesian3',[
     var angleBetweenScratch2 = new Cartesian3();
     /**
      * Returns the angle, in radians, between the provided Cartesians.
-     * @memberof Cartesian3
      *
      * @param {Cartesian3} left The first Cartesian.
      * @param {Cartesian3} right The second Cartesian.
@@ -1680,15 +1684,17 @@ define('Core/Cartesian3',[
     var mostOrthogonalAxisScratch = new Cartesian3();
     /**
      * Returns the axis that is most orthogonal to the provided Cartesian.
-     * @memberof Cartesian3
      *
      * @param {Cartesian3} cartesian The Cartesian on which to find the most orthogonal axis.
-     * @param {Cartesian3} [result] The object onto which to store the result.
+     * @param {Cartesian3} result The object onto which to store the result.
      * @returns {Cartesian3} The most orthogonal axis.
      */
     Cartesian3.mostOrthogonalAxis = function(cartesian, result) {
                 if (!defined(cartesian)) {
             throw new DeveloperError('cartesian is required.');
+        }
+        if (!defined(result)) {
+            throw new DeveloperError('result is required.');
         }
         
         var f = Cartesian3.normalize(cartesian, mostOrthogonalAxisScratch);
@@ -1714,7 +1720,6 @@ define('Core/Cartesian3',[
     /**
      * Compares the provided Cartesians componentwise and returns
      * <code>true</code> if they are equal, <code>false</code> otherwise.
-     * @memberof Cartesian3
      *
      * @param {Cartesian3} [left] The first Cartesian.
      * @param {Cartesian3} [right] The second Cartesian.
@@ -1733,7 +1738,6 @@ define('Core/Cartesian3',[
      * Compares the provided Cartesians componentwise and returns
      * <code>true</code> if they are within the provided epsilon,
      * <code>false</code> otherwise.
-     * @memberof Cartesian3
      *
      * @param {Cartesian3} [left] The first Cartesian.
      * @param {Cartesian3} [right] The second Cartesian.
@@ -1755,11 +1759,10 @@ define('Core/Cartesian3',[
 
     /**
      * Computes the cross (outer) product of two Cartesians.
-     * @memberof Cartesian3
      *
      * @param {Cartesian3} left The first Cartesian.
      * @param {Cartesian3} right The second Cartesian.
-     * @param {Cartesian3} [result] The object onto which to store the result.
+     * @param {Cartesian3} result The object onto which to store the result.
      * @returns {Cartesian3} The cross product.
      */
     Cartesian3.cross = function(left, right, result) {
@@ -1768,6 +1771,9 @@ define('Core/Cartesian3',[
         }
         if (!defined(right)) {
             throw new DeveloperError('right is required');
+        }
+        if (!defined(result)) {
+            throw new DeveloperError('result is required');
         }
         
         var leftX = left.x;
@@ -1781,9 +1787,6 @@ define('Core/Cartesian3',[
         var y = leftZ * rightX - leftX * rightZ;
         var z = leftX * rightY - leftY * rightX;
 
-        if (!defined(result)) {
-            return new Cartesian3(x, y, z);
-        }
         result.x = x;
         result.y = y;
         result.z = z;
@@ -1792,18 +1795,16 @@ define('Core/Cartesian3',[
 
     /**
      * Returns a Cartesian3 position from longitude and latitude values given in degrees.
-     * @memberof Cartesian3
      *
      * @param {Number} longitude The longitude, in degrees
      * @param {Number} latitude The latitude, in degrees
      * @param {Number} [height=0.0] The height, in meters, above the ellipsoid.
      * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid on which the position lies.
      * @param {Cartesian3} [result] The object onto which to store the result.
-     *
      * @returns {Cartesian3} The position
      *
      * @example
-     * var position = Cartesian3.fromDegrees(-115.0, 37.0);
+     * var position = Cesium.Cartesian3.fromDegrees(-115.0, 37.0);
      */
     Cartesian3.fromDegrees = function(longitude, latitude, height, ellipsoid, result) {
                 if (!defined(longitude)) {
@@ -1824,18 +1825,16 @@ define('Core/Cartesian3',[
 
     /**
      * Returns a Cartesian3 position from longitude and latitude values given in radians.
-     * @memberof Cartesian3
      *
      * @param {Number} longitude The longitude, in radians
      * @param {Number} latitude The latitude, in radians
      * @param {Number} [height=0.0] The height, in meters, above the ellipsoid.
      * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid on which the position lies.
      * @param {Cartesian3} [result] The object onto which to store the result.
-     *
      * @returns {Cartesian3} The position
      *
      * @example
-     * var position = Cartesian3.fromRadians(-2.007, 0.645);
+     * var position = Cesium.Cartesian3.fromRadians(-2.007, 0.645);
      */
     Cartesian3.fromRadians = function(longitude, latitude, height, ellipsoid, result) {
                 if (!defined(longitude)) {
@@ -1858,21 +1857,23 @@ define('Core/Cartesian3',[
         var gamma = Math.sqrt(Cartesian3.dot(scratchN, scratchK));
         scratchK = Cartesian3.divideByScalar(scratchK, gamma, scratchK);
         scratchN = Cartesian3.multiplyByScalar(scratchN, height, scratchN);
+
+        if (!defined(result)) {
+            result = new Cartesian3();
+        }
         return Cartesian3.add(scratchK, scratchN, result);
     };
 
     /**
      * Returns an array of Cartesian3 positions given an array of longitude and latitude values given in degrees.
-     * @memberof Cartesian3
      *
      * @param {Number[]} coordinates A list of longitude and latitude values. Values alternate [longitude, latitude, longitude, latitude...].
      * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid on which the coordinates lie.
      * @param {Cartesian3[]} [result] An array of Cartesian3 objects to store the result.
-     *
      * @returns {Cartesian3[]} The array of positions.
      *
      * @example
-     * var positions = Cartesian3.fromDegreesArray([-115.0, 37.0, -107.0, 33.0]);
+     * var positions = Cesium.Cartesian3.fromDegreesArray([-115.0, 37.0, -107.0, 33.0]);
      */
     Cartesian3.fromDegreesArray = function(coordinates, ellipsoid, result) {
                 if (!defined(coordinates)) {
@@ -1889,16 +1890,14 @@ define('Core/Cartesian3',[
 
     /**
      * Returns an array of Cartesian3 positions given an array of longitude and latitude values given in radians.
-     * @memberof Cartesian3
      *
      * @param {Number[]} coordinates A list of longitude and latitude values. Values alternate [longitude, latitude, longitude, latitude...].
      * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid on which the coordinates lie.
      * @param {Cartesian3[]} [result] An array of Cartesian3 objects to store the result.
-     *
      * @returns {Cartesian3[]} The array of positions.
      *
      * @example
-     * var positions = Cartesian3.fromRadiansArray([-2.007, 0.645, -1.867, .575]);
+     * var positions = Cesium.Cartesian3.fromRadiansArray([-2.007, 0.645, -1.867, .575]);
      */
     Cartesian3.fromRadiansArray = function(coordinates, ellipsoid, result) {
                 if (!defined(coordinates)) {
@@ -1929,16 +1928,14 @@ define('Core/Cartesian3',[
 
     /**
      * Returns an array of Cartesian3 positions given an array of longitude, latitude and height values where longitude and latitude are given in degrees.
-     * @memberof Cartesian3
      *
      * @param {Number[]} coordinates A list of longitude, latitude and height values. Values alternate [longitude, latitude, height,, longitude, latitude, height...].
      * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid on which the position lies.
      * @param {Cartesian3[]} [result] An array of Cartesian3 objects to store the result.
-     *
      * @returns {Cartesian3[]} The array of positions.
      *
      * @example
-     * var positions = Cartesian3.fromDegreesArrayHeights([-115.0, 37.0, 100000.0, -107.0, 33.0, 150000.0]);
+     * var positions = Cesium.Cartesian3.fromDegreesArrayHeights([-115.0, 37.0, 100000.0, -107.0, 33.0, 150000.0]);
      */
     Cartesian3.fromDegreesArrayHeights = function(coordinates, ellipsoid, result) {
                 if (!defined(coordinates)) {
@@ -1963,16 +1960,14 @@ define('Core/Cartesian3',[
 
     /**
      * Returns an array of Cartesian3 positions given an array of longitude, latitude and height values where longitude and latitude are given in radians.
-     * @memberof Cartesian3
      *
      * @param {Number[]} coordinates A list of longitude, latitude and height values. Values alternate [longitude, latitude, height,, longitude, latitude, height...].
      * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid on which the position lies.
      * @param {Cartesian3[]} [result] An array of Cartesian3 objects to store the result.
-     *
      * @returns {Cartesian3[]} The array of positions.
      *
      * @example
-     * var positions = Cartesian3.fromradiansArrayHeights([-2.007, 0.645, 100000.0, -1.867, .575, 150000.0]);
+     * var positions = Cesium.Cartesian3.fromRadiansArrayHeights([-2.007, 0.645, 100000.0, -1.867, .575, 150000.0]);
      */
     Cartesian3.fromRadiansArrayHeights = function(coordinates, ellipsoid, result) {
                 if (!defined(coordinates)) {
@@ -2004,31 +1999,38 @@ define('Core/Cartesian3',[
 
     /**
      * An immutable Cartesian3 instance initialized to (0.0, 0.0, 0.0).
-     * @memberof Cartesian3
+     *
+     * @type {Cartesian3}
+     * @constant
      */
     Cartesian3.ZERO = freezeObject(new Cartesian3(0.0, 0.0, 0.0));
 
     /**
      * An immutable Cartesian3 instance initialized to (1.0, 0.0, 0.0).
-     * @memberof Cartesian3
+     *
+     * @type {Cartesian3}
+     * @constant
      */
     Cartesian3.UNIT_X = freezeObject(new Cartesian3(1.0, 0.0, 0.0));
 
     /**
      * An immutable Cartesian3 instance initialized to (0.0, 1.0, 0.0).
-     * @memberof Cartesian3
+     *
+     * @type {Cartesian3}
+     * @constant
      */
     Cartesian3.UNIT_Y = freezeObject(new Cartesian3(0.0, 1.0, 0.0));
 
     /**
      * An immutable Cartesian3 instance initialized to (0.0, 0.0, 1.0).
-     * @memberof Cartesian3
+     *
+     * @type {Cartesian3}
+     * @constant
      */
     Cartesian3.UNIT_Z = freezeObject(new Cartesian3(0.0, 0.0, 1.0));
 
     /**
      * Duplicates this Cartesian3 instance.
-     * @memberof Cartesian3
      *
      * @param {Cartesian3} [result] The object onto which to store the result.
      * @returns {Cartesian3} The modified result parameter or a new Cartesian3 instance if one was not provided.
@@ -2040,7 +2042,6 @@ define('Core/Cartesian3',[
     /**
      * Compares this Cartesian against the provided Cartesian componentwise and returns
      * <code>true</code> if they are equal, <code>false</code> otherwise.
-     * @memberof Cartesian3
      *
      * @param {Cartesian3} [right] The right hand side Cartesian.
      * @returns {Boolean} <code>true</code> if they are equal, <code>false</code> otherwise.
@@ -2053,7 +2054,6 @@ define('Core/Cartesian3',[
      * Compares this Cartesian against the provided Cartesian componentwise and returns
      * <code>true</code> if they are within the provided epsilon,
      * <code>false</code> otherwise.
-     * @memberof Cartesian3
      *
      * @param {Cartesian3} [right] The right hand side Cartesian.
      * @param {Number} epsilon The epsilon to use for equality testing.
@@ -2065,7 +2065,6 @@ define('Core/Cartesian3',[
 
     /**
      * Creates a string representing this Cartesian in the format '(x, y, z)'.
-     * @memberof Cartesian3
      *
      * @returns {String} A string representing this Cartesian in the format '(x, y, z)'.
      */
@@ -2128,7 +2127,6 @@ define('Core/Cartographic',[
     /**
      * Creates a new Cartographic instance from longitude and latitude
      * specified in radians.
-     * @memberof Cartographic
      *
      * @param {Number} longitude The longitude, in radians.
      * @param {Number} latitude The latitude, in radians.
@@ -2143,9 +2141,9 @@ define('Core/Cartographic',[
         if (!defined(latitude)) {
             throw new DeveloperError('latitude is required.');
         }
-                
-        height = defaultValue(height, 0.0);
         
+        height = defaultValue(height, 0.0);
+
         if (!defined(result)) {
             return new Cartographic(longitude, latitude, height);
         }
@@ -2160,7 +2158,6 @@ define('Core/Cartographic',[
      * Creates a new Cartographic instance from longitude and latitude
      * specified in degrees.  The values in the resulting object will
      * be in radians.
-     * @memberof Cartographic
      *
      * @param {Number} longitude The longitude, in degrees.
      * @param {Number} latitude The latitude, in degrees.
@@ -2183,7 +2180,6 @@ define('Core/Cartographic',[
 
     /**
      * Duplicates a Cartographic instance.
-     * @memberof Cartographic
      *
      * @param {Cartographic} cartographic The cartographic to duplicate.
      * @param {Cartographic} [result] The object onto which to store the result.
@@ -2205,7 +2201,6 @@ define('Core/Cartographic',[
     /**
      * Compares the provided cartographics componentwise and returns
      * <code>true</code> if they are equal, <code>false</code> otherwise.
-     * @memberof Cartographic
      *
      * @param {Cartographic} [left] The first cartographic.
      * @param {Cartographic} [right] The second cartographic.
@@ -2224,7 +2219,6 @@ define('Core/Cartographic',[
      * Compares the provided cartographics componentwise and returns
      * <code>true</code> if they are within the provided epsilon,
      * <code>false</code> otherwise.
-     * @memberof Cartographic
      *
      * @param {Cartographic} [left] The first cartographic.
      * @param {Cartographic} [right] The second cartographic.
@@ -2245,30 +2239,15 @@ define('Core/Cartographic',[
     };
 
     /**
-     * Creates a string representing the provided cartographic in the format '(longitude, latitude, height)'.
-     * @memberof Cartographic
-     *
-     * @param {Cartographic} cartographic The cartographic to stringify.
-     * @returns {String} A string representing the provided cartographic in the format '(longitude, latitude, height)'.
-     */
-    Cartographic.toString = function(cartographic) {
-                if (!defined(cartographic)) {
-            throw new DeveloperError('cartographic is required');
-        }
-        
-        return '(' + cartographic.longitude + ', ' + cartographic.latitude + ', ' + cartographic.height + ')';
-    };
-
-    /**
      * An immutable Cartographic instance initialized to (0.0, 0.0, 0.0).
      *
-     * @memberof Cartographic
+     * @type {Cartographic}
+     * @constant
      */
     Cartographic.ZERO = freezeObject(new Cartographic(0.0, 0.0, 0.0));
 
     /**
      * Duplicates this instance.
-     * @memberof Cartographic
      *
      * @param {Cartographic} [result] The object onto which to store the result.
      * @returns {Cartographic} The modified result parameter or a new Cartographic instance if one was not provided.
@@ -2280,7 +2259,6 @@ define('Core/Cartographic',[
     /**
      * Compares the provided against this cartographic componentwise and returns
      * <code>true</code> if they are equal, <code>false</code> otherwise.
-     * @memberof Cartographic
      *
      * @param {Cartographic} [right] The second cartographic.
      * @returns {Boolean} <code>true</code> if left and right are equal, <code>false</code> otherwise.
@@ -2293,7 +2271,6 @@ define('Core/Cartographic',[
      * Compares the provided against this cartographic componentwise and returns
      * <code>true</code> if they are within the provided epsilon,
      * <code>false</code> otherwise.
-     * @memberof Cartographic
      *
      * @param {Cartographic} [right] The second cartographic.
      * @param {Number} epsilon The epsilon to use for equality testing.
@@ -2305,12 +2282,11 @@ define('Core/Cartographic',[
 
     /**
      * Creates a string representing this cartographic in the format '(longitude, latitude, height)'.
-     * @memberof Cartographic
      *
      * @returns {String} A string representing the provided cartographic in the format '(longitude, latitude, height)'.
      */
     Cartographic.prototype.toString = function() {
-        return Cartographic.toString(this);
+        return '(' + this.longitude + ', ' + this.latitude + ', ' + this.height + ')';
     };
 
     return Cartographic;
@@ -2371,6 +2347,40 @@ define('Core/Ellipsoid',[
         CesiumMath) {
     "use strict";
 
+    function initialize(ellipsoid, x, y, z) {
+        x = defaultValue(x, 0.0);
+        y = defaultValue(y, 0.0);
+        z = defaultValue(z, 0.0);
+
+                if (x < 0.0 || y < 0.0 || z < 0.0) {
+            throw new DeveloperError('All radii components must be greater than or equal to zero.');
+        }
+        
+        ellipsoid._radii = new Cartesian3(x, y, z);
+
+        ellipsoid._radiiSquared = new Cartesian3(x * x,
+                                            y * y,
+                                            z * z);
+
+        ellipsoid._radiiToTheFourth = new Cartesian3(x * x * x * x,
+                                                y * y * y * y,
+                                                z * z * z * z);
+
+        ellipsoid._oneOverRadii = new Cartesian3(x === 0.0 ? 0.0 : 1.0 / x,
+                                            y === 0.0 ? 0.0 : 1.0 / y,
+                                            z === 0.0 ? 0.0 : 1.0 / z);
+
+        ellipsoid._oneOverRadiiSquared = new Cartesian3(x === 0.0 ? 0.0 : 1.0 / (x * x),
+                                                   y === 0.0 ? 0.0 : 1.0 / (y * y),
+                                                   z === 0.0 ? 0.0 : 1.0 / (z * z));
+
+        ellipsoid._minimumRadius = Math.min(x, y, z);
+
+        ellipsoid._maximumRadius = Math.max(x, y, z);
+
+        ellipsoid._centerToleranceSquared = CesiumMath.EPSILON1;
+    }
+
     /**
      * A quadratic surface defined in Cartesian coordinates by the equation
      * <code>(x / a)^2 + (y / b)^2 + (z / c)^2 = 1</code>.  Primarily used
@@ -2380,7 +2390,6 @@ define('Core/Ellipsoid',[
      * constants is normally used.
      * @alias Ellipsoid
      * @constructor
-     * @immutable
      *
      * @param {Number} [x=0] The radius in the x direction.
      * @param {Number} [y=0] The radius in the y direction.
@@ -2393,37 +2402,16 @@ define('Core/Ellipsoid',[
      * @see Ellipsoid.UNIT_SPHERE
      */
     var Ellipsoid = function(x, y, z) {
-        x = defaultValue(x, 0.0);
-        y = defaultValue(y, 0.0);
-        z = defaultValue(z, 0.0);
+        this._radii = undefined;
+        this._radiiSquared = undefined;
+        this._radiiToTheFourth = undefined;
+        this._oneOverRadii = undefined;
+        this._oneOverRadiiSquared = undefined;
+        this._minimumRadius = undefined;
+        this._maximumRadius = undefined;
+        this._centerToleranceSquared = undefined;
 
-                if (x < 0.0 || y < 0.0 || z < 0.0) {
-            throw new DeveloperError('All radii components must be greater than or equal to zero.');
-        }
-        
-        this._radii = new Cartesian3(x, y, z);
-
-        this._radiiSquared = new Cartesian3(x * x,
-                                            y * y,
-                                            z * z);
-
-        this._radiiToTheFourth = new Cartesian3(x * x * x * x,
-                                                y * y * y * y,
-                                                z * z * z * z);
-
-        this._oneOverRadii = new Cartesian3(x === 0.0 ? 0.0 : 1.0 / x,
-                                            y === 0.0 ? 0.0 : 1.0 / y,
-                                            z === 0.0 ? 0.0 : 1.0 / z);
-
-        this._oneOverRadiiSquared = new Cartesian3(x === 0.0 ? 0.0 : 1.0 / (x * x),
-                                                   y === 0.0 ? 0.0 : 1.0 / (y * y),
-                                                   z === 0.0 ? 0.0 : 1.0 / (z * z));
-
-        this._minimumRadius = Math.min(x, y, z);
-
-        this._maximumRadius = Math.max(x, y, z);
-
-        this._centerToleranceSquared = CesiumMath.EPSILON1;
+        initialize(this, x, y, z);
     };
 
     defineProperties(Ellipsoid.prototype, {
@@ -2502,8 +2490,6 @@ define('Core/Ellipsoid',[
     /**
      * Duplicates an Ellipsoid instance.
      *
-     * @memberof Ellipsoid
-     *
      * @param {Ellipsoid} ellipsoid The ellipsoid to duplicate.
      * @param {Ellipsoid} [result] The object onto which to store the result, or undefined if a new
      *                    instance should be created.
@@ -2542,37 +2528,45 @@ define('Core/Ellipsoid',[
      * @see Ellipsoid.WGS84
      * @see Ellipsoid.UNIT_SPHERE
      */
-    Ellipsoid.fromCartesian3 = function(cartesian) {
-        if (!defined(cartesian)) {
-            return new Ellipsoid();
+    Ellipsoid.fromCartesian3 = function(cartesian, result) {
+        if (!defined(result)) {
+            result = new Ellipsoid();
         }
-        return new Ellipsoid(cartesian.x, cartesian.y, cartesian.z);
+
+        if (!defined(cartesian)) {
+            return result;
+        }
+
+        initialize(result, cartesian.x, cartesian.y, cartesian.z);
+        return result;
     };
 
     /**
      * An Ellipsoid instance initialized to the WGS84 standard.
-     * @memberof Ellipsoid
      *
-     * @see czm_getWgs84EllipsoidEC
+     * @type {Ellipsoid}
+     * @constant
      */
     Ellipsoid.WGS84 = freezeObject(new Ellipsoid(6378137.0, 6378137.0, 6356752.3142451793));
 
     /**
      * An Ellipsoid instance initialized to radii of (1.0, 1.0, 1.0).
-     * @memberof Ellipsoid
+     *
+     * @type {Ellipsoid}
+     * @constant
      */
     Ellipsoid.UNIT_SPHERE = freezeObject(new Ellipsoid(1.0, 1.0, 1.0));
 
     /**
      * An Ellipsoid instance initialized to a sphere with the lunar radius.
-     * @memberof Ellipsoid
+     *
+     * @type {Ellipsoid}
+     * @constant
      */
     Ellipsoid.MOON = freezeObject(new Ellipsoid(CesiumMath.LUNAR_RADIUS, CesiumMath.LUNAR_RADIUS, CesiumMath.LUNAR_RADIUS));
 
     /**
      * Duplicates an Ellipsoid instance.
-     *
-     * @memberof Ellipsoid
      *
      * @param {Ellipsoid} [result] The object onto which to store the result, or undefined if a new
      *                    instance should be created.
@@ -2584,7 +2578,7 @@ define('Core/Ellipsoid',[
 
     /**
      * Computes the unit vector directed from the center of this ellipsoid toward the provided Cartesian position.
-     * @memberof Ellipsoid
+     * @function
      *
      * @param {Cartesian3} cartesian The Cartesian for which to to determine the geocentric normal.
      * @param {Cartesian3} [result] The object onto which to store the result.
@@ -2594,7 +2588,6 @@ define('Core/Ellipsoid',[
 
     /**
      * Computes the normal of the plane tangent to the surface of the ellipsoid at the provided position.
-     * @memberof Ellipsoid
      *
      * @param {Cartographic} cartographic The cartographic position for which to to determine the geodetic normal.
      * @param {Cartesian3} [result] The object onto which to store the result.
@@ -2624,13 +2617,15 @@ define('Core/Ellipsoid',[
 
     /**
      * Computes the normal of the plane tangent to the surface of the ellipsoid at the provided position.
-     * @memberof Ellipsoid
      *
      * @param {Cartesian3} cartesian The Cartesian position for which to to determine the surface normal.
      * @param {Cartesian3} [result] The object onto which to store the result.
      * @returns {Cartesian3} The modified result parameter or a new Cartesian3 instance if none was provided.
      */
     Ellipsoid.prototype.geodeticSurfaceNormal = function(cartesian, result) {
+        if (!defined(result)) {
+            result = new Cartesian3();
+        }
         result = Cartesian3.multiplyComponents(cartesian, this._oneOverRadiiSquared, result);
         return Cartesian3.normalize(result, result);
     };
@@ -2640,7 +2635,6 @@ define('Core/Ellipsoid',[
 
     /**
      * Converts the provided cartographic to Cartesian representation.
-     * @memberof Ellipsoid
      *
      * @param {Cartographic} cartographic The cartographic position.
      * @param {Cartesian3} [result] The object onto which to store the result.
@@ -2660,12 +2654,15 @@ define('Core/Ellipsoid',[
         var gamma = Math.sqrt(Cartesian3.dot(n, k));
         Cartesian3.divideByScalar(k, gamma, k);
         Cartesian3.multiplyByScalar(n, cartographic.height, n);
+
+        if (!defined(result)) {
+            result = new Cartesian3();
+        }
         return Cartesian3.add(k, n, result);
     };
 
     /**
      * Converts the provided array of cartographics to an array of Cartesians.
-     * @memberof Ellipsoid
      *
      * @param {Cartographic[]} cartographics An array of cartographic positions.
      * @param {Cartesian3[]} [result] The object onto which to store the result.
@@ -2702,7 +2699,6 @@ define('Core/Ellipsoid',[
     /**
      * Converts the provided cartesian to cartographic representation.
      * The cartesian is undefined at the center of the ellipsoid.
-     * @memberof Ellipsoid
      *
      * @param {Cartesian3} cartesian The Cartesian position to convert to cartographic representation.
      * @param {Cartographic} [result] The object onto which to store the result.
@@ -2739,7 +2735,6 @@ define('Core/Ellipsoid',[
 
     /**
      * Converts the provided array of cartesians to an array of cartographics.
-     * @memberof Ellipsoid
      *
      * @param {Cartesian3[]} cartesians An array of Cartesian positions.
      * @param {Cartographic[]} [result] The object onto which to store the result.
@@ -2776,7 +2771,6 @@ define('Core/Ellipsoid',[
      * Scales the provided Cartesian position along the geodetic surface normal
      * so that it is on the surface of this ellipsoid.  If the position is
      * at the center of the ellipsoid, this function returns undefined.
-     * @memberof Ellipsoid
      *
      * @param {Cartesian3} cartesian The Cartesian position to scale.
      * @param {Cartesian3} [result] The object onto which to store the result.
@@ -2878,7 +2872,6 @@ define('Core/Ellipsoid',[
     /**
      * Scales the provided Cartesian position along the geocentric surface normal
      * so that it is on the surface of this ellipsoid.
-     * @memberof Ellipsoid
      *
      * @param {Cartesian3} cartesian The Cartesian position to scale.
      * @param {Cartesian3} [result] The object onto which to store the result.
@@ -2889,6 +2882,10 @@ define('Core/Ellipsoid',[
             throw new DeveloperError('cartesian is required.');
         }
         
+        if (!defined(result)) {
+            result = new Cartesian3();
+        }
+
         var positionX = cartesian.x;
         var positionY = cartesian.y;
         var positionZ = cartesian.z;
@@ -2905,8 +2902,6 @@ define('Core/Ellipsoid',[
      * Transforms a Cartesian X, Y, Z position to the ellipsoid-scaled space by multiplying
      * its components by the result of {@link Ellipsoid#oneOverRadii}.
      *
-     * @memberof Ellipsoid
-     *
      * @param {Cartesian3} position The position to transform.
      * @param {Cartesian3} [result] The position to which to copy the result, or undefined to create and
      *        return a new instance.
@@ -2914,14 +2909,16 @@ define('Core/Ellipsoid',[
      *          one passed as the result parameter if it is not undefined, or a new instance of it is.
      */
     Ellipsoid.prototype.transformPositionToScaledSpace = function(position, result) {
+        if (!defined(result)) {
+            result = new Cartesian3();
+        }
+
         return Cartesian3.multiplyComponents(position, this._oneOverRadii, result);
     };
 
     /**
      * Transforms a Cartesian X, Y, Z position from the ellipsoid-scaled space by multiplying
      * its components by the result of {@link Ellipsoid#radii}.
-     *
-     * @memberof Ellipsoid
      *
      * @param {Cartesian3} position The position to transform.
      * @param {Cartesian3} [result] The position to which to copy the result, or undefined to create and
@@ -2930,13 +2927,16 @@ define('Core/Ellipsoid',[
      *          one passed as the result parameter if it is not undefined, or a new instance of it is.
      */
     Ellipsoid.prototype.transformPositionFromScaledSpace = function(position, result) {
+        if (!defined(result)) {
+            result = new Cartesian3();
+        }
+
         return Cartesian3.multiplyComponents(position, this._radii, result);
     };
 
     /**
      * Compares this Ellipsoid against the provided Ellipsoid componentwise and returns
      * <code>true</code> if they are equal, <code>false</code> otherwise.
-     * @memberof Ellipsoid
      *
      * @param {Ellipsoid} [right] The other Ellipsoid.
      * @returns {Boolean} <code>true</code> if they are equal, <code>false</code> otherwise.
@@ -2949,7 +2949,6 @@ define('Core/Ellipsoid',[
 
     /**
      * Creates a string representing this Ellipsoid in the format '(radii.x, radii.y, radii.z)'.
-     * @memberof Ellipsoid
      *
      * @returns {String} A string representing this ellipsoid in the format '(radii.x, radii.y, radii.z)'.
      */
@@ -2974,7 +2973,6 @@ define('Core/formatError',[
      * @exports formatError
      *
      * @param {Object} object The item to find in the array.
-     *
      * @returns {String} A string containing the formatted error.
      */
     var formatError = function(object) {
@@ -3015,11 +3013,14 @@ define('Workers/createTaskProcessorWorker',[
      *
      * @exports createTaskProcessorWorker
      *
-     * @param {Function} workerFunction A function that takes as input two arguments:
-     * a parameters object, and an array into which transferable result objects can be pushed,
-     * and returns as output a result object.
-     * @returns {Function} An adapter function that handles the interaction with TaskProcessor,
-     * specifically, task ID management and posting a response message containing the result.
+     * @param {createTaskProcessorWorker~WorkerFunction} workerFunction The calculation function,
+     *        which takes parameters and returns a result.
+     * @returns {createTaskProcessorWorker~TaskProcessorWorkerFunction} A function that adapts the
+     *          calculation function to work as a Web Worker onmessage listener with TaskProcessor.
+     *
+     * @see TaskProcessor
+     * @see {@link http://www.w3.org/TR/workers/|Web Workers}
+     * @see {@link http://www.w3.org/TR/html5/common-dom-interfaces.html#transferable-objects|Transferable objects}
      *
      * @example
      * function doCalculation(parameters, transferableObjects) {
@@ -3029,10 +3030,6 @@ define('Workers/createTaskProcessorWorker',[
      *
      * return Cesium.createTaskProcessorWorker(doCalculation);
      * // the resulting function is compatible with TaskProcessor
-     *
-     * @see TaskProcessor
-     * @see {@link http://www.w3.org/TR/workers/|Web Workers}
-     * @see {@link http://www.w3.org/TR/html5/common-dom-interfaces.html#transferable-objects|Transferable objects}
      */
     var createTaskProcessorWorker = function(workerFunction) {
         var postMessage;
@@ -3087,24 +3084,56 @@ define('Workers/createTaskProcessorWorker',[
         };
     };
 
+    /**
+     * A function that performs a calculation in a Web Worker.
+     * @callback createTaskProcessorWorker~WorkerFunction
+     *
+     * @param {Object} parameters Parameters to the calculation.
+     * @param {Array} transferableObjects An array that should be filled with references to objects inside
+     *        the result that should be transferred back to the main document instead of copied.
+     * @returns {Object} The result of the calculation.
+     *
+     * @example
+     * function calculate(parameters, transferableObjects) {
+     *   // perform whatever calculation is necessary.
+     *   var typedArray = new Float32Array();
+     *
+     *   // typed arrays are transferable
+     *   transferableObjects.push(typedArray)
+     *
+     *   return {
+     *      typedArray : typedArray
+     *   };
+     * }
+     */
+
+    /**
+     * A Web Worker message event handler function that handles the interaction with TaskProcessor,
+     * specifically, task ID management and posting a response message containing the result.
+     * @callback createTaskProcessorWorker~TaskProcessorWorkerFunction
+     *
+     * @param {Object} event The onmessage event object.
+     */
+
     return createTaskProcessorWorker;
 });
 /*global define*/
 define('Workers/createVerticesFromQuantizedTerrainMesh',[
         '../Core/Cartesian3',
         '../Core/Cartographic',
+        '../Core/defined',
         '../Core/Ellipsoid',
         '../Core/Math',
         './createTaskProcessorWorker'
     ], function(
         Cartesian3,
         Cartographic,
+        defined,
         Ellipsoid,
         CesiumMath,
         createTaskProcessorWorker) {
     "use strict";
 
-    var vertexStride = 6;
     var maxShort = 32767;
 
     var xIndex = 0;
@@ -3113,6 +3142,8 @@ define('Workers/createVerticesFromQuantizedTerrainMesh',[
     var hIndex = 3;
     var uIndex = 4;
     var vIndex = 5;
+    var nxIndex = 6;
+    var nyIndex = 7;
 
     var cartesian3Scratch = new Cartesian3();
     var cartographicScratch = new Cartographic();
@@ -3120,6 +3151,7 @@ define('Workers/createVerticesFromQuantizedTerrainMesh',[
     function createVerticesFromQuantizedTerrainMesh(parameters, transferableObjects) {
         var quantizedVertices = parameters.quantizedVertices;
         var quantizedVertexCount = quantizedVertices.length / 3;
+        var octEncodedNormals = parameters.octEncodedNormals;
         var edgeVertexCount = parameters.westIndices.length + parameters.eastIndices.length +
                               parameters.southIndices.length + parameters.northIndices.length;
         var minimumHeight = parameters.minimumHeight;
@@ -3137,10 +3169,16 @@ define('Workers/createVerticesFromQuantizedTerrainMesh',[
         var uBuffer = quantizedVertices.subarray(0, quantizedVertexCount);
         var vBuffer = quantizedVertices.subarray(quantizedVertexCount, 2 * quantizedVertexCount);
         var heightBuffer = quantizedVertices.subarray(quantizedVertexCount * 2, 3 * quantizedVertexCount);
+        var hasVertexNormals = defined(octEncodedNormals);
+
+        var vertexStride = 6;
+        if (hasVertexNormals) {
+            vertexStride += 2;
+        }
 
         var vertexBuffer = new Float32Array(quantizedVertexCount * vertexStride + edgeVertexCount * vertexStride);
 
-        for (var i = 0, bufferIndex = 0; i < quantizedVertexCount; ++i, bufferIndex += vertexStride) {
+        for (var i = 0, bufferIndex = 0, n = 0; i < quantizedVertexCount; ++i, bufferIndex += vertexStride, n += 2) {
             var u = uBuffer[i] / maxShort;
             var v = vBuffer[i] / maxShort;
             var height = CesiumMath.lerp(minimumHeight, maximumHeight, heightBuffer[i] / maxShort);
@@ -3157,6 +3195,10 @@ define('Workers/createVerticesFromQuantizedTerrainMesh',[
             vertexBuffer[bufferIndex + hIndex] = height;
             vertexBuffer[bufferIndex + uIndex] = u;
             vertexBuffer[bufferIndex + vIndex] = v;
+            if (hasVertexNormals) {
+                vertexBuffer[bufferIndex + nxIndex] = octEncodedNormals[n];
+                vertexBuffer[bufferIndex + nyIndex] = octEncodedNormals[n + 1];
+            }
         }
 
         var edgeTriangleCount = Math.max(0, (edgeVertexCount - 4) * 2);
@@ -3166,13 +3208,13 @@ define('Workers/createVerticesFromQuantizedTerrainMesh',[
         // Add skirts.
         var vertexBufferIndex = quantizedVertexCount * vertexStride;
         var indexBufferIndex = parameters.indices.length;
-        indexBufferIndex = addSkirt(vertexBuffer, vertexBufferIndex, indexBuffer, indexBufferIndex, parameters.westIndices, center, ellipsoid, rectangle, parameters.westSkirtHeight, true);
+        indexBufferIndex = addSkirt(vertexBuffer, vertexBufferIndex, indexBuffer, indexBufferIndex, parameters.westIndices, center, ellipsoid, rectangle, parameters.westSkirtHeight, true, hasVertexNormals);
         vertexBufferIndex += parameters.westIndices.length * vertexStride;
-        indexBufferIndex = addSkirt(vertexBuffer, vertexBufferIndex, indexBuffer, indexBufferIndex, parameters.southIndices, center, ellipsoid, rectangle, parameters.southSkirtHeight, false);
+        indexBufferIndex = addSkirt(vertexBuffer, vertexBufferIndex, indexBuffer, indexBufferIndex, parameters.southIndices, center, ellipsoid, rectangle, parameters.southSkirtHeight, false, hasVertexNormals);
         vertexBufferIndex += parameters.southIndices.length * vertexStride;
-        indexBufferIndex = addSkirt(vertexBuffer, vertexBufferIndex, indexBuffer, indexBufferIndex, parameters.eastIndices, center, ellipsoid, rectangle, parameters.eastSkirtHeight, false);
+        indexBufferIndex = addSkirt(vertexBuffer, vertexBufferIndex, indexBuffer, indexBufferIndex, parameters.eastIndices, center, ellipsoid, rectangle, parameters.eastSkirtHeight, false, hasVertexNormals);
         vertexBufferIndex += parameters.eastIndices.length * vertexStride;
-        indexBufferIndex = addSkirt(vertexBuffer, vertexBufferIndex, indexBuffer, indexBufferIndex, parameters.northIndices, center, ellipsoid, rectangle, parameters.northSkirtHeight, true);
+        indexBufferIndex = addSkirt(vertexBuffer, vertexBufferIndex, indexBuffer, indexBufferIndex, parameters.northIndices, center, ellipsoid, rectangle, parameters.northSkirtHeight, true, hasVertexNormals);
         vertexBufferIndex += parameters.northIndices.length * vertexStride;
 
         transferableObjects.push(vertexBuffer.buffer, indexBuffer.buffer);
@@ -3183,8 +3225,12 @@ define('Workers/createVerticesFromQuantizedTerrainMesh',[
         };
     }
 
-    function addSkirt(vertexBuffer, vertexBufferIndex, indexBuffer, indexBufferIndex, edgeVertices, center, ellipsoid, rectangle, skirtLength, isWestOrNorthEdge) {
+    function addSkirt(vertexBuffer, vertexBufferIndex, indexBuffer, indexBufferIndex, edgeVertices, center, ellipsoid, rectangle, skirtLength, isWestOrNorthEdge, hasVertexNormals) {
         var start, end, increment;
+        var vertexStride = 6;
+        if (hasVertexNormals) {
+            vertexStride += 2;
+        }
         if (isWestOrNorthEdge) {
             start = edgeVertices.length - 1;
             end = -1;
@@ -3219,6 +3265,10 @@ define('Workers/createVerticesFromQuantizedTerrainMesh',[
             vertexBuffer[vertexBufferIndex++] = cartographicScratch.height;
             vertexBuffer[vertexBufferIndex++] = u;
             vertexBuffer[vertexBufferIndex++] = v;
+            if (hasVertexNormals) {
+                vertexBuffer[vertexBufferIndex++] = vertexBuffer[offset + nxIndex];
+                vertexBuffer[vertexBufferIndex++] = vertexBuffer[offset + nyIndex];
+            }
 
             if (previousIndex !== -1) {
                 indexBuffer[indexBufferIndex++] = previousIndex;
