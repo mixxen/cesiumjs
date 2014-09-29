@@ -1,11 +1,14 @@
 {
   "name": "cesiumjs",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "authors": [
     "Cesium Contributors"
   ],
   "description": "WebGL virtual globe and map engine",
-  "main": "Build/Cesium/Cesium.js",
+  "main": [
+	  "Build/Cesium/Widgets/widgets.css",
+	  "Build/Cesium/Cesium.js"
+	  ],
   "license": "Apache 2.0",
   "homepage": "http://cesiumjs.org",
   "ignore": [
