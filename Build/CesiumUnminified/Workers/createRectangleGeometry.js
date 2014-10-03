@@ -20723,8 +20723,7 @@ define('Core/Transforms',[
      *
      * @example
      * // Get the transform from local east-north-up at cartographic (0.0, 0.0) to Earth's fixed frame.
-     * var ellipsoid = Cesium.Ellipsoid.WGS84;
-     * var center = ellipsoid.cartographicToCartesian(Cesium.Cartographic.ZERO);
+     * var center = Cesium.Cartesian3.fromDegrees(0.0, 0.0);
      * var transform = Cesium.Transforms.eastNorthUpToFixedFrame(center);
      */
     Transforms.eastNorthUpToFixedFrame = function(origin, ellipsoid, result) {
@@ -20823,8 +20822,7 @@ define('Core/Transforms',[
      *
      * @example
      * // Get the transform from local north-east-down at cartographic (0.0, 0.0) to Earth's fixed frame.
-     * var ellipsoid = Cesium.Ellipsoid.WGS84;
-     * var center = ellipsoid.cartographicToCartesian(Cesium.Cartographic.ZERO);
+     * var center = Cesium.Cartesian3.fromDegrees(0.0, 0.0);
      * var transform = Cesium.Transforms.northEastDownToFixedFrame(center);
      */
     Transforms.northEastDownToFixedFrame = function(origin, ellipsoid, result) {
@@ -20902,10 +20900,6 @@ define('Core/Transforms',[
         return result;
     };
 
-    var northUpEastToFixedFrameNormal = new Cartesian3();
-    var northUpEastToFixedFrameTangent = new Cartesian3();
-    var northUpEastToFixedFrameBitangent = new Cartesian3();
-
     /**
      * Computes a 4x4 transformation matrix from a reference frame with an north-up-east axes
      * centered at the provided origin to the provided ellipsoid's fixed reference frame.
@@ -20923,8 +20917,7 @@ define('Core/Transforms',[
      *
      * @example
      * // Get the transform from local north-up-east at cartographic (0.0, 0.0) to Earth's fixed frame.
-     * var ellipsoid = Cesium.Ellipsoid.WGS84;
-     * var center = ellipsoid.cartographicToCartesian(Cesium.Cartographic.ZERO);
+     * var center = Cesium.Cartesian3.fromDegrees(0.0, 0.0);
      * var transform = Cesium.Transforms.northUpEastToFixedFrame(center);
      */
     Transforms.northUpEastToFixedFrame = function(origin, ellipsoid, result) {
@@ -23966,8 +23959,8 @@ define('Core/RectangleGeometryLibrary',[
         './Cartographic',
         './defined',
         './DeveloperError',
-        './Math',
         './GeographicProjection',
+        './Math',
         './Matrix2',
         './Rectangle'
     ], function(
@@ -23975,8 +23968,8 @@ define('Core/RectangleGeometryLibrary',[
         Cartographic,
         defined,
         DeveloperError,
-        CesiumMath,
         GeographicProjection,
+        CesiumMath,
         Matrix2,
         Rectangle) {
     "use strict";
