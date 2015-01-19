@@ -1,214 +1,214 @@
 // This file is automatically rebuilt by the Cesium build process.
 var gallery_demos = [{
   "name": "3D Models",
-  "date": 1414601761058,
+  "date": 1420461330000,
   "img": "3D Models.jpg"
 }, {
   "name": "Billboards",
-  "date": 1417467600734,
+  "date": 1420461330000,
   "img": "Billboards.jpg"
 }, {
   "name": "Box Outline",
-  "date": 1416855528449,
+  "date": 1420461330000,
   "img": "Box Outline.jpg"
 }, {
   "name": "Box",
-  "date": 1413314767420,
+  "date": 1420461330000,
   "img": "Box.jpg"
 }, {
   "name": "CZML",
-  "date": 1411486471215,
+  "date": 1420461330000,
   "img": "CZML.jpg"
 }, {
   "name": "Camera Tutorial",
-  "date": 1414782789481,
+  "date": 1420461330000,
   "img": "Camera Tutorial.jpg"
 }, {
   "name": "Camera",
-  "date": 1416338169614,
+  "date": 1420461330000,
   "img": "Camera.jpg"
 }, {
   "name": "Cesium Inspector",
-  "date": 1413314767427,
+  "date": 1420461330000,
   "img": "Cesium Inspector.jpg"
 }, {
   "name": "Cesium Widget",
-  "date": 1411486471247,
+  "date": 1420461330000,
   "img": "Cesium Widget.jpg"
 }, {
   "name": "Circle Outline",
-  "date": 1416855528465,
+  "date": 1420461330000,
   "img": "Circle Outline.jpg"
 }, {
   "name": "Circle",
-  "date": 1417458085237,
+  "date": 1420461330000,
   "img": "Circle.jpg"
 }, {
   "name": "Corridor Outline",
-  "date": 1416855528465,
+  "date": 1420461330000,
   "img": "Corridor Outline.jpg"
 }, {
   "name": "Corridor",
-  "date": 1413314767455,
+  "date": 1420461330000,
   "img": "Corridor.jpg"
 }, {
   "name": "Custom DataSource",
-  "date": 1411486471282,
+  "date": 1420461330000,
   "img": "Custom DataSource.jpg"
 }, {
   "name": "Cylinder Outline",
-  "date": 1416855528480,
+  "date": 1420461330000,
   "img": "Cylinder Outline.jpg"
 }, {
   "name": "Cylinder",
-  "date": 1413314767468,
+  "date": 1420461330000,
   "img": "Cylinder.jpg"
 }, {
   "name": "Ellipse Outline",
-  "date": 1416855528480,
+  "date": 1420461330000,
   "img": "Ellipse Outline.jpg"
 }, {
   "name": "Ellipse",
-  "date": 1416860513518,
+  "date": 1420461330000,
   "img": "Ellipse.jpg"
 }, {
   "name": "Ellipsoid Outline",
-  "date": 1416855528480,
+  "date": 1420461330000,
   "img": "Ellipsoid Outline.jpg"
 }, {
   "name": "Ellipsoid Surface",
-  "date": 1413314767494,
+  "date": 1420461330000,
   "img": "Ellipsoid Surface.jpg"
 }, {
   "name": "Ellipsoid",
-  "date": 1413314767501,
+  "date": 1420461330000,
   "img": "Ellipsoid.jpg"
 }, {
   "name": "GeoJSON and TopoJSON",
-  "date": 1416338169661,
+  "date": 1420461330000,
   "img": "GeoJSON and TopoJSON.jpg"
 }, {
   "name": "GeoJSON simplestyle",
-  "date": 1413314767514,
+  "date": 1420461330000,
   "img": "GeoJSON simplestyle.jpg"
 }, {
   "name": "Geometry and Appearances",
-  "date": 1416855528496,
+  "date": 1420461330000,
   "img": "Geometry and Appearances.jpg"
 }, {
   "name": "Hello World",
-  "date": 1417464970637,
+  "date": 1420461330000,
   "img": "Hello World.jpg"
 }, {
   "name": "Imagery Adjustment",
-  "date": 1411486471360,
+  "date": 1420461330000,
   "img": "Imagery Adjustment.jpg"
 }, {
   "name": "Imagery Layers Manipulation",
-  "date": 1411486471367,
+  "date": 1420461330000,
   "img": "Imagery Layers Manipulation.jpg"
 }, {
   "name": "Imagery Layers",
-  "date": 1411486471373,
+  "date": 1420461330000,
   "img": "Imagery Layers.jpg"
 }, {
   "name": "Labels",
-  "date": 1413314767549,
+  "date": 1420461330000,
   "img": "Labels.jpg"
 }, {
   "name": "Material",
-  "date": 1416338169676,
+  "date": 1420461330000,
   "img": "Material.jpg"
 }, {
   "name": "Materials",
-  "date": 1416855483505,
+  "date": 1420461330000,
   "img": "Materials.jpg"
 }, {
   "name": "Per Instance Color",
-  "date": 1413314767568,
+  "date": 1420461330000,
   "img": "Per Instance Color.jpg"
 }, {
   "name": "Picking",
-  "date": 1413314767575,
+  "date": 1420461330000,
   "img": "Picking.jpg"
 }, {
   "name": "PinBuilder",
-  "date": 1417465006965,
+  "date": 1420461330000,
   "img": "PinBuilder.jpg"
 }, {
   "name": "Polygon Outline",
-  "date": 1416855528496,
+  "date": 1420461330000,
   "img": "Polygon Outline.jpg"
 }, {
   "name": "Polygon",
-  "date": 1416957072855,
+  "date": 1420461330000,
   "img": "Polygon.jpg"
 }, {
   "name": "Polygons",
-  "date": 1413314767613,
+  "date": 1420461330000,
   "img": "Polygons.jpg"
 }, {
   "name": "Polyline Color",
-  "date": 1415303724168,
+  "date": 1420461330000,
   "img": "Polyline Color.jpg"
 }, {
   "name": "Polyline Material",
-  "date": 1414799308336,
+  "date": 1420461330000,
   "img": "Polyline Material.jpg"
 }, {
   "name": "Polyline Volume Outline",
-  "date": 1416855528511,
+  "date": 1420461330000,
   "img": "Polyline Volume Outline.jpg"
 }, {
   "name": "Polyline Volume",
-  "date": 1413314767641,
+  "date": 1420461330000,
   "img": "Polyline Volume.jpg"
 }, {
   "name": "Polyline",
-  "date": 1416350293058,
+  "date": 1420461330000,
   "img": "Polyline.jpg"
 }, {
   "name": "Polylines",
-  "date": 1416855483521,
+  "date": 1420461330000,
   "img": "Polylines.jpg"
 }, {
   "name": "Rectangle Outline",
-  "date": 1416855528511,
+  "date": 1420461330000,
   "img": "Rectangle Outline.jpg"
 }, {
   "name": "Rectangle",
-  "date": 1415299611652,
+  "date": 1420461330000,
   "img": "Rectangle.jpg"
 }, {
   "name": "Simple Polyline",
-  "date": 1416855528527,
+  "date": 1420461330000,
   "img": "Simple Polyline.jpg"
 }, {
   "name": "Sphere Outline",
-  "date": 1416855528527,
+  "date": 1420461330000,
   "img": "Sphere Outline.jpg"
 }, {
   "name": "Sphere",
-  "date": 1413314767685,
+  "date": 1420461330000,
   "img": "Sphere.jpg"
 }, {
   "name": "Terrain",
-  "date": 1413314767692,
+  "date": 1420461330000,
   "img": "Terrain.jpg"
 }, {
   "name": "Volumes",
-  "date": 1413314767697,
+  "date": 1420461330000,
   "img": "Volumes.jpg"
 }, {
   "name": "Wall Outline",
-  "date": 1416855528527,
+  "date": 1420461330000,
   "img": "Wall Outline.jpg"
 }, {
   "name": "Wall",
-  "date": 1416338169739,
+  "date": 1420461330000,
   "img": "Wall.jpg"
 }, {
   "name": "Web Map Service (WMS)",
-  "date": 1411486471546,
+  "date": 1420461330000,
   "img": "Web Map Service (WMS).jpg"
 }];
