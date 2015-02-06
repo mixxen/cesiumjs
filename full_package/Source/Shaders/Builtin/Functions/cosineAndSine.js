@@ -2,10 +2,7 @@
     /*global define*/
     define(function() {
     "use strict";
-    return "// Firefox 33-34 has a regression that prevents the CORDIC implementation from compiling\n\
-#ifndef DISABLE_CORDIC\n\
-\n\
-/**\n\
+    return "/**\n\
  * @private\n\
  */\n\
 vec2 cordic(float angle)\n\
@@ -215,7 +212,5 @@ vec2 czm_cosineAndSine(float angle)\n\
     {\n\
         return cordic(angle);\n\
     }\n\
-}\n\
-\n\
-#endif";
+}";
 });
