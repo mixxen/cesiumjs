@@ -10,11 +10,9 @@ void main()\n\
 {\n\
     vec3 positionToEyeEC = -v_positionEC;\n\
     \n\
-	vec3 normalEC;\n\
+	vec3 normalEC = normalize(v_normalEC);\n\
 #ifdef FACE_FORWARD\n\
-    normalEC = normalize(faceforward(v_normalEC, vec3(0.0, 0.0, 1.0), -v_normalEC));\n\
-#else\n\
-    normalEC = normalize(v_normalEC);\n\
+    normalEC = faceforward(normalEC, vec3(0.0, 0.0, 1.0), -normalEC);\n\
 #endif\n\
     \n\
     czm_materialInput materialInput;\n\

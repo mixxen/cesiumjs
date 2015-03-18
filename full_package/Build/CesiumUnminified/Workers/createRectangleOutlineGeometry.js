@@ -1793,6 +1793,15 @@ define('Core/Cartesian3',[
     };
 
     /**
+     * @private
+     */
+    Cartesian3.equalsArray = function(cartesian, array, offset) {
+        return cartesian.x === array[offset] &&
+               cartesian.y === array[offset + 1] &&
+               cartesian.z === array[offset + 2];
+    };
+
+    /**
      * Compares the provided Cartesians componentwise and returns
      * <code>true</code> if they pass an absolute or relative tolerance test,
      * <code>false</code> otherwise.
@@ -2107,15 +2116,16 @@ define('Core/Cartesian3',[
 
     /**
      * Compares this Cartesian against the provided Cartesian componentwise and returns
-     * <code>true</code> if they are within the provided epsilon,
+     * <code>true</code> if they pass an absolute or relative tolerance test,
      * <code>false</code> otherwise.
      *
      * @param {Cartesian3} [right] The right hand side Cartesian.
-     * @param {Number} epsilon The epsilon to use for equality testing.
+     * @param {Number} relativeEpsilon The relative epsilon tolerance to use for equality testing.
+     * @param {Number} [absoluteEpsilon=relativeEpsilon] The absolute epsilon tolerance to use for equality testing.
      * @returns {Boolean} <code>true</code> if they are within the provided epsilon, <code>false</code> otherwise.
      */
-    Cartesian3.prototype.equalsEpsilon = function(right, epsilon) {
-        return Cartesian3.equalsEpsilon(this, right, epsilon);
+    Cartesian3.prototype.equalsEpsilon = function(right, relativeEpsilon, absoluteEpsilon) {
+        return Cartesian3.equalsEpsilon(this, right, relativeEpsilon, absoluteEpsilon);
     };
 
     /**
@@ -4647,6 +4657,16 @@ define('Core/Cartesian4',[
     };
 
     /**
+     * @private
+     */
+    Cartesian4.equalsArray = function(cartesian, array, offset) {
+        return cartesian.x === array[offset] &&
+               cartesian.y === array[offset + 1] &&
+               cartesian.z === array[offset + 2] &&
+               cartesian.w === array[offset + 3];
+    };
+
+    /**
      * Compares the provided Cartesians componentwise and returns
      * <code>true</code> if they pass an absolute or relative tolerance test,
      * <code>false</code> otherwise.
@@ -4730,15 +4750,16 @@ define('Core/Cartesian4',[
 
     /**
      * Compares this Cartesian against the provided Cartesian componentwise and returns
-     * <code>true</code> if they are within the provided epsilon,
+     * <code>true</code> if they pass an absolute or relative tolerance test,
      * <code>false</code> otherwise.
      *
      * @param {Cartesian4} [right] The right hand side Cartesian.
-     * @param {Number} epsilon The epsilon to use for equality testing.
+     * @param {Number} relativeEpsilon The relative epsilon tolerance to use for equality testing.
+     * @param {Number} [absoluteEpsilon=relativeEpsilon] The absolute epsilon tolerance to use for equality testing.
      * @returns {Boolean} <code>true</code> if they are within the provided epsilon, <code>false</code> otherwise.
      */
-    Cartesian4.prototype.equalsEpsilon = function(right, epsilon) {
-        return Cartesian4.equalsEpsilon(this, right, epsilon);
+    Cartesian4.prototype.equalsEpsilon = function(right, relativeEpsilon, absoluteEpsilon) {
+        return Cartesian4.equalsEpsilon(this, right, relativeEpsilon, absoluteEpsilon);
     };
 
     /**
@@ -4806,6 +4827,71 @@ define('Core/Matrix3',[
         this[6] = defaultValue(column2Row0, 0.0);
         this[7] = defaultValue(column2Row1, 0.0);
         this[8] = defaultValue(column2Row2, 0.0);
+    };
+
+    /**
+     * The number of elements used to pack the object into an array.
+     * @type {Number}
+     */
+    Matrix3.packedLength = 9;
+
+    /**
+     * Stores the provided instance into the provided array.
+     *
+     * @param {Matrix3} value The value to pack.
+     * @param {Number[]} array The array to pack into.
+     * @param {Number} [startingIndex=0] The index into the array at which to start packing the elements.
+     */
+    Matrix3.pack = function(value, array, startingIndex) {
+                if (!defined(value)) {
+            throw new DeveloperError('value is required');
+        }
+
+        if (!defined(array)) {
+            throw new DeveloperError('array is required');
+        }
+        
+        startingIndex = defaultValue(startingIndex, 0);
+
+        array[startingIndex++] = value[0];
+        array[startingIndex++] = value[1];
+        array[startingIndex++] = value[2];
+        array[startingIndex++] = value[3];
+        array[startingIndex++] = value[4];
+        array[startingIndex++] = value[5];
+        array[startingIndex++] = value[6];
+        array[startingIndex++] = value[7];
+        array[startingIndex++] = value[8];
+    };
+
+    /**
+     * Retrieves an instance from a packed array.
+     *
+     * @param {Number[]} array The packed array.
+     * @param {Number} [startingIndex=0] The starting index of the element to be unpacked.
+     * @param {Matrix3} [result] The object into which to store the result.
+     */
+    Matrix3.unpack = function(array, startingIndex, result) {
+                if (!defined(array)) {
+            throw new DeveloperError('array is required');
+        }
+        
+        startingIndex = defaultValue(startingIndex, 0);
+
+        if (!defined(result)) {
+            result = new Matrix3();
+        }
+
+        result[0] = array[startingIndex++];
+        result[1] = array[startingIndex++];
+        result[2] = array[startingIndex++];
+        result[3] = array[startingIndex++];
+        result[4] = array[startingIndex++];
+        result[5] = array[startingIndex++];
+        result[6] = array[startingIndex++];
+        result[7] = array[startingIndex++];
+        result[8] = array[startingIndex++];
+        return result;
     };
 
     /**
@@ -6073,6 +6159,21 @@ define('Core/Matrix3',[
      */
     Matrix3.prototype.equals = function(right) {
         return Matrix3.equals(this, right);
+    };
+
+    /**
+     * @private
+     */
+    Matrix3.equalsArray = function(matrix, array, offset) {
+        return matrix[0] === array[offset] &&
+               matrix[1] === array[offset + 1] &&
+               matrix[2] === array[offset + 2] &&
+               matrix[3] === array[offset + 3] &&
+               matrix[4] === array[offset + 4] &&
+               matrix[5] === array[offset + 5] &&
+               matrix[6] === array[offset + 6] &&
+               matrix[7] === array[offset + 7] &&
+               matrix[8] === array[offset + 8];
     };
 
     /**
@@ -8728,6 +8829,28 @@ define('Core/Matrix4',[
      */
     Matrix4.prototype.equals = function(right) {
         return Matrix4.equals(this, right);
+    };
+
+    /**
+     * @private
+     */
+    Matrix4.equalsArray = function(matrix, array, offset) {
+        return matrix[0] === array[offset] &&
+               matrix[1] === array[offset + 1] &&
+               matrix[2] === array[offset + 2] &&
+               matrix[3] === array[offset + 3] &&
+               matrix[4] === array[offset + 4] &&
+               matrix[5] === array[offset + 5] &&
+               matrix[6] === array[offset + 6] &&
+               matrix[7] === array[offset + 7] &&
+               matrix[8] === array[offset + 8] &&
+               matrix[9] === array[offset + 9] &&
+               matrix[10] === array[offset + 10] &&
+               matrix[11] === array[offset + 11] &&
+               matrix[12] === array[offset + 12] &&
+               matrix[13] === array[offset + 13] &&
+               matrix[14] === array[offset + 14] &&
+               matrix[15] === array[offset + 15];
     };
 
     /**
@@ -11817,6 +11940,14 @@ define('Core/Cartesian2',[
     };
 
     /**
+     * @private
+     */
+    Cartesian2.equalsArray = function(cartesian, array, offset) {
+        return cartesian.x === array[offset] &&
+               cartesian.y === array[offset + 1];
+    };
+
+    /**
      * Compares the provided Cartesians componentwise and returns
      * <code>true</code> if they pass an absolute or relative tolerance test,
      * <code>false</code> otherwise.
@@ -11882,15 +12013,16 @@ define('Core/Cartesian2',[
 
     /**
      * Compares this Cartesian against the provided Cartesian componentwise and returns
-     * <code>true</code> if they are within the provided epsilon,
+     * <code>true</code> if they pass an absolute or relative tolerance test,
      * <code>false</code> otherwise.
      *
      * @param {Cartesian2} [right] The right hand side Cartesian.
-     * @param {Number} epsilon The epsilon to use for equality testing.
+     * @param {Number} relativeEpsilon The relative epsilon tolerance to use for equality testing.
+     * @param {Number} [absoluteEpsilon=relativeEpsilon] The absolute epsilon tolerance to use for equality testing.
      * @returns {Boolean} <code>true</code> if they are within the provided epsilon, <code>false</code> otherwise.
      */
-    Cartesian2.prototype.equalsEpsilon = function(right, epsilon) {
-        return Cartesian2.equalsEpsilon(this, right, epsilon);
+    Cartesian2.prototype.equalsEpsilon = function(right, relativeEpsilon, absoluteEpsilon) {
+        return Cartesian2.equalsEpsilon(this, right, relativeEpsilon, absoluteEpsilon);
     };
 
     /**
@@ -13075,7 +13207,7 @@ define('Core/IntersectionTests',[
      * @param {Cartesian3} p0 The first vertex of the triangle.
      * @param {Cartesian3} p1 The second vertex of the triangle.
      * @param {Cartesian3} p2 The third vertex of the triangle.
-     * @param {Boolean} [cullBackFaces=false] If <code>true<code>, will only compute an intersection with the front face of the triangle
+     * @param {Boolean} [cullBackFaces=false] If <code>true</code>, will only compute an intersection with the front face of the triangle
      *                  and return undefined for intersections with the back face.
      * @param {Cartesian3} [result] The <code>Cartesian3</code> onto which to store the result.
      * @returns {Cartesian3} The intersection point or undefined if there is no intersections.
@@ -13105,7 +13237,7 @@ define('Core/IntersectionTests',[
      * @param {Cartesian3} p0 The first vertex of the triangle.
      * @param {Cartesian3} p1 The second vertex of the triangle.
      * @param {Cartesian3} p2 The third vertex of the triangle.
-     * @param {Boolean} [cullBackFaces=false] If <code>true<code>, will only compute an intersection with the front face of the triangle
+     * @param {Boolean} [cullBackFaces=false] If <code>true</code>, will only compute an intersection with the front face of the triangle
      *                  and return undefined for intersections with the back face.
      * @param {Cartesian3} [result] The <code>Cartesian3</code> onto which to store the result.
      * @returns {Cartesian3} The intersection point or undefined if there is no intersections.
@@ -20894,14 +21026,9 @@ define('Core/PolygonPipeline',[
                 if (!defined(positions)) {
             throw new DeveloperError('positions is required.');
         }
-        if (positions.length < 3) {
-            throw new DeveloperError('At least three positions are required.');
-        }
         
         var length = positions.length;
-
         var cleanedPositions = [];
-
         for ( var i0 = length - 1, i1 = 0; i1 < length; i0 = i1++) {
             var v0 = positions[i0];
             var v1 = positions[i1];
@@ -21259,6 +21386,61 @@ define('Core/Matrix2',[
         this[1] = defaultValue(column0Row1, 0.0);
         this[2] = defaultValue(column1Row0, 0.0);
         this[3] = defaultValue(column1Row1, 0.0);
+    };
+
+    /**
+     * The number of elements used to pack the object into an array.
+     * @type {Number}
+     */
+    Matrix2.packedLength = 4;
+
+    /**
+     * Stores the provided instance into the provided array.
+     *
+     * @param {Matrix2} value The value to pack.
+     * @param {Number[]} array The array to pack into.
+     * @param {Number} [startingIndex=0] The index into the array at which to start packing the elements.
+     */
+    Matrix2.pack = function(value, array, startingIndex) {
+                if (!defined(value)) {
+            throw new DeveloperError('value is required');
+        }
+
+        if (!defined(array)) {
+            throw new DeveloperError('array is required');
+        }
+        
+        startingIndex = defaultValue(startingIndex, 0);
+
+        array[startingIndex++] = value[0];
+        array[startingIndex++] = value[1];
+        array[startingIndex++] = value[2];
+        array[startingIndex++] = value[3];
+    };
+
+    /**
+     * Retrieves an instance from a packed array.
+     *
+     * @param {Number[]} array The packed array.
+     * @param {Number} [startingIndex=0] The starting index of the element to be unpacked.
+     * @param {Matrix2} [result] The object into which to store the result.
+     */
+    Matrix2.unpack = function(array, startingIndex, result) {
+                if (!defined(array)) {
+            throw new DeveloperError('array is required');
+        }
+        
+        startingIndex = defaultValue(startingIndex, 0);
+
+        if (!defined(result)) {
+            result = new Matrix2();
+        }
+
+        result[0] = array[startingIndex++];
+        result[1] = array[startingIndex++];
+        result[2] = array[startingIndex++];
+        result[3] = array[startingIndex++];
+        return result;
     };
 
     /**
@@ -21890,6 +22072,16 @@ define('Core/Matrix2',[
     };
 
     /**
+     * @private
+     */
+    Matrix2.equalsArray = function(matrix, array, offset) {
+        return matrix[0] === array[offset] &&
+               matrix[1] === array[offset + 1] &&
+               matrix[2] === array[offset + 2] &&
+               matrix[3] === array[offset + 3];
+    };
+
+    /**
      * Compares the provided matrices componentwise and returns
      * <code>true</code> if they are within the provided epsilon,
      * <code>false</code> otherwise.
@@ -22397,7 +22589,7 @@ define('Core/RectangleOutlineGeometry',[
         var ellipsoid = defaultValue(options.ellipsoid, Ellipsoid.WGS84);
         var surfaceHeight = defaultValue(options.height, 0.0);
         var rotation = defaultValue(options.rotation, 0.0);
-        var extrudedHeight = defaultValue(options.extrudedHeight, surfaceHeight);
+        var extrudedHeight = options.extrudedHeight;
 
                 if (!defined(rectangle)) {
             throw new DeveloperError('rectangle is required.');
@@ -22420,7 +22612,7 @@ define('Core/RectangleOutlineGeometry',[
      * The number of elements used to pack the object into an array.
      * @type {Number}
      */
-    RectangleOutlineGeometry.packedLength = Rectangle.packedLength + Ellipsoid.packedLength + 4;
+    RectangleOutlineGeometry.packedLength = Rectangle.packedLength + Ellipsoid.packedLength + 5;
 
     /**
      * Stores the provided instance into the provided array.
@@ -22449,7 +22641,8 @@ define('Core/RectangleOutlineGeometry',[
         array[startingIndex++] = value._granularity;
         array[startingIndex++] = value._surfaceHeight;
         array[startingIndex++] = value._rotation;
-        array[startingIndex]   = value._extrudedHeight;
+        array[startingIndex++] = defined(value._extrudedHeight) ? 1.0 : 0.0;
+        array[startingIndex] = defaultValue(value._extrudedHeight, 0.0);
     };
 
     var scratchRectangle = new Rectangle();
@@ -22486,13 +22679,14 @@ define('Core/RectangleOutlineGeometry',[
         var granularity = array[startingIndex++];
         var height = array[startingIndex++];
         var rotation = array[startingIndex++];
+        var hasExtrudedHeight = array[startingIndex++];
         var extrudedHeight = array[startingIndex];
 
         if (!defined(result)) {
             scratchOptions.granularity = granularity;
             scratchOptions.height = height;
             scratchOptions.rotation = rotation;
-            scratchOptions.extrudedHeight = extrudedHeight;
+            scratchOptions.extrudedHeight = hasExtrudedHeight ? extrudedHeight : undefined;
             return new RectangleOutlineGeometry(scratchOptions);
         }
 
@@ -22500,7 +22694,7 @@ define('Core/RectangleOutlineGeometry',[
         result._ellipsoid = Ellipsoid.clone(ellipsoid, result._ellipsoid);
         result._surfaceHeight = height;
         result._rotation = rotation;
-        result._extrudedHeight = extrudedHeight;
+        result._extrudedHeight = hasExtrudedHeight ? extrudedHeight : undefined;
 
         return result;
     };
