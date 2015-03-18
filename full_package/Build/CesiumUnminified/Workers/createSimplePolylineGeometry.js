@@ -1793,6 +1793,15 @@ define('Core/Cartesian3',[
     };
 
     /**
+     * @private
+     */
+    Cartesian3.equalsArray = function(cartesian, array, offset) {
+        return cartesian.x === array[offset] &&
+               cartesian.y === array[offset + 1] &&
+               cartesian.z === array[offset + 2];
+    };
+
+    /**
      * Compares the provided Cartesians componentwise and returns
      * <code>true</code> if they pass an absolute or relative tolerance test,
      * <code>false</code> otherwise.
@@ -2107,15 +2116,16 @@ define('Core/Cartesian3',[
 
     /**
      * Compares this Cartesian against the provided Cartesian componentwise and returns
-     * <code>true</code> if they are within the provided epsilon,
+     * <code>true</code> if they pass an absolute or relative tolerance test,
      * <code>false</code> otherwise.
      *
      * @param {Cartesian3} [right] The right hand side Cartesian.
-     * @param {Number} epsilon The epsilon to use for equality testing.
+     * @param {Number} relativeEpsilon The relative epsilon tolerance to use for equality testing.
+     * @param {Number} [absoluteEpsilon=relativeEpsilon] The absolute epsilon tolerance to use for equality testing.
      * @returns {Boolean} <code>true</code> if they are within the provided epsilon, <code>false</code> otherwise.
      */
-    Cartesian3.prototype.equalsEpsilon = function(right, epsilon) {
-        return Cartesian3.equalsEpsilon(this, right, epsilon);
+    Cartesian3.prototype.equalsEpsilon = function(right, relativeEpsilon, absoluteEpsilon) {
+        return Cartesian3.equalsEpsilon(this, right, relativeEpsilon, absoluteEpsilon);
     };
 
     /**
@@ -3919,6 +3929,16 @@ define('Core/Cartesian4',[
     };
 
     /**
+     * @private
+     */
+    Cartesian4.equalsArray = function(cartesian, array, offset) {
+        return cartesian.x === array[offset] &&
+               cartesian.y === array[offset + 1] &&
+               cartesian.z === array[offset + 2] &&
+               cartesian.w === array[offset + 3];
+    };
+
+    /**
      * Compares the provided Cartesians componentwise and returns
      * <code>true</code> if they pass an absolute or relative tolerance test,
      * <code>false</code> otherwise.
@@ -4002,15 +4022,16 @@ define('Core/Cartesian4',[
 
     /**
      * Compares this Cartesian against the provided Cartesian componentwise and returns
-     * <code>true</code> if they are within the provided epsilon,
+     * <code>true</code> if they pass an absolute or relative tolerance test,
      * <code>false</code> otherwise.
      *
      * @param {Cartesian4} [right] The right hand side Cartesian.
-     * @param {Number} epsilon The epsilon to use for equality testing.
+     * @param {Number} relativeEpsilon The relative epsilon tolerance to use for equality testing.
+     * @param {Number} [absoluteEpsilon=relativeEpsilon] The absolute epsilon tolerance to use for equality testing.
      * @returns {Boolean} <code>true</code> if they are within the provided epsilon, <code>false</code> otherwise.
      */
-    Cartesian4.prototype.equalsEpsilon = function(right, epsilon) {
-        return Cartesian4.equalsEpsilon(this, right, epsilon);
+    Cartesian4.prototype.equalsEpsilon = function(right, relativeEpsilon, absoluteEpsilon) {
+        return Cartesian4.equalsEpsilon(this, right, relativeEpsilon, absoluteEpsilon);
     };
 
     /**
@@ -4078,6 +4099,71 @@ define('Core/Matrix3',[
         this[6] = defaultValue(column2Row0, 0.0);
         this[7] = defaultValue(column2Row1, 0.0);
         this[8] = defaultValue(column2Row2, 0.0);
+    };
+
+    /**
+     * The number of elements used to pack the object into an array.
+     * @type {Number}
+     */
+    Matrix3.packedLength = 9;
+
+    /**
+     * Stores the provided instance into the provided array.
+     *
+     * @param {Matrix3} value The value to pack.
+     * @param {Number[]} array The array to pack into.
+     * @param {Number} [startingIndex=0] The index into the array at which to start packing the elements.
+     */
+    Matrix3.pack = function(value, array, startingIndex) {
+                if (!defined(value)) {
+            throw new DeveloperError('value is required');
+        }
+
+        if (!defined(array)) {
+            throw new DeveloperError('array is required');
+        }
+        
+        startingIndex = defaultValue(startingIndex, 0);
+
+        array[startingIndex++] = value[0];
+        array[startingIndex++] = value[1];
+        array[startingIndex++] = value[2];
+        array[startingIndex++] = value[3];
+        array[startingIndex++] = value[4];
+        array[startingIndex++] = value[5];
+        array[startingIndex++] = value[6];
+        array[startingIndex++] = value[7];
+        array[startingIndex++] = value[8];
+    };
+
+    /**
+     * Retrieves an instance from a packed array.
+     *
+     * @param {Number[]} array The packed array.
+     * @param {Number} [startingIndex=0] The starting index of the element to be unpacked.
+     * @param {Matrix3} [result] The object into which to store the result.
+     */
+    Matrix3.unpack = function(array, startingIndex, result) {
+                if (!defined(array)) {
+            throw new DeveloperError('array is required');
+        }
+        
+        startingIndex = defaultValue(startingIndex, 0);
+
+        if (!defined(result)) {
+            result = new Matrix3();
+        }
+
+        result[0] = array[startingIndex++];
+        result[1] = array[startingIndex++];
+        result[2] = array[startingIndex++];
+        result[3] = array[startingIndex++];
+        result[4] = array[startingIndex++];
+        result[5] = array[startingIndex++];
+        result[6] = array[startingIndex++];
+        result[7] = array[startingIndex++];
+        result[8] = array[startingIndex++];
+        return result;
     };
 
     /**
@@ -5345,6 +5431,21 @@ define('Core/Matrix3',[
      */
     Matrix3.prototype.equals = function(right) {
         return Matrix3.equals(this, right);
+    };
+
+    /**
+     * @private
+     */
+    Matrix3.equalsArray = function(matrix, array, offset) {
+        return matrix[0] === array[offset] &&
+               matrix[1] === array[offset + 1] &&
+               matrix[2] === array[offset + 2] &&
+               matrix[3] === array[offset + 3] &&
+               matrix[4] === array[offset + 4] &&
+               matrix[5] === array[offset + 5] &&
+               matrix[6] === array[offset + 6] &&
+               matrix[7] === array[offset + 7] &&
+               matrix[8] === array[offset + 8];
     };
 
     /**
@@ -8000,6 +8101,28 @@ define('Core/Matrix4',[
      */
     Matrix4.prototype.equals = function(right) {
         return Matrix4.equals(this, right);
+    };
+
+    /**
+     * @private
+     */
+    Matrix4.equalsArray = function(matrix, array, offset) {
+        return matrix[0] === array[offset] &&
+               matrix[1] === array[offset + 1] &&
+               matrix[2] === array[offset + 2] &&
+               matrix[3] === array[offset + 3] &&
+               matrix[4] === array[offset + 4] &&
+               matrix[5] === array[offset + 5] &&
+               matrix[6] === array[offset + 6] &&
+               matrix[7] === array[offset + 7] &&
+               matrix[8] === array[offset + 8] &&
+               matrix[9] === array[offset + 9] &&
+               matrix[10] === array[offset + 10] &&
+               matrix[11] === array[offset + 11] &&
+               matrix[12] === array[offset + 12] &&
+               matrix[13] === array[offset + 13] &&
+               matrix[14] === array[offset + 14] &&
+               matrix[15] === array[offset + 15];
     };
 
     /**
@@ -10764,6 +10887,16 @@ define('Core/Color',[
     };
 
     /**
+     * @private
+     */
+    Color.equalsArray = function(color, array, offset) {
+        return color.red === array[offset] &&
+               color.green === array[offset + 1] &&
+               color.blue === array[offset + 2] &&
+               color.alpha === array[offset + 3];
+    };
+
+    /**
      * Returns a duplicate of a Color instance.
      *
      * @param {Color} [result] The object to store the result in, if undefined a new instance will be created.
@@ -12252,6 +12385,15 @@ define('Core/Color',[
      * @type {Color}
      */
     Color.YELLOWGREEN = freezeObject(Color.fromCssColorString('#9ACD32'));
+
+    /**
+     * An immutable Color instance initialized to CSS transparent.
+     * <span class="colorSwath" style="background: transparent;"></span>
+     *
+     * @constant
+     * @type {Color}
+     */
+    Color.TRANSPARENT = freezeObject(new Color(0, 0, 0, 0));
 
     return Color;
 });
@@ -14528,7 +14670,7 @@ define('Core/IntersectionTests',[
      * @param {Cartesian3} p0 The first vertex of the triangle.
      * @param {Cartesian3} p1 The second vertex of the triangle.
      * @param {Cartesian3} p2 The third vertex of the triangle.
-     * @param {Boolean} [cullBackFaces=false] If <code>true<code>, will only compute an intersection with the front face of the triangle
+     * @param {Boolean} [cullBackFaces=false] If <code>true</code>, will only compute an intersection with the front face of the triangle
      *                  and return undefined for intersections with the back face.
      * @param {Cartesian3} [result] The <code>Cartesian3</code> onto which to store the result.
      * @returns {Cartesian3} The intersection point or undefined if there is no intersections.
@@ -14558,7 +14700,7 @@ define('Core/IntersectionTests',[
      * @param {Cartesian3} p0 The first vertex of the triangle.
      * @param {Cartesian3} p1 The second vertex of the triangle.
      * @param {Cartesian3} p2 The third vertex of the triangle.
-     * @param {Boolean} [cullBackFaces=false] If <code>true<code>, will only compute an intersection with the front face of the triangle
+     * @param {Boolean} [cullBackFaces=false] If <code>true</code>, will only compute an intersection with the front face of the triangle
      *                  and return undefined for intersections with the back face.
      * @param {Cartesian3} [result] The <code>Cartesian3</code> onto which to store the result.
      * @returns {Cartesian3} The intersection point or undefined if there is no intersections.
@@ -15848,18 +15990,18 @@ define('Core/SimplePolylineGeometry',[
         options = defaultValue(options, defaultValue.EMPTY_OBJECT);
         var positions = options.positions;
         var colors = options.colors;
-        var perVertex = defaultValue(options.colorsPerVertex, false);
+        var colorsPerVertex = defaultValue(options.colorsPerVertex, false);
 
                 if ((!defined(positions)) || (positions.length < 2)) {
             throw new DeveloperError('At least two positions are required.');
         }
-        if (defined(colors) && ((perVertex && colors.length < positions.length) || (!perVertex && colors.length < positions.length - 1))) {
+        if (defined(colors) && ((colorsPerVertex && colors.length < positions.length) || (!colorsPerVertex && colors.length < positions.length - 1))) {
             throw new DeveloperError('colors has an invalid length.');
         }
         
         this._positions = positions;
         this._colors = colors;
-        this._perVertex = perVertex;
+        this._colorsPerVertex = colorsPerVertex;
         this._followSurface = defaultValue(options.followSurface, true);
         this._granularity = defaultValue(options.granularity, CesiumMath.RADIANS_PER_DEGREE);
         this._ellipsoid = defaultValue(options.ellipsoid, Ellipsoid.WGS84);
@@ -15914,7 +16056,7 @@ define('Core/SimplePolylineGeometry',[
         Ellipsoid.pack(value._ellipsoid, array, startingIndex);
         startingIndex += Ellipsoid.packedLength;
 
-        array[startingIndex++] = value._perVertex ? 1.0 : 0.0;
+        array[startingIndex++] = value._colorsPerVertex ? 1.0 : 0.0;
         array[startingIndex++] = value._followSurface ? 1.0 : 0.0;
         array[startingIndex]   = value._granularity;
     };
@@ -15952,7 +16094,7 @@ define('Core/SimplePolylineGeometry',[
         var ellipsoid = Ellipsoid.unpack(array, startingIndex);
         startingIndex += Ellipsoid.packedLength;
 
-        var perVertex = array[startingIndex++] === 1.0;
+        var colorsPerVertex = array[startingIndex++] === 1.0;
         var followSurface = array[startingIndex++] === 1.0;
         var granularity = array[startingIndex];
 
@@ -15961,7 +16103,7 @@ define('Core/SimplePolylineGeometry',[
                 positions : positions,
                 colors : colors,
                 ellipsoid : ellipsoid,
-                perVertex : perVertex,
+                colorsPerVertex : colorsPerVertex,
                 followSurface : followSurface,
                 granularity : granularity
             });
@@ -15970,7 +16112,7 @@ define('Core/SimplePolylineGeometry',[
         result._positions = positions;
         result._colors = colors;
         result._ellipsoid = ellipsoid;
-        result._perVertex = perVertex;
+        result._colorsPerVertex = colorsPerVertex;
         result._followSurface = followSurface;
         result._granularity = granularity;
 
@@ -15995,13 +16137,13 @@ define('Core/SimplePolylineGeometry',[
     SimplePolylineGeometry.createGeometry = function(simplePolylineGeometry) {
         var positions = simplePolylineGeometry._positions;
         var colors = simplePolylineGeometry._colors;
-        var perVertex = simplePolylineGeometry._perVertex;
+        var colorsPerVertex = simplePolylineGeometry._colorsPerVertex;
         var followSurface = simplePolylineGeometry._followSurface;
         var granularity = simplePolylineGeometry._granularity;
         var ellipsoid = simplePolylineGeometry._ellipsoid;
 
         var minDistance = CesiumMath.chordLength(granularity, ellipsoid.maximumRadius);
-        var perSegmentColors = defined(colors) && !perVertex;
+        var perSegmentColors = defined(colors) && !colorsPerVertex;
 
         var i;
         var length = positions.length;
