@@ -10,11 +10,9 @@ void main()\n\
 {\n\
     czm_materialInput materialInput;\n\
     \n\
-	vec3 normalEC = czm_normal3D * czm_geodeticSurfaceNormal(v_positionMC, vec3(0.0), vec3(1.0));\n\
+	vec3 normalEC = normalize(czm_normal3D * czm_geodeticSurfaceNormal(v_positionMC, vec3(0.0), vec3(1.0)));\n\
 #ifdef FACE_FORWARD\n\
-    normalEC = normalize(faceforward(normalEC, vec3(0.0, 0.0, 1.0), -normalEC));\n\
-#else\n\
-    normalEC = normalize(normalEC);\n\
+    normalEC = faceforward(normalEC, vec3(0.0, 0.0, 1.0), -normalEC);\n\
 #endif\n\
     \n\
     materialInput.s = v_st.s;\n\

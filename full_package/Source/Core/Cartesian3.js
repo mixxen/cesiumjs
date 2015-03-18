@@ -704,6 +704,15 @@ define([
     };
 
     /**
+     * @private
+     */
+    Cartesian3.equalsArray = function(cartesian, array, offset) {
+        return cartesian.x === array[offset] &&
+               cartesian.y === array[offset + 1] &&
+               cartesian.z === array[offset + 2];
+    };
+
+    /**
      * Compares the provided Cartesians componentwise and returns
      * <code>true</code> if they pass an absolute or relative tolerance test,
      * <code>false</code> otherwise.
@@ -1032,15 +1041,16 @@ define([
 
     /**
      * Compares this Cartesian against the provided Cartesian componentwise and returns
-     * <code>true</code> if they are within the provided epsilon,
+     * <code>true</code> if they pass an absolute or relative tolerance test,
      * <code>false</code> otherwise.
      *
      * @param {Cartesian3} [right] The right hand side Cartesian.
-     * @param {Number} epsilon The epsilon to use for equality testing.
+     * @param {Number} relativeEpsilon The relative epsilon tolerance to use for equality testing.
+     * @param {Number} [absoluteEpsilon=relativeEpsilon] The absolute epsilon tolerance to use for equality testing.
      * @returns {Boolean} <code>true</code> if they are within the provided epsilon, <code>false</code> otherwise.
      */
-    Cartesian3.prototype.equalsEpsilon = function(right, epsilon) {
-        return Cartesian3.equalsEpsilon(this, right, epsilon);
+    Cartesian3.prototype.equalsEpsilon = function(right, relativeEpsilon, absoluteEpsilon) {
+        return Cartesian3.equalsEpsilon(this, right, relativeEpsilon, absoluteEpsilon);
     };
 
     /**

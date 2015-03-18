@@ -3,7 +3,7 @@
     define(function() {
     "use strict";
     return "attribute vec4 position3DAndHeight;\n\
-attribute vec4 textureCoordAndEncodedNormals;\n\
+attribute vec3 textureCoordAndEncodedNormals;\n\
 \n\
 uniform vec3 u_center3D;\n\
 uniform mat4 u_modifiedModelView;\n\
@@ -91,15 +91,15 @@ void main() \n\
 \n\
     gl_Position = getPosition(position3DWC);\n\
 \n\
-#if defined(SHOW_REFLECTIVE_OCEAN) || defined(ENABLE_DAYNIGHT_SHADING)\n\
-    v_positionEC = (czm_modelView3D * vec4(position3DWC, 1.0)).xyz;\n\
-    v_positionMC = position3DWC;                                 // position in model coordinates\n\
-#elif defined(ENABLE_VERTEX_LIGHTING)\n\
+#if defined(ENABLE_VERTEX_LIGHTING)\n\
     v_positionEC = (czm_modelView3D * vec4(position3DWC, 1.0)).xyz;\n\
     v_positionMC = position3DWC;                                 // position in model coordinates\n\
     float encodedNormal = textureCoordAndEncodedNormals.z;\n\
     v_normalMC = czm_octDecode(encodedNormal);\n\
     v_normalEC = czm_normal3D * v_normalMC;\n\
+#elif defined(SHOW_REFLECTIVE_OCEAN) || defined(ENABLE_DAYNIGHT_SHADING)\n\
+    v_positionEC = (czm_modelView3D * vec4(position3DWC, 1.0)).xyz;\n\
+    v_positionMC = position3DWC;                                 // position in model coordinates\n\
 #endif\n\
 \n\
     v_textureCoordinates = textureCoordAndEncodedNormals.xy;\n\
