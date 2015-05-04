@@ -916,6 +916,7 @@ define([
                 frustumCommandsList[n].indices[p] = 0;
             }
         }
+        overlayList.length = 0;
 
         var near = Number.MAX_VALUE;
         var far = Number.MIN_VALUE;
@@ -1208,7 +1209,7 @@ define([
         var frustumCommandsList = scene._frustumCommandsList;
         var numFrustums = frustumCommandsList.length;
         for (i = 0; i < numFrustums; ++i) {
-            if (frustumCommandsList[i].translucentIndex > 0) {
+            if (frustumCommandsList[i].indices[Pass.TRANSLUCENT] > 0) {
                 renderTranslucentCommands = true;
                 break;
             }

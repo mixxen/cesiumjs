@@ -26,7 +26,7 @@ defineSuite([
         createFrameState,
         render) {
     "use strict";
-    /*global jasmine,describe,xdescribe,it,xit,expect,beforeEach,afterEach,beforeAll,afterAll,spyOn,runs,waits,waitsFor*/
+    /*global jasmine,describe,xdescribe,it,xit,expect,beforeEach,afterEach,beforeAll,afterAll,spyOn*/
 
     var context;
     var frameState;
@@ -318,6 +318,28 @@ defineSuite([
                 }
             }
         });
+        var pixel = renderMaterial(material);
+        expect(pixel).not.toEqual([0, 0, 0, 0]);
+    });
+
+    it('creates a material with an image canvas uniform', function() {
+        var canvas = document.createElement('canvas');
+        var context2D = canvas.getContext('2d');
+        context2D.width = 1;
+        context2D.height = 1;
+        context2D.fillStyle = 'rgb(0,0,255)';
+        context2D.fillRect(0, 0, 1, 1);
+
+        var material = new Material({
+            strict : true,
+            fabric : {
+                type : 'DiffuseMap',
+                uniforms : {
+                    image : canvas
+                }
+            }
+        });
+
         var pixel = renderMaterial(material);
         expect(pixel).not.toEqual([0, 0, 0, 0]);
     });

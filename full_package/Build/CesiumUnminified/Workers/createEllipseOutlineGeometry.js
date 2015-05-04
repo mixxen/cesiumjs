@@ -10324,6 +10324,18 @@ define('Core/FeatureDetection',[
         return isFirefox() && firefoxVersionResult;
     }
 
+    var hasPointerEvents;
+    function supportsPointerEvents() {
+        if (!defined(hasPointerEvents)) {
+            //While window.navigator.pointerEnabled is deprecated in the W3C specification
+            //we still need to use it if it exists in order to support browsers
+            //that rely on it, such as the Windows WebBrowser control which defines
+            //window.PointerEvent but sets window.navigator.pointerEnabled to false.
+            hasPointerEvents = defined(window.PointerEvent) && (!defined(window.navigator.pointerEnabled) || window.navigator.pointerEnabled);
+        }
+        return hasPointerEvents;
+    }
+
     /**
      * A set of functions to detect whether the current browser supports
      * various features.
@@ -10343,7 +10355,8 @@ define('Core/FeatureDetection',[
         isFirefox : isFirefox,
         firefoxVersion : firefoxVersion,
         isWindows : isWindows,
-        hardwareConcurrency : defaultValue(navigator.hardwareConcurrency, 3)
+        hardwareConcurrency : defaultValue(navigator.hardwareConcurrency, 3),
+        supportsPointerEvents : supportsPointerEvents
     };
 
     /**

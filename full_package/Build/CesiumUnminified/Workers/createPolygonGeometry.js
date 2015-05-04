@@ -11356,6 +11356,18 @@ define('Core/FeatureDetection',[
         return isFirefox() && firefoxVersionResult;
     }
 
+    var hasPointerEvents;
+    function supportsPointerEvents() {
+        if (!defined(hasPointerEvents)) {
+            //While window.navigator.pointerEnabled is deprecated in the W3C specification
+            //we still need to use it if it exists in order to support browsers
+            //that rely on it, such as the Windows WebBrowser control which defines
+            //window.PointerEvent but sets window.navigator.pointerEnabled to false.
+            hasPointerEvents = defined(window.PointerEvent) && (!defined(window.navigator.pointerEnabled) || window.navigator.pointerEnabled);
+        }
+        return hasPointerEvents;
+    }
+
     /**
      * A set of functions to detect whether the current browser supports
      * various features.
@@ -11375,7 +11387,8 @@ define('Core/FeatureDetection',[
         isFirefox : isFirefox,
         firefoxVersion : firefoxVersion,
         isWindows : isWindows,
-        hardwareConcurrency : defaultValue(navigator.hardwareConcurrency, 3)
+        hardwareConcurrency : defaultValue(navigator.hardwareConcurrency, 3),
+        supportsPointerEvents : supportsPointerEvents
     };
 
     /**
@@ -19449,6 +19462,49 @@ define('Core/Transforms',[
         Cartesian4.multiplyByScalar(tmp, 1.0 / tmp.w, tmp);
         Matrix4.multiplyByVector(viewportTransformation, tmp, tmp);
         return Cartesian2.fromCartesian4(tmp, result);
+    };
+
+    var normalScratch = new Cartesian3();
+    var rightScratch = new Cartesian3();
+    var upScratch = new Cartesian3();
+
+    /**
+     * @private
+     */
+    Transforms.rotationMatrixFromPositionVelocity = function(position, velocity, ellipsoid, result) {
+                if (!defined(position)) {
+            throw new DeveloperError('position is required.');
+        }
+
+        if (!defined(velocity)) {
+            throw new DeveloperError('velocity is required.');
+        }
+        
+        var normal = defaultValue(ellipsoid, Ellipsoid.WGS84).geodeticSurfaceNormal(position, normalScratch);
+        var right = Cartesian3.cross(velocity, normal, rightScratch);
+        if (Cartesian3.equalsEpsilon(right, Cartesian3.ZERO, CesiumMath.EPSILON6)) {
+            right = Cartesian3.clone(Cartesian3.UNIT_X, right);
+        }
+
+        var up = Cartesian3.cross(right, velocity, upScratch);
+        Cartesian3.cross(velocity, up, right);
+        Cartesian3.negate(right, right);
+
+        if (!defined(result)) {
+            result = new Matrix3();
+        }
+
+        result[0] = velocity.x;
+        result[1] = velocity.y;
+        result[2] = velocity.z;
+        result[3] = right.x;
+        result[4] = right.y;
+        result[5] = right.z;
+        result[6] = up.x;
+        result[7] = up.y;
+        result[8] = up.z;
+
+        return result;
     };
 
     return Transforms;

@@ -11034,6 +11034,18 @@ define('Core/FeatureDetection',[
         return isFirefox() && firefoxVersionResult;
     }
 
+    var hasPointerEvents;
+    function supportsPointerEvents() {
+        if (!defined(hasPointerEvents)) {
+            //While window.navigator.pointerEnabled is deprecated in the W3C specification
+            //we still need to use it if it exists in order to support browsers
+            //that rely on it, such as the Windows WebBrowser control which defines
+            //window.PointerEvent but sets window.navigator.pointerEnabled to false.
+            hasPointerEvents = defined(window.PointerEvent) && (!defined(window.navigator.pointerEnabled) || window.navigator.pointerEnabled);
+        }
+        return hasPointerEvents;
+    }
+
     /**
      * A set of functions to detect whether the current browser supports
      * various features.
@@ -11053,7 +11065,8 @@ define('Core/FeatureDetection',[
         isFirefox : isFirefox,
         firefoxVersion : firefoxVersion,
         isWindows : isWindows,
-        hardwareConcurrency : defaultValue(navigator.hardwareConcurrency, 3)
+        hardwareConcurrency : defaultValue(navigator.hardwareConcurrency, 3),
+        supportsPointerEvents : supportsPointerEvents
     };
 
     /**
@@ -19412,8 +19425,8 @@ define('Core/EllipseGeometry',[
      * @param {Ellipsoid} [options.ellipsoid=Ellipsoid.WGS84] The ellipsoid the ellipse will be on.
      * @param {Number} [options.height=0.0] The height above the ellipsoid.
      * @param {Number} [options.extrudedHeight] The height of the extrusion.
-     * @param {Number} [options.rotation=0.0] The angle from north (clockwise) in radians.
-     * @param {Number} [options.stRotation=0.0] The rotation of the texture coordinates, in radians. A positive rotation is counter-clockwise.
+     * @param {Number} [options.rotation=0.0] The angle of rotation counter-clockwise from north.
+     * @param {Number} [options.stRotation=0.0] The rotation of the texture coordinates counter-clockwise from north.
      * @param {Number} [options.granularity=CesiumMath.RADIANS_PER_DEGREE] The angular distance between points on the ellipse in radians.
      * @param {VertexFormat} [options.vertexFormat=VertexFormat.DEFAULT] The vertex attributes to be computed.
      *
@@ -19422,8 +19435,6 @@ define('Core/EllipseGeometry',[
      * @exception {DeveloperError} granularity must be greater than zero.
      *
      * @see EllipseGeometry.createGeometry
-     *
-     * @demo {@link http://cesiumjs.org/Cesium/Apps/Sandcastle/index.html?src=Ellipse.html|Cesium Sandcastle Ellipse Demo}
      *
      * @example
      * // Create an ellipse.

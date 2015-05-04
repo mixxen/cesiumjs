@@ -1,9 +1,9 @@
 {
   "name": "cesiumjs",
-  "version": "1.7.1",
+  "version": "1.9.0",
   "authors": [
     "Cesium Contributors",
-    "Michael Lodge-Paolini <mlodgepaolini@myflipsidemedia.com>"
+    "Michael Lodge-Paolini <mikelp@agi.com>"
   ],
   "description": "WebGL virtual globe and map engine",
   "main": [

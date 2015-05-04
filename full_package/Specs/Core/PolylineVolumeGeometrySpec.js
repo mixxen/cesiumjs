@@ -16,7 +16,7 @@ defineSuite([
         VertexFormat,
         createPackableSpecs) {
     "use strict";
-    /*global jasmine,describe,xdescribe,it,xit,expect,beforeEach,afterEach,beforeAll,afterAll,spyOn,runs,waits,waitsFor*/
+    /*global jasmine,describe,xdescribe,it,xit,expect,beforeEach,afterEach,beforeAll,afterAll,spyOn*/
     var shape;
 
     beforeAll(function() {
@@ -167,6 +167,24 @@ defineSuite([
 
         expect(m.attributes.position.values.length).toEqual(3 * (2 * 8 + 4 * 2 * 9));
         expect(m.indices.length).toEqual(3 * (8 * 2 + 4 * 7 * 2 + 4));
+    });
+
+    it('computes sharp turns', function() {
+        var m = PolylineVolumeGeometry.createGeometry(new PolylineVolumeGeometry({
+            vertexFormat : VertexFormat.POSITION_ONLY,
+            polylinePositions : Cartesian3.fromDegreesArrayHeights([
+                 2.00571672577652, 52.7781459942399, 500,
+                 1.99188457974115, 52.7764958852886, 500,
+                 2.01325961458495, 52.7674170680511, 500,
+                 1.98708058340534, 52.7733979856253, 500,
+                 2.00634853946644, 52.7650460748473, 500
+            ]),
+            cornerType: CornerType.BEVELED,
+            shapePositions: shape
+        }));
+
+        expect(m.attributes.position.values.length).toEqual(360);
+        expect(m.indices.length).toEqual(324);
     });
 
     it('computes straight volume', function() {

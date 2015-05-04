@@ -1,3 +1,4 @@
+@import url(../shared.css);
 body {
     margin: 0;
     padding: 0;
@@ -11,7 +12,10 @@ body {
     color: #edffff;
 }
 
-.cesium-infoBox-description a:link,a:visited,a:hover,a:active {
+.cesium-infoBox-description a:link,
+.cesium-infoBox-description a:visited,
+.cesium-infoBox-description a:hover,
+.cesium-infoBox-description a:active {
     color: #edffff;
 }
 
@@ -49,7 +53,10 @@ body {
     color: #000000;
 }
 
-.cesium-infoBox-description-lighter a:link,a:visited,a:hover,a:active {
+.cesium-infoBox-description-lighter a:link,
+.cesium-infoBox-description-lighter a:visited,
+.cesium-infoBox-description-lighter a:hover,
+.cesium-infoBox-description-lighter a:active {
     color: #000000;
 }
 
