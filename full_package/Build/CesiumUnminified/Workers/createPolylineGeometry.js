@@ -10324,6 +10324,18 @@ define('Core/FeatureDetection',[
         return isFirefox() && firefoxVersionResult;
     }
 
+    var hasPointerEvents;
+    function supportsPointerEvents() {
+        if (!defined(hasPointerEvents)) {
+            //While window.navigator.pointerEnabled is deprecated in the W3C specification
+            //we still need to use it if it exists in order to support browsers
+            //that rely on it, such as the Windows WebBrowser control which defines
+            //window.PointerEvent but sets window.navigator.pointerEnabled to false.
+            hasPointerEvents = defined(window.PointerEvent) && (!defined(window.navigator.pointerEnabled) || window.navigator.pointerEnabled);
+        }
+        return hasPointerEvents;
+    }
+
     /**
      * A set of functions to detect whether the current browser supports
      * various features.
@@ -10343,7 +10355,8 @@ define('Core/FeatureDetection',[
         isFirefox : isFirefox,
         firefoxVersion : firefoxVersion,
         isWindows : isWindows,
-        hardwareConcurrency : defaultValue(navigator.hardwareConcurrency, 3)
+        hardwareConcurrency : defaultValue(navigator.hardwareConcurrency, 3),
+        supportsPointerEvents : supportsPointerEvents
     };
 
     /**
@@ -15766,10 +15779,11 @@ define('Core/PolylinePipeline',[
 
         var cleanedPositions = positions.slice(0, i);
         for (; i < length; ++i) {
-            v0 = positions[i - 1];
+            // v0 is set by either the previous loop, or the previous clean point.
             v1 = positions[i];
             if (!Cartesian3.equalsEpsilon(v0, v1, removeDuplicatesEpsilon)) {
                 cleanedPositions.push(Cartesian3.clone(v1));
+                v0 = v1;
             }
         }
 
