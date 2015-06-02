@@ -4155,7 +4155,7 @@ define('Core/IndexDatatype',[
      *
      * @param {Number} numberOfVertices Number of vertices that the indices will reference.
      * @param {Any} indicesLengthOrArray Passed through to the typed array constructor.
-     * @returns {Uint16Aray|Uint32Array} A <code>Uint16Array</code> or <code>Uint32Array</code> constructed with <code>indicesLengthOrArray</code>.
+     * @returns {Uint16Array|Uint32Array} A <code>Uint16Array</code> or <code>Uint32Array</code> constructed with <code>indicesLengthOrArray</code>.
      *
      * @example
      * this.indices = Cesium.IndexDatatype.createTypedArray(positions.length / 3, numberOfIndices);
@@ -4178,9 +4178,9 @@ define('Core/IndexDatatype',[
      *
      * @param {Number} numberOfVertices Number of vertices that the indices will reference.
      * @param {ArrayBuffer} sourceArray Passed through to the typed array constructor.
-     * @param {byteOffset} byteOffset Passed through to the typed array constructor.
-     * @param {length} length Passed through to the typed array constructor.
-     * @returns {Uint16Aray|Uint32Array} A <code>Uint16Array</code> or <code>Uint32Array</code> constructed with <code>sourceArray</code>, <code>byteOffset</code>, and <code>length</code>.
+     * @param {Number} byteOffset Passed through to the typed array constructor.
+     * @param {Number} length Passed through to the typed array constructor.
+     * @returns {Uint16Array|Uint32Array} A <code>Uint16Array</code> or <code>Uint32Array</code> constructed with <code>sourceArray</code>, <code>byteOffset</code>, and <code>length</code>.
      *
      */
     IndexDatatype.createTypedArrayFromArrayBuffer = function(numberOfVertices, sourceArray, byteOffset, length) {

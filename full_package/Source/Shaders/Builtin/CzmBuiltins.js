@@ -61,7 +61,9 @@ define([
         './Functions/luminance',
         './Functions/modelToWindowCoordinates',
         './Functions/multiplyWithColorBalance',
+        './Functions/nearFarScalar',
         './Functions/octDecode',
+        './Functions/packDepth',
         './Functions/phong',
         './Functions/pointAlongRay',
         './Functions/rayEllipsoidIntersectionInterval',
@@ -71,6 +73,7 @@ define([
         './Functions/translateRelativeToEye',
         './Functions/translucentPhong',
         './Functions/transpose',
+        './Functions/unpackDepth',
         './Functions/windowToEyeCoordinates'
     ], function(
         czm_degreesPerRadian,
@@ -133,7 +136,9 @@ define([
         czm_luminance,
         czm_modelToWindowCoordinates,
         czm_multiplyWithColorBalance,
+        czm_nearFarScalar,
         czm_octDecode,
+        czm_packDepth,
         czm_phong,
         czm_pointAlongRay,
         czm_rayEllipsoidIntersectionInterval,
@@ -143,6 +148,7 @@ define([
         czm_translateRelativeToEye,
         czm_translucentPhong,
         czm_transpose,
+        czm_unpackDepth,
         czm_windowToEyeCoordinates) {
     "use strict";
     return {
@@ -206,7 +212,9 @@ define([
         czm_luminance : czm_luminance,
         czm_modelToWindowCoordinates : czm_modelToWindowCoordinates,
         czm_multiplyWithColorBalance : czm_multiplyWithColorBalance,
+        czm_nearFarScalar : czm_nearFarScalar,
         czm_octDecode : czm_octDecode,
+        czm_packDepth : czm_packDepth,
         czm_phong : czm_phong,
         czm_pointAlongRay : czm_pointAlongRay,
         czm_rayEllipsoidIntersectionInterval : czm_rayEllipsoidIntersectionInterval,
@@ -216,5 +224,6 @@ define([
         czm_translateRelativeToEye : czm_translateRelativeToEye,
         czm_translucentPhong : czm_translucentPhong,
         czm_transpose : czm_transpose,
+        czm_unpackDepth : czm_unpackDepth,
         czm_windowToEyeCoordinates : czm_windowToEyeCoordinates};
 });

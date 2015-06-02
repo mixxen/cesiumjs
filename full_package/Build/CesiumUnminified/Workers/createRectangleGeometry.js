@@ -3170,7 +3170,7 @@ define('Core/Rectangle',[
     /**
      * Stores the provided instance into the provided array.
      *
-     * @param {BoundingSphere} value The value to pack.
+     * @param {Rectangle} value The value to pack.
      * @param {Number[]} array The array to pack into.
      * @param {Number} [startingIndex=0] The index into the array at which to start packing the elements.
      */
@@ -3309,60 +3309,6 @@ define('Core/Rectangle',[
         result.south = minLat;
         result.east = maxLon;
         result.north = maxLat;
-        return result;
-    };
-
-    /**
-     * The number of elements used to pack the object into an array.
-     * @type {Number}
-     */
-    Rectangle.packedLength = 4;
-
-    /**
-     * Stores the provided instance into the provided array.
-     *
-     * @param {Rectangle} value The value to pack.
-     * @param {Number[]} array The array to pack into.
-     * @param {Number} [startingIndex=0] The index into the array at which to start packing the elements.
-     */
-    Rectangle.pack = function(value, array, startingIndex) {
-                if (!defined(value)) {
-            throw new DeveloperError('value is required');
-        }
-
-        if (!defined(array)) {
-            throw new DeveloperError('array is required');
-        }
-        
-        startingIndex = defaultValue(startingIndex, 0);
-
-        array[startingIndex++] = value.west;
-        array[startingIndex++] = value.south;
-        array[startingIndex++] = value.east;
-        array[startingIndex] = value.north;
-    };
-
-    /**
-     * Retrieves an instance from a packed array.
-     *
-     * @param {Number[]} array The packed array.
-     * @param {Number} [startingIndex=0] The starting index of the element to be unpacked.
-     * @param {Rectangle} [result] The object into which to store the result.
-     */
-    Rectangle.unpack = function(array, startingIndex, result) {
-                if (!defined(array)) {
-            throw new DeveloperError('array is required');
-        }
-        
-        startingIndex = defaultValue(startingIndex, 0);
-
-        if (!defined(result)) {
-            result = new Rectangle();
-        }
-        result.west = array[startingIndex++];
-        result.south = array[startingIndex++];
-        result.east = array[startingIndex++];
-        result.north = array[startingIndex];
         return result;
     };
 
@@ -5373,7 +5319,7 @@ define('Core/Matrix3',[
             throw new DeveloperError('index must be 0, 1, or 2.');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         var startIndex = index * 3;
@@ -5409,7 +5355,7 @@ define('Core/Matrix3',[
             throw new DeveloperError('index must be 0, 1, or 2.');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         result = Matrix3.clone(matrix, result);
@@ -5438,7 +5384,7 @@ define('Core/Matrix3',[
             throw new DeveloperError('index must be 0, 1, or 2.');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         var x = matrix[index];
@@ -5473,7 +5419,7 @@ define('Core/Matrix3',[
             throw new DeveloperError('index must be 0, 1, or 2.');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         result = Matrix3.clone(matrix, result);
@@ -5497,7 +5443,7 @@ define('Core/Matrix3',[
             throw new DeveloperError('matrix is required.');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         result.x = Cartesian3.magnitude(Cartesian3.fromElements(matrix[0], matrix[1], matrix[2], scratchColumn));
@@ -5536,7 +5482,7 @@ define('Core/Matrix3',[
             throw new DeveloperError('right is required');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         var column0Row0 = left[0] * right[0] + left[3] * right[1] + left[6] * right[2];
@@ -5579,7 +5525,7 @@ define('Core/Matrix3',[
             throw new DeveloperError('right is required');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         result[0] = left[0] + right[0];
@@ -5610,7 +5556,7 @@ define('Core/Matrix3',[
             throw new DeveloperError('right is required');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         result[0] = left[0] - right[0];
@@ -5641,7 +5587,7 @@ define('Core/Matrix3',[
             throw new DeveloperError('cartesian is required');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         var vX = cartesian.x;
@@ -5674,7 +5620,7 @@ define('Core/Matrix3',[
             throw new DeveloperError('scalar must be a number');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         result[0] = matrix[0] * scalar;
@@ -5701,7 +5647,7 @@ define('Core/Matrix3',[
             throw new DeveloperError('matrix is required');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         result[0] = -matrix[0];
@@ -5728,7 +5674,7 @@ define('Core/Matrix3',[
             throw new DeveloperError('matrix is required');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         var column0Row0 = matrix[0];
@@ -5919,7 +5865,7 @@ define('Core/Matrix3',[
             throw new DeveloperError('matrix is required');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         result[0] = Math.abs(matrix[0]);
@@ -5973,7 +5919,7 @@ define('Core/Matrix3',[
             throw new DeveloperError('matrix is required');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         var m11 = matrix[0];
@@ -6901,7 +6847,7 @@ define('Core/Matrix4',[
             throw new DeveloperError('far must be greater than zero.');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         var bottom = Math.tan(fovY * 0.5);
@@ -6962,7 +6908,7 @@ define('Core/Matrix4',[
             throw new DeveloperError('far is required.');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         var a = 1.0 / (right - left);
@@ -7027,7 +6973,7 @@ define('Core/Matrix4',[
             throw new DeveloperError('far is required.');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         var column0Row0 = 2.0 * near / (right - left);
@@ -7086,7 +7032,7 @@ define('Core/Matrix4',[
             throw new DeveloperError('near is required.');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         var column0Row0 = 2.0 * near / (right - left);
@@ -7136,7 +7082,7 @@ define('Core/Matrix4',[
      */
     Matrix4.computeViewportTransformation = function(viewport, nearDepthRange, farDepthRange, result) {
                 if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         viewport = defaultValue(viewport, defaultValue.EMPTY_OBJECT);
@@ -7290,7 +7236,7 @@ define('Core/Matrix4',[
             throw new DeveloperError('index must be 0, 1, 2, or 3.');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         var startIndex = index * 4;
@@ -7312,7 +7258,7 @@ define('Core/Matrix4',[
      * @param {Matrix4} matrix The matrix to use.
      * @param {Number} index The zero-based index of the column to set.
      * @param {Cartesian4} cartesian The Cartesian whose values will be assigned to the specified column.
-     * @param {Cartesian4} result The object onto which to store the result.
+     * @param {Matrix4} result The object onto which to store the result.
      * @returns {Matrix4} The modified result parameter.
      *
      * @exception {DeveloperError} index must be 0, 1, 2, or 3.
@@ -7343,7 +7289,7 @@ define('Core/Matrix4',[
             throw new DeveloperError('index must be 0, 1, 2, or 3.');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         result = Matrix4.clone(matrix, result);
@@ -7352,6 +7298,49 @@ define('Core/Matrix4',[
         result[startIndex + 1] = cartesian.y;
         result[startIndex + 2] = cartesian.z;
         result[startIndex + 3] = cartesian.w;
+        return result;
+    };
+
+    /**
+     * Computes a new matrix that replaces the translation in the rightmost column of the provided
+     * matrix with the provided translation.  This assumes the matrix is an affine transformation
+     *
+     * @param {Matrix4} matrix The matrix to use.
+     * @param {Cartesian3} translation The translation that replaces the translation of the provided matrix.
+     * @param {Cartesian4} result The object onto which to store the result.
+     * @returns {Matrix4} The modified result parameter.
+     */
+    Matrix4.setTranslation = function(matrix, translation, result) {
+                if (!defined(matrix)) {
+            throw new DeveloperError('matrix is required');
+        }
+        if (!defined(translation)) {
+            throw new DeveloperError('translation is required');
+        }
+        if (!defined(result)) {
+            throw new DeveloperError('result is required');
+        }
+        
+        result[0] = matrix[0];
+        result[1] = matrix[1];
+        result[2] = matrix[2];
+        result[3] = matrix[3];
+
+        result[4] = matrix[4];
+        result[5] = matrix[5];
+        result[6] = matrix[6];
+        result[7] = matrix[7];
+
+        result[8] = matrix[8];
+        result[9] = matrix[9];
+        result[10] = matrix[10];
+        result[11] = matrix[11];
+
+        result[12] = translation.x;
+        result[13] = translation.y;
+        result[14] = translation.z;
+        result[15] = matrix[15];
+
         return result;
     };
 
@@ -7391,7 +7380,7 @@ define('Core/Matrix4',[
             throw new DeveloperError('index must be 0, 1, 2, or 3.');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         var x = matrix[index];
@@ -7412,7 +7401,7 @@ define('Core/Matrix4',[
      * @param {Matrix4} matrix The matrix to use.
      * @param {Number} index The zero-based index of the row to set.
      * @param {Cartesian4} cartesian The Cartesian whose values will be assigned to the specified row.
-     * @param {Cartesian4} result The object onto which to store the result.
+     * @param {Matrix4} result The object onto which to store the result.
      * @returns {Matrix4} The modified result parameter.
      *
      * @exception {DeveloperError} index must be 0, 1, 2, or 3.
@@ -7443,7 +7432,7 @@ define('Core/Matrix4',[
             throw new DeveloperError('index must be 0, 1, 2, or 3.');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         result = Matrix4.clone(matrix, result);
@@ -7468,7 +7457,7 @@ define('Core/Matrix4',[
             throw new DeveloperError('matrix is required.');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         result.x = Cartesian3.magnitude(Cartesian3.fromElements(matrix[0], matrix[1], matrix[2], scratchColumn));
@@ -7508,7 +7497,7 @@ define('Core/Matrix4',[
             throw new DeveloperError('right is required');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         var left0 = left[0];
@@ -7600,7 +7589,7 @@ define('Core/Matrix4',[
             throw new DeveloperError('right is required');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         result[0] = left[0] + right[0];
@@ -7638,7 +7627,7 @@ define('Core/Matrix4',[
             throw new DeveloperError('right is required');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         result[0] = left[0] - right[0];
@@ -7687,7 +7676,7 @@ define('Core/Matrix4',[
             throw new DeveloperError('right is required');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         var left0 = left[0];
@@ -7773,7 +7762,7 @@ define('Core/Matrix4',[
             throw new DeveloperError('rotation is required');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         var left0 = matrix[0];
@@ -7849,7 +7838,7 @@ define('Core/Matrix4',[
             throw new DeveloperError('translation is required');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         var x = translation.x;
@@ -7906,7 +7895,7 @@ define('Core/Matrix4',[
             throw new DeveloperError('scale is required');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         uniformScaleScratch.x = scale;
@@ -7940,7 +7929,7 @@ define('Core/Matrix4',[
             throw new DeveloperError('scale is required');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         var scaleX = scale.x;
@@ -7987,7 +7976,7 @@ define('Core/Matrix4',[
             throw new DeveloperError('cartesian is required');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         var vX = cartesian.x;
@@ -8031,7 +8020,7 @@ define('Core/Matrix4',[
             throw new DeveloperError('cartesian is required');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         var vX = cartesian.x;
@@ -8070,7 +8059,7 @@ define('Core/Matrix4',[
             throw new DeveloperError('cartesian is required');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         var vX = cartesian.x;
@@ -8118,7 +8107,7 @@ define('Core/Matrix4',[
             throw new DeveloperError('scalar must be a number');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         result[0] = matrix[0] * scalar;
@@ -8167,7 +8156,7 @@ define('Core/Matrix4',[
             throw new DeveloperError('matrix is required');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         result[0] = -matrix[0];
@@ -8216,7 +8205,7 @@ define('Core/Matrix4',[
             throw new DeveloperError('matrix is required');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         var matrix1 = matrix[1];
@@ -8257,7 +8246,7 @@ define('Core/Matrix4',[
             throw new DeveloperError('matrix is required');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         result[0] = Math.abs(matrix[0]);
@@ -8409,7 +8398,7 @@ define('Core/Matrix4',[
             throw new DeveloperError('matrix is required');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         result.x = matrix[12];
@@ -8445,7 +8434,7 @@ define('Core/Matrix4',[
             throw new DeveloperError('matrix is required');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         result[0] = matrix[0];
@@ -8482,7 +8471,7 @@ define('Core/Matrix4',[
             throw new DeveloperError('matrix is required');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         // Special case for a zero scale matrix that can occur, for example,
@@ -8625,7 +8614,7 @@ define('Core/Matrix4',[
             throw new DeveloperError('matrix is required');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         //This function is an optimized version of the below 4 lines.
@@ -12675,7 +12664,7 @@ define('Core/IndexDatatype',[
      *
      * @param {Number} numberOfVertices Number of vertices that the indices will reference.
      * @param {Any} indicesLengthOrArray Passed through to the typed array constructor.
-     * @returns {Uint16Aray|Uint32Array} A <code>Uint16Array</code> or <code>Uint32Array</code> constructed with <code>indicesLengthOrArray</code>.
+     * @returns {Uint16Array|Uint32Array} A <code>Uint16Array</code> or <code>Uint32Array</code> constructed with <code>indicesLengthOrArray</code>.
      *
      * @example
      * this.indices = Cesium.IndexDatatype.createTypedArray(positions.length / 3, numberOfIndices);
@@ -12698,9 +12687,9 @@ define('Core/IndexDatatype',[
      *
      * @param {Number} numberOfVertices Number of vertices that the indices will reference.
      * @param {ArrayBuffer} sourceArray Passed through to the typed array constructor.
-     * @param {byteOffset} byteOffset Passed through to the typed array constructor.
-     * @param {length} length Passed through to the typed array constructor.
-     * @returns {Uint16Aray|Uint32Array} A <code>Uint16Array</code> or <code>Uint32Array</code> constructed with <code>sourceArray</code>, <code>byteOffset</code>, and <code>length</code>.
+     * @param {Number} byteOffset Passed through to the typed array constructor.
+     * @param {Number} length Passed through to the typed array constructor.
+     * @returns {Uint16Array|Uint32Array} A <code>Uint16Array</code> or <code>Uint32Array</code> constructed with <code>sourceArray</code>, <code>byteOffset</code>, and <code>length</code>.
      *
      */
     IndexDatatype.createTypedArrayFromArrayBuffer = function(numberOfVertices, sourceArray, byteOffset, length) {
@@ -14064,7 +14053,7 @@ define('Core/IntersectionTests',[
      *
      * @param {Ray} ray The ray.
      * @param {Ellipsoid} ellipsoid The ellipsoid.
-     * @returns {Cartesian} The nearest planetodetic point on the ray.
+     * @returns {Cartesian3} The nearest planetodetic point on the ray.
      */
     IntersectionTests.grazingAltitudeLocation = function(ray, ellipsoid) {
                 if (!defined(ray)) {
@@ -17529,7 +17518,7 @@ define('Core/Matrix2',[
             throw new DeveloperError('index must be 0 or 1.');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         var startIndex = index * 2;
@@ -17563,7 +17552,7 @@ define('Core/Matrix2',[
             throw new DeveloperError('index must be 0 or 1.');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         result = Matrix2.clone(matrix, result);
@@ -17591,7 +17580,7 @@ define('Core/Matrix2',[
             throw new DeveloperError('index must be 0 or 1.');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         var x = matrix[index];
@@ -17624,7 +17613,7 @@ define('Core/Matrix2',[
             throw new DeveloperError('index must be 0 or 1.');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         result = Matrix2.clone(matrix, result);
@@ -17647,7 +17636,7 @@ define('Core/Matrix2',[
             throw new DeveloperError('matrix is required.');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         result.x = Cartesian2.magnitude(Cartesian2.fromElements(matrix[0], matrix[1], scratchColumn));
@@ -17685,7 +17674,7 @@ define('Core/Matrix2',[
             throw new DeveloperError('right is required');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         var column0Row0 = left[0] * right[0] + left[2] * right[1];
@@ -17716,7 +17705,7 @@ define('Core/Matrix2',[
             throw new DeveloperError('right is required');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         result[0] = left[0] + right[0];
@@ -17742,7 +17731,7 @@ define('Core/Matrix2',[
             throw new DeveloperError('right is required');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         result[0] = left[0] - right[0];
@@ -17768,7 +17757,7 @@ define('Core/Matrix2',[
             throw new DeveloperError('cartesian is required');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         var x = matrix[0] * cartesian.x + matrix[2] * cartesian.y;
@@ -17795,7 +17784,7 @@ define('Core/Matrix2',[
             throw new DeveloperError('scalar is required and must be a number');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         result[0] = matrix[0] * scalar;
@@ -17817,7 +17806,7 @@ define('Core/Matrix2',[
             throw new DeveloperError('matrix is required');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         result[0] = -matrix[0];
@@ -17839,7 +17828,7 @@ define('Core/Matrix2',[
             throw new DeveloperError('matrix is required');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         var column0Row0 = matrix[0];
@@ -17866,7 +17855,7 @@ define('Core/Matrix2',[
             throw new DeveloperError('matrix is required');
         }
         if (!defined(result)) {
-            throw new DeveloperError('result is required,');
+            throw new DeveloperError('result is required');
         }
         
         result[0] = Math.abs(matrix[0]);
@@ -20699,7 +20688,8 @@ define('Core/JulianDate',[
                                new LeapSecond(new JulianDate(2451179, 43232.0, TimeStandard.TAI), 32), // January 1, 1999 00:00:00 UTC
                                new LeapSecond(new JulianDate(2453736, 43233.0, TimeStandard.TAI), 33), // January 1, 2006 00:00:00 UTC
                                new LeapSecond(new JulianDate(2454832, 43234.0, TimeStandard.TAI), 34), // January 1, 2009 00:00:00 UTC
-                               new LeapSecond(new JulianDate(2456109, 43235.0, TimeStandard.TAI), 35)  // July 1, 2012 00:00:00 UTC
+                               new LeapSecond(new JulianDate(2456109, 43235.0, TimeStandard.TAI), 35), // July 1, 2012 00:00:00 UTC
+                               new LeapSecond(new JulianDate(2457204, 43236.0, TimeStandard.TAI), 36)  // July 1, 2015 00:00:00 UTC
                              ];
 
     return JulianDate;
@@ -21003,7 +20993,7 @@ define('Core/loadWithXhr',[
             xhr.responseType = responseType;
         }
 
-        xhr.onload = function(e) {
+        xhr.onload = function() {
             if (xhr.status === 200) {
                 if (defined(xhr.response)) {
                     deferred.resolve(xhr.response);
@@ -21894,6 +21884,14 @@ define('Core/buildModuleUrl',[
     // exposed for testing
     buildModuleUrl._cesiumScriptRegex = cesiumScriptRegex;
 
+    /**
+     * Sets the base URL for resolving modules.
+     * @param {String} value The new base URL.
+     */
+    buildModuleUrl.setBaseUrl = function(value) {
+        baseUrl = new Uri(value).resolve(new Uri(document.location.href));
+    };
+
     return buildModuleUrl;
 });
 /*global define*/
@@ -22475,7 +22473,7 @@ define('Core/Quaternion',[
      * @param {Number[]} packedArray The packed array.
      * @param {Number} [startingIndex=0] The index of the first element to be converted.
      * @param {Number} [lastIndex=packedArray.length] The index of the last element to be converted.
-     * @param {Number[]} [result] The object into which to store the result.
+     * @param {Number[]} result The object into which to store the result.
      */
     Quaternion.convertPackedArrayForInterpolation = function(packedArray, startingIndex, lastIndex, result) {
         Quaternion.unpack(packedArray, lastIndex * 4, sampledQuaternionQuaternion0Conjugate);
@@ -22502,8 +22500,8 @@ define('Core/Quaternion',[
     /**
      * Retrieves an instance from a packed array converted with {@link convertPackedArrayForInterpolation}.
      *
-     * @param {Number[]} array The original packed array.
-     * @param {Number[]} sourceArray The converted array.
+     * @param {Number[]} array The array previously packed for interpolation.
+     * @param {Number[]} sourceArray The original packed array.
      * @param {Number} [startingIndex=0] The startingIndex used to convert the array.
      * @param {Number} [lastIndex=packedArray.length] The lastIndex used to convert the array.
      * @param {Quaternion} [result] The object into which to store the result.

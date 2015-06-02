@@ -19,20 +19,6 @@ varying vec4 v_pickColor;\n\
 varying vec4 v_color;\n\
 #endif\n\
 \n\
-float getNearFarScalar(vec4 nearFarScalar, float cameraDistSq)\n\
-{\n\
-    float valueAtMin = nearFarScalar.y;\n\
-    float valueAtMax = nearFarScalar.w;\n\
-    float nearDistanceSq = nearFarScalar.x * nearFarScalar.x;\n\
-    float farDistanceSq = nearFarScalar.z * nearFarScalar.z;\n\
-\n\
-    float t = (cameraDistSq - nearDistanceSq) / (farDistanceSq - nearDistanceSq);\n\
-\n\
-    t = pow(clamp(t, 0.0, 1.0), 0.2);\n\
-\n\
-    return mix(valueAtMin, valueAtMax, t);\n\
-}\n\
-\n\
 const float UPPER_BOUND = 32768.0;\n\
 \n\
 const float SHIFT_LEFT16 = 65536.0;\n\
@@ -50,6 +36,42 @@ const float SHIFT_RIGHT3 = 1.0 / 8.0;\n\
 const float SHIFT_RIGHT2 = 1.0 / 4.0;\n\
 const float SHIFT_RIGHT1 = 1.0 / 2.0;\n\
 \n\
+vec4 computePositionWindowCoordinates(vec4 positionEC, vec2 imageSize, float scale, vec2 direction, vec2 origin, vec2 translate, vec2 pixelOffset, vec3 alignedAxis, float rotation)\n\
+{\n\
+    vec4 positionWC = czm_eyeToWindowCoordinates(positionEC);\n\
+    \n\
+    vec2 halfSize = imageSize * scale * czm_resolutionScale;\n\
+    halfSize *= ((direction * 2.0) - 1.0);\n\
+    \n\
+    positionWC.xy += (origin * abs(halfSize));\n\
+    \n\
+#if defined(ROTATION) || defined(ALIGNED_AXIS)\n\
+    if (!all(equal(alignedAxis, vec3(0.0))) || rotation != 0.0)\n\
+    {\n\
+        float angle = rotation;\n\
+        if (!all(equal(alignedAxis, vec3(0.0))))\n\
+        {\n\
+            vec3 pos = positionEC.xyz + czm_encodedCameraPositionMCHigh + czm_encodedCameraPositionMCLow;\n\
+            vec3 normal = normalize(cross(alignedAxis, pos));\n\
+            vec4 tangent = vec4(normalize(cross(pos, normal)), 0.0);\n\
+            tangent = czm_modelViewProjection * tangent;\n\
+            angle += sign(-tangent.x) * acos(tangent.y / length(tangent.xy));\n\
+        }\n\
+        \n\
+        float cosTheta = cos(angle);\n\
+        float sinTheta = sin(angle);\n\
+        mat2 rotationMatrix = mat2(cosTheta, sinTheta, -sinTheta, cosTheta);\n\
+        halfSize = rotationMatrix * halfSize;\n\
+    }\n\
+#endif\n\
+    \n\
+    positionWC.xy += halfSize;\n\
+    positionWC.xy += translate;\n\
+    positionWC.xy += (pixelOffset * czm_resolutionScale);\n\
+    \n\
+    return positionWC;\n\
+}\n\
+\n\
 void main() \n\
 {\n\
     // Modifying this shader may also require modifications to Billboard._computeScreenSpacePosition\n\
@@ -61,6 +83,8 @@ void main() \n\
     \n\
 #if defined(ROTATION) || defined(ALIGNED_AXIS)\n\
     float rotation = positionLowAndRotation.w;\n\
+#else\n\
+    float rotation = 0.0;\n\
 #endif\n\
 \n\
     float compressed = compressedAttribute0.x;\n\
@@ -168,7 +192,7 @@ void main() \n\
 #endif\n\
 \n\
 #ifdef EYE_DISTANCE_SCALING\n\
-    scale *= getNearFarScalar(scaleByDistance, lengthSq);\n\
+    scale *= czm_nearFarScalar(scaleByDistance, lengthSq);\n\
     // push vertex behind near plane for clipping\n\
     if (scale == 0.0)\n\
     {\n\
@@ -178,7 +202,7 @@ void main() \n\
 \n\
     float translucency = 1.0;\n\
 #ifdef EYE_DISTANCE_TRANSLUCENCY\n\
-    translucency = getNearFarScalar(translucencyByDistance, lengthSq);\n\
+    translucency = czm_nearFarScalar(translucencyByDistance, lengthSq);\n\
     // push vertex behind near plane for clipping\n\
     if (translucency == 0.0)\n\
     {\n\
@@ -187,41 +211,19 @@ void main() \n\
 #endif\n\
 \n\
 #ifdef EYE_DISTANCE_PIXEL_OFFSET\n\
-    float pixelOffsetScale = getNearFarScalar(pixelOffsetScaleByDistance, lengthSq);\n\
+    float pixelOffsetScale = czm_nearFarScalar(pixelOffsetScaleByDistance, lengthSq);\n\
     pixelOffset *= pixelOffsetScale;\n\
 #endif\n\
-\n\
-    vec4 positionWC = czm_eyeToWindowCoordinates(positionEC);\n\
     \n\
-    vec2 halfSize = imageSize * scale * czm_resolutionScale;\n\
-    halfSize *= ((direction * 2.0) - 1.0);\n\
+#ifdef CLAMPED_TO_GROUND\n\
+    // move slightly closer to camera to avoid depth issues.\n\
+    positionEC.z *= 0.995;\n\
     \n\
-    positionWC.xy += (origin * abs(halfSize));\n\
-    \n\
-#if defined(ROTATION) || defined(ALIGNED_AXIS)\n\
-    if (!all(equal(alignedAxis, vec3(0.0))) || rotation != 0.0)\n\
-    {\n\
-        float angle = rotation;\n\
-        if (!all(equal(alignedAxis, vec3(0.0))))\n\
-        {\n\
-            vec3 pos = positionEC.xyz + czm_encodedCameraPositionMCHigh + czm_encodedCameraPositionMCLow;\n\
-            vec3 normal = normalize(cross(alignedAxis, pos));\n\
-            vec4 tangent = vec4(normalize(cross(pos, normal)), 0.0);\n\
-            tangent = czm_modelViewProjection * tangent;\n\
-            angle += sign(-tangent.x) * acos(tangent.y / length(tangent.xy));\n\
-        }\n\
-        \n\
-        float cosTheta = cos(angle);\n\
-        float sinTheta = sin(angle);\n\
-        mat2 rotationMatrix = mat2(cosTheta, sinTheta, -sinTheta, cosTheta);\n\
-        halfSize = rotationMatrix * halfSize;\n\
-    }\n\
+    // Force bottom vertical origin\n\
+    origin.y = 1.0;\n\
 #endif\n\
-    \n\
-    positionWC.xy += halfSize;\n\
-    positionWC.xy += translate;\n\
-    positionWC.xy += (pixelOffset * czm_resolutionScale);\n\
 \n\
+    vec4 positionWC = computePositionWindowCoordinates(positionEC, imageSize, scale, direction, origin, translate, pixelOffset, alignedAxis, rotation);\n\
     gl_Position = czm_viewportOrthographic * vec4(positionWC.xy, -positionWC.z, 1.0);\n\
     v_textureCoordinates = textureCoordinates;\n\
 \n\
