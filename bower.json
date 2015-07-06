@@ -1,6 +1,6 @@
 {
-  "name": "cesiumjs",
-  "version": "1.10.0",
+  "name": "cesium",
+  "version": "1.11.0",
   "authors": [
     "Cesium Contributors",
     "Michael Lodge-Paolini <mikelp@agi.com>"
@@ -13,6 +13,6 @@
   "license": "Apache-2.0",
   "homepage": "http://cesiumjs.org",
   "ignore": [
-    "full_package"
+    "src", ".git*"
   ]
 }
