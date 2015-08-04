@@ -1467,7 +1467,7 @@ define('Core/Cartesian3',[
      *
      * @example
      * // Returns 4.0, not 2.0
-     * var d = Cesium.Cartesian3.distance(new Cesium.Cartesian3(1.0, 0.0, 0.0), new Cesium.Cartesian3(3.0, 0.0, 0.0));
+     * var d = Cesium.Cartesian3.distanceSquared(new Cesium.Cartesian3(1.0, 0.0, 0.0), new Cesium.Cartesian3(3.0, 0.0, 0.0));
      */
     Cartesian3.distanceSquared = function(left, right) {
                 if (!defined(left) || !defined(right)) {
@@ -16134,13 +16134,13 @@ define('Core/loadWithXhr',[
      * @exports loadWithXhr
      *
      * @param {Object} options Object with the following properties:
-     * @param {String|Promise} options.url The URL of the data, or a promise for the URL.
+     * @param {String|Promise.<String>} options.url The URL of the data, or a promise for the URL.
      * @param {String} [options.responseType] The type of response.  This controls the type of item returned.
      * @param {String} [options.method='GET'] The HTTP method to use.
      * @param {String} [options.data] The data to send with the request, if any.
      * @param {Object} [options.headers] HTTP headers to send with the request, if any.
      * @param {String} [options.overrideMimeType] Overrides the MIME type returned by the server.
-     * @returns {Promise} a promise that will resolve to the requested data when loaded.
+     * @returns {Promise.<Object>} a promise that will resolve to the requested data when loaded.
      *
      * @see loadArrayBuffer
      * @see loadBlob
@@ -16287,6 +16287,7 @@ define('Core/loadWithXhr',[
 
     return loadWithXhr;
 });
+
 /*global define*/
 define('Core/loadText',[
         './loadWithXhr'
@@ -16302,9 +16303,9 @@ define('Core/loadText',[
      *
      * @exports loadText
      *
-     * @param {String|Promise} url The URL to request, or a promise for the URL.
+     * @param {String|Promise.<String>} url The URL to request, or a promise for the URL.
      * @param {Object} [headers] HTTP headers to send with the request.
-     * @returns {Promise} a promise that will resolve to the requested data when loaded.
+     * @returns {Promise.<String>} a promise that will resolve to the requested data when loaded.
      *
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest|XMLHttpRequest}
      * @see {@link http://www.w3.org/TR/cors/|Cross-Origin Resource Sharing}
@@ -16329,6 +16330,7 @@ define('Core/loadText',[
 
     return loadText;
 });
+
 /*global define*/
 define('Core/loadJson',[
         './clone',
@@ -16357,11 +16359,11 @@ define('Core/loadJson',[
      *
      * @exports loadJson
      *
-     * @param {String|Promise} url The URL to request, or a promise for the URL.
+     * @param {String|Promise.<String>} url The URL to request, or a promise for the URL.
      * @param {Object} [headers] HTTP headers to send with the request.
      * 'Accept: application/json,&#42;&#47;&#42;;q=0.01' is added to the request headers automatically
      * if not specified.
-     * @returns {Promise} a promise that will resolve to the requested data when loaded.
+     * @returns {Promise.<Object>} a promise that will resolve to the requested data when loaded.
      *
      * @see loadText
      * @see {@link http://www.w3.org/TR/cors/|Cross-Origin Resource Sharing}
@@ -16394,6 +16396,7 @@ define('Core/loadJson',[
 
     return loadJson;
 });
+
 /*global define*/
 define('Core/EarthOrientationParameters',[
         '../ThirdParty/when',
@@ -16531,7 +16534,7 @@ define('Core/EarthOrientationParameters',[
      * Gets a promise that, when resolved, indicates that the EOP data has been loaded and is
      * ready to use.
      *
-     * @returns {Promise} The promise.
+     * @returns {Promise.<undefined>} The promise.
      *
      * @see when
      */
@@ -16777,6 +16780,7 @@ define('Core/EarthOrientationParameters',[
 
     return EarthOrientationParameters;
 });
+
 /**
  * @license
  *
@@ -17295,7 +17299,7 @@ define('Core/Iau2006XysData',[
      *                 the Terrestrial Time (TT) time standard.
      * @param {Number} stopSecondTT The seconds past noon of the end of the interval to preload, expressed in
      *                 the Terrestrial Time (TT) time standard.
-     * @returns {Promise} A promise that, when resolved, indicates that the requested interval has been
+     * @returns {Promise.<undefined>} A promise that, when resolved, indicates that the requested interval has been
      *                    preloaded.
      */
     Iau2006XysData.prototype.preload = function(startDayTT, startSecondTT, stopDayTT, stopSecondTT) {
@@ -17461,6 +17465,7 @@ define('Core/Iau2006XysData',[
 
     return Iau2006XysData;
 });
+
 /*global define*/
 define('Core/Fullscreen',[
         './defined',
@@ -19529,7 +19534,7 @@ define('Core/Transforms',[
      * indicates that the preload has completed.
      *
      * @param {TimeInterval} timeInterval The interval to preload.
-     * @returns {Promise} A promise that, when resolved, indicates that the preload has completed
+     * @returns {Promise.<undefined>} A promise that, when resolved, indicates that the preload has completed
      *          and evaluation of the transformation between the fixed and ICRF axes will
      *          no longer return undefined for a time inside the interval.
      *
