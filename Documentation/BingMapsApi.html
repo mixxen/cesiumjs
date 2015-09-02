@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-    <title>Simon1994PlanetaryPositions - Cesium Documentation</title>
+    <title>BingMapsApi - Cesium Documentation</title>
 
     <!--[if lt IE 9]>
       <script src="javascript/html5.js"></script>
@@ -30,7 +30,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Simon1994PlanetaryPositions</h1>
+    <h1 class="page-title">BingMapsApi</h1>
 
     
 
@@ -48,8 +48,7 @@
 
     
         
-            <div class="description">Contains functions for finding the Cartesian coordinates of the sun and the moon in the
-Earth-centered inertial frame.</div>
+            <div class="description">Object for setting and retrieving the default BingMaps API key.</div>
         
 
         
@@ -85,7 +84,7 @@ Earth-centered inertial frame.</div>
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Core/Simon1994PlanetaryPositions.js#L29">Core/Simon1994PlanetaryPositions.js, line 29</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Core/BingMapsApi.js#L14">Core/BingMapsApi.js, line 14</a>
     </div>
     
 </dl>
@@ -104,16 +103,14 @@ Earth-centered inertial frame.</div>
     
 
     
-
-    
-        <h3 class="subsection-title">Methods</h3>
+        <h3 class="subsection-title">Members</h3>
 
         <dl>
             
 <dt>
     <div class="nameContainer">
-    <h4 class="name" id=".computeMoonPositionInEarthInertialFrame">
-        <span class="type-signature attribute-static">static</span>Simon1994PlanetaryPositions.computeMoonPositionInEarthInertialFrame<span class="signature">(<span class="optional">julianDate</span>, <span class="optional">result</span>)</span> &rarr; <span class="type-signature returnType"><a href="Cartesian3.html">Cartesian3</a></span>
+    <h4 class="name" id=".defaultKey">
+        <span class="type-signature attribute-static">static</span>BingMapsApi.defaultKey<span class="type-signature"> :String</span>
     </h4>
 
     </div>
@@ -121,121 +118,17 @@ Earth-centered inertial frame.</div>
     
 </dt>
 <dd>
-
     
     <div class="description">
-        Computes the position of the Moon in the Earth-centered inertial frame
+        The default Bing Maps API key to use if one is not provided to the
+constructor of an object that uses the Bing Maps API.  If this property is undefined,
+Cesium's default key is used, which is only suitable for use early in development.
+Please generate your own key by visiting
+<a href="https://www.bingmapsportal.com/">https://www.bingmapsportal.com/</a>
+as soon as possible and prior to deployment.  When Cesium's default key is used,
+a message is printed to the console the first time the Bing Maps API is used.
     </div>
     
-
-    
-
-    
-
-    
-
-    
-        
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>julianDate</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="JulianDate.html">JulianDate</a></span>
-
-
-            
-            </td>
-
-            
-
-            <td class="description last">
-            
-                
-                        <span class="optional">optional</span>
-                
-                
-
-                
-            
-                The time at which to compute the Sun's position, if not provided the current system time is used.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>result</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Cartesian3.html">Cartesian3</a></span>
-
-
-            
-            </td>
-
-            
-
-            <td class="description last">
-            
-                
-                        <span class="optional">optional</span>
-                
-                
-
-                
-            
-                The object onto which to store the result.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    Calculated moon position
-</div>
-
-
-        
 
     
 
@@ -272,178 +165,7 @@ Earth-centered inertial frame.</div>
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Core/Simon1994PlanetaryPositions.js#L517">Core/Simon1994PlanetaryPositions.js, line 517</a>
-    </div>
-    
-</dl>
-
-</dd>
-
-        
-            
-<dt>
-    <div class="nameContainer">
-    <h4 class="name" id=".computeSunPositionInEarthInertialFrame">
-        <span class="type-signature attribute-static">static</span>Simon1994PlanetaryPositions.computeSunPositionInEarthInertialFrame<span class="signature">(<span class="optional">julianDate</span>, <span class="optional">result</span>)</span> &rarr; <span class="type-signature returnType"><a href="Cartesian3.html">Cartesian3</a></span>
-    </h4>
-
-    </div>
-
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Computes the position of the Sun in the Earth-centered inertial frame
-    </div>
-    
-
-    
-
-    
-
-    
-
-    
-        
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>julianDate</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="JulianDate.html">JulianDate</a></span>
-
-
-            
-            </td>
-
-            
-
-            <td class="description last">
-            
-                
-                        <span class="optional">optional</span>
-                
-                
-
-                
-            
-                The time at which to compute the Sun's position, if not provided the current system time is used.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>result</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Cartesian3.html">Cartesian3</a></span>
-
-
-            
-            </td>
-
-            
-
-            <td class="description last">
-            
-                
-                        <span class="optional">optional</span>
-                
-                
-
-                
-            
-                The object onto which to store the result.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    Calculated sun position
-</div>
-
-
-        
-
-    
-
-    
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Core/Simon1994PlanetaryPositions.js#L488">Core/Simon1994PlanetaryPositions.js, line 488</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Core/BingMapsApi.js#L28">Core/BingMapsApi.js, line 28</a>
     </div>
     
 </dl>
@@ -451,6 +173,8 @@ Earth-centered inertial frame.</div>
 </dd>
 
         </dl>
+    
+
     
 
     
