@@ -26,9 +26,10 @@ define('Core/defined',[],function() {
     "use strict";
 
     /**
-     * Returns true if the object is defined, returns false otherwise.
-     *
      * @exports defined
+     *
+     * @param {Object} value The object.
+     * @returns {Boolean} Returns true if the object is defined, returns false otherwise.
      *
      * @example
      * if (Cesium.defined(positions)) {
@@ -81,6 +82,10 @@ define('Core/defaultValue',[
      * Useful for setting a default value for a parameter.
      *
      * @exports defaultValue
+     *
+     * @param {*} a
+     * @param {*} b
+     * @returns {*} Returns the first parameter if not undefined, otherwise the second parameter.
      *
      * @example
      * param = Cesium.defaultValue(param, 'default');
@@ -639,7 +644,7 @@ define('Core/Math',[
      *</p>
      *
      * @param {Number} value The number whose hyperbolic sine is to be returned.
-     * @returns The hyperbolic sine of <code>value</code>.
+     * @returns {Number} The hyperbolic sine of <code>value</code>.
      */
     CesiumMath.sinh = function(value) {
         var part1 = Math.pow(Math.E, value);
@@ -665,7 +670,7 @@ define('Core/Math',[
      *</p>
      *
      * @param {Number} value The number whose hyperbolic cosine is to be returned.
-     * @returns The hyperbolic cosine of <code>value</code>.
+     * @returns {Number} The hyperbolic cosine of <code>value</code>.
      */
     CesiumMath.cosh = function(value) {
         var part1 = Math.pow(Math.E, value);
@@ -1295,6 +1300,7 @@ define('Core/Cartesian3',[
      * @param {Number[]} array The packed array.
      * @param {Number} [startingIndex=0] The starting index of the element to be unpacked.
      * @param {Cartesian3} [result] The object into which to store the result.
+     * @returns {Cartesian3} The modified result parameter or a new Cartesian3 instance if one was not provided.
      */
     Cartesian3.unpack = function(array, startingIndex, result) {
                 if (!defined(array)) {
@@ -2484,6 +2490,7 @@ define('Core/Ellipsoid',[
          * Gets the radii of the ellipsoid.
          * @memberof Ellipsoid.prototype
          * @type {Cartesian3}
+         * @readonly
          */
         radii : {
             get: function() {
@@ -2494,6 +2501,7 @@ define('Core/Ellipsoid',[
          * Gets the squared radii of the ellipsoid.
          * @memberof Ellipsoid.prototype
          * @type {Cartesian3}
+         * @readonly
          */
         radiiSquared : {
             get : function() {
@@ -2504,6 +2512,7 @@ define('Core/Ellipsoid',[
          * Gets the radii of the ellipsoid raise to the fourth power.
          * @memberof Ellipsoid.prototype
          * @type {Cartesian3}
+         * @readonly
          */
         radiiToTheFourth : {
             get : function() {
@@ -2514,6 +2523,7 @@ define('Core/Ellipsoid',[
          * Gets one over the radii of the ellipsoid.
          * @memberof Ellipsoid.prototype
          * @type {Cartesian3}
+         * @readonly
          */
         oneOverRadii : {
             get : function() {
@@ -2524,6 +2534,7 @@ define('Core/Ellipsoid',[
          * Gets one over the squared radii of the ellipsoid.
          * @memberof Ellipsoid.prototype
          * @type {Cartesian3}
+         * @readonly
          */
         oneOverRadiiSquared : {
             get : function() {
@@ -2534,6 +2545,7 @@ define('Core/Ellipsoid',[
          * Gets the minimum radius of the ellipsoid.
          * @memberof Ellipsoid.prototype
          * @type {Number}
+         * @readonly
          */
         minimumRadius : {
             get : function() {
@@ -2544,6 +2556,7 @@ define('Core/Ellipsoid',[
          * Gets the maximum radius of the ellipsoid.
          * @memberof Ellipsoid.prototype
          * @type {Number}
+         * @readonly
          */
         maximumRadius : {
             get : function() {
@@ -2651,7 +2664,7 @@ define('Core/Ellipsoid',[
      * Stores the provided instance into the provided array.
      * @function
      *
-     * @param {Object} value The value to pack.
+     * @param {Ellipsoid} value The value to pack.
      * @param {Number[]} array The array to pack into.
      * @param {Number} [startingIndex=0] The index into the array at which to start packing the elements.
      */
@@ -2674,6 +2687,7 @@ define('Core/Ellipsoid',[
      * @param {Number[]} array The packed array.
      * @param {Number} [startingIndex=0] The starting index of the element to be unpacked.
      * @param {Ellipsoid} [result] The object into which to store the result.
+     * @returns {Ellipsoid} The modified result parameter or a new Ellipsoid instance if one was not provided.
      */
     Ellipsoid.unpack = function(array, startingIndex, result) {
                 if (!defined(array)) {
@@ -2782,7 +2796,7 @@ define('Core/Ellipsoid',[
      * //Convert an array of Cartographics and determine their Cartesian representation on a WGS84 ellipsoid.
      * var positions = [new Cesium.Cartographic(Cesium.Math.toRadians(21), Cesium.Math.toRadians(78), 0),
      *                  new Cesium.Cartographic(Cesium.Math.toRadians(21.321), Cesium.Math.toRadians(78.123), 100),
-     *                  new Cesium.Cartographic(Cesium.Math.toRadians(21.645), Cesium.Math.toRadians(78.456), 250)
+     *                  new Cesium.Cartographic(Cesium.Math.toRadians(21.645), Cesium.Math.toRadians(78.456), 250)];
      * var cartesianPositions = Cesium.Ellipsoid.WGS84.cartographicArrayToCartesianArray(positions);
      */
     Ellipsoid.prototype.cartographicArrayToCartesianArray = function(cartographics, result) {
@@ -2816,7 +2830,7 @@ define('Core/Ellipsoid',[
      *
      * @example
      * //Create a Cartesian and determine it's Cartographic representation on a WGS84 ellipsoid.
-     * var position = new Cesium.Cartesian(17832.12, 83234.52, 952313.73);
+     * var position = new Cesium.Cartesian3(17832.12, 83234.52, 952313.73);
      * var cartographicPosition = Cesium.Ellipsoid.WGS84.cartesianToCartographic(position);
      */
     Ellipsoid.prototype.cartesianToCartographic = function(cartesian, result) {
@@ -3205,6 +3219,7 @@ define('Core/Cartesian2',[
      * @param {Number[]} array The packed array.
      * @param {Number} [startingIndex=0] The starting index of the element to be unpacked.
      * @param {Cartesian2} [result] The object into which to store the result.
+     * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
      */
     Cartesian2.unpack = function(array, startingIndex, result) {
                 if (!defined(array)) {
@@ -4069,6 +4084,7 @@ define('Core/Rectangle',[
      * @param {Number[]} array The packed array.
      * @param {Number} [startingIndex=0] The starting index of the element to be unpacked.
      * @param {Rectangle} [result] The object into which to store the result.
+     * @returns {Rectangle} The modified result parameter or a new Rectangle instance if one was not provided.
      */
     Rectangle.unpack = function(array, startingIndex, result) {
                 if (!defined(array)) {
@@ -5911,6 +5927,7 @@ define('Core/Matrix3',[
      * @param {Number[]} array The packed array.
      * @param {Number} [startingIndex=0] The starting index of the element to be unpacked.
      * @param {Matrix3} [result] The object into which to store the result.
+     * @returns {Matrix3} The modified result parameter or a new Matrix3 instance if one was not provided.
      */
     Matrix3.unpack = function(array, startingIndex, result) {
                 if (!defined(array)) {
@@ -7493,6 +7510,7 @@ define('Core/Matrix4',[
      * @param {Number[]} array The packed array.
      * @param {Number} [startingIndex=0] The starting index of the element to be unpacked.
      * @param {Matrix4} [result] The object into which to store the result.
+     * @returns {Matrix4} The modified result parameter or a new Matrix4 instance if one was not provided.
      */
     Matrix4.unpack = function(array, startingIndex, result) {
                 if (!defined(array)) {
@@ -7590,7 +7608,7 @@ define('Core/Matrix4',[
      *
      * @param {Number[]} values The column-major order array.
      * @param {Matrix4} [result] The object in which the result will be stored, if undefined a new instance will be created.
-     * @returns The modified result parameter, or a new Matrix4 instance if one was not provided.
+     * @returns {Matrix4} The modified result parameter, or a new Matrix4 instance if one was not provided.
      */
     Matrix4.fromColumnMajorArray = function(values, result) {
                 if (!defined(values)) {
@@ -7606,7 +7624,7 @@ define('Core/Matrix4',[
      *
      * @param {Number[]} values The row-major order array.
      * @param {Matrix4} [result] The object in which the result will be stored, if undefined a new instance will be created.
-     * @returns The modified result parameter, or a new Matrix4 instance if one was not provided.
+     * @returns {Matrix4} The modified result parameter, or a new Matrix4 instance if one was not provided.
      */
     Matrix4.fromRowMajorArray = function(values, result) {
                 if (!defined(values)) {
@@ -7645,7 +7663,7 @@ define('Core/Matrix4',[
      * @param {Matrix3} rotation The upper left portion of the matrix representing the rotation.
      * @param {Cartesian3} [translation=Cartesian3.ZERO] The upper right portion of the matrix representing the translation.
      * @param {Matrix4} [result] The object in which the result will be stored, if undefined a new instance will be created.
-     * @returns The modified result parameter, or a new Matrix4 instance if one was not provided.
+     * @returns {Matrix4} The modified result parameter, or a new Matrix4 instance if one was not provided.
      */
     Matrix4.fromRotationTranslation = function(rotation, translation, result) {
                 if (!defined(rotation)) {
@@ -7688,7 +7706,7 @@ define('Core/Matrix4',[
      * @param {Quaternion} rotation The rotation transformation.
      * @param {Cartesian3} scale The non-uniform scale transformation.
      * @param {Matrix4} [result] The object in which the result will be stored, if undefined a new instance will be created.
-     * @returns The modified result parameter, or a new Matrix4 instance if one was not provided.
+     * @returns {Matrix4} The modified result parameter, or a new Matrix4 instance if one was not provided.
      *
      * @example
      * var result = Cesium.Matrix4.fromTranslationQuaternionRotationScale(
@@ -7764,7 +7782,7 @@ define('Core/Matrix4',[
      *
      * @param {Cartesian3} translation The upper right portion of the matrix representing the translation.
      * @param {Matrix4} [result] The object in which the result will be stored, if undefined a new instance will be created.
-     * @returns The modified result parameter, or a new Matrix4 instance if one was not provided.
+     * @returns {Matrix4} The modified result parameter, or a new Matrix4 instance if one was not provided.
      *
      * @see Matrix4.multiplyByTranslation
      */
@@ -7781,7 +7799,7 @@ define('Core/Matrix4',[
      *
      * @param {Cartesian3} scale The x, y, and z scale factors.
      * @param {Matrix4} [result] The object in which the result will be stored, if undefined a new instance will be created.
-     * @returns The modified result parameter, or a new Matrix4 instance if one was not provided.
+     * @returns {Matrix4} The modified result parameter, or a new Matrix4 instance if one was not provided.
      *
      * @example
      * // Creates
@@ -7828,7 +7846,7 @@ define('Core/Matrix4',[
      *
      * @param {Number} scale The uniform scale factor.
      * @param {Matrix4} [result] The object in which the result will be stored, if undefined a new instance will be created.
-     * @returns The modified result parameter, or a new Matrix4 instance if one was not provided.
+     * @returns {Matrix4} The modified result parameter, or a new Matrix4 instance if one was not provided.
      *
      * @example
      * // Creates
@@ -7878,7 +7896,7 @@ define('Core/Matrix4',[
      *
      * @param {Camera} camera The camera to use.
      * @param {Matrix4} [result] The object in which the result will be stored, if undefined a new instance will be created.
-     * @returns The modified result parameter, or a new Matrix4 instance if one was not provided.
+     * @returns {Matrix4} The modified result parameter, or a new Matrix4 instance if one was not provided.
      */
     Matrix4.fromCamera = function(camera, result) {
                 if (!defined(camera)) {
@@ -7969,7 +7987,7 @@ define('Core/Matrix4',[
       * @param {Number} near The distance to the near plane in meters.
       * @param {Number} far The distance to the far plane in meters.
       * @param {Matrix4} result The object in which the result will be stored.
-      * @returns The modified result parameter.
+      * @returns {Matrix4} The modified result parameter.
       *
       * @exception {DeveloperError} fovY must be in [0, PI).
       * @exception {DeveloperError} aspectRatio must be greater than zero.
@@ -8029,7 +8047,7 @@ define('Core/Matrix4',[
     * @param {Number} near The distance to the near plane in meters.
     * @param {Number} far The distance to the far plane in meters.
     * @param {Matrix4} result The object in which the result will be stored.
-    * @returns The modified result parameter.
+    * @returns {Matrix4} The modified result parameter.
     */
     Matrix4.computeOrthographicOffCenter = function(left, right, bottom, top, near, far, result) {
                 if (!defined(left)) {
@@ -8094,7 +8112,7 @@ define('Core/Matrix4',[
      * @param {Number} near The distance to the near plane in meters.
      * @param {Number} far The distance to the far plane in meters.
      * @param {Matrix4} result The object in which the result will be stored.
-     * @returns The modified result parameter.
+     * @returns {Matrix4} The modified result parameter.
      */
     Matrix4.computePerspectiveOffCenter = function(left, right, bottom, top, near, far, result) {
                 if (!defined(left)) {
@@ -8156,7 +8174,7 @@ define('Core/Matrix4',[
      * @param {Number} near The distance to the near plane in meters.
      * @param {Number} far The distance to the far plane in meters.
      * @param {Matrix4} result The object in which the result will be stored.
-     * @returns The modified result parameter.
+     * @returns {Matrix4} The modified result parameter.
      */
     Matrix4.computeInfinitePerspectiveOffCenter = function(left, right, bottom, top, near, result) {
                 if (!defined(left)) {
@@ -8212,7 +8230,7 @@ define('Core/Matrix4',[
      * @param {Number}[nearDepthRange=0.0] The near plane distance in window coordinates.
      * @param {Number}[farDepthRange=1.0] The far plane distance in window coordinates.
      * @param {Matrix4} result The object in which the result will be stored.
-     * @returns The modified result parameter.
+     * @returns {Matrix4} The modified result parameter.
      *
      * @example
      * // Create viewport transformation using an explicit viewport and depth range.
@@ -10508,7 +10526,7 @@ define('Core/BoundingSphere',[
      * algorithms, a naive algorithm and Ritter's algorithm. The smaller of the two spheres is used to
      * ensure a tight fit.
      *
-     * @param {Cartesian3[]} positions An array of points that the bounding sphere will enclose.  Each point
+     * @param {Number[]} positions An array of points that the bounding sphere will enclose.  Each point
      *        is formed from three elements in the array in the order X, Y, Z.
      * @param {Cartesian3} [center=Cartesian3.ZERO] The position to which the positions are relative, which need not be the
      *        origin of the coordinate system.  This is useful when the positions are to be used for
@@ -10688,8 +10706,8 @@ define('Core/BoundingSphere',[
      * Computes a bounding sphere from the corner points of an axis-aligned bounding box.  The sphere
      * tighly and fully encompases the box.
      *
-     * @param {Number} [corner] The minimum height over the rectangle.
-     * @param {Number} [oppositeCorner] The maximum height over the rectangle.
+     * @param {Cartesian3} [corner] The minimum height over the rectangle.
+     * @param {Cartesian3} [oppositeCorner] The maximum height over the rectangle.
      * @param {BoundingSphere} [result] The object onto which to store the result.
      * @returns {BoundingSphere} The modified result parameter or a new BoundingSphere instance if none was provided.
      *
@@ -10842,6 +10860,7 @@ define('Core/BoundingSphere',[
      * @param {Number[]} array The packed array.
      * @param {Number} [startingIndex=0] The starting index of the element to be unpacked.
      * @param {BoundingSphere} [result] The object into which to store the result.
+     * @returns {BoundingSphere} The modified result parameter or a new BoundingSphere instance if one was not provided.
      */
     BoundingSphere.unpack = function(array, startingIndex, result) {
                 if (!defined(array)) {
@@ -10980,27 +10999,6 @@ define('Core/BoundingSphere',[
         return Intersect.INSIDE;
     };
 
-    var scratchPlane = new Plane(new Cartesian3(), 0.0);
-    /**
-     * Determines which side of a plane a sphere is located.
-     *
-     * @deprecated
-     * @param {BoundingSphere} sphere The bounding sphere to test.
-     * @param {Cartesian4} plane The coefficients of the plane in Hessian Normal Form, as `ax + by + cz + d = 0`,
-     *                           where (a, b, c) must be a unit normal vector.
-     *                           The coefficients a, b, c, and d are the components x, y, z,
-     *                           and w of the {@link Cartesian4}, respectively.
-     * @returns {Intersect} {@link Intersect.INSIDE} if the entire sphere is on the side of the plane
-     *                      the normal is pointing, {@link Intersect.OUTSIDE} if the entire sphere is
-     *                      on the opposite side, and {@link Intersect.INTERSECTING} if the sphere
-     *                      intersects the plane.
-     */
-    BoundingSphere.intersect = function(sphere, plane) {
-        deprecationWarning('BoundingSphere.intersect', 'BoundingSphere.intersect() was deprecated in Cesium 1.11.  It will be removed in 1.12.  Use BoundingSphere.intersectPlane() instead.');
-        var p = Plane.fromCartesian4(plane, scratchPlane);
-        return BoundingSphere.intersectPlane(sphere, p);
-    };
-
     /**
      * Applies a 4x4 affine transformation matrix to a bounding sphere.
      *
@@ -11100,7 +11098,7 @@ define('Core/BoundingSphere',[
      * @param {BoundingSphere} sphere The bounding sphere to calculate the distance to.
      * @param {Cartesian3} position The position to calculate the distance from.
      * @param {Cartesian3} direction The direction from position.
-     * @param {Cartesian2} [result] A Cartesian2 to store the nearest and farthest distances.
+     * @param {Interval} [result] A Interval to store the nearest and farthest distances.
      * @returns {Interval} The nearest and farthest distances on the bounding sphere from position in direction.
      */
     BoundingSphere.computePlaneDistances = function(sphere, position, direction, result) {
@@ -11121,8 +11119,7 @@ define('Core/BoundingSphere',[
         }
 
         var toCenter = Cartesian3.subtract(sphere.center, position, scratchCartesian3);
-        var proj = Cartesian3.multiplyByScalar(direction, Cartesian3.dot(direction, toCenter), scratchCartesian3);
-        var mag = Cartesian3.magnitude(proj);
+        var mag = Cartesian3.dot(direction, toCenter);
 
         result.start = mag - sphere.radius;
         result.stop = mag + sphere.radius;
@@ -11239,6 +11236,23 @@ define('Core/BoundingSphere',[
     };
 
     /**
+     * Determines whether or not a sphere is hidden from view by the occluder.
+     *
+     * @param {BoundingSphere} sphere The bounding sphere surrounding the occludee object.
+     * @param {Occluder} occluder The occluder.
+     * @returns {Boolean} <code>true</code> if the sphere is not visible; otherwise <code>false</code>.
+     */
+    BoundingSphere.isOccluded = function(sphere, occluder) {
+                if (!defined(sphere)) {
+            throw new DeveloperError('sphere is required.');
+        }
+        if (!defined(occluder)) {
+            throw new DeveloperError('occluder is required.');
+        }
+                return !occluder.isBoundingSphereVisible(sphere);
+    };
+
+    /**
      * Compares the provided BoundingSphere componentwise and returns
      * <code>true</code> if they are equal, <code>false</code> otherwise.
      *
@@ -11268,19 +11282,45 @@ define('Core/BoundingSphere',[
     };
 
     /**
-     * Determines which side of a plane the sphere is located.
+     * Computes the estimated distance squared from the closest point on a bounding sphere to a point.
      *
-     * @deprecated
-     * @param {Cartesian4} plane The coefficients of the plane in the for ax + by + cz + d = 0
-     *                           where the coefficients a, b, c, and d are the components x, y, z,
-     *                           and w of the {@link Cartesian4}, respectively.
-     * @returns {Intersect} {@link Intersect.INSIDE} if the entire sphere is on the side of the plane
-     *                      the normal is pointing, {@link Intersect.OUTSIDE} if the entire sphere is
-     *                      on the opposite side, and {@link Intersect.INTERSECTING} if the sphere
-     *                      intersects the plane.
+     * @param {Cartesian3} cartesian The point
+     * @returns {Number} The estimated distance squared from the bounding sphere to the point.
+     *
+     * @example
+     * // Sort bounding spheres from back to front
+     * spheres.sort(function(a, b) {
+     *     return b.distanceSquaredTo(camera.positionWC) - a.distanceSquaredTo(camera.positionWC);
+     * });
      */
-    BoundingSphere.prototype.intersect = function(plane) {
-        return BoundingSphere.intersect(this, plane);
+    BoundingSphere.prototype.distanceSquaredTo = function(cartesian) {
+        return BoundingSphere.distanceSquaredTo(this, cartesian);
+    };
+
+    /**
+     * The distances calculated by the vector from the center of the bounding sphere to position projected onto direction
+     * plus/minus the radius of the bounding sphere.
+     * <br>
+     * If you imagine the infinite number of planes with normal direction, this computes the smallest distance to the
+     * closest and farthest planes from position that intersect the bounding sphere.
+     *
+     * @param {Cartesian3} position The position to calculate the distance from.
+     * @param {Cartesian3} direction The direction from position.
+     * @param {Interval} [result] A Interval to store the nearest and farthest distances.
+     * @returns {Interval} The nearest and farthest distances on the bounding sphere from position in direction.
+     */
+    BoundingSphere.prototype.computePlaneDistances = function(position, direction, result) {
+        return BoundingSphere.computePlaneDistances(this, position, direction, result);
+    };
+
+    /**
+     * Determines whether or not a sphere is hidden from view by the occluder.
+     *
+     * @param {Occluder} occluder The occluder.
+     * @returns {Boolean} <code>true</code> if the sphere is not visible; otherwise <code>false</code>.
+     */
+    BoundingSphere.prototype.isOccluded = function(occluder) {
+        return BoundingSphere.isOccluded(this, occluder);
     };
 
     /**
@@ -11342,6 +11382,7 @@ define('Core/Fullscreen',[
          * browser is in fullscreen mode or not, use {@link Fullscreen#fullscreen}.
          * @memberof Fullscreen
          * @type {Object}
+         * @readonly
          */
         element : {
             get : function() {
@@ -11360,6 +11401,7 @@ define('Core/Fullscreen',[
          * use {@link Fullscreen#fullscreen}.
          * @memberof Fullscreen
          * @type {String}
+         * @readonly
          */
         changeEventName : {
             get : function() {
@@ -11376,6 +11418,7 @@ define('Core/Fullscreen',[
          * occurs.  This event name is intended for use with addEventListener.
          * @memberof Fullscreen
          * @type {String}
+         * @readonly
          */
         errorEventName : {
             get : function() {
@@ -11393,6 +11436,7 @@ define('Core/Fullscreen',[
          * adds an "allowfullscreen" attribute (or prefixed equivalent).
          * @memberof Fullscreen
          * @type {Boolean}
+         * @readonly
          */
         enabled : {
             get : function() {
@@ -11408,6 +11452,7 @@ define('Core/Fullscreen',[
          * Determines if the browser is currently in fullscreen mode.
          * @memberof Fullscreen
          * @type {Boolean}
+         * @readonly
          */
         fullscreen : {
             get : function() {
@@ -11423,7 +11468,7 @@ define('Core/Fullscreen',[
     /**
      * Detects whether the browser supports the standard fullscreen API.
      *
-     * @returns <code>true</code> if the browser supports the standard fullscreen API,
+     * @returns {Boolean} <code>true</code> if the browser supports the standard fullscreen API,
      * <code>false</code> otherwise.
      */
     Fullscreen.supportsFullscreen = function() {
@@ -11734,7 +11779,7 @@ define('Core/FeatureDetection',[
     /**
      * Detects whether the current browser supports the full screen standard.
      *
-     * @returns true if the browser supports the full screen standard, false if not.
+     * @returns {Boolean} true if the browser supports the full screen standard, false if not.
      *
      * @see Fullscreen
      * @see {@link http://dvcs.w3.org/hg/fullscreen/raw-file/tip/Overview.html|W3C Fullscreen Living Specification}
@@ -11746,7 +11791,7 @@ define('Core/FeatureDetection',[
     /**
      * Detects whether the current browser supports typed arrays.
      *
-     * @returns true if the browser supports typed arrays, false if not.
+     * @returns {Boolean} true if the browser supports typed arrays, false if not.
      *
      * @see {@link http://www.khronos.org/registry/typedarray/specs/latest/|Typed Array Specification}
      */
@@ -11757,7 +11802,7 @@ define('Core/FeatureDetection',[
     /**
      * Detects whether the current browser supports Web Workers.
      *
-     * @returns true if the browsers supports Web Workers, false if not.
+     * @returns {Boolean} true if the browsers supports Web Workers, false if not.
      *
      * @see {@link http://www.w3.org/TR/workers/}
      */
@@ -12306,7 +12351,7 @@ define('Core/Geometry',[
          * geometry.attributes.position = new Cesium.GeometryAttribute({
          *   componentDatatype : Cesium.ComponentDatatype.FLOAT,
          *   componentsPerAttribute : 3,
-         *   values : new Float32Array()
+         *   values : new Float32Array(0)
          * });
          */
         this.attributes = options.attributes;
@@ -12356,7 +12401,7 @@ define('Core/Geometry',[
      * Computes the number of vertices in a geometry.  The runtime is linear with
      * respect to the number of attributes in a vertex, not the number of vertices.
      *
-     * @param {Cartesian3} geometry The geometry.
+     * @param {Geometry} geometry The geometry.
      * @returns {Number} The number of vertices in the geometry.
      *
      * @example
@@ -12411,7 +12456,7 @@ define('Core/GeometryAttribute',[
      * @param {ComponentDatatype} [options.componentDatatype] The datatype of each component in the attribute, e.g., individual elements in values.
      * @param {Number} [options.componentsPerAttribute] A number between 1 and 4 that defines the number of components in an attributes.
      * @param {Boolean} [options.normalize=false] When <code>true</code> and <code>componentDatatype</code> is an integer format, indicate that the components should be mapped to the range [0, 1] (unsigned) or [-1, 1] (signed) when they are accessed as floating-point for rendering.
-     * @param {Number[]} [options.values] The values for the attributes stored in a typed array.
+     * @param {TypedArray} [options.values] The values for the attributes stored in a typed array.
      *
      * @exception {DeveloperError} options.componentsPerAttribute must be between 1 and 4.
      *
@@ -12423,11 +12468,11 @@ define('Core/GeometryAttribute',[
      *     position : new Cesium.GeometryAttribute({
      *       componentDatatype : Cesium.ComponentDatatype.FLOAT,
      *       componentsPerAttribute : 3,
-     *       values : [
+     *       values : new Float32Array([
      *         0.0, 0.0, 0.0,
      *         7500000.0, 0.0, 0.0,
      *         0.0, 7500000.0, 0.0
-     *       ]
+     *       ])
      *     })
      *   },
      *   primitiveType : Cesium.PrimitiveType.LINE_LOOP
@@ -12469,8 +12514,8 @@ define('Core/GeometryAttribute',[
          * @default undefined
          *
          * @example
-         * attribute.componentDatatype : Cesium.ComponentDatatype.FLOAT,
-         * attribute.componentsPerAttribute : 3,
+         * attribute.componentDatatype = Cesium.ComponentDatatype.FLOAT;
+         * attribute.componentsPerAttribute = 3;
          * attribute.values = new Float32Array([
          *   0.0, 0.0, 0.0,
          *   7500000.0, 0.0, 0.0,
@@ -12492,13 +12537,13 @@ define('Core/GeometryAttribute',[
          * @default false
          *
          * @example
-         * attribute.componentDatatype : Cesium.ComponentDatatype.UNSIGNED_BYTE,
-         * attribute.componentsPerAttribute : 4,
+         * attribute.componentDatatype = Cesium.ComponentDatatype.UNSIGNED_BYTE;
+         * attribute.componentsPerAttribute = 4;
          * attribute.normalize = true;
          * attribute.values = new Uint8Array([
-         *   Cesium.Color.floatToByte(color.red)
-         *   Cesium.Color.floatToByte(color.green)
-         *   Cesium.Color.floatToByte(color.blue)
+         *   Cesium.Color.floatToByte(color.red),
+         *   Cesium.Color.floatToByte(color.green),
+         *   Cesium.Color.floatToByte(color.blue),
          *   Cesium.Color.floatToByte(color.alpha)
          * ]);
          */
@@ -12509,13 +12554,13 @@ define('Core/GeometryAttribute',[
          * every three elements in <code>values</code> defines one attributes since
          * <code>componentsPerAttribute</code> is 3.
          *
-         * @type Array
+         * @type TypedArray
          *
          * @default undefined
          *
          * @example
-         * attribute.componentDatatype : Cesium.ComponentDatatype.FLOAT,
-         * attribute.componentsPerAttribute : 3,
+         * attribute.componentDatatype = Cesium.ComponentDatatype.FLOAT;
+         * attribute.componentsPerAttribute = 3;
          * attribute.values = new Float32Array([
          *   0.0, 0.0, 0.0,
          *   7500000.0, 0.0, 0.0,
@@ -12968,26 +13013,6 @@ define('Core/AxisAlignedBoundingBox',[
         return Intersect.INTERSECTING;
     };
 
-    var scratchPlane = new Plane(new Cartesian3(), 0.0);
-    /**
-     * Determines which side of a plane a box is located.
-     *
-     * @deprecated
-     * @param {AxisAlignedBoundingBox} box The bounding box to test.
-     * @param {Cartesian4} plane The coefficients of the plane in the form <code>ax + by + cz + d = 0</code>
-     *                           where the coefficients a, b, c, and d are the components x, y, z, and w
-     *                           of the {@link Cartesian4}, respectively.
-     * @returns {Intersect} {@link Intersect.INSIDE} if the entire box is on the side of the plane
-     *                      the normal is pointing, {@link Intersect.OUTSIDE} if the entire box is
-     *                      on the opposite side, and {@link Intersect.INTERSECTING} if the box
-     *                      intersects the plane.
-     */
-    AxisAlignedBoundingBox.intersect = function(box, plane) {
-        deprecationWarning('AxisAlignedBoundingBox.intersect', 'AxisAlignedBoundingBox.intersect() was deprecated in Cesium 1.11.  It will be removed in 1.12.  Use AxisAlignedBoundingBox.intersectPlane() instead.');
-        var p = Plane.fromCartesian4(plane, scratchPlane);
-        return AxisAlignedBoundingBox.intersectPlane(box, p);
-    };
-
     /**
      * Duplicates this AxisAlignedBoundingBox instance.
      *
@@ -13009,22 +13034,6 @@ define('Core/AxisAlignedBoundingBox',[
      */
     AxisAlignedBoundingBox.prototype.intersectPlane = function(plane) {
         return AxisAlignedBoundingBox.intersectPlane(this, plane);
-    };
-
-    /**
-     * Determines which side of a plane this box is located.
-     *
-     * @deprecated
-     * @param {Cartesian4} plane The coefficients of the plane in the form <code>ax + by + cz + d = 0</code>
-     *                           where the coefficients a, b, c, and d are the components x, y, z, and w
-     *                           of the {@link Cartesian4}, respectively.
-     * @returns {Intersect} {@link Intersect.INSIDE} if the entire box is on the side of the plane
-     *                      the normal is pointing, {@link Intersect.OUTSIDE} if the entire box is
-     *                      on the opposite side, and {@link Intersect.INTERSECTING} if the box
-     *                      intersects the plane.
-     */
-    AxisAlignedBoundingBox.prototype.intersect = function(plane) {
-        return AxisAlignedBoundingBox.intersect(this, plane);
     };
 
     /**
@@ -13784,9 +13793,10 @@ define('Core/Ray',[
      * Computes the point along the ray given by r(t) = o + t*d,
      * where o is the origin of the ray and d is the direction.
      *
+     * @param {Ray} ray The ray.
      * @param {Number} t A scalar value.
      * @param {Cartesian3} [result] The object in which the result will be stored.
-     * @returns The modified result parameter, or a new instance if none was provided.
+     * @returns {Cartesian3} The modified result parameter, or a new instance if none was provided.
      *
      * @example
      * //Get the first intersection point of a ray and an ellipsoid.
@@ -16254,7 +16264,7 @@ define('Core/JulianDate',[
 
         var a = ((month - 14) / 12) | 0;
         var b = year + 4800 + a;
-        var dayNumber = (((1461 * b) / 4) | 0) + (((367 * (month - 2 - 12 * a)) / 12) | 0) - (((3 * ((b + 100) / 100)) / 4) | 0) + day - 32075;
+        var dayNumber = (((1461 * b) / 4) | 0) + (((367 * (month - 2 - 12 * a)) / 12) | 0) - (((3 * (((b + 100) / 100) | 0)) / 4) | 0) + day - 32075;
 
         // JulianDates are noon-based
         hour = hour - 12;
@@ -17135,6 +17145,7 @@ define('Core/clone',[
      *
      * @param {Object} object The object to clone.
      * @param {Boolean} [deep=false] If true, all properties will be deep cloned recursively.
+     * @returns {Object} The cloned object.
      */
     var clone = function(object, deep) {
         if (object === null || typeof object !== 'object') {
@@ -18811,7 +18822,7 @@ define('Core/Quaternion',[
      * @param {Number} heading The heading angle in radians.
      * @param {Number} pitch The pitch angle in radians.
      * @param {Number} roll The roll angle in radians.
-     * @param {Quaternion} result The object onto which to store the result.
+     * @param {Quaternion} [result] The object onto which to store the result.
      * @returns {Quaternion} The modified result parameter or a new Quaternion instance if none was provided.
      */
     Quaternion.fromHeadingPitchRoll = function(heading, pitch, roll, result) {
@@ -18874,6 +18885,7 @@ define('Core/Quaternion',[
      * @param {Number[]} array The packed array.
      * @param {Number} [startingIndex=0] The starting index of the element to be unpacked.
      * @param {Quaternion} [result] The object into which to store the result.
+     * @returns {Quaternion} The modified result parameter or a new Quaternion instance if one was not provided.
      */
     Quaternion.unpack = function(array, startingIndex, result) {
                 if (!defined(array)) {
@@ -18936,6 +18948,7 @@ define('Core/Quaternion',[
      * @param {Number} [startingIndex=0] The startingIndex used to convert the array.
      * @param {Number} [lastIndex=packedArray.length] The lastIndex used to convert the array.
      * @param {Quaternion} [result] The object into which to store the result.
+     * @returns {Quaternion} The modified result parameter or a new Quaternion instance if one was not provided.
      */
     Quaternion.unpackInterpolationResult = function(array, sourceArray, firstIndex, lastIndex, result) {
         if (!defined(result)) {
@@ -19487,13 +19500,13 @@ define('Core/Quaternion',[
      *
      * @example
      * // 1. compute the squad interpolation between two quaternions on a curve
-     * var s0 = Cesium.Quaternion.computeInnerQuadrangle(quaternions[i - 1], quaternions[i], quaternions[i + 1]);
-     * var s1 = Cesium.Quaternion.computeInnerQuadrangle(quaternions[i], quaternions[i + 1], quaternions[i + 2]);
-     * var q = Cesium.Quaternion.squad(quaternions[i], quaternions[i + 1], s0, s1, t);
+     * var s0 = Cesium.Quaternion.computeInnerQuadrangle(quaternions[i - 1], quaternions[i], quaternions[i + 1], new Cesium.Quaternion());
+     * var s1 = Cesium.Quaternion.computeInnerQuadrangle(quaternions[i], quaternions[i + 1], quaternions[i + 2], new Cesium.Quaternion());
+     * var q = Cesium.Quaternion.squad(quaternions[i], quaternions[i + 1], s0, s1, t, new Cesium.Quaternion());
      *
      * // 2. compute the squad interpolation as above but where the first quaternion is a end point.
-     * var s1 = Cesium.Quaternion.computeInnerQuadrangle(quaternions[0], quaternions[1], quaternions[2]);
-     * var q = Cesium.Quaternion.squad(quaternions[0], quaternions[1], quaternions[0], s1, t);
+     * var s1 = Cesium.Quaternion.computeInnerQuadrangle(quaternions[0], quaternions[1], quaternions[2], new Cesium.Quaternion());
+     * var q = Cesium.Quaternion.squad(quaternions[0], quaternions[1], quaternions[0], s1, t, new Cesium.Quaternion());
      */
     Quaternion.squad = function(q0, q1, s0, s1, t, result) {
                 if (!defined(q0) || !defined(q1) || !defined(s0) || !defined(s1)) {
@@ -19595,7 +19608,7 @@ define('Core/Quaternion',[
      * @param {Quaternion} s0 The first inner quadrangle.
      * @param {Quaternion} s1 The second inner quadrangle.
      * @param {Number} t The time in [0,1] used to interpolate.
-     * @param {Quaternion} [result] The object onto which to store the result.
+     * @param {Quaternion} result The object onto which to store the result.
      * @returns {Quaternion} The modified result parameter or a new instance if none was provided.
      *
      * @see Quaternion#squad
@@ -20148,7 +20161,7 @@ define('Core/Transforms',[
      * @example
      * //Set the view to in the inertial frame.
      * scene.preRender.addEventListener(function(scene, time) {
-     *    var now = new Cesium.JulianDate();
+     *    var now = Cesium.JulianDate.now();
      *    var offset = Cesium.Matrix4.multiplyByPoint(camera.transform, camera.position, new Cesium.Cartesian3());
      *    var transform = Cesium.Matrix4.fromRotationTranslation(Cesium.Transforms.computeTemeToPseudoFixedMatrix(now));
      *    var inverseTransform = Cesium.Matrix4.inverseTransformation(transform, new Cesium.Matrix4());
@@ -20246,7 +20259,7 @@ define('Core/Transforms',[
      *
      * @example
      * var interval = new Cesium.TimeInterval(...);
-     * when(preloadIcrfFixed(interval), function() {
+     * when(Cesium.Transforms.preloadIcrfFixed(interval), function() {
      *     // the data is now loaded
      * });
      */
@@ -20325,7 +20338,7 @@ define('Core/Transforms',[
      *
      * @example
      * // Transform a point from the ICRF axes to the Fixed axes.
-     * var now = new Cesium.JulianDate();
+     * var now = Cesium.JulianDate.now();
      * var pointInFixed = Cesium.Cartesian3.fromDegrees(0.0, 0.0);
      * var fixedToIcrf = Cesium.Transforms.computeIcrfToFixedMatrix(now);
      * var pointInInertial = new Cesium.Cartesian3();
@@ -20565,12 +20578,12 @@ define('Core/EllipsoidTangentPlane',[
     /**
      * A plane tangent to the provided ellipsoid at the provided origin.
      * If origin is not on the surface of the ellipsoid, it's surface projection will be used.
-     * If origin as at the center of the ellipsoid, an exception will be thrown.
+     * If origin is at the center of the ellipsoid, an exception will be thrown.
      * @alias EllipsoidTangentPlane
      * @constructor
      *
-     * @param {Ellipsoid} ellipsoid The ellipsoid to use.
      * @param {Cartesian3} origin The point on the surface of the ellipsoid where the tangent plane touches.
+     * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid to use.
      *
      * @exception {DeveloperError} origin must not be at the center of the ellipsoid.
      */
@@ -21210,6 +21223,7 @@ define('Core/EllipsoidGeodesic',[
          * Gets the ellipsoid.
          * @memberof EllipsoidGeodesic.prototype
          * @type {Ellipsoid}
+         * @readonly
          */
         ellipsoid : {
             get : function() {
@@ -21221,6 +21235,7 @@ define('Core/EllipsoidGeodesic',[
          * Gets the surface distance between the start and end point
          * @memberof EllipsoidGeodesic.prototype
          * @type {Number}
+         * @readonly
          */
         surfaceDistance : {
             get : function() {
@@ -21236,6 +21251,7 @@ define('Core/EllipsoidGeodesic',[
          * Gets the initial planetodetic point on the path.
          * @memberof EllipsoidGeodesic.prototype
          * @type {Cartographic}
+         * @readonly
          */
         start : {
             get : function() {
@@ -21247,6 +21263,7 @@ define('Core/EllipsoidGeodesic',[
          * Gets the final planetodetic point on the path.
          * @memberof EllipsoidGeodesic.prototype
          * @type {Cartographic}
+         * @readonly
          */
         end : {
             get : function() {
@@ -21258,6 +21275,7 @@ define('Core/EllipsoidGeodesic',[
          * Gets the heading at the initial point.
          * @memberof EllipsoidGeodesic.prototype
          * @type {Number}
+         * @readonly
          */
         startHeading : {
             get : function() {
@@ -21273,6 +21291,7 @@ define('Core/EllipsoidGeodesic',[
          * Gets the heading at the final point.
          * @memberof EllipsoidGeodesic.prototype
          * @type {Number}
+         * @readonly
          */
         endHeading : {
             get : function() {
@@ -21798,6 +21817,7 @@ define('Core/Queue',[],function() {
 
         /**
          * The length of the queue.
+         * @type {Number}
          */
         this.length = 0;
     };
@@ -22921,7 +22941,7 @@ define('Core/PolygonPipeline',[
      *
      * @param {Cartesian2[]} outerRing An array of Cartesian points defining the outer boundary of the polygon.
      * @param {Cartesian2[]} innerRings An array of arrays of Cartesian points, where each array represents a hole in the polygon.
-     * @returns A single list of Cartesian points defining the polygon, including the eliminated inner ring.
+     * @returns {Cartesian2[]} A single list of Cartesian points defining the polygon, including the eliminated inner ring.
      *
      * @exception {DeveloperError} <code>outerRing</code> must not be empty.
      *
@@ -23505,7 +23525,7 @@ define('Core/PolylineVolumeOutlineGeometry',[
      *
      * @param {Object} options Object with the following properties:
      * @param {Cartesian3[]} options.polylinePositions An array of positions that define the center of the polyline volume.
-     * @param {Number} options.shapePositions An array of positions that define the shape to be extruded along the polyline
+     * @param {Cartesian2[]} options.shapePositions An array of positions that define the shape to be extruded along the polyline
      * @param {Ellipsoid} [options.ellipsoid=Ellipsoid.WGS84] The ellipsoid to be used as a reference.
      * @param {Number} [options.granularity=CesiumMath.RADIANS_PER_DEGREE] The distance, in radians, between each latitude and longitude. Determines the number of positions in the buffer.
      * @param {CornerType} [options.cornerType=CornerType.ROUNDED] Determines the style of the corners.
@@ -23565,7 +23585,7 @@ define('Core/PolylineVolumeOutlineGeometry',[
      * Stores the provided instance into the provided array.
      * @function
      *
-     * @param {Object} value The value to pack.
+     * @param {PolylineVolumeOutlineGeometry} value The value to pack.
      * @param {Number[]} array The array to pack into.
      * @param {Number} [startingIndex=0] The index into the array at which to start packing the elements.
      */
@@ -23620,6 +23640,7 @@ define('Core/PolylineVolumeOutlineGeometry',[
      * @param {Number[]} array The packed array.
      * @param {Number} [startingIndex=0] The starting index of the element to be unpacked.
      * @param {PolylineVolumeOutlineGeometry} [result] The object into which to store the result.
+     * @returns {PolylineVolumeOutlineGeometry} The modified result parameter or a new PolylineVolumeOutlineGeometry instance if one was not provided.
      */
     PolylineVolumeOutlineGeometry.unpack = function(array, startingIndex, result) {
                 if (!defined(array)) {

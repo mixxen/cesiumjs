@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-    <title>Simon1994PlanetaryPositions - Cesium Documentation</title>
+    <title>GroundPrimitive - Cesium Documentation</title>
 
     <!--[if lt IE 9]>
       <script src="javascript/html5.js"></script>
@@ -30,7 +30,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Simon1994PlanetaryPositions</h1>
+    <h1 class="page-title">GroundPrimitive</h1>
 
     
 
@@ -48,72 +48,10 @@
 
     
         
-            <div class="description">Contains functions for finding the Cartesian coordinates of the sun and the moon in the
-Earth-centered inertial frame.</div>
-        
-
-        
-<dl class="details">
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Core/Simon1994PlanetaryPositions.js#L29">Core/Simon1994PlanetaryPositions.js, line 29</a>
-    </div>
-    
-</dl>
-
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        <dl>
-            
 <dt>
     <div class="nameContainer">
-    <h4 class="name" id=".computeMoonPositionInEarthInertialFrame">
-        <span class="type-signature attribute-static">static</span>Simon1994PlanetaryPositions.computeMoonPositionInEarthInertialFrame<span class="signature">(<span class="optional">julianDate</span>, <span class="optional">result</span>)</span> &rarr; <span class="type-signature returnType"><a href="Cartesian3.html">Cartesian3</a></span>
+    <h4 class="name" id="GroundPrimitive">
+        new GroundPrimitive<span class="signature">(<span class="optional">options</span>)</span>
     </h4>
 
     </div>
@@ -124,7 +62,18 @@ Earth-centered inertial frame.</div>
 
     
     <div class="description">
-        Computes the position of the Moon in the Earth-centered inertial frame
+        A ground primitive represents geometry draped over the terrain in the <a href="Scene.html"><code>Scene</code></a>.  The geometry must be from a single <a href="GeometryInstance.html"><code>GeometryInstance</code></a>.
+Batching multiple geometries is not yet supported.
+<p>
+A primitive combines the geometry instance with an <a href="Appearance.html"><code>Appearance</code></a> that describes the full shading, including
+<a href="Material.html"><code>Material</code></a> and <code>RenderState</code>.  Roughly, the geometry instance defines the structure and placement,
+and the appearance defines the visual characteristics.  Decoupling geometry and appearance allows us to mix
+and match most of them and add a new geometry or appearance independently of each other. Only the <a href="PerInstanceColorAppearance.html"><code>PerInstanceColorAppearance</code></a>
+is supported at this time.
+</p>
+<p>
+Valid geometries are <a href="CircleGeometry.html"><code>CircleGeometry</code></a>, <a href="CorridorGeometry.html"><code>CorridorGeometry</code></a>, <a href="EllipseGeometry.html"><code>EllipseGeometry</code></a>, <a href="PolygonGeometry.html"><code>PolygonGeometry</code></a>, and <a href="RectangleGeometry.html"><code>RectangleGeometry</code></a>.
+</p>
     </div>
     
 
@@ -157,13 +106,13 @@ Earth-centered inertial frame.</div>
 
         <tr>
             
-                <td class="name"><code>julianDate</code></td>
+                <td class="name"><code>options</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="JulianDate.html">JulianDate</a></span>
+<span class="param-type">Object</span>
 
 
             
@@ -180,25 +129,83 @@ Earth-centered inertial frame.</div>
 
                 
             
-                The time at which to compute the Sun's position, if not provided the current system time is used.</td>
+                Object with the following properties:
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>geometryInstance</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="GeometryInstance.html">GeometryInstance</a></span>
+
+
+            
+            </td>
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">
+            
+                
+                        <span class="optional">optional</span>
+                
+                
+
+                
+            
+                A single geometry instance to render.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>result</code></td>
+                <td class="name"><code>show</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="Cartesian3.html">Cartesian3</a></span>
+<span class="param-type">Boolean</span>
 
 
             
             </td>
 
+            
+                <td class="default">
+                
+                    <code class="language-javascript">true</code>
+                
+                </td>
             
 
             <td class="description last">
@@ -210,7 +217,265 @@ Earth-centered inertial frame.</div>
 
                 
             
-                The object onto which to store the result.</td>
+                Determines if this primitive will be shown.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>vertexCacheOptimize</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="default">
+                
+                    <code class="language-javascript">false</code>
+                
+                </td>
+            
+
+            <td class="description last">
+            
+                
+                        <span class="optional">optional</span>
+                
+                
+
+                
+            
+                When <code>true</code>, geometry vertices are optimized for the pre and post-vertex-shader caches.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>interleave</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="default">
+                
+                    <code class="language-javascript">false</code>
+                
+                </td>
+            
+
+            <td class="description last">
+            
+                
+                        <span class="optional">optional</span>
+                
+                
+
+                
+            
+                When <code>true</code>, geometry vertex attributes are interleaved, which can slightly improve rendering performance but increases load time.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>compressVertices</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="default">
+                
+                    <code class="language-javascript">true</code>
+                
+                </td>
+            
+
+            <td class="description last">
+            
+                
+                        <span class="optional">optional</span>
+                
+                
+
+                
+            
+                When <code>true</code>, the geometry vertices are compressed, which will save memory.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>releaseGeometryInstances</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="default">
+                
+                    <code class="language-javascript">true</code>
+                
+                </td>
+            
+
+            <td class="description last">
+            
+                
+                        <span class="optional">optional</span>
+                
+                
+
+                
+            
+                When <code>true</code>, the primitive does not keep a reference to the input <code>geometryInstances</code> to save memory.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>allowPicking</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="default">
+                
+                    <code class="language-javascript">true</code>
+                
+                </td>
+            
+
+            <td class="description last">
+            
+                
+                        <span class="optional">optional</span>
+                
+                
+
+                
+            
+                When <code>true</code>, each geometry instance will only be pickable with <a href="Scene.html#pick"><code>Scene#pick</code></a>.  When <code>false</code>, GPU memory is saved.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>asynchronous</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="default">
+                
+                    <code class="language-javascript">true</code>
+                
+                </td>
+            
+
+            <td class="description last">
+            
+                
+                        <span class="optional">optional</span>
+                
+                
+
+                
+            
+                Determines if the primitive will be created asynchronously or block until ready.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>debugShowBoundingVolume</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="default">
+                
+                    <code class="language-javascript">false</code>
+                
+                </td>
+            
+
+            <td class="description last">
+            
+                
+                        <span class="optional">optional</span>
+                
+                
+
+                
+            
+                For debugging only. Determines if this primitive's commands' bounding spheres are shown.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+            </td>
         </tr>
 
     
@@ -227,15 +492,6 @@ Earth-centered inertial frame.</div>
     
 
     
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    Calculated moon position
-</div>
-
-
-        
 
     
 
@@ -260,6 +516,111 @@ Earth-centered inertial frame.</div>
     
 
     
+        <h5>Example:</h5>
+        
+    <pre><code class="language-javascript">var rectangleInstance = new Cesium.GeometryInstance({
+  geometry : new Cesium.RectangleGeometry({
+    rectangle : Cesium.Rectangle.fromDegrees(-140.0, 30.0, -100.0, 40.0)
+  }),
+  id : 'rectangle',
+  attributes : {
+    color : new Cesium.ColorGeometryInstanceAttribute(0.0, 1.0, 1.0, 0.5)
+  }
+});
+scene.primitives.add(new Cesium.GroundPrimitive({
+  geometryInstance : rectangleInstance
+}));</code></pre>
+
+    
+
+    
+
+    
+
+    
+    <h5>See:</h5>
+    <ul class="see-list">
+        <li><a href="Primitive.html">Primitive</a></li>
+    
+        <li><a href="GeometryInstance.html">GeometryInstance</a></li>
+    
+        <li><a href="Appearance.html">Appearance</a></li>
+    </ul>
+    
+
+    
+    
+    
+    <div class="source-link">
+        Source: 
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/GroundPrimitive.js#L112">Scene/GroundPrimitive.js, line 112</a>
+    </div>
+    
+</dl>
+
+</dd>
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
+            
+<dt>
+    <div class="nameContainer">
+    <h4 class="name" id="allowPicking">
+        <span class="type-signature attribute-readonly">readonly</span>allowPicking<span class="type-signature"> :Boolean</span>
+    </h4>
+
+    </div>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        When <code>true</code>, each geometry instance will only be pickable with <a href="Scene.html#pick"><code>Scene#pick</code></a>.  When <code>false</code>, GPU memory is saved.
+    </div>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <span class="details-header">Default Value:</span>
+    <code class="language-javascript">true</code>
+    
+
+    
 
     
 
@@ -272,7 +633,7 @@ Earth-centered inertial frame.</div>
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Core/Simon1994PlanetaryPositions.js#L517">Core/Simon1994PlanetaryPositions.js, line 517</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/GroundPrimitive.js#L243">Scene/GroundPrimitive.js, line 243</a>
     </div>
     
 </dl>
@@ -283,8 +644,659 @@ Earth-centered inertial frame.</div>
             
 <dt>
     <div class="nameContainer">
-    <h4 class="name" id=".computeSunPositionInEarthInertialFrame">
-        <span class="type-signature attribute-static">static</span>Simon1994PlanetaryPositions.computeSunPositionInEarthInertialFrame<span class="signature">(<span class="optional">julianDate</span>, <span class="optional">result</span>)</span> &rarr; <span class="type-signature returnType"><a href="Cartesian3.html">Cartesian3</a></span>
+    <h4 class="name" id="asynchronous">
+        <span class="type-signature attribute-readonly">readonly</span>asynchronous<span class="type-signature"> :Boolean</span>
+    </h4>
+
+    </div>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Determines if the geometry instances will be created and batched on a web worker.
+    </div>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <span class="details-header">Default Value:</span>
+    <code class="language-javascript">true</code>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+    <div class="source-link">
+        Source: 
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/GroundPrimitive.js#L259">Scene/GroundPrimitive.js, line 259</a>
+    </div>
+    
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+    <h4 class="name" id="compressVertices">
+        <span class="type-signature attribute-readonly">readonly</span>compressVertices<span class="type-signature"> :Boolean</span>
+    </h4>
+
+    </div>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        When <code>true</code>, geometry vertices are compressed, which will save memory.
+    </div>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <span class="details-header">Default Value:</span>
+    <code class="language-javascript">true</code>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+    <div class="source-link">
+        Source: 
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/GroundPrimitive.js#L275">Scene/GroundPrimitive.js, line 275</a>
+    </div>
+    
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+    <h4 class="name" id="debugShowBoundingVolume">
+        debugShowBoundingVolume<span class="type-signature"> :Boolean</span>
+    </h4>
+
+    </div>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        This property is for debugging only; it is not for production use nor is it optimized.
+<p>
+Draws the bounding sphere for each draw command in the primitive.
+</p>
+    </div>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <span class="details-header">Default Value:</span>
+    <code class="language-javascript">false</code>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+    <div class="source-link">
+        Source: 
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/GroundPrimitive.js#L147">Scene/GroundPrimitive.js, line 147</a>
+    </div>
+    
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+    <h4 class="name" id="geometryInstance">
+        geometryInstance<span class="type-signature"> :Array</span>
+    </h4>
+
+    </div>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        The geometry instance rendered with this primitive.  This may
+be <code>undefined</code> if <code>options.releaseGeometryInstances</code>
+is <code>true</code> when the primitive is constructed.
+<p>
+Changing this property after the primitive is rendered has no effect.
+</p>
+    </div>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <span class="details-header">Default Value:</span>
+    <code class="language-javascript">undefined</code>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+    <div class="source-link">
+        Source: 
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/GroundPrimitive.js#L127">Scene/GroundPrimitive.js, line 127</a>
+    </div>
+    
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+    <h4 class="name" id="interleave">
+        <span class="type-signature attribute-readonly">readonly</span>interleave<span class="type-signature"> :Boolean</span>
+    </h4>
+
+    </div>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Determines if geometry vertex attributes are interleaved, which can slightly improve rendering performance.
+    </div>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <span class="details-header">Default Value:</span>
+    <code class="language-javascript">false</code>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+    <div class="source-link">
+        Source: 
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/GroundPrimitive.js#L211">Scene/GroundPrimitive.js, line 211</a>
+    </div>
+    
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+    <h4 class="name" id="ready">
+        <span class="type-signature attribute-readonly">readonly</span>ready<span class="type-signature"> :Boolean</span>
+    </h4>
+
+    </div>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Determines if the primitive is complete and ready to render.  If this property is
+true, the primitive will be rendered the next time that <a href="GroundPrimitive.html#update"><code>GroundPrimitive#update</code></a>
+is called.
+    </div>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+    <div class="source-link">
+        Source: 
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/GroundPrimitive.js#L291">Scene/GroundPrimitive.js, line 291</a>
+    </div>
+    
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+    <h4 class="name" id="readyPromise">
+        <span class="type-signature attribute-readonly">readonly</span>readyPromise<span class="type-signature"> :Promise.&lt;<a href="GroundPrimitive.html">GroundPrimitive</a>></span>
+    </h4>
+
+    </div>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Gets a promise that resolves when the primitive is ready to render.
+    </div>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+    <div class="source-link">
+        Source: 
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/GroundPrimitive.js#L303">Scene/GroundPrimitive.js, line 303</a>
+    </div>
+    
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+    <h4 class="name" id="releaseGeometryInstances">
+        <span class="type-signature attribute-readonly">readonly</span>releaseGeometryInstances<span class="type-signature"> :Boolean</span>
+    </h4>
+
+    </div>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        When <code>true</code>, the primitive does not keep a reference to the input <code>geometryInstances</code> to save memory.
+    </div>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <span class="details-header">Default Value:</span>
+    <code class="language-javascript">true</code>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+    <div class="source-link">
+        Source: 
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/GroundPrimitive.js#L227">Scene/GroundPrimitive.js, line 227</a>
+    </div>
+    
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+    <h4 class="name" id="show">
+        show<span class="type-signature"> :Boolean</span>
+    </h4>
+
+    </div>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Determines if the primitive will be shown.  This affects all geometry
+instances in the primitive.
+    </div>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <span class="details-header">Default Value:</span>
+    <code class="language-javascript">true</code>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+    <div class="source-link">
+        Source: 
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/GroundPrimitive.js#L136">Scene/GroundPrimitive.js, line 136</a>
+    </div>
+    
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+    <h4 class="name" id="vertexCacheOptimize">
+        <span class="type-signature attribute-readonly">readonly</span>vertexCacheOptimize<span class="type-signature"> :Boolean</span>
+    </h4>
+
+    </div>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        When <code>true</code>, geometry vertices are optimized for the pre and post-vertex-shader caches.
+    </div>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <span class="details-header">Default Value:</span>
+    <code class="language-javascript">true</code>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+    <div class="source-link">
+        Source: 
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/GroundPrimitive.js#L195">Scene/GroundPrimitive.js, line 195</a>
+    </div>
+    
+</dl>
+
+</dd>
+
+        </dl>
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<dt>
+    <div class="nameContainer">
+    <h4 class="name" id=".isSupported">
+        <span class="type-signature attribute-static">static</span>GroundPrimitive.isSupported<span class="signature">(scene)</span> &rarr; <span class="type-signature returnType">Boolean</span>
     </h4>
 
     </div>
@@ -295,7 +1307,7 @@ Earth-centered inertial frame.</div>
 
     
     <div class="description">
-        Computes the position of the Sun in the Earth-centered inertial frame
+        Determines if GroundPrimitive rendering is supported.
     </div>
     
 
@@ -328,13 +1340,13 @@ Earth-centered inertial frame.</div>
 
         <tr>
             
-                <td class="name"><code>julianDate</code></td>
+                <td class="name"><code>scene</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="JulianDate.html">JulianDate</a></span>
+<span class="param-type"><a href="Scene.html">Scene</a></span>
 
 
             
@@ -344,44 +1356,7 @@ Earth-centered inertial frame.</div>
 
             <td class="description last">
             
-                
-                        <span class="optional">optional</span>
-                
-                
-
-                
-            
-                The time at which to compute the Sun's position, if not provided the current system time is used.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>result</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Cartesian3.html">Cartesian3</a></span>
-
-
-            
-            </td>
-
-            
-
-            <td class="description last">
-            
-                
-                        <span class="optional">optional</span>
-                
-                
-
-                
-            
-                The object onto which to store the result.</td>
+                The scene.</td>
         </tr>
 
     
@@ -402,7 +1377,7 @@ Earth-centered inertial frame.</div>
     
             
 <div class="param-desc">
-    Calculated sun position
+    <code>true</code> if GroundPrimitives are supported; otherwise, returns <code>false</code>
 </div>
 
 
@@ -443,7 +1418,485 @@ Earth-centered inertial frame.</div>
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Core/Simon1994PlanetaryPositions.js#L488">Core/Simon1994PlanetaryPositions.js, line 488</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/GroundPrimitive.js#L316">Scene/GroundPrimitive.js, line 316</a>
+    </div>
+    
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+    <h4 class="name" id="destroy">
+        destroy<span class="signature">()</span> &rarr; <span class="type-signature returnType">undefined</span>
+    </h4>
+
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Destroys the WebGL resources held by this object.  Destroying an object allows for deterministic
+release of WebGL resources, instead of relying on the garbage collector to destroy this object.
+<p>
+Once an object is destroyed, it should not be used; calling any function other than
+<code>isDestroyed</code> will result in a <a href="DeveloperError.html"><code>DeveloperError</code></a> exception.  Therefore,
+assign the return value (<code>undefined</code>) to the object as done in the example.
+</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+        
+
+    
+    <h5>Throws:</h5>
+    <ul>
+            <li>
+
+    <div class="param-desc">
+        
+<span class="param-type"><a href="DeveloperError.html">DeveloperError</a></span>
+
+: This object was destroyed, i.e., destroy() was called.
+    </div>
+
+</li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Example:</h5>
+        
+    <pre><code class="language-javascript">e = e &amp;&amp; e.destroy();</code></pre>
+
+    
+
+    
+
+    
+
+    
+    <h5>See:</h5>
+    <ul class="see-list">
+        <li><a href="GroundPrimitive.html#isDestroyed">GroundPrimitive#isDestroyed</a></li>
+    </ul>
+    
+
+    
+    
+    
+    <div class="source-link">
+        Source: 
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/GroundPrimitive.js#L786">Scene/GroundPrimitive.js, line 786</a>
+    </div>
+    
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+    <h4 class="name" id="getGeometryInstanceAttributes">
+        getGeometryInstanceAttributes<span class="signature">(id)</span> &rarr; <span class="type-signature returnType">Object</span>
+    </h4>
+
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Returns the modifiable per-instance attributes for a <a href="GeometryInstance.html"><code>GeometryInstance</code></a>.
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            <td class="description last">
+            
+                The id of the <a href="GeometryInstance.html"><code>GeometryInstance</code></a>.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    The typed array in the attribute's format or undefined if the is no instance with id.
+</div>
+
+
+        
+
+    
+    <h5>Throws:</h5>
+    <ul>
+            <li>
+
+    <div class="param-desc">
+        
+<span class="param-type"><a href="DeveloperError.html">DeveloperError</a></span>
+
+: must call update before calling getGeometryInstanceAttributes.
+    </div>
+
+</li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Example:</h5>
+        
+    <pre><code class="language-javascript">var attributes = primitive.getGeometryInstanceAttributes('an id');
+attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(Cesium.Color.AQUA);
+attributes.show = Cesium.ShowGeometryInstanceAttribute.toValue(true);</code></pre>
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+    <div class="source-link">
+        Source: 
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/GroundPrimitive.js#L744">Scene/GroundPrimitive.js, line 744</a>
+    </div>
+    
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+    <h4 class="name" id="isDestroyed">
+        isDestroyed<span class="signature">()</span> &rarr; <span class="type-signature returnType">Boolean</span>
+    </h4>
+
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Returns true if this object was destroyed; otherwise, false.
+<p>
+If this object was destroyed, it should not be used; calling any function other than
+<code>isDestroyed</code> will result in a <a href="DeveloperError.html"><code>DeveloperError</code></a> exception.
+</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <code>true</code> if this object was destroyed; otherwise, <code>false</code>.
+</div>
+
+
+        
+
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>See:</h5>
+    <ul class="see-list">
+        <li><a href="GroundPrimitive.html#destroy">GroundPrimitive#destroy</a></li>
+    </ul>
+    
+
+    
+    
+    
+    <div class="source-link">
+        Source: 
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/GroundPrimitive.js#L764">Scene/GroundPrimitive.js, line 764</a>
+    </div>
+    
+</dl>
+
+</dd>
+
+        
+            
+<dt>
+    <div class="nameContainer">
+    <h4 class="name" id="update">
+        update<span class="signature">()</span>
+    </h4>
+
+    </div>
+
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Called when <a href="Viewer.html"><code>Viewer</code></a> or <a href="CesiumWidget.html"><code>CesiumWidget</code></a> render the scene to
+get the draw commands needed to render this primitive.
+<p>
+Do not call this function directly.  This is documented just to
+list the exceptions that may be propagated when the scene is rendered:
+</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Throws:</h5>
+    <ul>
+            <li>
+
+    <div class="param-desc">
+        
+<span class="param-type"><a href="DeveloperError.html">DeveloperError</a></span>
+
+: All instance geometries must have the same primitiveType.
+    </div>
+
+</li>
+        
+            <li>
+
+    <div class="param-desc">
+        
+<span class="param-type"><a href="DeveloperError.html">DeveloperError</a></span>
+
+: Appearance and material have a uniform with the same name.
+    </div>
+
+</li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    
+    
+    <div class="source-link">
+        Source: 
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/GroundPrimitive.js#L670">Scene/GroundPrimitive.js, line 670</a>
     </div>
     
 </dl>
