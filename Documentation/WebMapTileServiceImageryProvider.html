@@ -162,7 +162,7 @@ This provider supports HTTP KVP-encoded and RESTful GetTile requests, but does n
 
                 
             
-                The base URL for the WMTS GetTile operation (for KVP-encoded requests) or the tile-URL template (for RESTful requests). The tile-URL template should contain the following variables: &#123;style&#125;, &#123;TileMatrixSet&#125;, &#123;TileMatrix&#125;, &#123;TileRow&#125;, &#123;TileCol&#125;. The first two are optional if actual values are hardcoded or not required by the server.</td>
+                The base URL for the WMTS GetTile operation (for KVP-encoded requests) or the tile-URL template (for RESTful requests). The tile-URL template should contain the following variables: &#123;style&#125;, &#123;TileMatrixSet&#125;, &#123;TileMatrix&#125;, &#123;TileRow&#125;, &#123;TileCol&#125;. The first two are optional if actual values are hardcoded or not required by the server. The &#123;s&#125; keyword may be used to specify subdomains.</td>
         </tr>
 
     
@@ -649,6 +649,47 @@ This provider supports HTTP KVP-encoded and RESTful GetTile requests, but does n
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>subdomains</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+|
+
+<span class="param-type">Array.&lt;String></span>
+
+
+            
+            </td>
+
+            
+                <td class="default">
+                
+                    <code class="language-javascript">'abc'</code>
+                
+                </td>
+            
+
+            <td class="description last">
+            
+                
+                        <span class="optional">optional</span>
+                
+                
+
+                
+            
+                The subdomains to use for the <code>{s}</code> placeholder in the URL template.
+                         If this parameter is a single string, each character in the string is a subdomain.  If it is
+                         an array, each element in the array is a subdomain.</td>
+        </tr>
+
+    
     </tbody>
 </table>
             </td>
@@ -751,7 +792,7 @@ viewer.imageryLayers.addImageryProvider(shadedRelief2);</code></pre>
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/WebMapTileServiceImageryProvider.js#L94">Scene/WebMapTileServiceImageryProvider.js, line 94</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Scene/WebMapTileServiceImageryProvider.js#L97">Scene/WebMapTileServiceImageryProvider.js, line 97</a>
     </div>
     
 </dl>
@@ -829,7 +870,7 @@ the source of the imagery.  This function should not be called before <a href="W
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/WebMapTileServiceImageryProvider.js#L354">Scene/WebMapTileServiceImageryProvider.js, line 354</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Scene/WebMapTileServiceImageryProvider.js#L368">Scene/WebMapTileServiceImageryProvider.js, line 368</a>
     </div>
     
 </dl>
@@ -892,7 +933,7 @@ are passed an instance of <a href="TileProviderError.html"><code>TileProviderErr
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/WebMapTileServiceImageryProvider.js#L319">Scene/WebMapTileServiceImageryProvider.js, line 319</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Scene/WebMapTileServiceImageryProvider.js#L333">Scene/WebMapTileServiceImageryProvider.js, line 333</a>
     </div>
     
 </dl>
@@ -953,7 +994,7 @@ are passed an instance of <a href="TileProviderError.html"><code>TileProviderErr
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/WebMapTileServiceImageryProvider.js#L331">Scene/WebMapTileServiceImageryProvider.js, line 331</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Scene/WebMapTileServiceImageryProvider.js#L345">Scene/WebMapTileServiceImageryProvider.js, line 345</a>
     </div>
     
 </dl>
@@ -1018,7 +1059,7 @@ and texture upload time are reduced.
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/WebMapTileServiceImageryProvider.js#L370">Scene/WebMapTileServiceImageryProvider.js, line 370</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Scene/WebMapTileServiceImageryProvider.js#L384">Scene/WebMapTileServiceImageryProvider.js, line 384</a>
     </div>
     
 </dl>
@@ -1080,7 +1121,7 @@ not be called before <a href="WebMapTileServiceImageryProvider.html#ready"><code
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/WebMapTileServiceImageryProvider.js#L251">Scene/WebMapTileServiceImageryProvider.js, line 251</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Scene/WebMapTileServiceImageryProvider.js#L265">Scene/WebMapTileServiceImageryProvider.js, line 265</a>
     </div>
     
 </dl>
@@ -1142,7 +1183,7 @@ not be called before <a href="WebMapTileServiceImageryProvider.html#ready"><code
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/WebMapTileServiceImageryProvider.js#L264">Scene/WebMapTileServiceImageryProvider.js, line 264</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Scene/WebMapTileServiceImageryProvider.js#L278">Scene/WebMapTileServiceImageryProvider.js, line 278</a>
     </div>
     
 </dl>
@@ -1203,7 +1244,7 @@ not be called before <a href="WebMapTileServiceImageryProvider.html#ready"><code
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/WebMapTileServiceImageryProvider.js#L212">Scene/WebMapTileServiceImageryProvider.js, line 212</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Scene/WebMapTileServiceImageryProvider.js#L226">Scene/WebMapTileServiceImageryProvider.js, line 226</a>
     </div>
     
 </dl>
@@ -1264,7 +1305,7 @@ not be called before <a href="WebMapTileServiceImageryProvider.html#ready"><code
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/WebMapTileServiceImageryProvider.js#L343">Scene/WebMapTileServiceImageryProvider.js, line 343</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Scene/WebMapTileServiceImageryProvider.js#L357">Scene/WebMapTileServiceImageryProvider.js, line 357</a>
     </div>
     
 </dl>
@@ -1326,7 +1367,7 @@ not be called before <a href="WebMapTileServiceImageryProvider.html#ready"><code
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/WebMapTileServiceImageryProvider.js#L290">Scene/WebMapTileServiceImageryProvider.js, line 290</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Scene/WebMapTileServiceImageryProvider.js#L304">Scene/WebMapTileServiceImageryProvider.js, line 304</a>
     </div>
     
 </dl>
@@ -1390,7 +1431,7 @@ not be called before <a href="WebMapTileServiceImageryProvider.html#ready"><code
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/WebMapTileServiceImageryProvider.js#L305">Scene/WebMapTileServiceImageryProvider.js, line 305</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Scene/WebMapTileServiceImageryProvider.js#L319">Scene/WebMapTileServiceImageryProvider.js, line 319</a>
     </div>
     
 </dl>
@@ -1452,7 +1493,7 @@ not be called before <a href="WebMapTileServiceImageryProvider.html#ready"><code
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/WebMapTileServiceImageryProvider.js#L238">Scene/WebMapTileServiceImageryProvider.js, line 238</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Scene/WebMapTileServiceImageryProvider.js#L252">Scene/WebMapTileServiceImageryProvider.js, line 252</a>
     </div>
     
 </dl>
@@ -1514,7 +1555,7 @@ not be called before <a href="WebMapTileServiceImageryProvider.html#ready"><code
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/WebMapTileServiceImageryProvider.js#L225">Scene/WebMapTileServiceImageryProvider.js, line 225</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Scene/WebMapTileServiceImageryProvider.js#L239">Scene/WebMapTileServiceImageryProvider.js, line 239</a>
     </div>
     
 </dl>
@@ -1576,7 +1617,7 @@ not be called before <a href="WebMapTileServiceImageryProvider.html#ready"><code
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/WebMapTileServiceImageryProvider.js#L277">Scene/WebMapTileServiceImageryProvider.js, line 277</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Scene/WebMapTileServiceImageryProvider.js#L291">Scene/WebMapTileServiceImageryProvider.js, line 291</a>
     </div>
     
 </dl>
@@ -1637,7 +1678,7 @@ not be called before <a href="WebMapTileServiceImageryProvider.html#ready"><code
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/WebMapTileServiceImageryProvider.js#L200">Scene/WebMapTileServiceImageryProvider.js, line 200</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Scene/WebMapTileServiceImageryProvider.js#L214">Scene/WebMapTileServiceImageryProvider.js, line 214</a>
     </div>
     
 </dl>
@@ -1837,7 +1878,7 @@ not be called before <a href="WebMapTileServiceImageryProvider.html#ready"><code
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/WebMapTileServiceImageryProvider.js#L387">Scene/WebMapTileServiceImageryProvider.js, line 387</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Scene/WebMapTileServiceImageryProvider.js#L401">Scene/WebMapTileServiceImageryProvider.js, line 401</a>
     </div>
     
 </dl>
@@ -2067,7 +2108,7 @@ undefined.
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/WebMapTileServiceImageryProvider.js#L424">Scene/WebMapTileServiceImageryProvider.js, line 424</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Scene/WebMapTileServiceImageryProvider.js#L438">Scene/WebMapTileServiceImageryProvider.js, line 438</a>
     </div>
     
 </dl>
@@ -2265,7 +2306,7 @@ not be called before <a href="WebMapTileServiceImageryProvider.html#ready"><code
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/WebMapTileServiceImageryProvider.js#L405">Scene/WebMapTileServiceImageryProvider.js, line 405</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Scene/WebMapTileServiceImageryProvider.js#L419">Scene/WebMapTileServiceImageryProvider.js, line 419</a>
     </div>
     
 </dl>

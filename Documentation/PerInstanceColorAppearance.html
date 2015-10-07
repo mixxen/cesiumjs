@@ -457,14 +457,18 @@ var instance = new Cesium.GeometryInstance({
   geometry : new Cesium.RectangleGeometry({
     rectangle : Cesium.Rectangle.fromDegrees(0.0, 20.0, 10.0, 30.0)
   }),
-  color : new Cesium.Color(1.0, 0.0, 0.0, 0.5)
+  attributes : {
+    color : new Cesium.Color(1.0, 0.0, 0.0, 0.5)
+  }
 });
 
 var anotherInstance = new Cesium.GeometryInstance({
   geometry : new Cesium.RectangleGeometry({
     rectangle : Cesium.Rectangle.fromDegrees(0.0, 40.0, 10.0, 50.0)
   }),
-  color : new Cesium.Color(0.0, 0.0, 1.0, 0.5)
+  attributes : {
+    color : new Cesium.Color(0.0, 0.0, 1.0, 0.5)
+  }
 });
 
 var rectanglePrimitive = new Cesium.Primitive({
@@ -490,7 +494,7 @@ var rectanglePrimitive = new Cesium.Primitive({
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/PerInstanceColorAppearance.js#L81">Scene/PerInstanceColorAppearance.js, line 81</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Scene/PerInstanceColorAppearance.js#L85">Scene/PerInstanceColorAppearance.js, line 85</a>
     </div>
     
 </dl>
@@ -569,7 +573,7 @@ This requires only a <code>position</code> attribute.
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/PerInstanceColorAppearance.js#L262">Scene/PerInstanceColorAppearance.js, line 262</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Scene/PerInstanceColorAppearance.js#L266">Scene/PerInstanceColorAppearance.js, line 266</a>
     </div>
     
 </dl>
@@ -632,7 +636,7 @@ attributes.
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/PerInstanceColorAppearance.js#L251">Scene/PerInstanceColorAppearance.js, line 251</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Scene/PerInstanceColorAppearance.js#L255">Scene/PerInstanceColorAppearance.js, line 255</a>
     </div>
     
 </dl>
@@ -698,7 +702,7 @@ If the viewer enters the geometry, it will not be visible.
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/PerInstanceColorAppearance.js#L183">Scene/PerInstanceColorAppearance.js, line 183</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Scene/PerInstanceColorAppearance.js#L187">Scene/PerInstanceColorAppearance.js, line 187</a>
     </div>
     
 </dl>
@@ -765,7 +769,7 @@ shaded like <a href="WallGeometry.html"><code>WallGeometry</code></a>.
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/PerInstanceColorAppearance.js#L235">Scene/PerInstanceColorAppearance.js, line 235</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Scene/PerInstanceColorAppearance.js#L239">Scene/PerInstanceColorAppearance.js, line 239</a>
     </div>
     
 </dl>
@@ -830,7 +834,7 @@ which means lighting is not taking into account.
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/PerInstanceColorAppearance.js#L216">Scene/PerInstanceColorAppearance.js, line 216</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Scene/PerInstanceColorAppearance.js#L220">Scene/PerInstanceColorAppearance.js, line 220</a>
     </div>
     
 </dl>
@@ -891,7 +895,7 @@ which means lighting is not taking into account.
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/PerInstanceColorAppearance.js#L146">Scene/PerInstanceColorAppearance.js, line 146</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Scene/PerInstanceColorAppearance.js#L150">Scene/PerInstanceColorAppearance.js, line 150</a>
     </div>
     
 </dl>
@@ -956,7 +960,7 @@ used by <a href="PerInstanceColorAppearance.html"><code>PerInstanceColorAppearan
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/PerInstanceColorAppearance.js#L99">Scene/PerInstanceColorAppearance.js, line 99</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Scene/PerInstanceColorAppearance.js#L103">Scene/PerInstanceColorAppearance.js, line 103</a>
     </div>
     
 </dl>
@@ -1022,7 +1026,7 @@ and <a href="PerInstanceColorAppearance.html#closed"><code>PerInstanceColorAppea
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/PerInstanceColorAppearance.js#L165">Scene/PerInstanceColorAppearance.js, line 165</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Scene/PerInstanceColorAppearance.js#L169">Scene/PerInstanceColorAppearance.js, line 169</a>
     </div>
     
 </dl>
@@ -1087,7 +1091,7 @@ and <a href="PerInstanceColorAppearance.html#closed"><code>PerInstanceColorAppea
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/PerInstanceColorAppearance.js#L109">Scene/PerInstanceColorAppearance.js, line 109</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Scene/PerInstanceColorAppearance.js#L113">Scene/PerInstanceColorAppearance.js, line 113</a>
     </div>
     
 </dl>
@@ -1150,7 +1154,7 @@ potential performance cost - but it can't have less.
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/PerInstanceColorAppearance.js#L199">Scene/PerInstanceColorAppearance.js, line 199</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Scene/PerInstanceColorAppearance.js#L203">Scene/PerInstanceColorAppearance.js, line 203</a>
     </div>
     
 </dl>
@@ -1211,7 +1215,7 @@ potential performance cost - but it can't have less.
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/PerInstanceColorAppearance.js#L132">Scene/PerInstanceColorAppearance.js, line 132</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Scene/PerInstanceColorAppearance.js#L136">Scene/PerInstanceColorAppearance.js, line 136</a>
     </div>
     
 </dl>
@@ -1308,7 +1312,7 @@ and <a href="PerInstanceColorAppearance.html#faceForward"><code>PerInstanceColor
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/PerInstanceColorAppearance.js#L273">Scene/PerInstanceColorAppearance.js, line 273</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Scene/PerInstanceColorAppearance.js#L277">Scene/PerInstanceColorAppearance.js, line 277</a>
     </div>
     
 </dl>
@@ -1399,7 +1403,7 @@ created in the context.
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/PerInstanceColorAppearance.js#L293">Scene/PerInstanceColorAppearance.js, line 293</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Scene/PerInstanceColorAppearance.js#L297">Scene/PerInstanceColorAppearance.js, line 297</a>
     </div>
     
 </dl>
@@ -1488,7 +1492,7 @@ created in the context.
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Scene/PerInstanceColorAppearance.js#L282">Scene/PerInstanceColorAppearance.js, line 282</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Scene/PerInstanceColorAppearance.js#L286">Scene/PerInstanceColorAppearance.js, line 286</a>
     </div>
     
 </dl>
