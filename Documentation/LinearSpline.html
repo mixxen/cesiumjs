@@ -248,8 +248,9 @@
     
         <h5>Example:</h5>
         
-    <pre><code class="language-javascript">var spline = new Cesium.LinearSpline({
-    times : [ 0.0, 1.5, 3.0, 4.5, 6.0 ],
+    <pre><code class="language-javascript">var times = [ 0.0, 1.5, 3.0, 4.5, 6.0 ];
+var spline = new Cesium.LinearSpline({
+    times : times,
     points : [
         new Cesium.Cartesian3(1235398.0, -4810983.0, 4146266.0),
         new Cesium.Cartesian3(1372574.0, -5345182.0, 4606657.0),
@@ -259,8 +260,7 @@
     ]
 });
 
-var p0 = spline.evaluate(times[i]);         // equal to positions[i]
-var p1 = spline.evaluate(times[i] + delta); // interpolated value when delta &lt; times[i + 1] - times[i]</code></pre>
+var p0 = spline.evaluate(times[0]);</code></pre>
 
     
 
@@ -284,7 +284,7 @@ var p1 = spline.evaluate(times[i] + delta); // interpolated value when delta &lt
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Core/LinearSpline.js#L51">Core/LinearSpline.js, line 51</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Core/LinearSpline.js#L51">Core/LinearSpline.js, line 51</a>
     </div>
     
 </dl>
@@ -361,7 +361,7 @@ var p1 = spline.evaluate(times[i] + delta); // interpolated value when delta &lt
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Core/LinearSpline.js#L98">Core/LinearSpline.js, line 98</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Core/LinearSpline.js#L98">Core/LinearSpline.js, line 98</a>
     </div>
     
 </dl>
@@ -422,7 +422,7 @@ var p1 = spline.evaluate(times[i] + delta); // interpolated value when delta &lt
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Core/LinearSpline.js#L84">Core/LinearSpline.js, line 84</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Core/LinearSpline.js#L84">Core/LinearSpline.js, line 84</a>
     </div>
     
 </dl>
@@ -613,7 +613,7 @@ var p1 = spline.evaluate(times[i] + delta); // interpolated value when delta &lt
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Core/LinearSpline.js#L130">Core/LinearSpline.js, line 130</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Core/LinearSpline.js#L130">Core/LinearSpline.js, line 130</a>
     </div>
     
 </dl>
@@ -764,7 +764,7 @@ var p1 = spline.evaluate(times[i] + delta); // interpolated value when delta &lt
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Core/LinearSpline.js#L117">Core/LinearSpline.js, line 117</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Core/LinearSpline.js#L117">Core/LinearSpline.js, line 117</a>
     </div>
     
 </dl>

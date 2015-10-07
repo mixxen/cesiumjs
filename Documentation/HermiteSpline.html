@@ -310,8 +310,9 @@ respectively.
         <h5>Example:</h5>
         
     <pre><code class="language-javascript">// Create a G&lt;sup>1&lt;/sup> continuous Hermite spline
+var times = [ 0.0, 1.5, 3.0, 4.5, 6.0 ];
 var spline = new Cesium.HermiteSpline({
-    times : [ 0.0, 1.5, 3.0, 4.5, 6.0 ],
+    times : times,
     points : [
         new Cesium.Cartesian3(1235398.0, -4810983.0, 4146266.0),
         new Cesium.Cartesian3(1372574.0, -5345182.0, 4606657.0),
@@ -333,8 +334,7 @@ var spline = new Cesium.HermiteSpline({
     ]
 });
 
-var p0 = spline.evaluate(times[i]);         // equal to positions[i]
-var p1 = spline.evaluate(times[i] + delta); // interpolated value when delta &lt; times[i + 1] - times[i]</code></pre>
+var p0 = spline.evaluate(times[0]);</code></pre>
 
     
 
@@ -358,7 +358,7 @@ var p1 = spline.evaluate(times[i] + delta); // interpolated value when delta &lt
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Core/HermiteSpline.js#L180">Core/HermiteSpline.js, line 180</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Core/HermiteSpline.js#L180">Core/HermiteSpline.js, line 180</a>
     </div>
     
 </dl>
@@ -435,7 +435,7 @@ var p1 = spline.evaluate(times[i] + delta); // interpolated value when delta &lt
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Core/HermiteSpline.js#L248">Core/HermiteSpline.js, line 248</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Core/HermiteSpline.js#L248">Core/HermiteSpline.js, line 248</a>
     </div>
     
 </dl>
@@ -496,7 +496,7 @@ var p1 = spline.evaluate(times[i] + delta); // interpolated value when delta &lt
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Core/HermiteSpline.js#L262">Core/HermiteSpline.js, line 262</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Core/HermiteSpline.js#L262">Core/HermiteSpline.js, line 262</a>
     </div>
     
 </dl>
@@ -557,7 +557,7 @@ var p1 = spline.evaluate(times[i] + delta); // interpolated value when delta &lt
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Core/HermiteSpline.js#L234">Core/HermiteSpline.js, line 234</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Core/HermiteSpline.js#L234">Core/HermiteSpline.js, line 234</a>
     </div>
     
 </dl>
@@ -618,7 +618,7 @@ var p1 = spline.evaluate(times[i] + delta); // interpolated value when delta &lt
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Core/HermiteSpline.js#L220">Core/HermiteSpline.js, line 220</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Core/HermiteSpline.js#L220">Core/HermiteSpline.js, line 220</a>
     </div>
     
 </dl>
@@ -912,7 +912,7 @@ var spline = Cesium.HermiteSpline.createC1({
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Core/HermiteSpline.js#L307">Core/HermiteSpline.js, line 307</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Core/HermiteSpline.js#L307">Core/HermiteSpline.js, line 307</a>
     </div>
     
 </dl>
@@ -1214,7 +1214,7 @@ var spline = Cesium.HermiteSpline.createClampedCubic({
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Core/HermiteSpline.js#L430">Core/HermiteSpline.js, line 430</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Core/HermiteSpline.js#L430">Core/HermiteSpline.js, line 430</a>
     </div>
     
 </dl>
@@ -1468,7 +1468,7 @@ var spline = Cesium.HermiteSpline.createNaturalCubic({
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Core/HermiteSpline.js#L363">Core/HermiteSpline.js, line 363</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Core/HermiteSpline.js#L363">Core/HermiteSpline.js, line 363</a>
     </div>
     
 </dl>
@@ -1653,7 +1653,7 @@ var spline = Cesium.HermiteSpline.createNaturalCubic({
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Core/HermiteSpline.js#L503">Core/HermiteSpline.js, line 503</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Core/HermiteSpline.js#L503">Core/HermiteSpline.js, line 503</a>
     </div>
     
 </dl>
@@ -1804,7 +1804,7 @@ var spline = Cesium.HermiteSpline.createNaturalCubic({
     
     <div class="source-link">
         Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.13/Source/Core/HermiteSpline.js#L487">Core/HermiteSpline.js, line 487</a>
+        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.14/Source/Core/HermiteSpline.js#L487">Core/HermiteSpline.js, line 487</a>
     </div>
     
 </dl>
