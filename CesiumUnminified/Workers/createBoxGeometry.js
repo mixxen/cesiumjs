@@ -20,8 +20,7 @@
  * Portions licensed separately.
  * See https://github.com/AnalyticalGraphicsInc/cesium/blob/master/LICENSE.md for full licensing details.
  */
-(function () {
-/*global define*/
+(function () {/*global define*/
 define('Core/defined',[],function() {
     "use strict";
 
@@ -13021,4 +13020,5 @@ define('Workers/createBoxGeometry',[
         return BoxGeometry.createGeometry(boxGeometry);
     };
 });
+
 }());
