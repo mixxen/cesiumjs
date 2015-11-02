@@ -20,7 +20,6 @@
  * Portions licensed separately.
  * See https://github.com/AnalyticalGraphicsInc/cesium/blob/master/LICENSE.md for full licensing details.
  */
-
 if (typeof self === 'undefined') {
     self = {}; //define self so that the Dojo build can evaluate this file without crashing.
 }
