@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Matrix4 - Cesium Documentation</title>
 
     <!--[if lt IE 9]>
@@ -13,24 +14,13 @@
 </head>
 <body>
 
-<div id="bkgd">
-
-<div class="nav">
-    <div class="menu">
-        <a href="index.html"><img id="cesium-logo" src="images/CesiumLogo.jpg" class="menuLogo"></a>
-        <div class="divider"></div>
-
-        <input type="text" class="classFilter" id="ClassFilter" placeholder="Filter">
-
-        <ul id="ClassList"><li data-name="Animation"><a href="Animation.html">Animation</a></li><li data-name="AnimationViewModel"><a href="AnimationViewModel.html">AnimationViewModel</a></li><li data-name="Appearance"><a href="Appearance.html">Appearance</a></li><li data-name="ArcGisImageServerTerrainProvider"><a href="ArcGisImageServerTerrainProvider.html">ArcGisImageServerTerrainProvider</a></li><li data-name="ArcGisMapServerImageryProvider"><a href="ArcGisMapServerImageryProvider.html">ArcGisMapServerImageryProvider</a></li><li data-name="AssociativeArray"><a href="AssociativeArray.html">AssociativeArray</a></li><li data-name="AxisAlignedBoundingBox"><a href="AxisAlignedBoundingBox.html">AxisAlignedBoundingBox</a></li><li data-name="barycentricCoordinates"><a href="barycentricCoordinates.html">barycentricCoordinates</a></li><li data-name="BaseLayerPicker"><a href="BaseLayerPicker.html">BaseLayerPicker</a></li><li data-name="BaseLayerPickerViewModel"><a href="BaseLayerPickerViewModel.html">BaseLayerPickerViewModel</a></li><li data-name="Billboard"><a href="Billboard.html">Billboard</a></li><li data-name="BillboardCollection"><a href="BillboardCollection.html">BillboardCollection</a></li><li data-name="BillboardGraphics"><a href="BillboardGraphics.html">BillboardGraphics</a></li><li data-name="BillboardVisualizer"><a href="BillboardVisualizer.html">BillboardVisualizer</a></li><li data-name="binarySearch"><a href="binarySearch.html">binarySearch</a></li><li data-name="BingMapsApi"><a href="BingMapsApi.html">BingMapsApi</a></li><li data-name="BingMapsImageryProvider"><a href="BingMapsImageryProvider.html">BingMapsImageryProvider</a></li><li data-name="BingMapsStyle"><a href="BingMapsStyle.html">BingMapsStyle</a></li><li data-name="BlendEquation"><a href="BlendEquation.html">BlendEquation</a></li><li data-name="BlendFunction"><a href="BlendFunction.html">BlendFunction</a></li><li data-name="BlendingState"><a href="BlendingState.html">BlendingState</a></li><li data-name="BoundingRectangle"><a href="BoundingRectangle.html">BoundingRectangle</a></li><li data-name="BoundingSphere"><a href="BoundingSphere.html">BoundingSphere</a></li><li data-name="BoxGeometry"><a href="BoxGeometry.html">BoxGeometry</a></li><li data-name="BoxGeometryUpdater"><a href="BoxGeometryUpdater.html">BoxGeometryUpdater</a></li><li data-name="BoxGraphics"><a href="BoxGraphics.html">BoxGraphics</a></li><li data-name="BoxOutlineGeometry"><a href="BoxOutlineGeometry.html">BoxOutlineGeometry</a></li><li data-name="CallbackProperty"><a href="CallbackProperty.html">CallbackProperty</a></li><li data-name="Camera"><a href="Camera.html">Camera</a></li><li data-name="CameraEventAggregator"><a href="CameraEventAggregator.html">CameraEventAggregator</a></li><li data-name="CameraEventType"><a href="CameraEventType.html">CameraEventType</a></li><li data-name="cancelAnimationFrame"><a href="cancelAnimationFrame.html">cancelAnimationFrame</a></li><li data-name="Cartesian2"><a href="Cartesian2.html">Cartesian2</a></li><li data-name="Cartesian3"><a href="Cartesian3.html">Cartesian3</a></li><li data-name="Cartesian4"><a href="Cartesian4.html">Cartesian4</a></li><li data-name="Cartographic"><a href="Cartographic.html">Cartographic</a></li><li data-name="CatmullRomSpline"><a href="CatmullRomSpline.html">CatmullRomSpline</a></li><li data-name="CesiumInspector"><a href="CesiumInspector.html">CesiumInspector</a></li><li data-name="CesiumInspectorViewModel"><a href="CesiumInspectorViewModel.html">CesiumInspectorViewModel</a></li><li data-name="CesiumMath"><a href="CesiumMath.html">CesiumMath</a></li><li data-name="CesiumTerrainProvider"><a href="CesiumTerrainProvider.html">CesiumTerrainProvider</a></li><li data-name="CesiumWidget"><a href="CesiumWidget.html">CesiumWidget</a></li><li data-name="CheckerboardMaterialProperty"><a href="CheckerboardMaterialProperty.html">CheckerboardMaterialProperty</a></li><li data-name="CircleGeometry"><a href="CircleGeometry.html">CircleGeometry</a></li><li data-name="CircleOutlineGeometry"><a href="CircleOutlineGeometry.html">CircleOutlineGeometry</a></li><li data-name="Clock"><a href="Clock.html">Clock</a></li><li data-name="ClockRange"><a href="ClockRange.html">ClockRange</a></li><li data-name="ClockStep"><a href="ClockStep.html">ClockStep</a></li><li data-name="ClockViewModel"><a href="ClockViewModel.html">ClockViewModel</a></li><li data-name="clone"><a href="clone.html">clone</a></li><li data-name="Color"><a href="Color.html">Color</a></li><li data-name="ColorGeometryInstanceAttribute"><a href="ColorGeometryInstanceAttribute.html">ColorGeometryInstanceAttribute</a></li><li data-name="ColorMaterialProperty"><a href="ColorMaterialProperty.html">ColorMaterialProperty</a></li><li data-name="combine"><a href="combine.html">combine</a></li><li data-name="Command"><a href="Command.html">Command</a></li><li data-name="ComponentDatatype"><a href="ComponentDatatype.html">ComponentDatatype</a></li><li data-name="CompositeEntityCollection"><a href="CompositeEntityCollection.html">CompositeEntityCollection</a></li><li data-name="CompositeMaterialProperty"><a href="CompositeMaterialProperty.html">CompositeMaterialProperty</a></li><li data-name="CompositePositionProperty"><a href="CompositePositionProperty.html">CompositePositionProperty</a></li><li data-name="CompositeProperty"><a href="CompositeProperty.html">CompositeProperty</a></li><li data-name="ConstantPositionProperty"><a href="ConstantPositionProperty.html">ConstantPositionProperty</a></li><li data-name="ConstantProperty"><a href="ConstantProperty.html">ConstantProperty</a></li><li data-name="CornerType"><a href="CornerType.html">CornerType</a></li><li data-name="CorridorGeometry"><a href="CorridorGeometry.html">CorridorGeometry</a></li><li data-name="CorridorGeometryUpdater"><a href="CorridorGeometryUpdater.html">CorridorGeometryUpdater</a></li><li data-name="CorridorGraphics"><a href="CorridorGraphics.html">CorridorGraphics</a></li><li data-name="CorridorOutlineGeometry"><a href="CorridorOutlineGeometry.html">CorridorOutlineGeometry</a></li><li data-name="createCommand"><a href="createCommand.html">createCommand</a></li><li data-name="createGuid"><a href="createGuid.html">createGuid</a></li><li data-name="createTangentSpaceDebugPrimitive"><a href="createTangentSpaceDebugPrimitive.html">createTangentSpaceDebugPrimitive</a></li><li data-name="createTaskProcessorWorker"><a href="createTaskProcessorWorker.html">createTaskProcessorWorker</a></li><li data-name="Credit"><a href="Credit.html">Credit</a></li><li data-name="CreditDisplay"><a href="CreditDisplay.html">CreditDisplay</a></li><li data-name="CubicRealPolynomial"><a href="CubicRealPolynomial.html">CubicRealPolynomial</a></li><li data-name="CullFace"><a href="CullFace.html">CullFace</a></li><li data-name="CullingVolume"><a href="CullingVolume.html">CullingVolume</a></li><li data-name="CustomDataSource"><a href="CustomDataSource.html">CustomDataSource</a></li><li data-name="CylinderGeometry"><a href="CylinderGeometry.html">CylinderGeometry</a></li><li data-name="CylinderGeometryUpdater"><a href="CylinderGeometryUpdater.html">CylinderGeometryUpdater</a></li><li data-name="CylinderGraphics"><a href="CylinderGraphics.html">CylinderGraphics</a></li><li data-name="CylinderOutlineGeometry"><a href="CylinderOutlineGeometry.html">CylinderOutlineGeometry</a></li><li data-name="CzmlDataSource"><a href="CzmlDataSource.html">CzmlDataSource</a></li><li data-name="DataSource"><a href="DataSource.html">DataSource</a></li><li data-name="DataSourceClock"><a href="DataSourceClock.html">DataSourceClock</a></li><li data-name="DataSourceCollection"><a href="DataSourceCollection.html">DataSourceCollection</a></li><li data-name="DataSourceDisplay"><a href="DataSourceDisplay.html">DataSourceDisplay</a></li><li data-name="DebugAppearance"><a href="DebugAppearance.html">DebugAppearance</a></li><li data-name="DebugModelMatrixPrimitive"><a href="DebugModelMatrixPrimitive.html">DebugModelMatrixPrimitive</a></li><li data-name="DefaultProxy"><a href="DefaultProxy.html">DefaultProxy</a></li><li data-name="defaultValue"><a href="defaultValue.html">defaultValue</a></li><li data-name="defined"><a href="defined.html">defined</a></li><li data-name="definedNotNull"><a href="definedNotNull.html">definedNotNull</a></li><li data-name="DepthFunction"><a href="DepthFunction.html">DepthFunction</a></li><li data-name="destroyObject"><a href="destroyObject.html">destroyObject</a></li><li data-name="DeveloperError"><a href="DeveloperError.html">DeveloperError</a></li><li data-name="DiscardMissingTileImagePolicy"><a href="DiscardMissingTileImagePolicy.html">DiscardMissingTileImagePolicy</a></li><li data-name="DynamicGeometryUpdater"><a href="DynamicGeometryUpdater.html">DynamicGeometryUpdater</a></li><li data-name="EasingFunction"><a href="EasingFunction.html">EasingFunction</a></li><li data-name="EllipseGeometry"><a href="EllipseGeometry.html">EllipseGeometry</a></li><li data-name="EllipseGeometryUpdater"><a href="EllipseGeometryUpdater.html">EllipseGeometryUpdater</a></li><li data-name="EllipseGraphics"><a href="EllipseGraphics.html">EllipseGraphics</a></li><li data-name="EllipseOutlineGeometry"><a href="EllipseOutlineGeometry.html">EllipseOutlineGeometry</a></li><li data-name="Ellipsoid"><a href="Ellipsoid.html">Ellipsoid</a></li><li data-name="EllipsoidGeodesic"><a href="EllipsoidGeodesic.html">EllipsoidGeodesic</a></li><li data-name="EllipsoidGeometry"><a href="EllipsoidGeometry.html">EllipsoidGeometry</a></li><li data-name="EllipsoidGeometryUpdater"><a href="EllipsoidGeometryUpdater.html">EllipsoidGeometryUpdater</a></li><li data-name="EllipsoidGraphics"><a href="EllipsoidGraphics.html">EllipsoidGraphics</a></li><li data-name="EllipsoidOutlineGeometry"><a href="EllipsoidOutlineGeometry.html">EllipsoidOutlineGeometry</a></li><li data-name="EllipsoidSurfaceAppearance"><a href="EllipsoidSurfaceAppearance.html">EllipsoidSurfaceAppearance</a></li><li data-name="EllipsoidTangentPlane"><a href="EllipsoidTangentPlane.html">EllipsoidTangentPlane</a></li><li data-name="EllipsoidTerrainProvider"><a href="EllipsoidTerrainProvider.html">EllipsoidTerrainProvider</a></li><li data-name="Entity"><a href="Entity.html">Entity</a></li><li data-name="EntityCollection"><a href="EntityCollection.html">EntityCollection</a></li><li data-name="EntityView"><a href="EntityView.html">EntityView</a></li><li data-name="Event"><a href="Event.html">Event</a></li><li data-name="EventHelper"><a href="EventHelper.html">EventHelper</a></li><li data-name="ExtrapolationType"><a href="ExtrapolationType.html">ExtrapolationType</a></li><li data-name="FeatureDetection"><a href="FeatureDetection.html">FeatureDetection</a></li><li data-name="formatError"><a href="formatError.html">formatError</a></li><li data-name="FrameRateMonitor"><a href="FrameRateMonitor.html">FrameRateMonitor</a></li><li data-name="Fullscreen"><a href="Fullscreen.html">Fullscreen</a></li><li data-name="FullscreenButton"><a href="FullscreenButton.html">FullscreenButton</a></li><li data-name="FullscreenButtonViewModel"><a href="FullscreenButtonViewModel.html">FullscreenButtonViewModel</a></li><li data-name="Geocoder"><a href="Geocoder.html">Geocoder</a></li><li data-name="GeocoderViewModel"><a href="GeocoderViewModel.html">GeocoderViewModel</a></li><li data-name="GeographicProjection"><a href="GeographicProjection.html">GeographicProjection</a></li><li data-name="GeographicTilingScheme"><a href="GeographicTilingScheme.html">GeographicTilingScheme</a></li><li data-name="GeoJsonDataSource"><a href="GeoJsonDataSource.html">GeoJsonDataSource</a></li><li data-name="Geometry"><a href="Geometry.html">Geometry</a></li><li data-name="GeometryAttribute"><a href="GeometryAttribute.html">GeometryAttribute</a></li><li data-name="GeometryAttributes"><a href="GeometryAttributes.html">GeometryAttributes</a></li><li data-name="GeometryInstance"><a href="GeometryInstance.html">GeometryInstance</a></li><li data-name="GeometryInstanceAttribute"><a href="GeometryInstanceAttribute.html">GeometryInstanceAttribute</a></li><li data-name="GeometryPipeline"><a href="GeometryPipeline.html">GeometryPipeline</a></li><li data-name="GeometryUpdater"><a href="GeometryUpdater.html">GeometryUpdater</a></li><li data-name="GeometryVisualizer"><a href="GeometryVisualizer.html">GeometryVisualizer</a></li><li data-name="GetFeatureInfoFormat"><a href="GetFeatureInfoFormat.html">GetFeatureInfoFormat</a></li><li data-name="getFilenameFromUri"><a href="getFilenameFromUri.html">getFilenameFromUri</a></li><li data-name="getImagePixels"><a href="getImagePixels.html">getImagePixels</a></li><li data-name="getTimestamp"><a href="getTimestamp.html">getTimestamp</a></li><li data-name="Globe"><a href="Globe.html">Globe</a></li><li data-name="GoogleEarthImageryProvider"><a href="GoogleEarthImageryProvider.html">GoogleEarthImageryProvider</a></li><li data-name="GregorianDate"><a href="GregorianDate.html">GregorianDate</a></li><li data-name="GridImageryProvider"><a href="GridImageryProvider.html">GridImageryProvider</a></li><li data-name="GridMaterialProperty"><a href="GridMaterialProperty.html">GridMaterialProperty</a></li><li data-name="GroundPrimitive"><a href="GroundPrimitive.html">GroundPrimitive</a></li><li data-name="HeadingPitchRange"><a href="HeadingPitchRange.html">HeadingPitchRange</a></li><li data-name="HeightmapTerrainData"><a href="HeightmapTerrainData.html">HeightmapTerrainData</a></li><li data-name="HeightmapTessellator"><a href="HeightmapTessellator.html">HeightmapTessellator</a></li><li data-name="HeightReference"><a href="HeightReference.html">HeightReference</a></li><li data-name="HermitePolynomialApproximation"><a href="HermitePolynomialApproximation.html">HermitePolynomialApproximation</a></li><li data-name="HermiteSpline"><a href="HermiteSpline.html">HermiteSpline</a></li><li data-name="HomeButton"><a href="HomeButton.html">HomeButton</a></li><li data-name="HomeButtonViewModel"><a href="HomeButtonViewModel.html">HomeButtonViewModel</a></li><li data-name="HorizontalOrigin"><a href="HorizontalOrigin.html">HorizontalOrigin</a></li><li data-name="ImageMaterialProperty"><a href="ImageMaterialProperty.html">ImageMaterialProperty</a></li><li data-name="ImageryLayer"><a href="ImageryLayer.html">ImageryLayer</a></li><li data-name="ImageryLayerCollection"><a href="ImageryLayerCollection.html">ImageryLayerCollection</a></li><li data-name="ImageryLayerFeatureInfo"><a href="ImageryLayerFeatureInfo.html">ImageryLayerFeatureInfo</a></li><li data-name="ImageryProvider"><a href="ImageryProvider.html">ImageryProvider</a></li><li data-name="IndexDatatype"><a href="IndexDatatype.html">IndexDatatype</a></li><li data-name="InfoBox"><a href="InfoBox.html">InfoBox</a></li><li data-name="InfoBoxViewModel"><a href="InfoBoxViewModel.html">InfoBoxViewModel</a></li><li data-name="InterpolationAlgorithm"><a href="InterpolationAlgorithm.html">InterpolationAlgorithm</a></li><li data-name="Intersect"><a href="Intersect.html">Intersect</a></li><li data-name="Intersections2D"><a href="Intersections2D.html">Intersections2D</a></li><li data-name="IntersectionTests"><a href="IntersectionTests.html">IntersectionTests</a></li><li data-name="Interval"><a href="Interval.html">Interval</a></li><li data-name="isArray"><a href="isArray.html">isArray</a></li><li data-name="isLeapYear"><a href="isLeapYear.html">isLeapYear</a></li><li data-name="Iso8601"><a href="Iso8601.html">Iso8601</a></li><li data-name="jsonp"><a href="jsonp.html">jsonp</a></li><li data-name="JulianDate"><a href="JulianDate.html">JulianDate</a></li><li data-name="KeyboardEventModifier"><a href="KeyboardEventModifier.html">KeyboardEventModifier</a></li><li data-name="KmlDataSource"><a href="KmlDataSource.html">KmlDataSource</a></li><li data-name="KmlFeatureData"><a href="KmlFeatureData.html">KmlFeatureData</a></li><li data-name="Label"><a href="Label.html">Label</a></li><li data-name="LabelCollection"><a href="LabelCollection.html">LabelCollection</a></li><li data-name="LabelGraphics"><a href="LabelGraphics.html">LabelGraphics</a></li><li data-name="LabelStyle"><a href="LabelStyle.html">LabelStyle</a></li><li data-name="LabelVisualizer"><a href="LabelVisualizer.html">LabelVisualizer</a></li><li data-name="LagrangePolynomialApproximation"><a href="LagrangePolynomialApproximation.html">LagrangePolynomialApproximation</a></li><li data-name="LeapSecond"><a href="LeapSecond.html">LeapSecond</a></li><li data-name="LinearApproximation"><a href="LinearApproximation.html">LinearApproximation</a></li><li data-name="LinearSpline"><a href="LinearSpline.html">LinearSpline</a></li><li data-name="loadArrayBuffer"><a href="loadArrayBuffer.html">loadArrayBuffer</a></li><li data-name="loadBlob"><a href="loadBlob.html">loadBlob</a></li><li data-name="loadImage"><a href="loadImage.html">loadImage</a></li><li data-name="loadImageViaBlob"><a href="loadImageViaBlob.html">loadImageViaBlob</a></li><li data-name="loadJson"><a href="loadJson.html">loadJson</a></li><li data-name="loadJsonp"><a href="loadJsonp.html">loadJsonp</a></li><li data-name="loadText"><a href="loadText.html">loadText</a></li><li data-name="loadWithXhr"><a href="loadWithXhr.html">loadWithXhr</a></li><li data-name="loadXML"><a href="loadXML.html">loadXML</a></li><li data-name="MapboxImageryProvider"><a href="MapboxImageryProvider.html">MapboxImageryProvider</a></li><li data-name="MapProjection"><a href="MapProjection.html">MapProjection</a></li><li data-name="Material"><a href="Material.html">Material</a></li><li data-name="MaterialAppearance"><a href="MaterialAppearance.html">MaterialAppearance</a></li><li data-name="MaterialProperty"><a href="MaterialProperty.html">MaterialProperty</a></li><li data-name="Matrix2"><a href="Matrix2.html">Matrix2</a></li><li data-name="Matrix3"><a href="Matrix3.html">Matrix3</a></li><li data-name="Matrix4"><a href="Matrix4.html">Matrix4</a></li><li data-name="mergeSort"><a href="mergeSort.html">mergeSort</a></li><li data-name="Model"><a href="Model.html">Model</a></li><li data-name="ModelAnimation"><a href="ModelAnimation.html">ModelAnimation</a></li><li data-name="ModelAnimationCollection"><a href="ModelAnimationCollection.html">ModelAnimationCollection</a></li><li data-name="ModelAnimationLoop"><a href="ModelAnimationLoop.html">ModelAnimationLoop</a></li><li data-name="ModelGraphics"><a href="ModelGraphics.html">ModelGraphics</a></li><li data-name="ModelMaterial"><a href="ModelMaterial.html">ModelMaterial</a></li><li data-name="ModelMesh"><a href="ModelMesh.html">ModelMesh</a></li><li data-name="ModelNode"><a href="ModelNode.html">ModelNode</a></li><li data-name="ModelVisualizer"><a href="ModelVisualizer.html">ModelVisualizer</a></li><li data-name="Moon"><a href="Moon.html">Moon</a></li><li data-name="NavigationHelpButton"><a href="NavigationHelpButton.html">NavigationHelpButton</a></li><li data-name="NavigationHelpButtonViewModel"><a href="NavigationHelpButtonViewModel.html">NavigationHelpButtonViewModel</a></li><li data-name="NearFarScalar"><a href="NearFarScalar.html">NearFarScalar</a></li><li data-name="NeverTileDiscardPolicy"><a href="NeverTileDiscardPolicy.html">NeverTileDiscardPolicy</a></li><li data-name="objectToQuery"><a href="objectToQuery.html">objectToQuery</a></li><li data-name="Occluder"><a href="Occluder.html">Occluder</a></li><li data-name="OpenStreetMapImageryProvider"><a href="OpenStreetMapImageryProvider.html">OpenStreetMapImageryProvider</a></li><li data-name="OrientedBoundingBox"><a href="OrientedBoundingBox.html">OrientedBoundingBox</a></li><li data-name="OrthographicFrustum"><a href="OrthographicFrustum.html">OrthographicFrustum</a></li><li data-name="Packable"><a href="Packable.html">Packable</a></li><li data-name="PackableForInterpolation"><a href="PackableForInterpolation.html">PackableForInterpolation</a></li><li data-name="PathGraphics"><a href="PathGraphics.html">PathGraphics</a></li><li data-name="PathVisualizer"><a href="PathVisualizer.html">PathVisualizer</a></li><li data-name="PerformanceWatchdog"><a href="PerformanceWatchdog.html">PerformanceWatchdog</a></li><li data-name="PerformanceWatchdogViewModel"><a href="PerformanceWatchdogViewModel.html">PerformanceWatchdogViewModel</a></li><li data-name="PerInstanceColorAppearance"><a href="PerInstanceColorAppearance.html">PerInstanceColorAppearance</a></li><li data-name="PerspectiveFrustum"><a href="PerspectiveFrustum.html">PerspectiveFrustum</a></li><li data-name="PerspectiveOffCenterFrustum"><a href="PerspectiveOffCenterFrustum.html">PerspectiveOffCenterFrustum</a></li><li data-name="PinBuilder"><a href="PinBuilder.html">PinBuilder</a></li><li data-name="PixelFormat"><a href="PixelFormat.html">PixelFormat</a></li><li data-name="Plane"><a href="Plane.html">Plane</a></li><li data-name="PointGraphics"><a href="PointGraphics.html">PointGraphics</a></li><li data-name="pointInsideTriangle"><a href="pointInsideTriangle.html">pointInsideTriangle</a></li><li data-name="PointPrimitive"><a href="PointPrimitive.html">PointPrimitive</a></li><li data-name="PointPrimitiveCollection"><a href="PointPrimitiveCollection.html">PointPrimitiveCollection</a></li><li data-name="PointVisualizer"><a href="PointVisualizer.html">PointVisualizer</a></li><li data-name="PolygonGeometry"><a href="PolygonGeometry.html">PolygonGeometry</a></li><li data-name="PolygonGeometryUpdater"><a href="PolygonGeometryUpdater.html">PolygonGeometryUpdater</a></li><li data-name="PolygonGraphics"><a href="PolygonGraphics.html">PolygonGraphics</a></li><li data-name="PolygonHierarchy"><a href="PolygonHierarchy.html">PolygonHierarchy</a></li><li data-name="PolygonOutlineGeometry"><a href="PolygonOutlineGeometry.html">PolygonOutlineGeometry</a></li><li data-name="Polyline"><a href="Polyline.html">Polyline</a></li><li data-name="PolylineArrowMaterialProperty"><a href="PolylineArrowMaterialProperty.html">PolylineArrowMaterialProperty</a></li><li data-name="PolylineCollection"><a href="PolylineCollection.html">PolylineCollection</a></li><li data-name="PolylineColorAppearance"><a href="PolylineColorAppearance.html">PolylineColorAppearance</a></li><li data-name="PolylineGeometry"><a href="PolylineGeometry.html">PolylineGeometry</a></li><li data-name="PolylineGeometryUpdater"><a href="PolylineGeometryUpdater.html">PolylineGeometryUpdater</a></li><li data-name="PolylineGlowMaterialProperty"><a href="PolylineGlowMaterialProperty.html">PolylineGlowMaterialProperty</a></li><li data-name="PolylineGraphics"><a href="PolylineGraphics.html">PolylineGraphics</a></li><li data-name="PolylineMaterialAppearance"><a href="PolylineMaterialAppearance.html">PolylineMaterialAppearance</a></li><li data-name="PolylineOutlineMaterialProperty"><a href="PolylineOutlineMaterialProperty.html">PolylineOutlineMaterialProperty</a></li><li data-name="PolylineVolumeGeometry"><a href="PolylineVolumeGeometry.html">PolylineVolumeGeometry</a></li><li data-name="PolylineVolumeGeometryUpdater"><a href="PolylineVolumeGeometryUpdater.html">PolylineVolumeGeometryUpdater</a></li><li data-name="PolylineVolumeGraphics"><a href="PolylineVolumeGraphics.html">PolylineVolumeGraphics</a></li><li data-name="PolylineVolumeOutlineGeometry"><a href="PolylineVolumeOutlineGeometry.html">PolylineVolumeOutlineGeometry</a></li><li data-name="PositionProperty"><a href="PositionProperty.html">PositionProperty</a></li><li data-name="PositionPropertyArray"><a href="PositionPropertyArray.html">PositionPropertyArray</a></li><li data-name="Primitive"><a href="Primitive.html">Primitive</a></li><li data-name="PrimitiveCollection"><a href="PrimitiveCollection.html">PrimitiveCollection</a></li><li data-name="PrimitiveType"><a href="PrimitiveType.html">PrimitiveType</a></li><li data-name="Property"><a href="Property.html">Property</a></li><li data-name="PropertyArray"><a href="PropertyArray.html">PropertyArray</a></li><li data-name="ProviderViewModel"><a href="ProviderViewModel.html">ProviderViewModel</a></li><li data-name="QuadraticRealPolynomial"><a href="QuadraticRealPolynomial.html">QuadraticRealPolynomial</a></li><li data-name="QuantizedMeshTerrainData"><a href="QuantizedMeshTerrainData.html">QuantizedMeshTerrainData</a></li><li data-name="QuarticRealPolynomial"><a href="QuarticRealPolynomial.html">QuarticRealPolynomial</a></li><li data-name="Quaternion"><a href="Quaternion.html">Quaternion</a></li><li data-name="QuaternionSpline"><a href="QuaternionSpline.html">QuaternionSpline</a></li><li data-name="queryToObject"><a href="queryToObject.html">queryToObject</a></li><li data-name="Queue"><a href="Queue.html">Queue</a></li><li data-name="Ray"><a href="Ray.html">Ray</a></li><li data-name="Rectangle"><a href="Rectangle.html">Rectangle</a></li><li data-name="RectangleGeometry"><a href="RectangleGeometry.html">RectangleGeometry</a></li><li data-name="RectangleGeometryUpdater"><a href="RectangleGeometryUpdater.html">RectangleGeometryUpdater</a></li><li data-name="RectangleGraphics"><a href="RectangleGraphics.html">RectangleGraphics</a></li><li data-name="RectangleOutlineGeometry"><a href="RectangleOutlineGeometry.html">RectangleOutlineGeometry</a></li><li data-name="ReferenceFrame"><a href="ReferenceFrame.html">ReferenceFrame</a></li><li data-name="ReferenceProperty"><a href="ReferenceProperty.html">ReferenceProperty</a></li><li data-name="requestAnimationFrame"><a href="requestAnimationFrame.html">requestAnimationFrame</a></li><li data-name="RequestErrorEvent"><a href="RequestErrorEvent.html">RequestErrorEvent</a></li><li data-name="Rotation"><a href="Rotation.html">Rotation</a></li><li data-name="RuntimeError"><a href="RuntimeError.html">RuntimeError</a></li><li data-name="SampledPositionProperty"><a href="SampledPositionProperty.html">SampledPositionProperty</a></li><li data-name="SampledProperty"><a href="SampledProperty.html">SampledProperty</a></li><li data-name="sampleTerrain"><a href="sampleTerrain.html">sampleTerrain</a></li><li data-name="Scene"><a href="Scene.html">Scene</a></li><li data-name="SceneMode"><a href="SceneMode.html">SceneMode</a></li><li data-name="SceneModePicker"><a href="SceneModePicker.html">SceneModePicker</a></li><li data-name="SceneModePickerViewModel"><a href="SceneModePickerViewModel.html">SceneModePickerViewModel</a></li><li data-name="SceneTransforms"><a href="SceneTransforms.html">SceneTransforms</a></li><li data-name="ScreenSpaceCameraController"><a href="ScreenSpaceCameraController.html">ScreenSpaceCameraController</a></li><li data-name="ScreenSpaceEventHandler"><a href="ScreenSpaceEventHandler.html">ScreenSpaceEventHandler</a></li><li data-name="ScreenSpaceEventType"><a href="ScreenSpaceEventType.html">ScreenSpaceEventType</a></li><li data-name="SelectionIndicator"><a href="SelectionIndicator.html">SelectionIndicator</a></li><li data-name="SelectionIndicatorViewModel"><a href="SelectionIndicatorViewModel.html">SelectionIndicatorViewModel</a></li><li data-name="ShowGeometryInstanceAttribute"><a href="ShowGeometryInstanceAttribute.html">ShowGeometryInstanceAttribute</a></li><li data-name="Simon1994PlanetaryPositions"><a href="Simon1994PlanetaryPositions.html">Simon1994PlanetaryPositions</a></li><li data-name="SimplePolylineGeometry"><a href="SimplePolylineGeometry.html">SimplePolylineGeometry</a></li><li data-name="SingleTileImageryProvider"><a href="SingleTileImageryProvider.html">SingleTileImageryProvider</a></li><li data-name="SkyAtmosphere"><a href="SkyAtmosphere.html">SkyAtmosphere</a></li><li data-name="SkyBox"><a href="SkyBox.html">SkyBox</a></li><li data-name="SphereGeometry"><a href="SphereGeometry.html">SphereGeometry</a></li><li data-name="SphereOutlineGeometry"><a href="SphereOutlineGeometry.html">SphereOutlineGeometry</a></li><li data-name="Spherical"><a href="Spherical.html">Spherical</a></li><li data-name="Spline"><a href="Spline.html">Spline</a></li><li data-name="StencilFunction"><a href="StencilFunction.html">StencilFunction</a></li><li data-name="StencilOperation"><a href="StencilOperation.html">StencilOperation</a></li><li data-name="StripeMaterialProperty"><a href="StripeMaterialProperty.html">StripeMaterialProperty</a></li><li data-name="StripeOrientation"><a href="StripeOrientation.html">StripeOrientation</a></li><li data-name="subdivideArray"><a href="subdivideArray.html">subdivideArray</a></li><li data-name="Sun"><a href="Sun.html">Sun</a></li><li data-name="SvgPathBindingHandler"><a href="SvgPathBindingHandler.html">SvgPathBindingHandler</a></li><li data-name="TaskProcessor"><a href="TaskProcessor.html">TaskProcessor</a></li><li data-name="TerrainData"><a href="TerrainData.html">TerrainData</a></li><li data-name="TerrainMesh"><a href="TerrainMesh.html">TerrainMesh</a></li><li data-name="TerrainProvider"><a href="TerrainProvider.html">TerrainProvider</a></li><li data-name="throttleRequestByServer"><a href="throttleRequestByServer.html">throttleRequestByServer</a></li><li data-name="TileCoordinatesImageryProvider"><a href="TileCoordinatesImageryProvider.html">TileCoordinatesImageryProvider</a></li><li data-name="TileDiscardPolicy"><a href="TileDiscardPolicy.html">TileDiscardPolicy</a></li><li data-name="TileMapServiceImageryProvider"><a href="TileMapServiceImageryProvider.html">TileMapServiceImageryProvider</a></li><li data-name="TileProviderError"><a href="TileProviderError.html">TileProviderError</a></li><li data-name="TilingScheme"><a href="TilingScheme.html">TilingScheme</a></li><li data-name="TimeInterval"><a href="TimeInterval.html">TimeInterval</a></li><li data-name="TimeIntervalCollection"><a href="TimeIntervalCollection.html">TimeIntervalCollection</a></li><li data-name="TimeIntervalCollectionPositionProperty"><a href="TimeIntervalCollectionPositionProperty.html">TimeIntervalCollectionPositionProperty</a></li><li data-name="TimeIntervalCollectionProperty"><a href="TimeIntervalCollectionProperty.html">TimeIntervalCollectionProperty</a></li><li data-name="Timeline"><a href="Timeline.html">Timeline</a></li><li data-name="TimeStandard"><a href="TimeStandard.html">TimeStandard</a></li><li data-name="ToggleButtonViewModel"><a href="ToggleButtonViewModel.html">ToggleButtonViewModel</a></li><li data-name="Transforms"><a href="Transforms.html">Transforms</a></li><li data-name="TridiagonalSystemSolver"><a href="TridiagonalSystemSolver.html">TridiagonalSystemSolver</a></li><li data-name="UrlTemplateImageryProvider"><a href="UrlTemplateImageryProvider.html">UrlTemplateImageryProvider</a></li><li data-name="VelocityOrientationProperty"><a href="VelocityOrientationProperty.html">VelocityOrientationProperty</a></li><li data-name="VertexFormat"><a href="VertexFormat.html">VertexFormat</a></li><li data-name="VerticalOrigin"><a href="VerticalOrigin.html">VerticalOrigin</a></li><li data-name="Viewer"><a href="Viewer.html">Viewer</a></li><li data-name="viewerCesiumInspectorMixin"><a href="viewerCesiumInspectorMixin.html">viewerCesiumInspectorMixin</a></li><li data-name="viewerDragDropMixin"><a href="viewerDragDropMixin.html">viewerDragDropMixin</a></li><li data-name="viewerPerformanceWatchdogMixin"><a href="viewerPerformanceWatchdogMixin.html">viewerPerformanceWatchdogMixin</a></li><li data-name="ViewportQuad"><a href="ViewportQuad.html">ViewportQuad</a></li><li data-name="Visibility"><a href="Visibility.html">Visibility</a></li><li data-name="Visualizer"><a href="Visualizer.html">Visualizer</a></li><li data-name="VRTheWorldTerrainProvider"><a href="VRTheWorldTerrainProvider.html">VRTheWorldTerrainProvider</a></li><li data-name="WallGeometry"><a href="WallGeometry.html">WallGeometry</a></li><li data-name="WallGeometryUpdater"><a href="WallGeometryUpdater.html">WallGeometryUpdater</a></li><li data-name="WallGraphics"><a href="WallGraphics.html">WallGraphics</a></li><li data-name="WallOutlineGeometry"><a href="WallOutlineGeometry.html">WallOutlineGeometry</a></li><li data-name="WebMapServiceImageryProvider"><a href="WebMapServiceImageryProvider.html">WebMapServiceImageryProvider</a></li><li data-name="WebMapTileServiceImageryProvider"><a href="WebMapTileServiceImageryProvider.html">WebMapTileServiceImageryProvider</a></li><li data-name="WebMercatorProjection"><a href="WebMercatorProjection.html">WebMercatorProjection</a></li><li data-name="WebMercatorTilingScheme"><a href="WebMercatorTilingScheme.html">WebMercatorTilingScheme</a></li><li data-name="WindingOrder"><a href="WindingOrder.html">WindingOrder</a></li></ul>
-    </div>
-</div>
-
-<div class="nav navStatic"></div>
-
 <div id="main">
 
-    <h1 class="page-title">Matrix4</h1>
+    <h1 class="page-title">
+        <a href="index.html"><img src="images/CesiumLogo.png" class="cesiumLogo"></a>
+        Matrix4
+        <div class="titleCenterer"></div>
+    </h1>
 
     
 
@@ -51,7 +41,15 @@
 <dt>
     <div class="nameContainer">
     <h4 class="name" id="Matrix4">
-        new Matrix4<span class="signature">(<span class="optional">column0Row0</span>, <span class="optional">column1Row0</span>, <span class="optional">column2Row0</span>, <span class="optional">column3Row0</span>, <span class="optional">column0Row1</span>, <span class="optional">column1Row1</span>, <span class="optional">column2Row1</span>, <span class="optional">column3Row1</span>, <span class="optional">column0Row2</span>, <span class="optional">column1Row2</span>, <span class="optional">column2Row2</span>, <span class="optional">column3Row2</span>, <span class="optional">column0Row3</span>, <span class="optional">column1Row3</span>, <span class="optional">column2Row3</span>, <span class="optional">column3Row3</span>)</span>
+        <a href="#Matrix4" class="doc-link"></a>
+        new Cesium.Matrix4<span class="signature">(<span class="optional">column0Row0</span>, <span class="optional">column1Row0</span>, <span class="optional">column2Row0</span>, <span class="optional">column3Row0</span>, <span class="optional">column0Row1</span>, <span class="optional">column1Row1</span>, <span class="optional">column2Row1</span>, <span class="optional">column3Row1</span>, <span class="optional">column0Row2</span>, <span class="optional">column1Row2</span>, <span class="optional">column2Row2</span>, <span class="optional">column3Row2</span>, <span class="optional">column0Row3</span>, <span class="optional">column1Row3</span>, <span class="optional">column2Row3</span>, <span class="optional">column3Row3</span>)</span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L64">Core/Matrix4.js 64</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -62,8 +60,7 @@
 
     
     <div class="description">
-        A 4x4 matrix, indexable as a column-major order array.
-Constructor parameters are in row-major order for code readability.
+        A 4x4 matrix, indexable as a column-major order array.Constructor parameters are in row-major order for code readability.
     </div>
     
 
@@ -751,13 +748,6 @@ Constructor parameters are in row-major order for code readability.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L64">Core/Matrix4.js, line 64</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -783,7 +773,15 @@ Constructor parameters are in row-major order for code readability.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".COLUMN0ROW0">
-        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Matrix4.COLUMN0ROW0<span class="type-signature"> :Number</span>
+        <a href="#.COLUMN0ROW0" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Cesium.Matrix4.COLUMN0ROW0<span class="type-signature"> : Number</span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L2565">Core/Matrix4.js 2565</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -828,13 +826,6 @@ Constructor parameters are in row-major order for code readability.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L2565">Core/Matrix4.js, line 2565</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -844,7 +835,15 @@ Constructor parameters are in row-major order for code readability.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".COLUMN0ROW1">
-        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Matrix4.COLUMN0ROW1<span class="type-signature"> :Number</span>
+        <a href="#.COLUMN0ROW1" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Cesium.Matrix4.COLUMN0ROW1<span class="type-signature"> : Number</span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L2573">Core/Matrix4.js 2573</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -889,13 +888,6 @@ Constructor parameters are in row-major order for code readability.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L2573">Core/Matrix4.js, line 2573</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -905,7 +897,15 @@ Constructor parameters are in row-major order for code readability.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".COLUMN0ROW2">
-        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Matrix4.COLUMN0ROW2<span class="type-signature"> :Number</span>
+        <a href="#.COLUMN0ROW2" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Cesium.Matrix4.COLUMN0ROW2<span class="type-signature"> : Number</span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L2581">Core/Matrix4.js 2581</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -950,13 +950,6 @@ Constructor parameters are in row-major order for code readability.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L2581">Core/Matrix4.js, line 2581</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -966,7 +959,15 @@ Constructor parameters are in row-major order for code readability.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".COLUMN0ROW3">
-        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Matrix4.COLUMN0ROW3<span class="type-signature"> :Number</span>
+        <a href="#.COLUMN0ROW3" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Cesium.Matrix4.COLUMN0ROW3<span class="type-signature"> : Number</span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L2589">Core/Matrix4.js 2589</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -1011,13 +1012,6 @@ Constructor parameters are in row-major order for code readability.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L2589">Core/Matrix4.js, line 2589</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -1027,7 +1021,15 @@ Constructor parameters are in row-major order for code readability.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".COLUMN1ROW0">
-        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Matrix4.COLUMN1ROW0<span class="type-signature"> :Number</span>
+        <a href="#.COLUMN1ROW0" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Cesium.Matrix4.COLUMN1ROW0<span class="type-signature"> : Number</span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L2597">Core/Matrix4.js 2597</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -1072,13 +1074,6 @@ Constructor parameters are in row-major order for code readability.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L2597">Core/Matrix4.js, line 2597</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -1088,7 +1083,15 @@ Constructor parameters are in row-major order for code readability.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".COLUMN1ROW1">
-        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Matrix4.COLUMN1ROW1<span class="type-signature"> :Number</span>
+        <a href="#.COLUMN1ROW1" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Cesium.Matrix4.COLUMN1ROW1<span class="type-signature"> : Number</span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L2605">Core/Matrix4.js 2605</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -1133,13 +1136,6 @@ Constructor parameters are in row-major order for code readability.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L2605">Core/Matrix4.js, line 2605</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -1149,7 +1145,15 @@ Constructor parameters are in row-major order for code readability.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".COLUMN1ROW2">
-        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Matrix4.COLUMN1ROW2<span class="type-signature"> :Number</span>
+        <a href="#.COLUMN1ROW2" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Cesium.Matrix4.COLUMN1ROW2<span class="type-signature"> : Number</span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L2613">Core/Matrix4.js 2613</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -1194,13 +1198,6 @@ Constructor parameters are in row-major order for code readability.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L2613">Core/Matrix4.js, line 2613</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -1210,7 +1207,15 @@ Constructor parameters are in row-major order for code readability.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".COLUMN1ROW3">
-        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Matrix4.COLUMN1ROW3<span class="type-signature"> :Number</span>
+        <a href="#.COLUMN1ROW3" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Cesium.Matrix4.COLUMN1ROW3<span class="type-signature"> : Number</span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L2621">Core/Matrix4.js 2621</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -1255,13 +1260,6 @@ Constructor parameters are in row-major order for code readability.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L2621">Core/Matrix4.js, line 2621</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -1271,7 +1269,15 @@ Constructor parameters are in row-major order for code readability.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".COLUMN2ROW0">
-        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Matrix4.COLUMN2ROW0<span class="type-signature"> :Number</span>
+        <a href="#.COLUMN2ROW0" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Cesium.Matrix4.COLUMN2ROW0<span class="type-signature"> : Number</span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L2629">Core/Matrix4.js 2629</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -1316,13 +1322,6 @@ Constructor parameters are in row-major order for code readability.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L2629">Core/Matrix4.js, line 2629</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -1332,7 +1331,15 @@ Constructor parameters are in row-major order for code readability.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".COLUMN2ROW1">
-        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Matrix4.COLUMN2ROW1<span class="type-signature"> :Number</span>
+        <a href="#.COLUMN2ROW1" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Cesium.Matrix4.COLUMN2ROW1<span class="type-signature"> : Number</span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L2637">Core/Matrix4.js 2637</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -1377,13 +1384,6 @@ Constructor parameters are in row-major order for code readability.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L2637">Core/Matrix4.js, line 2637</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -1393,7 +1393,15 @@ Constructor parameters are in row-major order for code readability.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".COLUMN2ROW2">
-        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Matrix4.COLUMN2ROW2<span class="type-signature"> :Number</span>
+        <a href="#.COLUMN2ROW2" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Cesium.Matrix4.COLUMN2ROW2<span class="type-signature"> : Number</span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L2645">Core/Matrix4.js 2645</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -1438,13 +1446,6 @@ Constructor parameters are in row-major order for code readability.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L2645">Core/Matrix4.js, line 2645</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -1454,7 +1455,15 @@ Constructor parameters are in row-major order for code readability.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".COLUMN2ROW3">
-        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Matrix4.COLUMN2ROW3<span class="type-signature"> :Number</span>
+        <a href="#.COLUMN2ROW3" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Cesium.Matrix4.COLUMN2ROW3<span class="type-signature"> : Number</span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L2653">Core/Matrix4.js 2653</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -1499,13 +1508,6 @@ Constructor parameters are in row-major order for code readability.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L2653">Core/Matrix4.js, line 2653</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -1515,7 +1517,15 @@ Constructor parameters are in row-major order for code readability.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".COLUMN3ROW0">
-        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Matrix4.COLUMN3ROW0<span class="type-signature"> :Number</span>
+        <a href="#.COLUMN3ROW0" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Cesium.Matrix4.COLUMN3ROW0<span class="type-signature"> : Number</span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L2661">Core/Matrix4.js 2661</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -1560,13 +1570,6 @@ Constructor parameters are in row-major order for code readability.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L2661">Core/Matrix4.js, line 2661</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -1576,7 +1579,15 @@ Constructor parameters are in row-major order for code readability.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".COLUMN3ROW1">
-        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Matrix4.COLUMN3ROW1<span class="type-signature"> :Number</span>
+        <a href="#.COLUMN3ROW1" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Cesium.Matrix4.COLUMN3ROW1<span class="type-signature"> : Number</span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L2669">Core/Matrix4.js 2669</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -1621,13 +1632,6 @@ Constructor parameters are in row-major order for code readability.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L2669">Core/Matrix4.js, line 2669</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -1637,7 +1641,15 @@ Constructor parameters are in row-major order for code readability.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".COLUMN3ROW2">
-        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Matrix4.COLUMN3ROW2<span class="type-signature"> :Number</span>
+        <a href="#.COLUMN3ROW2" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Cesium.Matrix4.COLUMN3ROW2<span class="type-signature"> : Number</span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L2677">Core/Matrix4.js 2677</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -1682,13 +1694,6 @@ Constructor parameters are in row-major order for code readability.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L2677">Core/Matrix4.js, line 2677</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -1698,7 +1703,15 @@ Constructor parameters are in row-major order for code readability.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".COLUMN3ROW3">
-        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Matrix4.COLUMN3ROW3<span class="type-signature"> :Number</span>
+        <a href="#.COLUMN3ROW3" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Cesium.Matrix4.COLUMN3ROW3<span class="type-signature"> : Number</span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L2685">Core/Matrix4.js 2685</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -1743,13 +1756,6 @@ Constructor parameters are in row-major order for code readability.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L2685">Core/Matrix4.js, line 2685</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -1759,7 +1765,15 @@ Constructor parameters are in row-major order for code readability.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".IDENTITY">
-        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Matrix4.IDENTITY<span class="type-signature"> :<a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.IDENTITY" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Cesium.Matrix4.IDENTITY<span class="type-signature"> : <a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L2543">Core/Matrix4.js 2543</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -1804,13 +1818,6 @@ Constructor parameters are in row-major order for code readability.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L2543">Core/Matrix4.js, line 2543</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -1820,7 +1827,15 @@ Constructor parameters are in row-major order for code readability.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".packedLength">
-        <span class="type-signature attribute-static">static</span>Matrix4.packedLength<span class="type-signature"> :Number</span>
+        <a href="#.packedLength" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.packedLength<span class="type-signature"> : Number</span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L90">Core/Matrix4.js 90</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -1865,13 +1880,6 @@ Constructor parameters are in row-major order for code readability.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L90">Core/Matrix4.js, line 90</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -1881,7 +1889,15 @@ Constructor parameters are in row-major order for code readability.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".ZERO">
-        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Matrix4.ZERO<span class="type-signature"> :<a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.ZERO" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span><span class="type-signature attribute-constant">constant</span>Cesium.Matrix4.ZERO<span class="type-signature"> : <a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L2554">Core/Matrix4.js 2554</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -1926,13 +1942,6 @@ Constructor parameters are in row-major order for code readability.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L2554">Core/Matrix4.js, line 2554</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -1948,7 +1957,15 @@ Constructor parameters are in row-major order for code readability.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id="clone">
+        <a href="#clone" class="doc-link"></a>
         clone<span class="signature">(<span class="optional">result</span>)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L2693">Core/Matrix4.js 2693</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -2073,13 +2090,6 @@ Constructor parameters are in row-major order for code readability.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L2693">Core/Matrix4.js, line 2693</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -2089,7 +2099,15 @@ Constructor parameters are in row-major order for code readability.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id="equals">
+        <a href="#equals" class="doc-link"></a>
         equals<span class="signature">(<span class="optional">right</span>)</span> &rarr; <span class="type-signature returnType">Boolean</span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L2704">Core/Matrix4.js 2704</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -2100,8 +2118,7 @@ Constructor parameters are in row-major order for code readability.
 
     
     <div class="description">
-        Compares this matrix to the provided matrix componentwise and returns
-<code>true</code> if they are equal, <code>false</code> otherwise.
+        Compares this matrix to the provided matrix componentwise and returns<code>true</code> if they are equal, <code>false</code> otherwise.
     </div>
     
 
@@ -2215,13 +2232,6 @@ Constructor parameters are in row-major order for code readability.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L2704">Core/Matrix4.js, line 2704</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -2231,7 +2241,15 @@ Constructor parameters are in row-major order for code readability.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id="equalsEpsilon">
+        <a href="#equalsEpsilon" class="doc-link"></a>
         equalsEpsilon<span class="signature">(<span class="optional">right</span>, epsilon)</span> &rarr; <span class="type-signature returnType">Boolean</span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L2739">Core/Matrix4.js 2739</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -2242,9 +2260,7 @@ Constructor parameters are in row-major order for code readability.
 
     
     <div class="description">
-        Compares this matrix to the provided matrix componentwise and returns
-<code>true</code> if they are within the provided epsilon,
-<code>false</code> otherwise.
+        Compares this matrix to the provided matrix componentwise and returns<code>true</code> if they are within the provided epsilon,<code>false</code> otherwise.
     </div>
     
 
@@ -2386,13 +2402,6 @@ Constructor parameters are in row-major order for code readability.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L2739">Core/Matrix4.js, line 2739</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -2402,7 +2411,15 @@ Constructor parameters are in row-major order for code readability.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id="toString">
+        <a href="#toString" class="doc-link"></a>
         toString<span class="signature">()</span> &rarr; <span class="type-signature returnType">String</span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L2749">Core/Matrix4.js 2749</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -2413,8 +2430,7 @@ Constructor parameters are in row-major order for code readability.
 
     
     <div class="description">
-        Computes a string representing this Matrix with each row being
-on a separate line and in the format '(column0, column1, column2, column3)'.
+        Computes a string representing this Matrix with each row beingon a separate line and in the format '(column0, column1, column2, column3)'.
     </div>
     
 
@@ -2476,13 +2492,6 @@ on a separate line and in the format '(column0, column1, column2, column3)'.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L2749">Core/Matrix4.js, line 2749</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -2492,7 +2501,15 @@ on a separate line and in the format '(column0, column1, column2, column3)'.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".abs">
-        <span class="type-signature attribute-static">static</span>Matrix4.abs<span class="signature">(matrix, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.abs" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.abs<span class="signature">(matrix, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L2106">Core/Matrix4.js 2106</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -2633,13 +2650,6 @@ on a separate line and in the format '(column0, column1, column2, column3)'.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L2106">Core/Matrix4.js, line 2106</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -2649,7 +2659,15 @@ on a separate line and in the format '(column0, column1, column2, column3)'.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".add">
-        <span class="type-signature attribute-static">static</span>Matrix4.add<span class="signature">(left, right, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.add" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.add<span class="signature">(left, right, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L1416">Core/Matrix4.js 1416</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -2813,13 +2831,6 @@ on a separate line and in the format '(column0, column1, column2, column3)'.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L1416">Core/Matrix4.js, line 1416</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -2829,7 +2840,15 @@ on a separate line and in the format '(column0, column1, column2, column3)'.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".clone">
-        <span class="type-signature attribute-static">static</span>Matrix4.clone<span class="signature">(matrix, <span class="optional">result</span>)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.clone" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.clone<span class="signature">(matrix, <span class="optional">result</span>)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L177">Core/Matrix4.js 177</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -2982,13 +3001,6 @@ on a separate line and in the format '(column0, column1, column2, column3)'.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L177">Core/Matrix4.js, line 177</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -2998,7 +3010,15 @@ on a separate line and in the format '(column0, column1, column2, column3)'.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".computeInfinitePerspectiveOffCenter">
-        <span class="type-signature attribute-static">static</span>Matrix4.computeInfinitePerspectiveOffCenter<span class="signature">(left, right, bottom, top, near, far, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.computeInfinitePerspectiveOffCenter" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.computeInfinitePerspectiveOffCenter<span class="signature">(left, right, bottom, top, near, far, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L828">Core/Matrix4.js 828</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -3254,13 +3274,6 @@ on a separate line and in the format '(column0, column1, column2, column3)'.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L828">Core/Matrix4.js, line 828</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -3270,7 +3283,15 @@ on a separate line and in the format '(column0, column1, column2, column3)'.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".computeOrthographicOffCenter">
-        <span class="type-signature attribute-static">static</span>Matrix4.computeOrthographicOffCenter<span class="signature">(left, right, bottom, top, near, far, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.computeOrthographicOffCenter" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.computeOrthographicOffCenter<span class="signature">(left, right, bottom, top, near, far, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L697">Core/Matrix4.js 697</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -3526,13 +3547,6 @@ on a separate line and in the format '(column0, column1, column2, column3)'.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L697">Core/Matrix4.js, line 697</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -3542,7 +3556,15 @@ on a separate line and in the format '(column0, column1, column2, column3)'.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".computePerspectiveFieldOfView">
-        <span class="type-signature attribute-static">static</span>Matrix4.computePerspectiveFieldOfView<span class="signature">(fovY, aspectRatio, near, far, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.computePerspectiveFieldOfView" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.computePerspectiveFieldOfView<span class="signature">(fovY, aspectRatio, near, far, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L640">Core/Matrix4.js 640</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -3799,13 +3821,6 @@ on a separate line and in the format '(column0, column1, column2, column3)'.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L640">Core/Matrix4.js, line 640</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -3815,7 +3830,15 @@ on a separate line and in the format '(column0, column1, column2, column3)'.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".computePerspectiveOffCenter">
-        <span class="type-signature attribute-static">static</span>Matrix4.computePerspectiveOffCenter<span class="signature">(left, right, bottom, top, near, far, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.computePerspectiveOffCenter" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.computePerspectiveOffCenter<span class="signature">(left, right, bottom, top, near, far, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L764">Core/Matrix4.js 764</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -4071,13 +4094,6 @@ on a separate line and in the format '(column0, column1, column2, column3)'.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L764">Core/Matrix4.js, line 764</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -4087,7 +4103,15 @@ on a separate line and in the format '(column0, column1, column2, column3)'.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".computeViewportTransformation">
-        <span class="type-signature attribute-static">static</span>Matrix4.computeViewportTransformation<span class="signature">(<span class="optional">viewport</span>, <span class="optional">nearDepthRange</span>, <span class="optional">farDepthRange</span>, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.computeViewportTransformation" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.computeViewportTransformation<span class="signature">(<span class="optional">viewport</span>, <span class="optional">nearDepthRange</span>, <span class="optional">farDepthRange</span>, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L895">Core/Matrix4.js 895</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -4318,13 +4342,7 @@ on a separate line and in the format '(column0, column1, column2, column3)'.
     
         <h5>Example:</h5>
         
-    <pre><code class="language-javascript">// Create viewport transformation using an explicit viewport and depth range.
-var m = Cesium.Matrix4.computeViewportTransformation({
-    x : 0.0,
-    y : 0.0,
-    width : 1024.0,
-    height : 768.0
-}, 0.0, 1.0, new Cesium.Matrix4());</code></pre>
+    <pre><code class="language-javascript">// Create viewport transformation using an explicit viewport and depth range.var m = Cesium.Matrix4.computeViewportTransformation({    x : 0.0,    y : 0.0,    width : 1024.0,    height : 768.0}, 0.0, 1.0, new Cesium.Matrix4());</code></pre>
 
     
 
@@ -4334,13 +4352,6 @@ var m = Cesium.Matrix4.computeViewportTransformation({
 
     
 
-    
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L895">Core/Matrix4.js, line 895</a>
-    </div>
     
 </dl>
 
@@ -4351,7 +4362,15 @@ var m = Cesium.Matrix4.computeViewportTransformation({
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".equals">
-        <span class="type-signature attribute-static">static</span>Matrix4.equals<span class="signature">(<span class="optional">left</span>, <span class="optional">right</span>)</span> &rarr; <span class="type-signature returnType">Boolean</span>
+        <a href="#.equals" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.equals<span class="signature">(<span class="optional">left</span>, <span class="optional">right</span>)</span> &rarr; <span class="type-signature returnType">Boolean</span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L2165">Core/Matrix4.js 2165</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -4362,8 +4381,7 @@ var m = Cesium.Matrix4.computeViewportTransformation({
 
     
     <div class="description">
-        Compares the provided matrices componentwise and returns
-<code>true</code> if they are equal, <code>false</code> otherwise.
+        Compares the provided matrices componentwise and returns<code>true</code> if they are equal, <code>false</code> otherwise.
     </div>
     
 
@@ -4501,25 +4519,7 @@ var m = Cesium.Matrix4.computeViewportTransformation({
     
         <h5>Example:</h5>
         
-    <pre><code class="language-javascript">//compares two Matrix4 instances
-
-// a = [10.0, 14.0, 18.0, 22.0]
-//     [11.0, 15.0, 19.0, 23.0]
-//     [12.0, 16.0, 20.0, 24.0]
-//     [13.0, 17.0, 21.0, 25.0]
-
-// b = [10.0, 14.0, 18.0, 22.0]
-//     [11.0, 15.0, 19.0, 23.0]
-//     [12.0, 16.0, 20.0, 24.0]
-//     [13.0, 17.0, 21.0, 25.0]
-
-if(Cesium.Matrix4.equals(a,b)) {
-     console.log("Both matrices are equal");
-} else {
-     console.log("They are not equal");
-}
-
-//Prints "Both matrices are equal" on the console</code></pre>
+    <pre><code class="language-javascript">//compares two Matrix4 instances// a = [10.0, 14.0, 18.0, 22.0]//     [11.0, 15.0, 19.0, 23.0]//     [12.0, 16.0, 20.0, 24.0]//     [13.0, 17.0, 21.0, 25.0]// b = [10.0, 14.0, 18.0, 22.0]//     [11.0, 15.0, 19.0, 23.0]//     [12.0, 16.0, 20.0, 24.0]//     [13.0, 17.0, 21.0, 25.0]if(Cesium.Matrix4.equals(a,b)) {     console.log("Both matrices are equal");} else {     console.log("They are not equal");}//Prints "Both matrices are equal" on the console</code></pre>
 
     
 
@@ -4529,13 +4529,6 @@ if(Cesium.Matrix4.equals(a,b)) {
 
     
 
-    
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L2165">Core/Matrix4.js, line 2165</a>
-    </div>
     
 </dl>
 
@@ -4546,7 +4539,15 @@ if(Cesium.Matrix4.equals(a,b)) {
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".equalsEpsilon">
-        <span class="type-signature attribute-static">static</span>Matrix4.equalsEpsilon<span class="signature">(<span class="optional">left</span>, <span class="optional">right</span>, epsilon)</span> &rarr; <span class="type-signature returnType">Boolean</span>
+        <a href="#.equalsEpsilon" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.equalsEpsilon<span class="signature">(<span class="optional">left</span>, <span class="optional">right</span>, epsilon)</span> &rarr; <span class="type-signature returnType">Boolean</span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L2227">Core/Matrix4.js 2227</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -4557,9 +4558,7 @@ if(Cesium.Matrix4.equals(a,b)) {
 
     
     <div class="description">
-        Compares the provided matrices componentwise and returns
-<code>true</code> if they are within the provided epsilon,
-<code>false</code> otherwise.
+        Compares the provided matrices componentwise and returns<code>true</code> if they are within the provided epsilon,<code>false</code> otherwise.
     </div>
     
 
@@ -4725,25 +4724,7 @@ if(Cesium.Matrix4.equals(a,b)) {
     
         <h5>Example:</h5>
         
-    <pre><code class="language-javascript">//compares two Matrix4 instances
-
-// a = [10.5, 14.5, 18.5, 22.5]
-//     [11.5, 15.5, 19.5, 23.5]
-//     [12.5, 16.5, 20.5, 24.5]
-//     [13.5, 17.5, 21.5, 25.5]
-
-// b = [10.0, 14.0, 18.0, 22.0]
-//     [11.0, 15.0, 19.0, 23.0]
-//     [12.0, 16.0, 20.0, 24.0]
-//     [13.0, 17.0, 21.0, 25.0]
-
-if(Cesium.Matrix4.equalsEpsilon(a,b,0.1)){
-     console.log("Difference between both the matrices is less than 0.1");
-} else {
-     console.log("Difference between both the matrices is not less than 0.1");
-}
-
-//Prints "Difference between both the matrices is not less than 0.1" on the console</code></pre>
+    <pre><code class="language-javascript">//compares two Matrix4 instances// a = [10.5, 14.5, 18.5, 22.5]//     [11.5, 15.5, 19.5, 23.5]//     [12.5, 16.5, 20.5, 24.5]//     [13.5, 17.5, 21.5, 25.5]// b = [10.0, 14.0, 18.0, 22.0]//     [11.0, 15.0, 19.0, 23.0]//     [12.0, 16.0, 20.0, 24.0]//     [13.0, 17.0, 21.0, 25.0]if(Cesium.Matrix4.equalsEpsilon(a,b,0.1)){     console.log("Difference between both the matrices is less than 0.1");} else {     console.log("Difference between both the matrices is not less than 0.1");}//Prints "Difference between both the matrices is not less than 0.1" on the console</code></pre>
 
     
 
@@ -4753,13 +4734,6 @@ if(Cesium.Matrix4.equalsEpsilon(a,b,0.1)){
 
     
 
-    
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L2227">Core/Matrix4.js, line 2227</a>
-    </div>
     
 </dl>
 
@@ -4770,7 +4744,15 @@ if(Cesium.Matrix4.equalsEpsilon(a,b,0.1)){
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".fromArray">
-        <span class="type-signature attribute-static">static</span>Matrix4.fromArray<span class="signature">(array, <span class="optional">startingIndex</span>, <span class="optional">result</span>)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.fromArray" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.fromArray<span class="signature">(array, <span class="optional">startingIndex</span>, <span class="optional">result</span>)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L229">Core/Matrix4.js 229</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -4963,18 +4945,7 @@ if(Cesium.Matrix4.equalsEpsilon(a,b,0.1)){
     
         <h5>Example:</h5>
         
-    <pre><code class="language-javascript">// Create the Matrix4:
-// [1.0, 2.0, 3.0, 4.0]
-// [1.0, 2.0, 3.0, 4.0]
-// [1.0, 2.0, 3.0, 4.0]
-// [1.0, 2.0, 3.0, 4.0]
-
-var v = [1.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 2.0, 3.0, 3.0, 3.0, 3.0, 4.0, 4.0, 4.0, 4.0];
-var m = Cesium.Matrix4.fromArray(v);
-
-// Create same Matrix4 with using an offset into an array
-var v2 = [0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 2.0, 3.0, 3.0, 3.0, 3.0, 4.0, 4.0, 4.0, 4.0];
-var m2 = Cesium.Matrix4.fromArray(v2, 2);</code></pre>
+    <pre><code class="language-javascript">// Create the Matrix4:// [1.0, 2.0, 3.0, 4.0]// [1.0, 2.0, 3.0, 4.0]// [1.0, 2.0, 3.0, 4.0]// [1.0, 2.0, 3.0, 4.0]var v = [1.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 2.0, 3.0, 3.0, 3.0, 3.0, 4.0, 4.0, 4.0, 4.0];var m = Cesium.Matrix4.fromArray(v);// Create same Matrix4 with using an offset into an arrayvar v2 = [0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 2.0, 3.0, 3.0, 3.0, 3.0, 4.0, 4.0, 4.0, 4.0];var m2 = Cesium.Matrix4.fromArray(v2, 2);</code></pre>
 
     
 
@@ -4984,13 +4955,6 @@ var m2 = Cesium.Matrix4.fromArray(v2, 2);</code></pre>
 
     
 
-    
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L229">Core/Matrix4.js, line 229</a>
-    </div>
     
 </dl>
 
@@ -5001,7 +4965,15 @@ var m2 = Cesium.Matrix4.fromArray(v2, 2);</code></pre>
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".fromCamera">
-        <span class="type-signature attribute-static">static</span>Matrix4.fromCamera<span class="signature">(camera, <span class="optional">result</span>)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.fromCamera" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.fromCamera<span class="signature">(camera, <span class="optional">result</span>)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L540">Core/Matrix4.js 540</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -5154,13 +5126,6 @@ var m2 = Cesium.Matrix4.fromArray(v2, 2);</code></pre>
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L540">Core/Matrix4.js, line 540</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -5170,7 +5135,15 @@ var m2 = Cesium.Matrix4.fromArray(v2, 2);</code></pre>
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".fromColumnMajorArray">
-        <span class="type-signature attribute-static">static</span>Matrix4.fromColumnMajorArray<span class="signature">(values, <span class="optional">result</span>)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.fromColumnMajorArray" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.fromColumnMajorArray<span class="signature">(values, <span class="optional">result</span>)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L238">Core/Matrix4.js 238</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -5323,13 +5296,6 @@ var m2 = Cesium.Matrix4.fromArray(v2, 2);</code></pre>
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L238">Core/Matrix4.js, line 238</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -5339,7 +5305,15 @@ var m2 = Cesium.Matrix4.fromArray(v2, 2);</code></pre>
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".fromRotationTranslation">
-        <span class="type-signature attribute-static">static</span>Matrix4.fromRotationTranslation<span class="signature">(rotation, <span class="optional">translation</span>, <span class="optional">result</span>)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.fromRotationTranslation" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.fromRotationTranslation<span class="signature">(rotation, <span class="optional">translation</span>, <span class="optional">result</span>)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L297">Core/Matrix4.js 297</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -5350,8 +5324,7 @@ var m2 = Cesium.Matrix4.fromArray(v2, 2);</code></pre>
 
     
     <div class="description">
-        Computes a Matrix4 instance from a Matrix3 representing the rotation
-and a Cartesian3 representing the translation.
+        Computes a Matrix4 instance from a Matrix3 representing the rotationand a Cartesian3 representing the translation.
     </div>
     
 
@@ -5539,13 +5512,6 @@ and a Cartesian3 representing the translation.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L297">Core/Matrix4.js, line 297</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -5555,7 +5521,15 @@ and a Cartesian3 representing the translation.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".fromRowMajorArray">
-        <span class="type-signature attribute-static">static</span>Matrix4.fromRowMajorArray<span class="signature">(values, <span class="optional">result</span>)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.fromRowMajorArray" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.fromRowMajorArray<span class="signature">(values, <span class="optional">result</span>)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L256">Core/Matrix4.js 256</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -5566,8 +5540,7 @@ and a Cartesian3 representing the translation.
 
     
     <div class="description">
-        Computes a Matrix4 instance from a row-major order array.
-The resulting matrix will be in column-major order.
+        Computes a Matrix4 instance from a row-major order array.The resulting matrix will be in column-major order.
     </div>
     
 
@@ -5709,13 +5682,6 @@ The resulting matrix will be in column-major order.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L256">Core/Matrix4.js, line 256</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -5725,7 +5691,15 @@ The resulting matrix will be in column-major order.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".fromScale">
-        <span class="type-signature attribute-static">static</span>Matrix4.fromScale<span class="signature">(scale, <span class="optional">result</span>)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.fromScale" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.fromScale<span class="signature">(scale, <span class="optional">result</span>)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L447">Core/Matrix4.js 447</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -5872,12 +5846,7 @@ The resulting matrix will be in column-major order.
     
         <h5>Example:</h5>
         
-    <pre><code class="language-javascript">// Creates
-//   [7.0, 0.0, 0.0, 0.0]
-//   [0.0, 8.0, 0.0, 0.0]
-//   [0.0, 0.0, 9.0, 0.0]
-//   [0.0, 0.0, 0.0, 1.0]
-var m = Cesium.Matrix4.fromScale(new Cesium.Cartesian3(7.0, 8.0, 9.0));</code></pre>
+    <pre><code class="language-javascript">// Creates//   [7.0, 0.0, 0.0, 0.0]//   [0.0, 8.0, 0.0, 0.0]//   [0.0, 0.0, 9.0, 0.0]//   [0.0, 0.0, 0.0, 1.0]var m = Cesium.Matrix4.fromScale(new Cesium.Cartesian3(7.0, 8.0, 9.0));</code></pre>
 
     
 
@@ -5887,13 +5856,6 @@ var m = Cesium.Matrix4.fromScale(new Cesium.Cartesian3(7.0, 8.0, 9.0));</code></
 
     
 
-    
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L447">Core/Matrix4.js, line 447</a>
-    </div>
     
 </dl>
 
@@ -5904,7 +5866,15 @@ var m = Cesium.Matrix4.fromScale(new Cesium.Cartesian3(7.0, 8.0, 9.0));</code></
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".fromTranslation">
-        <span class="type-signature attribute-static">static</span>Matrix4.fromTranslation<span class="signature">(translation, <span class="optional">result</span>)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.fromTranslation" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.fromTranslation<span class="signature">(translation, <span class="optional">result</span>)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L422">Core/Matrix4.js 422</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -6062,13 +6032,6 @@ var m = Cesium.Matrix4.fromScale(new Cesium.Cartesian3(7.0, 8.0, 9.0));</code></
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L422">Core/Matrix4.js, line 422</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -6078,7 +6041,15 @@ var m = Cesium.Matrix4.fromScale(new Cesium.Cartesian3(7.0, 8.0, 9.0));</code></
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".fromTranslationQuaternionRotationScale">
-        <span class="type-signature attribute-static">static</span>Matrix4.fromTranslationQuaternionRotationScale<span class="signature">(translation, rotation, scale, <span class="optional">result</span>)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.fromTranslationQuaternionRotationScale" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.fromTranslationQuaternionRotationScale<span class="signature">(translation, rotation, scale, <span class="optional">result</span>)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L349">Core/Matrix4.js 349</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -6089,8 +6060,7 @@ var m = Cesium.Matrix4.fromScale(new Cesium.Cartesian3(7.0, 8.0, 9.0));</code></
 
     
     <div class="description">
-        Computes a Matrix4 instance from a translation, rotation, and scale (TRS)
-representation with the rotation represented as a quaternion.
+        Computes a Matrix4 instance from a translation, rotation, and scale (TRS)representation with the rotation represented as a quaternion.
     </div>
     
 
@@ -6282,11 +6252,7 @@ representation with the rotation represented as a quaternion.
     
         <h5>Example:</h5>
         
-    <pre><code class="language-javascript">var result = Cesium.Matrix4.fromTranslationQuaternionRotationScale(
-  new Cesium.Cartesian3(1.0, 2.0, 3.0), // translation
-  Cesium.Quaternion.IDENTITY,           // rotation
-  new Cesium.Cartesian3(7.0, 8.0, 9.0), // scale
-  result);</code></pre>
+    <pre><code class="language-javascript">var result = Cesium.Matrix4.fromTranslationQuaternionRotationScale(  new Cesium.Cartesian3(1.0, 2.0, 3.0), // translation  Cesium.Quaternion.IDENTITY,           // rotation  new Cesium.Cartesian3(7.0, 8.0, 9.0), // scale  result);</code></pre>
 
     
 
@@ -6296,13 +6262,6 @@ representation with the rotation represented as a quaternion.
 
     
 
-    
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L349">Core/Matrix4.js, line 349</a>
-    </div>
     
 </dl>
 
@@ -6313,7 +6272,15 @@ representation with the rotation represented as a quaternion.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".fromUniformScale">
-        <span class="type-signature attribute-static">static</span>Matrix4.fromUniformScale<span class="signature">(scale, <span class="optional">result</span>)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.fromUniformScale" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.fromUniformScale<span class="signature">(scale, <span class="optional">result</span>)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L496">Core/Matrix4.js 496</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -6460,12 +6427,7 @@ representation with the rotation represented as a quaternion.
     
         <h5>Example:</h5>
         
-    <pre><code class="language-javascript">// Creates
-//   [2.0, 0.0, 0.0, 0.0]
-//   [0.0, 2.0, 0.0, 0.0]
-//   [0.0, 0.0, 2.0, 0.0]
-//   [0.0, 0.0, 0.0, 1.0]
-var m = Cesium.Matrix4.fromUniformScale(2.0);</code></pre>
+    <pre><code class="language-javascript">// Creates//   [2.0, 0.0, 0.0, 0.0]//   [0.0, 2.0, 0.0, 0.0]//   [0.0, 0.0, 2.0, 0.0]//   [0.0, 0.0, 0.0, 1.0]var m = Cesium.Matrix4.fromUniformScale(2.0);</code></pre>
 
     
 
@@ -6475,13 +6437,6 @@ var m = Cesium.Matrix4.fromUniformScale(2.0);</code></pre>
 
     
 
-    
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L496">Core/Matrix4.js, line 496</a>
-    </div>
     
 </dl>
 
@@ -6492,7 +6447,15 @@ var m = Cesium.Matrix4.fromUniformScale(2.0);</code></pre>
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".getColumn">
-        <span class="type-signature attribute-static">static</span>Matrix4.getColumn<span class="signature">(matrix, index, result)</span> &rarr; <span class="type-signature returnType"><a href="Cartesian4.html">Cartesian4</a></span>
+        <a href="#.getColumn" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.getColumn<span class="signature">(matrix, index, result)</span> &rarr; <span class="type-signature returnType"><a href="Cartesian4.html">Cartesian4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L1048">Core/Matrix4.js 1048</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -6664,20 +6627,9 @@ var m = Cesium.Matrix4.fromUniformScale(2.0);</code></pre>
     
         <h5>Examples:</h5>
         
-    <pre><code class="language-javascript">//returns a Cartesian4 instance with values from the specified column
-// m = [10.0, 11.0, 12.0, 13.0]
-//     [14.0, 15.0, 16.0, 17.0]
-//     [18.0, 19.0, 20.0, 21.0]
-//     [22.0, 23.0, 24.0, 25.0]
+    <pre><code class="language-javascript">//returns a Cartesian4 instance with values from the specified column// m = [10.0, 11.0, 12.0, 13.0]//     [14.0, 15.0, 16.0, 17.0]//     [18.0, 19.0, 20.0, 21.0]//     [22.0, 23.0, 24.0, 25.0]//Example 1: Creates an instance of Cartesianvar a = Cesium.Matrix4.getColumn(m, 2, new Cesium.Cartesian4());</code></pre>
 
-//Example 1: Creates an instance of Cartesian
-var a = Cesium.Matrix4.getColumn(m, 2, new Cesium.Cartesian4());</code></pre>
-
-    <pre><code class="language-javascript">//Example 2: Sets values for Cartesian instance
-var a = new Cesium.Cartesian4();
-Cesium.Matrix4.getColumn(m, 2, a);
-
-// a.x = 12.0; a.y = 16.0; a.z = 20.0; a.w = 24.0;</code></pre>
+    <pre><code class="language-javascript">//Example 2: Sets values for Cartesian instancevar a = new Cesium.Cartesian4();Cesium.Matrix4.getColumn(m, 2, a);// a.x = 12.0; a.y = 16.0; a.z = 20.0; a.w = 24.0;</code></pre>
 
     
 
@@ -6687,13 +6639,6 @@ Cesium.Matrix4.getColumn(m, 2, a);
 
     
 
-    
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L1048">Core/Matrix4.js, line 1048</a>
-    </div>
     
 </dl>
 
@@ -6704,7 +6649,15 @@ Cesium.Matrix4.getColumn(m, 2, a);
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".getElementIndex">
-        <span class="type-signature attribute-static">static</span>Matrix4.getElementIndex<span class="signature">(row, column)</span> &rarr; <span class="type-signature returnType">Number</span>
+        <a href="#.getElementIndex" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.getElementIndex<span class="signature">(row, column)</span> &rarr; <span class="type-signature returnType">Number</span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L1008">Core/Matrix4.js 1008</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -6864,10 +6817,7 @@ Cesium.Matrix4.getColumn(m, 2, a);
     
         <h5>Example:</h5>
         
-    <pre><code class="language-javascript">var myMatrix = new Cesium.Matrix4();
-var column1Row0Index = Cesium.Matrix4.getElementIndex(1, 0);
-var column1Row0 = myMatrix[column1Row0Index];
-myMatrix[column1Row0Index] = 10.0;</code></pre>
+    <pre><code class="language-javascript">var myMatrix = new Cesium.Matrix4();var column1Row0Index = Cesium.Matrix4.getElementIndex(1, 0);var column1Row0 = myMatrix[column1Row0Index];myMatrix[column1Row0Index] = 10.0;</code></pre>
 
     
 
@@ -6877,13 +6827,6 @@ myMatrix[column1Row0Index] = 10.0;</code></pre>
 
     
 
-    
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L1008">Core/Matrix4.js, line 1008</a>
-    </div>
     
 </dl>
 
@@ -6894,7 +6837,15 @@ myMatrix[column1Row0Index] = 10.0;</code></pre>
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".getMaximumScale">
-        <span class="type-signature attribute-static">static</span>Matrix4.getMaximumScale<span class="signature">(matrix)</span> &rarr; <span class="type-signature returnType">Number</span>
+        <a href="#.getMaximumScale" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.getMaximumScale<span class="signature">(matrix)</span> &rarr; <span class="type-signature returnType">Number</span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L1309">Core/Matrix4.js 1309</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -6905,9 +6856,7 @@ myMatrix[column1Row0Index] = 10.0;</code></pre>
 
     
     <div class="description">
-        Computes the maximum scale assuming the matrix is an affine transformation.
-The maximum scale is the maximum length of the column vectors in the upper-left
-3x3 matrix.
+        Computes the maximum scale assuming the matrix is an affine transformation.The maximum scale is the maximum length of the column vectors in the upper-left3x3 matrix.
     </div>
     
 
@@ -7014,13 +6963,6 @@ The maximum scale is the maximum length of the column vectors in the upper-left
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L1309">Core/Matrix4.js, line 1309</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -7030,7 +6972,15 @@ The maximum scale is the maximum length of the column vectors in the upper-left
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".getRotation">
-        <span class="type-signature attribute-static">static</span>Matrix4.getRotation<span class="signature">(matrix, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix3.html">Matrix3</a></span>
+        <a href="#.getRotation" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.getRotation<span class="signature">(matrix, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix3.html">Matrix3</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L2300">Core/Matrix4.js 2300</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -7165,19 +7115,7 @@ The maximum scale is the maximum length of the column vectors in the upper-left
     
         <h5>Example:</h5>
         
-    <pre><code class="language-javascript">// returns a Matrix3 instance from a Matrix4 instance
-
-// m = [10.0, 14.0, 18.0, 22.0]
-//     [11.0, 15.0, 19.0, 23.0]
-//     [12.0, 16.0, 20.0, 24.0]
-//     [13.0, 17.0, 21.0, 25.0]
-
-var b = new Cesium.Matrix3();
-Cesium.Matrix4.getRotation(m,b);
-
-// b = [10.0, 14.0, 18.0]
-//     [11.0, 15.0, 19.0]
-//     [12.0, 16.0, 20.0]</code></pre>
+    <pre><code class="language-javascript">// returns a Matrix3 instance from a Matrix4 instance// m = [10.0, 14.0, 18.0, 22.0]//     [11.0, 15.0, 19.0, 23.0]//     [12.0, 16.0, 20.0, 24.0]//     [13.0, 17.0, 21.0, 25.0]var b = new Cesium.Matrix3();Cesium.Matrix4.getRotation(m,b);// b = [10.0, 14.0, 18.0]//     [11.0, 15.0, 19.0]//     [12.0, 16.0, 20.0]</code></pre>
 
     
 
@@ -7187,13 +7125,6 @@ Cesium.Matrix4.getRotation(m,b);
 
     
 
-    
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L2300">Core/Matrix4.js, line 2300</a>
-    </div>
     
 </dl>
 
@@ -7204,7 +7135,15 @@ Cesium.Matrix4.getRotation(m,b);
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".getRow">
-        <span class="type-signature attribute-static">static</span>Matrix4.getRow<span class="signature">(matrix, index, result)</span> &rarr; <span class="type-signature returnType"><a href="Cartesian4.html">Cartesian4</a></span>
+        <a href="#.getRow" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.getRow<span class="signature">(matrix, index, result)</span> &rarr; <span class="type-signature returnType"><a href="Cartesian4.html">Cartesian4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L1198">Core/Matrix4.js 1198</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -7376,20 +7315,9 @@ Cesium.Matrix4.getRotation(m,b);
     
         <h5>Examples:</h5>
         
-    <pre><code class="language-javascript">//returns a Cartesian4 instance with values from the specified column
-// m = [10.0, 11.0, 12.0, 13.0]
-//     [14.0, 15.0, 16.0, 17.0]
-//     [18.0, 19.0, 20.0, 21.0]
-//     [22.0, 23.0, 24.0, 25.0]
+    <pre><code class="language-javascript">//returns a Cartesian4 instance with values from the specified column// m = [10.0, 11.0, 12.0, 13.0]//     [14.0, 15.0, 16.0, 17.0]//     [18.0, 19.0, 20.0, 21.0]//     [22.0, 23.0, 24.0, 25.0]//Example 1: Returns an instance of Cartesianvar a = Cesium.Matrix4.getRow(m, 2, new Cesium.Cartesian4());</code></pre>
 
-//Example 1: Returns an instance of Cartesian
-var a = Cesium.Matrix4.getRow(m, 2, new Cesium.Cartesian4());</code></pre>
-
-    <pre><code class="language-javascript">//Example 2: Sets values for a Cartesian instance
-var a = new Cesium.Cartesian4();
-Cesium.Matrix4.getRow(m, 2, a);
-
-// a.x = 18.0; a.y = 19.0; a.z = 20.0; a.w = 21.0;</code></pre>
+    <pre><code class="language-javascript">//Example 2: Sets values for a Cartesian instancevar a = new Cesium.Cartesian4();Cesium.Matrix4.getRow(m, 2, a);// a.x = 18.0; a.y = 19.0; a.z = 20.0; a.w = 21.0;</code></pre>
 
     
 
@@ -7399,13 +7327,6 @@ Cesium.Matrix4.getRow(m, 2, a);
 
     
 
-    
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L1198">Core/Matrix4.js, line 1198</a>
-    </div>
     
 </dl>
 
@@ -7416,7 +7337,15 @@ Cesium.Matrix4.getRow(m, 2, a);
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".getScale">
-        <span class="type-signature attribute-static">static</span>Matrix4.getScale<span class="signature">(matrix, result)</span> &rarr; <span class="type-signature returnType"><a href="Cartesian3.html">Cartesian3</a></span>
+        <a href="#.getScale" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.getScale<span class="signature">(matrix, result)</span> &rarr; <span class="type-signature returnType"><a href="Cartesian3.html">Cartesian3</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L1283">Core/Matrix4.js 1283</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -7557,13 +7486,6 @@ Cesium.Matrix4.getRow(m, 2, a);
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L1283">Core/Matrix4.js, line 1283</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -7573,7 +7495,15 @@ Cesium.Matrix4.getRow(m, 2, a);
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".getTranslation">
-        <span class="type-signature attribute-static">static</span>Matrix4.getTranslation<span class="signature">(matrix, result)</span> &rarr; <span class="type-signature returnType"><a href="Cartesian3.html">Cartesian3</a></span>
+        <a href="#.getTranslation" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.getTranslation<span class="signature">(matrix, result)</span> &rarr; <span class="type-signature returnType"><a href="Cartesian3.html">Cartesian3</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L2262">Core/Matrix4.js 2262</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -7714,13 +7644,6 @@ Cesium.Matrix4.getRow(m, 2, a);
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L2262">Core/Matrix4.js, line 2262</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -7730,7 +7653,15 @@ Cesium.Matrix4.getRow(m, 2, a);
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".inverse">
-        <span class="type-signature attribute-static">static</span>Matrix4.inverse<span class="signature">(matrix, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.inverse" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.inverse<span class="signature">(matrix, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L2339">Core/Matrix4.js 2339</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -7741,10 +7672,7 @@ Cesium.Matrix4.getRow(m, 2, a);
 
     
     <div class="description">
-        Computes the inverse of the provided matrix using Cramers Rule.
-If the determinant is zero, the matrix can not be inverted, and an exception is thrown.
-If the matrix is an affine transformation matrix, it is more efficient
-to invert it with <a href="Matrix4.html#.inverseTransformation"><code>Matrix4.inverseTransformation</code></a>.
+        Computes the inverse of the provided matrix using Cramers Rule.If the determinant is zero, the matrix can not be inverted, and an exception is thrown.If the matrix is an affine transformation matrix, it is more efficientto invert it with <a href="Matrix4.html#.inverseTransformation"><code>Matrix4.inverseTransformation</code></a>.
     </div>
     
 
@@ -7888,13 +7816,6 @@ to invert it with <a href="Matrix4.html#.inverseTransformation"><code>Matrix4.in
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L2339">Core/Matrix4.js, line 2339</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -7904,7 +7825,15 @@ to invert it with <a href="Matrix4.html#.inverseTransformation"><code>Matrix4.in
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".inverseTransformation">
-        <span class="type-signature attribute-static">static</span>Matrix4.inverseTransformation<span class="signature">(matrix, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.inverseTransformation" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.inverseTransformation<span class="signature">(matrix, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L2484">Core/Matrix4.js 2484</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -7915,13 +7844,7 @@ to invert it with <a href="Matrix4.html#.inverseTransformation"><code>Matrix4.in
 
     
     <div class="description">
-        Computes the inverse of the provided matrix assuming it is
-an affine transformation matrix, where the upper left 3x3 elements
-are a rotation matrix, and the upper three elements in the fourth
-column are the translation.  The bottom row is assumed to be [0, 0, 0, 1].
-The matrix is not verified to be in the proper form.
-This method is faster than computing the inverse for a general 4x4
-matrix using <a href="Matrix4.html#.inverse"><code>Matrix4.inverse</code></a>.
+        Computes the inverse of the provided matrix assuming it isan affine transformation matrix, where the upper left 3x3 elementsare a rotation matrix, and the upper three elements in the fourthcolumn are the translation.  The bottom row is assumed to be [0, 0, 0, 1].The matrix is not verified to be in the proper form.This method is faster than computing the inverse for a general 4x4matrix using <a href="Matrix4.html#.inverse"><code>Matrix4.inverse</code></a>.
     </div>
     
 
@@ -8051,13 +7974,6 @@ matrix using <a href="Matrix4.html#.inverse"><code>Matrix4.inverse</code></a>.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L2484">Core/Matrix4.js, line 2484</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -8067,7 +7983,15 @@ matrix using <a href="Matrix4.html#.inverse"><code>Matrix4.inverse</code></a>.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".multiply">
-        <span class="type-signature attribute-static">static</span>Matrix4.multiply<span class="signature">(left, right, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.multiply" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.multiply<span class="signature">(left, right, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L1322">Core/Matrix4.js 1322</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -8231,13 +8155,6 @@ matrix using <a href="Matrix4.html#.inverse"><code>Matrix4.inverse</code></a>.
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L1322">Core/Matrix4.js, line 1322</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -8247,7 +8164,15 @@ matrix using <a href="Matrix4.html#.inverse"><code>Matrix4.inverse</code></a>.
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".multiplyByMatrix3">
-        <span class="type-signature attribute-static">static</span>Matrix4.multiplyByMatrix3<span class="signature">(matrix, rotation, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.multiplyByMatrix3" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.multiplyByMatrix3<span class="signature">(matrix, rotation, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L1595">Core/Matrix4.js 1595</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -8258,9 +8183,7 @@ matrix using <a href="Matrix4.html#.inverse"><code>Matrix4.inverse</code></a>.
 
     
     <div class="description">
-        Multiplies a transformation matrix (with a bottom row of <code>[0.0, 0.0, 0.0, 1.0]</code>)
-by a 3x3 rotation matrix.  This is an optimization
-for <code>Matrix4.multiply(m, Matrix4.fromRotationTranslation(rotation), m);</code> with less allocations and arithmetic operations.
+        Multiplies a transformation matrix (with a bottom row of <code>[0.0, 0.0, 0.0, 1.0]</code>)by a 3x3 rotation matrix.  This is an optimizationfor <code>Matrix4.multiply(m, Matrix4.fromRotationTranslation(rotation), m);</code> with less allocations and arithmetic operations.
     </div>
     
 
@@ -8407,8 +8330,7 @@ for <code>Matrix4.multiply(m, Matrix4.fromRotationTranslation(rotation), m);</co
     
         <h5>Example:</h5>
         
-    <pre><code class="language-javascript">// Instead of Cesium.Matrix4.multiply(m, Cesium.Matrix4.fromRotationTranslation(rotation), m);
-Cesium.Matrix4.multiplyByMatrix3(m, rotation, m);</code></pre>
+    <pre><code class="language-javascript">// Instead of Cesium.Matrix4.multiply(m, Cesium.Matrix4.fromRotationTranslation(rotation), m);Cesium.Matrix4.multiplyByMatrix3(m, rotation, m);</code></pre>
 
     
 
@@ -8418,13 +8340,6 @@ Cesium.Matrix4.multiplyByMatrix3(m, rotation, m);</code></pre>
 
     
 
-    
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L1595">Core/Matrix4.js, line 1595</a>
-    </div>
     
 </dl>
 
@@ -8435,7 +8350,15 @@ Cesium.Matrix4.multiplyByMatrix3(m, rotation, m);</code></pre>
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".multiplyByPoint">
-        <span class="type-signature attribute-static">static</span>Matrix4.multiplyByPoint<span class="signature">(matrix, cartesian, result)</span> &rarr; <span class="type-signature returnType"><a href="Cartesian3.html">Cartesian3</a></span>
+        <a href="#.multiplyByPoint" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.multiplyByPoint<span class="signature">(matrix, cartesian, result)</span> &rarr; <span class="type-signature returnType"><a href="Cartesian3.html">Cartesian3</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L1907">Core/Matrix4.js 1907</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -8446,8 +8369,7 @@ Cesium.Matrix4.multiplyByMatrix3(m, rotation, m);</code></pre>
 
     
     <div class="description">
-        Computes the product of a matrix and a <a href="Cartesian3.html"><code>Cartesian3</code></a>. This is equivalent to calling <a href="Matrix4.html#.multiplyByVector"><code>Matrix4.multiplyByVector</code></a>
-with a <a href="Cartesian4.html"><code>Cartesian4</code></a> with a <code>w</code> component of 1, but returns a <a href="Cartesian3.html"><code>Cartesian3</code></a> instead of a <a href="Cartesian4.html"><code>Cartesian4</code></a>.
+        Computes the product of a matrix and a <a href="Cartesian3.html"><code>Cartesian3</code></a>. This is equivalent to calling <a href="Matrix4.html#.multiplyByVector"><code>Matrix4.multiplyByVector</code></a>with a <a href="Cartesian4.html"><code>Cartesian4</code></a> with a <code>w</code> component of 1, but returns a <a href="Cartesian3.html"><code>Cartesian3</code></a> instead of a <a href="Cartesian4.html"><code>Cartesian4</code></a>.
     </div>
     
 
@@ -8594,8 +8516,7 @@ with a <a href="Cartesian4.html"><code>Cartesian4</code></a> with a <code>w</cod
     
         <h5>Example:</h5>
         
-    <pre><code class="language-javascript">var p = new Cesium.Cartesian3(1.0, 2.0, 3.0);
-var result = Cesium.Matrix4.multiplyByPoint(matrix, p, new Cesium.Cartesian3());</code></pre>
+    <pre><code class="language-javascript">var p = new Cesium.Cartesian3(1.0, 2.0, 3.0);var result = Cesium.Matrix4.multiplyByPoint(matrix, p, new Cesium.Cartesian3());</code></pre>
 
     
 
@@ -8605,13 +8526,6 @@ var result = Cesium.Matrix4.multiplyByPoint(matrix, p, new Cesium.Cartesian3());
 
     
 
-    
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L1907">Core/Matrix4.js, line 1907</a>
-    </div>
     
 </dl>
 
@@ -8622,7 +8536,15 @@ var result = Cesium.Matrix4.multiplyByPoint(matrix, p, new Cesium.Cartesian3());
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".multiplyByPointAsVector">
-        <span class="type-signature attribute-static">static</span>Matrix4.multiplyByPointAsVector<span class="signature">(matrix, cartesian, result)</span> &rarr; <span class="type-signature returnType"><a href="Cartesian3.html">Cartesian3</a></span>
+        <a href="#.multiplyByPointAsVector" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.multiplyByPointAsVector<span class="signature">(matrix, cartesian, result)</span> &rarr; <span class="type-signature returnType"><a href="Cartesian3.html">Cartesian3</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L1867">Core/Matrix4.js 1867</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -8633,8 +8555,7 @@ var result = Cesium.Matrix4.multiplyByPoint(matrix, p, new Cesium.Cartesian3());
 
     
     <div class="description">
-        Computes the product of a matrix and a <a href="Cartesian3.html"><code>Cartesian3</code></a>.  This is equivalent to calling <a href="Matrix4.html#.multiplyByVector"><code>Matrix4.multiplyByVector</code></a>
-with a <a href="Cartesian4.html"><code>Cartesian4</code></a> with a <code>w</code> component of zero.
+        Computes the product of a matrix and a <a href="Cartesian3.html"><code>Cartesian3</code></a>.  This is equivalent to calling <a href="Matrix4.html#.multiplyByVector"><code>Matrix4.multiplyByVector</code></a>with a <a href="Cartesian4.html"><code>Cartesian4</code></a> with a <code>w</code> component of zero.
     </div>
     
 
@@ -8781,11 +8702,7 @@ with a <a href="Cartesian4.html"><code>Cartesian4</code></a> with a <code>w</cod
     
         <h5>Example:</h5>
         
-    <pre><code class="language-javascript">var p = new Cesium.Cartesian3(1.0, 2.0, 3.0);
-var result = Cesium.Matrix4.multiplyByPointAsVector(matrix, p, new Cesium.Cartesian3());
-// A shortcut for
-//   Cartesian3 p = ...
-//   Cesium.Matrix4.multiplyByVector(matrix, new Cesium.Cartesian4(p.x, p.y, p.z, 0.0), result);</code></pre>
+    <pre><code class="language-javascript">var p = new Cesium.Cartesian3(1.0, 2.0, 3.0);var result = Cesium.Matrix4.multiplyByPointAsVector(matrix, p, new Cesium.Cartesian3());// A shortcut for//   Cartesian3 p = ...//   Cesium.Matrix4.multiplyByVector(matrix, new Cesium.Cartesian4(p.x, p.y, p.z, 0.0), result);</code></pre>
 
     
 
@@ -8795,13 +8712,6 @@ var result = Cesium.Matrix4.multiplyByPointAsVector(matrix, p, new Cesium.Cartes
 
     
 
-    
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L1867">Core/Matrix4.js, line 1867</a>
-    </div>
     
 </dl>
 
@@ -8812,7 +8722,15 @@ var result = Cesium.Matrix4.multiplyByPointAsVector(matrix, p, new Cesium.Cartes
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".multiplyByScalar">
-        <span class="type-signature attribute-static">static</span>Matrix4.multiplyByScalar<span class="signature">(matrix, scalar, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.multiplyByScalar" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.multiplyByScalar<span class="signature">(matrix, scalar, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L1958">Core/Matrix4.js 1958</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -8970,19 +8888,7 @@ var result = Cesium.Matrix4.multiplyByPointAsVector(matrix, p, new Cesium.Cartes
     
         <h5>Example:</h5>
         
-    <pre><code class="language-javascript">//create a Matrix4 instance which is a scaled version of the supplied Matrix4
-// m = [10.0, 11.0, 12.0, 13.0]
-//     [14.0, 15.0, 16.0, 17.0]
-//     [18.0, 19.0, 20.0, 21.0]
-//     [22.0, 23.0, 24.0, 25.0]
-
-var a = Cesium.Matrix4.multiplyByScalar(m, -2, new Cesium.Matrix4());
-
-// m remains the same
-// a = [-20.0, -22.0, -24.0, -26.0]
-//     [-28.0, -30.0, -32.0, -34.0]
-//     [-36.0, -38.0, -40.0, -42.0]
-//     [-44.0, -46.0, -48.0, -50.0]</code></pre>
+    <pre><code class="language-javascript">//create a Matrix4 instance which is a scaled version of the supplied Matrix4// m = [10.0, 11.0, 12.0, 13.0]//     [14.0, 15.0, 16.0, 17.0]//     [18.0, 19.0, 20.0, 21.0]//     [22.0, 23.0, 24.0, 25.0]var a = Cesium.Matrix4.multiplyByScalar(m, -2, new Cesium.Matrix4());// m remains the same// a = [-20.0, -22.0, -24.0, -26.0]//     [-28.0, -30.0, -32.0, -34.0]//     [-36.0, -38.0, -40.0, -42.0]//     [-44.0, -46.0, -48.0, -50.0]</code></pre>
 
     
 
@@ -8992,13 +8898,6 @@ var a = Cesium.Matrix4.multiplyByScalar(m, -2, new Cesium.Matrix4());
 
     
 
-    
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L1958">Core/Matrix4.js, line 1958</a>
-    </div>
     
 </dl>
 
@@ -9009,7 +8908,15 @@ var a = Cesium.Matrix4.multiplyByScalar(m, -2, new Cesium.Matrix4());
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".multiplyByScale">
-        <span class="type-signature attribute-static">static</span>Matrix4.multiplyByScale<span class="signature">(matrix, scale, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.multiplyByScale" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.multiplyByScale<span class="signature">(matrix, scale, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L1772">Core/Matrix4.js 1772</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -9020,11 +8927,7 @@ var a = Cesium.Matrix4.multiplyByScalar(m, -2, new Cesium.Matrix4());
 
     
     <div class="description">
-        Multiplies an affine transformation matrix (with a bottom row of <code>[0.0, 0.0, 0.0, 1.0]</code>)
-by an implicit non-uniform scale matrix.  This is an optimization
-for <code>Matrix4.multiply(m, Matrix4.fromUniformScale(scale), m);</code>, where
-<code>m</code> must be an affine matrix.
-This function performs fewer allocations and arithmetic operations.
+        Multiplies an affine transformation matrix (with a bottom row of <code>[0.0, 0.0, 0.0, 1.0]</code>)by an implicit non-uniform scale matrix.  This is an optimizationfor <code>Matrix4.multiply(m, Matrix4.fromUniformScale(scale), m);</code>, where<code>m</code> must be an affine matrix.This function performs fewer allocations and arithmetic operations.
     </div>
     
 
@@ -9171,8 +9074,7 @@ This function performs fewer allocations and arithmetic operations.
     
         <h5>Example:</h5>
         
-    <pre><code class="language-javascript">// Instead of Cesium.Matrix4.multiply(m, Cesium.Matrix4.fromScale(scale), m);
-Cesium.Matrix4.multiplyByScale(m, scale, m);</code></pre>
+    <pre><code class="language-javascript">// Instead of Cesium.Matrix4.multiply(m, Cesium.Matrix4.fromScale(scale), m);Cesium.Matrix4.multiplyByScale(m, scale, m);</code></pre>
 
     
 
@@ -9190,13 +9092,6 @@ Cesium.Matrix4.multiplyByScale(m, scale, m);</code></pre>
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L1772">Core/Matrix4.js, line 1772</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -9206,7 +9101,15 @@ Cesium.Matrix4.multiplyByScale(m, scale, m);</code></pre>
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".multiplyByTranslation">
-        <span class="type-signature attribute-static">static</span>Matrix4.multiplyByTranslation<span class="signature">(matrix, translation, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.multiplyByTranslation" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.multiplyByTranslation<span class="signature">(matrix, translation, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L1673">Core/Matrix4.js 1673</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -9217,9 +9120,7 @@ Cesium.Matrix4.multiplyByScale(m, scale, m);</code></pre>
 
     
     <div class="description">
-        Multiplies a transformation matrix (with a bottom row of <code>[0.0, 0.0, 0.0, 1.0]</code>)
-by an implicit translation matrix defined by a <a href="Cartesian3.html"><code>Cartesian3</code></a>.  This is an optimization
-for <code>Matrix4.multiply(m, Matrix4.fromTranslation(position), m);</code> with less allocations and arithmetic operations.
+        Multiplies a transformation matrix (with a bottom row of <code>[0.0, 0.0, 0.0, 1.0]</code>)by an implicit translation matrix defined by a <a href="Cartesian3.html"><code>Cartesian3</code></a>.  This is an optimizationfor <code>Matrix4.multiply(m, Matrix4.fromTranslation(position), m);</code> with less allocations and arithmetic operations.
     </div>
     
 
@@ -9366,8 +9267,7 @@ for <code>Matrix4.multiply(m, Matrix4.fromTranslation(position), m);</code> with
     
         <h5>Example:</h5>
         
-    <pre><code class="language-javascript">// Instead of Cesium.Matrix4.multiply(m, Cesium.Matrix4.fromTranslation(position), m);
-Cesium.Matrix4.multiplyByTranslation(m, position, m);</code></pre>
+    <pre><code class="language-javascript">// Instead of Cesium.Matrix4.multiply(m, Cesium.Matrix4.fromTranslation(position), m);Cesium.Matrix4.multiplyByTranslation(m, position, m);</code></pre>
 
     
 
@@ -9377,13 +9277,6 @@ Cesium.Matrix4.multiplyByTranslation(m, position, m);</code></pre>
 
     
 
-    
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L1673">Core/Matrix4.js, line 1673</a>
-    </div>
     
 </dl>
 
@@ -9394,7 +9287,15 @@ Cesium.Matrix4.multiplyByTranslation(m, position, m);</code></pre>
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".multiplyByUniformScale">
-        <span class="type-signature attribute-static">static</span>Matrix4.multiplyByUniformScale<span class="signature">(matrix, scale, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.multiplyByUniformScale" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.multiplyByUniformScale<span class="signature">(matrix, scale, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L1734">Core/Matrix4.js 1734</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -9405,11 +9306,7 @@ Cesium.Matrix4.multiplyByTranslation(m, position, m);</code></pre>
 
     
     <div class="description">
-        Multiplies an affine transformation matrix (with a bottom row of <code>[0.0, 0.0, 0.0, 1.0]</code>)
-by an implicit uniform scale matrix.  This is an optimization
-for <code>Matrix4.multiply(m, Matrix4.fromUniformScale(scale), m);</code>, where
-<code>m</code> must be an affine matrix.
-This function performs fewer allocations and arithmetic operations.
+        Multiplies an affine transformation matrix (with a bottom row of <code>[0.0, 0.0, 0.0, 1.0]</code>)by an implicit uniform scale matrix.  This is an optimizationfor <code>Matrix4.multiply(m, Matrix4.fromUniformScale(scale), m);</code>, where<code>m</code> must be an affine matrix.This function performs fewer allocations and arithmetic operations.
     </div>
     
 
@@ -9556,8 +9453,7 @@ This function performs fewer allocations and arithmetic operations.
     
         <h5>Example:</h5>
         
-    <pre><code class="language-javascript">// Instead of Cesium.Matrix4.multiply(m, Cesium.Matrix4.fromUniformScale(scale), m);
-Cesium.Matrix4.multiplyByUniformScale(m, scale, m);</code></pre>
+    <pre><code class="language-javascript">// Instead of Cesium.Matrix4.multiply(m, Cesium.Matrix4.fromUniformScale(scale), m);Cesium.Matrix4.multiplyByUniformScale(m, scale, m);</code></pre>
 
     
 
@@ -9575,13 +9471,6 @@ Cesium.Matrix4.multiplyByUniformScale(m, scale, m);</code></pre>
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L1734">Core/Matrix4.js, line 1734</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -9591,7 +9480,15 @@ Cesium.Matrix4.multiplyByUniformScale(m, scale, m);</code></pre>
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".multiplyByVector">
-        <span class="type-signature attribute-static">static</span>Matrix4.multiplyByVector<span class="signature">(matrix, cartesian, result)</span> &rarr; <span class="type-signature returnType"><a href="Cartesian4.html">Cartesian4</a></span>
+        <a href="#.multiplyByVector" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.multiplyByVector<span class="signature">(matrix, cartesian, result)</span> &rarr; <span class="type-signature returnType"><a href="Cartesian4.html">Cartesian4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L1821">Core/Matrix4.js 1821</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -9755,13 +9652,6 @@ Cesium.Matrix4.multiplyByUniformScale(m, scale, m);</code></pre>
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L1821">Core/Matrix4.js, line 1821</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -9771,7 +9661,15 @@ Cesium.Matrix4.multiplyByUniformScale(m, scale, m);</code></pre>
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".multiplyTransformation">
-        <span class="type-signature attribute-static">static</span>Matrix4.multiplyTransformation<span class="signature">(left, right, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.multiplyTransformation" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.multiplyTransformation<span class="signature">(left, right, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L1507">Core/Matrix4.js 1507</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -9782,13 +9680,7 @@ Cesium.Matrix4.multiplyByUniformScale(m, scale, m);</code></pre>
 
     
     <div class="description">
-        Computes the product of two matrices assuming the matrices are
-affine transformation matrices, where the upper left 3x3 elements
-are a rotation matrix, and the upper three elements in the fourth
-column are the translation.  The bottom row is assumed to be [0, 0, 0, 1].
-The matrix is not verified to be in the proper form.
-This method is faster than computing the product for general 4x4
-matrices using <a href="Matrix4.html#.multiply"><code>Matrix4.multiply</code></a>.
+        Computes the product of two matrices assuming the matrices areaffine transformation matrices, where the upper left 3x3 elementsare a rotation matrix, and the upper three elements in the fourthcolumn are the translation.  The bottom row is assumed to be [0, 0, 0, 1].The matrix is not verified to be in the proper form.This method is faster than computing the product for general 4x4matrices using <a href="Matrix4.html#.multiply"><code>Matrix4.multiply</code></a>.
     </div>
     
 
@@ -9935,9 +9827,7 @@ matrices using <a href="Matrix4.html#.multiply"><code>Matrix4.multiply</code></a
     
         <h5>Example:</h5>
         
-    <pre><code class="language-javascript">var m1 = new Cesium.Matrix4(1.0, 6.0, 7.0, 0.0, 2.0, 5.0, 8.0, 0.0, 3.0, 4.0, 9.0, 0.0, 0.0, 0.0, 0.0, 1.0);
-var m2 = Cesium.Transforms.eastNorthUpToFixedFrame(new Cesium.Cartesian3(1.0, 1.0, 1.0));
-var m3 = Cesium.Matrix4.multiplyTransformation(m1, m2, new Cesium.Matrix4());</code></pre>
+    <pre><code class="language-javascript">var m1 = new Cesium.Matrix4(1.0, 6.0, 7.0, 0.0, 2.0, 5.0, 8.0, 0.0, 3.0, 4.0, 9.0, 0.0, 0.0, 0.0, 0.0, 1.0);var m2 = Cesium.Transforms.eastNorthUpToFixedFrame(new Cesium.Cartesian3(1.0, 1.0, 1.0));var m3 = Cesium.Matrix4.multiplyTransformation(m1, m2, new Cesium.Matrix4());</code></pre>
 
     
 
@@ -9947,13 +9837,6 @@ var m3 = Cesium.Matrix4.multiplyTransformation(m1, m2, new Cesium.Matrix4());</c
 
     
 
-    
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L1507">Core/Matrix4.js, line 1507</a>
-    </div>
     
 </dl>
 
@@ -9964,7 +9847,15 @@ var m3 = Cesium.Matrix4.multiplyTransformation(m1, m2, new Cesium.Matrix4());</c
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".negate">
-        <span class="type-signature attribute-static">static</span>Matrix4.negate<span class="signature">(matrix, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.negate" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.negate<span class="signature">(matrix, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L2012">Core/Matrix4.js 2012</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -10099,19 +9990,7 @@ var m3 = Cesium.Matrix4.multiplyTransformation(m1, m2, new Cesium.Matrix4());</c
     
         <h5>Example:</h5>
         
-    <pre><code class="language-javascript">//create a new Matrix4 instance which is a negation of a Matrix4
-// m = [10.0, 11.0, 12.0, 13.0]
-//     [14.0, 15.0, 16.0, 17.0]
-//     [18.0, 19.0, 20.0, 21.0]
-//     [22.0, 23.0, 24.0, 25.0]
-
-var a = Cesium.Matrix4.negate(m, new Cesium.Matrix4());
-
-// m remains the same
-// a = [-10.0, -11.0, -12.0, -13.0]
-//     [-14.0, -15.0, -16.0, -17.0]
-//     [-18.0, -19.0, -20.0, -21.0]
-//     [-22.0, -23.0, -24.0, -25.0]</code></pre>
+    <pre><code class="language-javascript">//create a new Matrix4 instance which is a negation of a Matrix4// m = [10.0, 11.0, 12.0, 13.0]//     [14.0, 15.0, 16.0, 17.0]//     [18.0, 19.0, 20.0, 21.0]//     [22.0, 23.0, 24.0, 25.0]var a = Cesium.Matrix4.negate(m, new Cesium.Matrix4());// m remains the same// a = [-10.0, -11.0, -12.0, -13.0]//     [-14.0, -15.0, -16.0, -17.0]//     [-18.0, -19.0, -20.0, -21.0]//     [-22.0, -23.0, -24.0, -25.0]</code></pre>
 
     
 
@@ -10121,13 +10000,6 @@ var a = Cesium.Matrix4.negate(m, new Cesium.Matrix4());
 
     
 
-    
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L2012">Core/Matrix4.js, line 2012</a>
-    </div>
     
 </dl>
 
@@ -10138,7 +10010,15 @@ var a = Cesium.Matrix4.negate(m, new Cesium.Matrix4());
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".pack">
-        <span class="type-signature attribute-static">static</span>Matrix4.pack<span class="signature">(value, array, <span class="optional">startingIndex</span>)</span>
+        <a href="#.pack" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.pack<span class="signature">(value, array, <span class="optional">startingIndex</span>)</span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L99">Core/Matrix4.js 99</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -10326,13 +10206,6 @@ var a = Cesium.Matrix4.negate(m, new Cesium.Matrix4());
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L99">Core/Matrix4.js, line 99</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -10342,7 +10215,15 @@ var a = Cesium.Matrix4.negate(m, new Cesium.Matrix4());
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".setColumn">
-        <span class="type-signature attribute-static">static</span>Matrix4.setColumn<span class="signature">(matrix, index, cartesian, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.setColumn" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.setColumn<span class="signature">(matrix, index, cartesian, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L1101">Core/Matrix4.js 1101</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -10537,19 +10418,7 @@ var a = Cesium.Matrix4.negate(m, new Cesium.Matrix4());
     
         <h5>Example:</h5>
         
-    <pre><code class="language-javascript">//creates a new Matrix4 instance with new column values from the Cartesian4 instance
-// m = [10.0, 11.0, 12.0, 13.0]
-//     [14.0, 15.0, 16.0, 17.0]
-//     [18.0, 19.0, 20.0, 21.0]
-//     [22.0, 23.0, 24.0, 25.0]
-
-var a = Cesium.Matrix4.setColumn(m, 2, new Cesium.Cartesian4(99.0, 98.0, 97.0, 96.0), new Cesium.Matrix4());
-
-// m remains the same
-// a = [10.0, 11.0, 99.0, 13.0]
-//     [14.0, 15.0, 98.0, 17.0]
-//     [18.0, 19.0, 97.0, 21.0]
-//     [22.0, 23.0, 96.0, 25.0]</code></pre>
+    <pre><code class="language-javascript">//creates a new Matrix4 instance with new column values from the Cartesian4 instance// m = [10.0, 11.0, 12.0, 13.0]//     [14.0, 15.0, 16.0, 17.0]//     [18.0, 19.0, 20.0, 21.0]//     [22.0, 23.0, 24.0, 25.0]var a = Cesium.Matrix4.setColumn(m, 2, new Cesium.Cartesian4(99.0, 98.0, 97.0, 96.0), new Cesium.Matrix4());// m remains the same// a = [10.0, 11.0, 99.0, 13.0]//     [14.0, 15.0, 98.0, 17.0]//     [18.0, 19.0, 97.0, 21.0]//     [22.0, 23.0, 96.0, 25.0]</code></pre>
 
     
 
@@ -10559,13 +10428,6 @@ var a = Cesium.Matrix4.setColumn(m, 2, new Cesium.Cartesian4(99.0, 98.0, 97.0, 9
 
     
 
-    
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L1101">Core/Matrix4.js, line 1101</a>
-    </div>
     
 </dl>
 
@@ -10576,7 +10438,15 @@ var a = Cesium.Matrix4.setColumn(m, 2, new Cesium.Cartesian4(99.0, 98.0, 97.0, 9
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".setRow">
-        <span class="type-signature attribute-static">static</span>Matrix4.setRow<span class="signature">(matrix, index, cartesian, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.setRow" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.setRow<span class="signature">(matrix, index, cartesian, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L1250">Core/Matrix4.js 1250</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -10771,19 +10641,7 @@ var a = Cesium.Matrix4.setColumn(m, 2, new Cesium.Cartesian4(99.0, 98.0, 97.0, 9
     
         <h5>Example:</h5>
         
-    <pre><code class="language-javascript">//create a new Matrix4 instance with new row values from the Cartesian4 instance
-// m = [10.0, 11.0, 12.0, 13.0]
-//     [14.0, 15.0, 16.0, 17.0]
-//     [18.0, 19.0, 20.0, 21.0]
-//     [22.0, 23.0, 24.0, 25.0]
-
-var a = Cesium.Matrix4.setRow(m, 2, new Cesium.Cartesian4(99.0, 98.0, 97.0, 96.0), new Cesium.Matrix4());
-
-// m remains the same
-// a = [10.0, 11.0, 12.0, 13.0]
-//     [14.0, 15.0, 16.0, 17.0]
-//     [99.0, 98.0, 97.0, 96.0]
-//     [22.0, 23.0, 24.0, 25.0]</code></pre>
+    <pre><code class="language-javascript">//create a new Matrix4 instance with new row values from the Cartesian4 instance// m = [10.0, 11.0, 12.0, 13.0]//     [14.0, 15.0, 16.0, 17.0]//     [18.0, 19.0, 20.0, 21.0]//     [22.0, 23.0, 24.0, 25.0]var a = Cesium.Matrix4.setRow(m, 2, new Cesium.Cartesian4(99.0, 98.0, 97.0, 96.0), new Cesium.Matrix4());// m remains the same// a = [10.0, 11.0, 12.0, 13.0]//     [14.0, 15.0, 16.0, 17.0]//     [99.0, 98.0, 97.0, 96.0]//     [22.0, 23.0, 24.0, 25.0]</code></pre>
 
     
 
@@ -10793,13 +10651,6 @@ var a = Cesium.Matrix4.setRow(m, 2, new Cesium.Cartesian4(99.0, 98.0, 97.0, 96.0
 
     
 
-    
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L1250">Core/Matrix4.js, line 1250</a>
-    </div>
     
 </dl>
 
@@ -10810,7 +10661,15 @@ var a = Cesium.Matrix4.setRow(m, 2, new Cesium.Cartesian4(99.0, 98.0, 97.0, 96.0
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".setTranslation">
-        <span class="type-signature attribute-static">static</span>Matrix4.setTranslation<span class="signature">(matrix, translation, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.setTranslation" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.setTranslation<span class="signature">(matrix, translation, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L1135">Core/Matrix4.js 1135</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -10821,8 +10680,7 @@ var a = Cesium.Matrix4.setRow(m, 2, new Cesium.Cartesian4(99.0, 98.0, 97.0, 96.0
 
     
     <div class="description">
-        Computes a new matrix that replaces the translation in the rightmost column of the provided
-matrix with the provided translation.  This assumes the matrix is an affine transformation
+        Computes a new matrix that replaces the translation in the rightmost column of the providedmatrix with the provided translation.  This assumes the matrix is an affine transformation
     </div>
     
 
@@ -10975,13 +10833,6 @@ matrix with the provided translation.  This assumes the matrix is an affine tran
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L1135">Core/Matrix4.js, line 1135</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -10991,7 +10842,15 @@ matrix with the provided translation.  This assumes the matrix is an affine tran
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".subtract">
-        <span class="type-signature attribute-static">static</span>Matrix4.subtract<span class="signature">(left, right, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.subtract" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.subtract<span class="signature">(left, right, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L1456">Core/Matrix4.js 1456</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -11155,13 +11014,6 @@ matrix with the provided translation.  This assumes the matrix is an affine tran
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L1456">Core/Matrix4.js, line 1456</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -11171,7 +11023,15 @@ matrix with the provided translation.  This assumes the matrix is an affine tran
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".toArray">
-        <span class="type-signature attribute-static">static</span>Matrix4.toArray<span class="signature">(matrix, <span class="optional">result</span>)</span> &rarr; <span class="type-signature returnType">Array.&lt;Number></span>
+        <a href="#.toArray" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.toArray<span class="signature">(matrix, <span class="optional">result</span>)</span> &rarr; <span class="type-signature returnType">Array.&lt;Number></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L960">Core/Matrix4.js 960</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -11182,8 +11042,7 @@ matrix with the provided translation.  This assumes the matrix is an affine tran
 
     
     <div class="description">
-        Computes an Array from the provided Matrix4 instance.
-The array will be in column-major order.
+        Computes an Array from the provided Matrix4 instance.The array will be in column-major order.
     </div>
     
 
@@ -11319,15 +11178,7 @@ The array will be in column-major order.
     
         <h5>Example:</h5>
         
-    <pre><code class="language-javascript">//create an array from an instance of Matrix4
-// m = [10.0, 14.0, 18.0, 22.0]
-//     [11.0, 15.0, 19.0, 23.0]
-//     [12.0, 16.0, 20.0, 24.0]
-//     [13.0, 17.0, 21.0, 25.0]
-var a = Cesium.Matrix4.toArray(m);
-
-// m remains the same
-//creates a = [10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0, 19.0, 20.0, 21.0, 22.0, 23.0, 24.0, 25.0]</code></pre>
+    <pre><code class="language-javascript">//create an array from an instance of Matrix4// m = [10.0, 14.0, 18.0, 22.0]//     [11.0, 15.0, 19.0, 23.0]//     [12.0, 16.0, 20.0, 24.0]//     [13.0, 17.0, 21.0, 25.0]var a = Cesium.Matrix4.toArray(m);// m remains the same//creates a = [10.0, 11.0, 12.0, 13.0, 14.0, 15.0, 16.0, 17.0, 18.0, 19.0, 20.0, 21.0, 22.0, 23.0, 24.0, 25.0]</code></pre>
 
     
 
@@ -11337,13 +11188,6 @@ var a = Cesium.Matrix4.toArray(m);
 
     
 
-    
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L960">Core/Matrix4.js, line 960</a>
-    </div>
     
 </dl>
 
@@ -11354,7 +11198,15 @@ var a = Cesium.Matrix4.toArray(m);
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".transpose">
-        <span class="type-signature attribute-static">static</span>Matrix4.transpose<span class="signature">(matrix, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.transpose" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.transpose<span class="signature">(matrix, result)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L2063">Core/Matrix4.js 2063</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -11489,19 +11341,7 @@ var a = Cesium.Matrix4.toArray(m);
     
         <h5>Example:</h5>
         
-    <pre><code class="language-javascript">//returns transpose of a Matrix4
-// m = [10.0, 11.0, 12.0, 13.0]
-//     [14.0, 15.0, 16.0, 17.0]
-//     [18.0, 19.0, 20.0, 21.0]
-//     [22.0, 23.0, 24.0, 25.0]
-
-var a = Cesium.Matrix4.transpose(m, new Cesium.Matrix4());
-
-// m remains the same
-// a = [10.0, 14.0, 18.0, 22.0]
-//     [11.0, 15.0, 19.0, 23.0]
-//     [12.0, 16.0, 20.0, 24.0]
-//     [13.0, 17.0, 21.0, 25.0]</code></pre>
+    <pre><code class="language-javascript">//returns transpose of a Matrix4// m = [10.0, 11.0, 12.0, 13.0]//     [14.0, 15.0, 16.0, 17.0]//     [18.0, 19.0, 20.0, 21.0]//     [22.0, 23.0, 24.0, 25.0]var a = Cesium.Matrix4.transpose(m, new Cesium.Matrix4());// m remains the same// a = [10.0, 14.0, 18.0, 22.0]//     [11.0, 15.0, 19.0, 23.0]//     [12.0, 16.0, 20.0, 24.0]//     [13.0, 17.0, 21.0, 25.0]</code></pre>
 
     
 
@@ -11511,13 +11351,6 @@ var a = Cesium.Matrix4.transpose(m, new Cesium.Matrix4());
 
     
 
-    
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L2063">Core/Matrix4.js, line 2063</a>
-    </div>
     
 </dl>
 
@@ -11528,7 +11361,15 @@ var a = Cesium.Matrix4.transpose(m, new Cesium.Matrix4());
 <dt>
     <div class="nameContainer">
     <h4 class="name" id=".unpack">
-        <span class="type-signature attribute-static">static</span>Matrix4.unpack<span class="signature">(array, <span class="optional">startingIndex</span>, <span class="optional">result</span>)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        <a href="#.unpack" class="doc-link"></a>
+        <span class="type-signature attribute-static">static</span>Cesium.Matrix4.unpack<span class="signature">(array, <span class="optional">startingIndex</span>, <span class="optional">result</span>)</span> &rarr; <span class="type-signature returnType"><a href="Matrix4.html">Matrix4</a></span>
+        
+
+<div class="source-link rightLinks">
+    <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.16/Source/Core/Matrix4.js#L138">Core/Matrix4.js 138</a>
+</div>
+
+
     </h4>
 
     </div>
@@ -11727,13 +11568,6 @@ var a = Cesium.Matrix4.transpose(m, new Cesium.Matrix4());
     
 
     
-    
-    
-    <div class="source-link">
-        Source: 
-        <a href="https://github.com/AnalyticalGraphicsInc/cesium/blob/1.15/Source/Core/Matrix4.js#L138">Core/Matrix4.js, line 138</a>
-    </div>
-    
 </dl>
 
 </dd>
@@ -11753,13 +11587,16 @@ var a = Cesium.Matrix4.transpose(m, new Cesium.Matrix4());
 
 
     <footer>
-        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.3.3</a>
+        Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
     </footer>
 </div>
 
+<div class="nav">
+    <div class="menu">
+        <input type="text" class="classFilter" id="ClassFilter" placeholder="Search">
+        <ul id="ClassList"><li data-name="Animation"><a href="Animation.html">Animation</a></li><li data-name="AnimationViewModel"><a href="AnimationViewModel.html">AnimationViewModel</a></li><li data-name="Appearance"><a href="Appearance.html">Appearance</a></li><li data-name="ArcGisImageServerTerrainProvider"><a href="ArcGisImageServerTerrainProvider.html">ArcGisImageServerTerrainProvider</a></li><li data-name="ArcGisMapServerImageryProvider"><a href="ArcGisMapServerImageryProvider.html">ArcGisMapServerImageryProvider</a></li><li data-name="AssociativeArray"><a href="AssociativeArray.html">AssociativeArray</a></li><li data-name="AxisAlignedBoundingBox"><a href="AxisAlignedBoundingBox.html">AxisAlignedBoundingBox</a></li><li data-name="barycentricCoordinates"><a href="barycentricCoordinates.html">barycentricCoordinates</a></li><li data-name="BaseLayerPicker"><a href="BaseLayerPicker.html">BaseLayerPicker</a></li><li data-name="BaseLayerPickerViewModel"><a href="BaseLayerPickerViewModel.html">BaseLayerPickerViewModel</a></li><li data-name="Billboard"><a href="Billboard.html">Billboard</a></li><li data-name="BillboardCollection"><a href="BillboardCollection.html">BillboardCollection</a></li><li data-name="BillboardGraphics"><a href="BillboardGraphics.html">BillboardGraphics</a></li><li data-name="BillboardVisualizer"><a href="BillboardVisualizer.html">BillboardVisualizer</a></li><li data-name="binarySearch"><a href="binarySearch.html">binarySearch</a></li><li data-name="BingMapsApi"><a href="BingMapsApi.html">BingMapsApi</a></li><li data-name="BingMapsImageryProvider"><a href="BingMapsImageryProvider.html">BingMapsImageryProvider</a></li><li data-name="BingMapsStyle"><a href="BingMapsStyle.html">BingMapsStyle</a></li><li data-name="BlendEquation"><a href="BlendEquation.html">BlendEquation</a></li><li data-name="BlendFunction"><a href="BlendFunction.html">BlendFunction</a></li><li data-name="BlendingState"><a href="BlendingState.html">BlendingState</a></li><li data-name="BoundingRectangle"><a href="BoundingRectangle.html">BoundingRectangle</a></li><li data-name="BoundingSphere"><a href="BoundingSphere.html">BoundingSphere</a></li><li data-name="BoxGeometry"><a href="BoxGeometry.html">BoxGeometry</a></li><li data-name="BoxGeometryUpdater"><a href="BoxGeometryUpdater.html">BoxGeometryUpdater</a></li><li data-name="BoxGraphics"><a href="BoxGraphics.html">BoxGraphics</a></li><li data-name="BoxOutlineGeometry"><a href="BoxOutlineGeometry.html">BoxOutlineGeometry</a></li><li data-name="CallbackProperty"><a href="CallbackProperty.html">CallbackProperty</a></li><li data-name="Camera"><a href="Camera.html">Camera</a></li><li data-name="CameraEventAggregator"><a href="CameraEventAggregator.html">CameraEventAggregator</a></li><li data-name="CameraEventType"><a href="CameraEventType.html">CameraEventType</a></li><li data-name="cancelAnimationFrame"><a href="cancelAnimationFrame.html">cancelAnimationFrame</a></li><li data-name="Cartesian2"><a href="Cartesian2.html">Cartesian2</a></li><li data-name="Cartesian3"><a href="Cartesian3.html">Cartesian3</a></li><li data-name="Cartesian4"><a href="Cartesian4.html">Cartesian4</a></li><li data-name="Cartographic"><a href="Cartographic.html">Cartographic</a></li><li data-name="CatmullRomSpline"><a href="CatmullRomSpline.html">CatmullRomSpline</a></li><li data-name="CesiumInspector"><a href="CesiumInspector.html">CesiumInspector</a></li><li data-name="CesiumInspectorViewModel"><a href="CesiumInspectorViewModel.html">CesiumInspectorViewModel</a></li><li data-name="CesiumMath"><a href="CesiumMath.html">CesiumMath</a></li><li data-name="CesiumTerrainProvider"><a href="CesiumTerrainProvider.html">CesiumTerrainProvider</a></li><li data-name="CesiumWidget"><a href="CesiumWidget.html">CesiumWidget</a></li><li data-name="CheckerboardMaterialProperty"><a href="CheckerboardMaterialProperty.html">CheckerboardMaterialProperty</a></li><li data-name="CircleGeometry"><a href="CircleGeometry.html">CircleGeometry</a></li><li data-name="CircleOutlineGeometry"><a href="CircleOutlineGeometry.html">CircleOutlineGeometry</a></li><li data-name="Clock"><a href="Clock.html">Clock</a></li><li data-name="ClockRange"><a href="ClockRange.html">ClockRange</a></li><li data-name="ClockStep"><a href="ClockStep.html">ClockStep</a></li><li data-name="ClockViewModel"><a href="ClockViewModel.html">ClockViewModel</a></li><li data-name="clone"><a href="clone.html">clone</a></li><li data-name="Color"><a href="Color.html">Color</a></li><li data-name="ColorGeometryInstanceAttribute"><a href="ColorGeometryInstanceAttribute.html">ColorGeometryInstanceAttribute</a></li><li data-name="ColorMaterialProperty"><a href="ColorMaterialProperty.html">ColorMaterialProperty</a></li><li data-name="combine"><a href="combine.html">combine</a></li><li data-name="Command"><a href="Command.html">Command</a></li><li data-name="ComponentDatatype"><a href="ComponentDatatype.html">ComponentDatatype</a></li><li data-name="CompositeEntityCollection"><a href="CompositeEntityCollection.html">CompositeEntityCollection</a></li><li data-name="CompositeMaterialProperty"><a href="CompositeMaterialProperty.html">CompositeMaterialProperty</a></li><li data-name="CompositePositionProperty"><a href="CompositePositionProperty.html">CompositePositionProperty</a></li><li data-name="CompositeProperty"><a href="CompositeProperty.html">CompositeProperty</a></li><li data-name="ConstantPositionProperty"><a href="ConstantPositionProperty.html">ConstantPositionProperty</a></li><li data-name="ConstantProperty"><a href="ConstantProperty.html">ConstantProperty</a></li><li data-name="CornerType"><a href="CornerType.html">CornerType</a></li><li data-name="CorridorGeometry"><a href="CorridorGeometry.html">CorridorGeometry</a></li><li data-name="CorridorGeometryUpdater"><a href="CorridorGeometryUpdater.html">CorridorGeometryUpdater</a></li><li data-name="CorridorGraphics"><a href="CorridorGraphics.html">CorridorGraphics</a></li><li data-name="CorridorOutlineGeometry"><a href="CorridorOutlineGeometry.html">CorridorOutlineGeometry</a></li><li data-name="createCommand"><a href="createCommand.html">createCommand</a></li><li data-name="createGuid"><a href="createGuid.html">createGuid</a></li><li data-name="createOpenStreetMapImageryProvider"><a href="createOpenStreetMapImageryProvider.html">createOpenStreetMapImageryProvider</a></li><li data-name="createTangentSpaceDebugPrimitive"><a href="createTangentSpaceDebugPrimitive.html">createTangentSpaceDebugPrimitive</a></li><li data-name="createTaskProcessorWorker"><a href="createTaskProcessorWorker.html">createTaskProcessorWorker</a></li><li data-name="Credit"><a href="Credit.html">Credit</a></li><li data-name="CreditDisplay"><a href="CreditDisplay.html">CreditDisplay</a></li><li data-name="CubicRealPolynomial"><a href="CubicRealPolynomial.html">CubicRealPolynomial</a></li><li data-name="CullFace"><a href="CullFace.html">CullFace</a></li><li data-name="CullingVolume"><a href="CullingVolume.html">CullingVolume</a></li><li data-name="CustomDataSource"><a href="CustomDataSource.html">CustomDataSource</a></li><li data-name="CylinderGeometry"><a href="CylinderGeometry.html">CylinderGeometry</a></li><li data-name="CylinderGeometryUpdater"><a href="CylinderGeometryUpdater.html">CylinderGeometryUpdater</a></li><li data-name="CylinderGraphics"><a href="CylinderGraphics.html">CylinderGraphics</a></li><li data-name="CylinderOutlineGeometry"><a href="CylinderOutlineGeometry.html">CylinderOutlineGeometry</a></li><li data-name="CzmlDataSource"><a href="CzmlDataSource.html">CzmlDataSource</a></li><li data-name="DataSource"><a href="DataSource.html">DataSource</a></li><li data-name="DataSourceClock"><a href="DataSourceClock.html">DataSourceClock</a></li><li data-name="DataSourceCollection"><a href="DataSourceCollection.html">DataSourceCollection</a></li><li data-name="DataSourceDisplay"><a href="DataSourceDisplay.html">DataSourceDisplay</a></li><li data-name="DebugAppearance"><a href="DebugAppearance.html">DebugAppearance</a></li><li data-name="DebugModelMatrixPrimitive"><a href="DebugModelMatrixPrimitive.html">DebugModelMatrixPrimitive</a></li><li data-name="DefaultProxy"><a href="DefaultProxy.html">DefaultProxy</a></li><li data-name="defaultValue"><a href="defaultValue.html">defaultValue</a></li><li data-name="defined"><a href="defined.html">defined</a></li><li data-name="definedNotNull"><a href="definedNotNull.html">definedNotNull</a></li><li data-name="DepthFunction"><a href="DepthFunction.html">DepthFunction</a></li><li data-name="destroyObject"><a href="destroyObject.html">destroyObject</a></li><li data-name="DeveloperError"><a href="DeveloperError.html">DeveloperError</a></li><li data-name="DiscardMissingTileImagePolicy"><a href="DiscardMissingTileImagePolicy.html">DiscardMissingTileImagePolicy</a></li><li data-name="DynamicGeometryUpdater"><a href="DynamicGeometryUpdater.html">DynamicGeometryUpdater</a></li><li data-name="EasingFunction"><a href="EasingFunction.html">EasingFunction</a></li><li data-name="EllipseGeometry"><a href="EllipseGeometry.html">EllipseGeometry</a></li><li data-name="EllipseGeometryUpdater"><a href="EllipseGeometryUpdater.html">EllipseGeometryUpdater</a></li><li data-name="EllipseGraphics"><a href="EllipseGraphics.html">EllipseGraphics</a></li><li data-name="EllipseOutlineGeometry"><a href="EllipseOutlineGeometry.html">EllipseOutlineGeometry</a></li><li data-name="Ellipsoid"><a href="Ellipsoid.html">Ellipsoid</a></li><li data-name="EllipsoidGeodesic"><a href="EllipsoidGeodesic.html">EllipsoidGeodesic</a></li><li data-name="EllipsoidGeometry"><a href="EllipsoidGeometry.html">EllipsoidGeometry</a></li><li data-name="EllipsoidGeometryUpdater"><a href="EllipsoidGeometryUpdater.html">EllipsoidGeometryUpdater</a></li><li data-name="EllipsoidGraphics"><a href="EllipsoidGraphics.html">EllipsoidGraphics</a></li><li data-name="EllipsoidOutlineGeometry"><a href="EllipsoidOutlineGeometry.html">EllipsoidOutlineGeometry</a></li><li data-name="EllipsoidSurfaceAppearance"><a href="EllipsoidSurfaceAppearance.html">EllipsoidSurfaceAppearance</a></li><li data-name="EllipsoidTangentPlane"><a href="EllipsoidTangentPlane.html">EllipsoidTangentPlane</a></li><li data-name="EllipsoidTerrainProvider"><a href="EllipsoidTerrainProvider.html">EllipsoidTerrainProvider</a></li><li data-name="Entity"><a href="Entity.html">Entity</a></li><li data-name="EntityCollection"><a href="EntityCollection.html">EntityCollection</a></li><li data-name="EntityView"><a href="EntityView.html">EntityView</a></li><li data-name="Event"><a href="Event.html">Event</a></li><li data-name="EventHelper"><a href="EventHelper.html">EventHelper</a></li><li data-name="ExtrapolationType"><a href="ExtrapolationType.html">ExtrapolationType</a></li><li data-name="FeatureDetection"><a href="FeatureDetection.html">FeatureDetection</a></li><li data-name="Fog"><a href="Fog.html">Fog</a></li><li data-name="formatError"><a href="formatError.html">formatError</a></li><li data-name="FrameRateMonitor"><a href="FrameRateMonitor.html">FrameRateMonitor</a></li><li data-name="Fullscreen"><a href="Fullscreen.html">Fullscreen</a></li><li data-name="FullscreenButton"><a href="FullscreenButton.html">FullscreenButton</a></li><li data-name="FullscreenButtonViewModel"><a href="FullscreenButtonViewModel.html">FullscreenButtonViewModel</a></li><li data-name="Geocoder"><a href="Geocoder.html">Geocoder</a></li><li data-name="GeocoderViewModel"><a href="GeocoderViewModel.html">GeocoderViewModel</a></li><li data-name="GeographicProjection"><a href="GeographicProjection.html">GeographicProjection</a></li><li data-name="GeographicTilingScheme"><a href="GeographicTilingScheme.html">GeographicTilingScheme</a></li><li data-name="GeoJsonDataSource"><a href="GeoJsonDataSource.html">GeoJsonDataSource</a></li><li data-name="Geometry"><a href="Geometry.html">Geometry</a></li><li data-name="GeometryAttribute"><a href="GeometryAttribute.html">GeometryAttribute</a></li><li data-name="GeometryAttributes"><a href="GeometryAttributes.html">GeometryAttributes</a></li><li data-name="GeometryInstance"><a href="GeometryInstance.html">GeometryInstance</a></li><li data-name="GeometryInstanceAttribute"><a href="GeometryInstanceAttribute.html">GeometryInstanceAttribute</a></li><li data-name="GeometryPipeline"><a href="GeometryPipeline.html">GeometryPipeline</a></li><li data-name="GeometryUpdater"><a href="GeometryUpdater.html">GeometryUpdater</a></li><li data-name="GeometryVisualizer"><a href="GeometryVisualizer.html">GeometryVisualizer</a></li><li data-name="getBaseUri"><a href="getBaseUri.html">getBaseUri</a></li><li data-name="GetFeatureInfoFormat"><a href="GetFeatureInfoFormat.html">GetFeatureInfoFormat</a></li><li data-name="getFilenameFromUri"><a href="getFilenameFromUri.html">getFilenameFromUri</a></li><li data-name="getImagePixels"><a href="getImagePixels.html">getImagePixels</a></li><li data-name="getTimestamp"><a href="getTimestamp.html">getTimestamp</a></li><li data-name="Globe"><a href="Globe.html">Globe</a></li><li data-name="GoogleEarthImageryProvider"><a href="GoogleEarthImageryProvider.html">GoogleEarthImageryProvider</a></li><li data-name="GregorianDate"><a href="GregorianDate.html">GregorianDate</a></li><li data-name="GridImageryProvider"><a href="GridImageryProvider.html">GridImageryProvider</a></li><li data-name="GridMaterialProperty"><a href="GridMaterialProperty.html">GridMaterialProperty</a></li><li data-name="GroundPrimitive"><a href="GroundPrimitive.html">GroundPrimitive</a></li><li data-name="HeadingPitchRange"><a href="HeadingPitchRange.html">HeadingPitchRange</a></li><li data-name="HeightmapTerrainData"><a href="HeightmapTerrainData.html">HeightmapTerrainData</a></li><li data-name="HeightmapTessellator"><a href="HeightmapTessellator.html">HeightmapTessellator</a></li><li data-name="HeightReference"><a href="HeightReference.html">HeightReference</a></li><li data-name="HermitePolynomialApproximation"><a href="HermitePolynomialApproximation.html">HermitePolynomialApproximation</a></li><li data-name="HermiteSpline"><a href="HermiteSpline.html">HermiteSpline</a></li><li data-name="HomeButton"><a href="HomeButton.html">HomeButton</a></li><li data-name="HomeButtonViewModel"><a href="HomeButtonViewModel.html">HomeButtonViewModel</a></li><li data-name="HorizontalOrigin"><a href="HorizontalOrigin.html">HorizontalOrigin</a></li><li data-name="ImageMaterialProperty"><a href="ImageMaterialProperty.html">ImageMaterialProperty</a></li><li data-name="ImageryLayer"><a href="ImageryLayer.html">ImageryLayer</a></li><li data-name="ImageryLayerCollection"><a href="ImageryLayerCollection.html">ImageryLayerCollection</a></li><li data-name="ImageryLayerFeatureInfo"><a href="ImageryLayerFeatureInfo.html">ImageryLayerFeatureInfo</a></li><li data-name="ImageryProvider"><a href="ImageryProvider.html">ImageryProvider</a></li><li data-name="IndexDatatype"><a href="IndexDatatype.html">IndexDatatype</a></li><li data-name="InfoBox"><a href="InfoBox.html">InfoBox</a></li><li data-name="InfoBoxViewModel"><a href="InfoBoxViewModel.html">InfoBoxViewModel</a></li><li data-name="InterpolationAlgorithm"><a href="InterpolationAlgorithm.html">InterpolationAlgorithm</a></li><li data-name="Intersect"><a href="Intersect.html">Intersect</a></li><li data-name="Intersections2D"><a href="Intersections2D.html">Intersections2D</a></li><li data-name="IntersectionTests"><a href="IntersectionTests.html">IntersectionTests</a></li><li data-name="Interval"><a href="Interval.html">Interval</a></li><li data-name="isArray"><a href="isArray.html">isArray</a></li><li data-name="isLeapYear"><a href="isLeapYear.html">isLeapYear</a></li><li data-name="Iso8601"><a href="Iso8601.html">Iso8601</a></li><li data-name="jsonp"><a href="jsonp.html">jsonp</a></li><li data-name="JulianDate"><a href="JulianDate.html">JulianDate</a></li><li data-name="KeyboardEventModifier"><a href="KeyboardEventModifier.html">KeyboardEventModifier</a></li><li data-name="KmlDataSource"><a href="KmlDataSource.html">KmlDataSource</a></li><li data-name="KmlFeatureData"><a href="KmlFeatureData.html">KmlFeatureData</a></li><li data-name="Label"><a href="Label.html">Label</a></li><li data-name="LabelCollection"><a href="LabelCollection.html">LabelCollection</a></li><li data-name="LabelGraphics"><a href="LabelGraphics.html">LabelGraphics</a></li><li data-name="LabelStyle"><a href="LabelStyle.html">LabelStyle</a></li><li data-name="LabelVisualizer"><a href="LabelVisualizer.html">LabelVisualizer</a></li><li data-name="LagrangePolynomialApproximation"><a href="LagrangePolynomialApproximation.html">LagrangePolynomialApproximation</a></li><li data-name="LeapSecond"><a href="LeapSecond.html">LeapSecond</a></li><li data-name="LinearApproximation"><a href="LinearApproximation.html">LinearApproximation</a></li><li data-name="LinearSpline"><a href="LinearSpline.html">LinearSpline</a></li><li data-name="loadArrayBuffer"><a href="loadArrayBuffer.html">loadArrayBuffer</a></li><li data-name="loadBlob"><a href="loadBlob.html">loadBlob</a></li><li data-name="loadImage"><a href="loadImage.html">loadImage</a></li><li data-name="loadImageViaBlob"><a href="loadImageViaBlob.html">loadImageViaBlob</a></li><li data-name="loadJson"><a href="loadJson.html">loadJson</a></li><li data-name="loadJsonp"><a href="loadJsonp.html">loadJsonp</a></li><li data-name="loadText"><a href="loadText.html">loadText</a></li><li data-name="loadWithXhr"><a href="loadWithXhr.html">loadWithXhr</a></li><li data-name="loadXML"><a href="loadXML.html">loadXML</a></li><li data-name="MapboxImageryProvider"><a href="MapboxImageryProvider.html">MapboxImageryProvider</a></li><li data-name="MapProjection"><a href="MapProjection.html">MapProjection</a></li><li data-name="Material"><a href="Material.html">Material</a></li><li data-name="MaterialAppearance"><a href="MaterialAppearance.html">MaterialAppearance</a></li><li data-name="MaterialProperty"><a href="MaterialProperty.html">MaterialProperty</a></li><li data-name="Matrix2"><a href="Matrix2.html">Matrix2</a></li><li data-name="Matrix3"><a href="Matrix3.html">Matrix3</a></li><li data-name="Matrix4"><a href="Matrix4.html">Matrix4</a></li><li data-name="mergeSort"><a href="mergeSort.html">mergeSort</a></li><li data-name="Model"><a href="Model.html">Model</a></li><li data-name="ModelAnimation"><a href="ModelAnimation.html">ModelAnimation</a></li><li data-name="ModelAnimationCollection"><a href="ModelAnimationCollection.html">ModelAnimationCollection</a></li><li data-name="ModelAnimationLoop"><a href="ModelAnimationLoop.html">ModelAnimationLoop</a></li><li data-name="ModelGraphics"><a href="ModelGraphics.html">ModelGraphics</a></li><li data-name="ModelMaterial"><a href="ModelMaterial.html">ModelMaterial</a></li><li data-name="ModelMesh"><a href="ModelMesh.html">ModelMesh</a></li><li data-name="ModelNode"><a href="ModelNode.html">ModelNode</a></li><li data-name="ModelVisualizer"><a href="ModelVisualizer.html">ModelVisualizer</a></li><li data-name="Moon"><a href="Moon.html">Moon</a></li><li data-name="NavigationHelpButton"><a href="NavigationHelpButton.html">NavigationHelpButton</a></li><li data-name="NavigationHelpButtonViewModel"><a href="NavigationHelpButtonViewModel.html">NavigationHelpButtonViewModel</a></li><li data-name="NearFarScalar"><a href="NearFarScalar.html">NearFarScalar</a></li><li data-name="NeverTileDiscardPolicy"><a href="NeverTileDiscardPolicy.html">NeverTileDiscardPolicy</a></li><li data-name="objectToQuery"><a href="objectToQuery.html">objectToQuery</a></li><li data-name="Occluder"><a href="Occluder.html">Occluder</a></li><li data-name="OpenStreetMapImageryProvider"><a href="OpenStreetMapImageryProvider.html">OpenStreetMapImageryProvider</a></li><li data-name="OrientedBoundingBox"><a href="OrientedBoundingBox.html">OrientedBoundingBox</a></li><li data-name="OrthographicFrustum"><a href="OrthographicFrustum.html">OrthographicFrustum</a></li><li data-name="Packable"><a href="Packable.html">Packable</a></li><li data-name="PackableForInterpolation"><a href="PackableForInterpolation.html">PackableForInterpolation</a></li><li data-name="PathGraphics"><a href="PathGraphics.html">PathGraphics</a></li><li data-name="PathVisualizer"><a href="PathVisualizer.html">PathVisualizer</a></li><li data-name="PerformanceWatchdog"><a href="PerformanceWatchdog.html">PerformanceWatchdog</a></li><li data-name="PerformanceWatchdogViewModel"><a href="PerformanceWatchdogViewModel.html">PerformanceWatchdogViewModel</a></li><li data-name="PerInstanceColorAppearance"><a href="PerInstanceColorAppearance.html">PerInstanceColorAppearance</a></li><li data-name="PerspectiveFrustum"><a href="PerspectiveFrustum.html">PerspectiveFrustum</a></li><li data-name="PerspectiveOffCenterFrustum"><a href="PerspectiveOffCenterFrustum.html">PerspectiveOffCenterFrustum</a></li><li data-name="PinBuilder"><a href="PinBuilder.html">PinBuilder</a></li><li data-name="PixelFormat"><a href="PixelFormat.html">PixelFormat</a></li><li data-name="Plane"><a href="Plane.html">Plane</a></li><li data-name="PointGraphics"><a href="PointGraphics.html">PointGraphics</a></li><li data-name="pointInsideTriangle"><a href="pointInsideTriangle.html">pointInsideTriangle</a></li><li data-name="PointPrimitive"><a href="PointPrimitive.html">PointPrimitive</a></li><li data-name="PointPrimitiveCollection"><a href="PointPrimitiveCollection.html">PointPrimitiveCollection</a></li><li data-name="PointVisualizer"><a href="PointVisualizer.html">PointVisualizer</a></li><li data-name="PolygonGeometry"><a href="PolygonGeometry.html">PolygonGeometry</a></li><li data-name="PolygonGeometryUpdater"><a href="PolygonGeometryUpdater.html">PolygonGeometryUpdater</a></li><li data-name="PolygonGraphics"><a href="PolygonGraphics.html">PolygonGraphics</a></li><li data-name="PolygonHierarchy"><a href="PolygonHierarchy.html">PolygonHierarchy</a></li><li data-name="PolygonOutlineGeometry"><a href="PolygonOutlineGeometry.html">PolygonOutlineGeometry</a></li><li data-name="Polyline"><a href="Polyline.html">Polyline</a></li><li data-name="PolylineArrowMaterialProperty"><a href="PolylineArrowMaterialProperty.html">PolylineArrowMaterialProperty</a></li><li data-name="PolylineCollection"><a href="PolylineCollection.html">PolylineCollection</a></li><li data-name="PolylineColorAppearance"><a href="PolylineColorAppearance.html">PolylineColorAppearance</a></li><li data-name="PolylineGeometry"><a href="PolylineGeometry.html">PolylineGeometry</a></li><li data-name="PolylineGeometryUpdater"><a href="PolylineGeometryUpdater.html">PolylineGeometryUpdater</a></li><li data-name="PolylineGlowMaterialProperty"><a href="PolylineGlowMaterialProperty.html">PolylineGlowMaterialProperty</a></li><li data-name="PolylineGraphics"><a href="PolylineGraphics.html">PolylineGraphics</a></li><li data-name="PolylineMaterialAppearance"><a href="PolylineMaterialAppearance.html">PolylineMaterialAppearance</a></li><li data-name="PolylineOutlineMaterialProperty"><a href="PolylineOutlineMaterialProperty.html">PolylineOutlineMaterialProperty</a></li><li data-name="PolylineVolumeGeometry"><a href="PolylineVolumeGeometry.html">PolylineVolumeGeometry</a></li><li data-name="PolylineVolumeGeometryUpdater"><a href="PolylineVolumeGeometryUpdater.html">PolylineVolumeGeometryUpdater</a></li><li data-name="PolylineVolumeGraphics"><a href="PolylineVolumeGraphics.html">PolylineVolumeGraphics</a></li><li data-name="PolylineVolumeOutlineGeometry"><a href="PolylineVolumeOutlineGeometry.html">PolylineVolumeOutlineGeometry</a></li><li data-name="PositionProperty"><a href="PositionProperty.html">PositionProperty</a></li><li data-name="PositionPropertyArray"><a href="PositionPropertyArray.html">PositionPropertyArray</a></li><li data-name="Primitive"><a href="Primitive.html">Primitive</a></li><li data-name="PrimitiveCollection"><a href="PrimitiveCollection.html">PrimitiveCollection</a></li><li data-name="PrimitiveType"><a href="PrimitiveType.html">PrimitiveType</a></li><li data-name="Property"><a href="Property.html">Property</a></li><li data-name="PropertyArray"><a href="PropertyArray.html">PropertyArray</a></li><li data-name="ProviderViewModel"><a href="ProviderViewModel.html">ProviderViewModel</a></li><li data-name="QuadraticRealPolynomial"><a href="QuadraticRealPolynomial.html">QuadraticRealPolynomial</a></li><li data-name="QuantizedMeshTerrainData"><a href="QuantizedMeshTerrainData.html">QuantizedMeshTerrainData</a></li><li data-name="QuarticRealPolynomial"><a href="QuarticRealPolynomial.html">QuarticRealPolynomial</a></li><li data-name="Quaternion"><a href="Quaternion.html">Quaternion</a></li><li data-name="QuaternionSpline"><a href="QuaternionSpline.html">QuaternionSpline</a></li><li data-name="queryToObject"><a href="queryToObject.html">queryToObject</a></li><li data-name="Queue"><a href="Queue.html">Queue</a></li><li data-name="Ray"><a href="Ray.html">Ray</a></li><li data-name="Rectangle"><a href="Rectangle.html">Rectangle</a></li><li data-name="RectangleGeometry"><a href="RectangleGeometry.html">RectangleGeometry</a></li><li data-name="RectangleGeometryUpdater"><a href="RectangleGeometryUpdater.html">RectangleGeometryUpdater</a></li><li data-name="RectangleGraphics"><a href="RectangleGraphics.html">RectangleGraphics</a></li><li data-name="RectangleOutlineGeometry"><a href="RectangleOutlineGeometry.html">RectangleOutlineGeometry</a></li><li data-name="ReferenceFrame"><a href="ReferenceFrame.html">ReferenceFrame</a></li><li data-name="ReferenceProperty"><a href="ReferenceProperty.html">ReferenceProperty</a></li><li data-name="requestAnimationFrame"><a href="requestAnimationFrame.html">requestAnimationFrame</a></li><li data-name="RequestErrorEvent"><a href="RequestErrorEvent.html">RequestErrorEvent</a></li><li data-name="Rotation"><a href="Rotation.html">Rotation</a></li><li data-name="RuntimeError"><a href="RuntimeError.html">RuntimeError</a></li><li data-name="SampledPositionProperty"><a href="SampledPositionProperty.html">SampledPositionProperty</a></li><li data-name="SampledProperty"><a href="SampledProperty.html">SampledProperty</a></li><li data-name="sampleTerrain"><a href="sampleTerrain.html">sampleTerrain</a></li><li data-name="Scene"><a href="Scene.html">Scene</a></li><li data-name="SceneMode"><a href="SceneMode.html">SceneMode</a></li><li data-name="SceneModePicker"><a href="SceneModePicker.html">SceneModePicker</a></li><li data-name="SceneModePickerViewModel"><a href="SceneModePickerViewModel.html">SceneModePickerViewModel</a></li><li data-name="SceneTransforms"><a href="SceneTransforms.html">SceneTransforms</a></li><li data-name="ScreenSpaceCameraController"><a href="ScreenSpaceCameraController.html">ScreenSpaceCameraController</a></li><li data-name="ScreenSpaceEventHandler"><a href="ScreenSpaceEventHandler.html">ScreenSpaceEventHandler</a></li><li data-name="ScreenSpaceEventType"><a href="ScreenSpaceEventType.html">ScreenSpaceEventType</a></li><li data-name="SelectionIndicator"><a href="SelectionIndicator.html">SelectionIndicator</a></li><li data-name="SelectionIndicatorViewModel"><a href="SelectionIndicatorViewModel.html">SelectionIndicatorViewModel</a></li><li data-name="ShowGeometryInstanceAttribute"><a href="ShowGeometryInstanceAttribute.html">ShowGeometryInstanceAttribute</a></li><li data-name="Simon1994PlanetaryPositions"><a href="Simon1994PlanetaryPositions.html">Simon1994PlanetaryPositions</a></li><li data-name="SimplePolylineGeometry"><a href="SimplePolylineGeometry.html">SimplePolylineGeometry</a></li><li data-name="SingleTileImageryProvider"><a href="SingleTileImageryProvider.html">SingleTileImageryProvider</a></li><li data-name="SkyAtmosphere"><a href="SkyAtmosphere.html">SkyAtmosphere</a></li><li data-name="SkyBox"><a href="SkyBox.html">SkyBox</a></li><li data-name="SphereGeometry"><a href="SphereGeometry.html">SphereGeometry</a></li><li data-name="SphereOutlineGeometry"><a href="SphereOutlineGeometry.html">SphereOutlineGeometry</a></li><li data-name="Spherical"><a href="Spherical.html">Spherical</a></li><li data-name="Spline"><a href="Spline.html">Spline</a></li><li data-name="StencilFunction"><a href="StencilFunction.html">StencilFunction</a></li><li data-name="StencilOperation"><a href="StencilOperation.html">StencilOperation</a></li><li data-name="StripeMaterialProperty"><a href="StripeMaterialProperty.html">StripeMaterialProperty</a></li><li data-name="StripeOrientation"><a href="StripeOrientation.html">StripeOrientation</a></li><li data-name="subdivideArray"><a href="subdivideArray.html">subdivideArray</a></li><li data-name="Sun"><a href="Sun.html">Sun</a></li><li data-name="SvgPathBindingHandler"><a href="SvgPathBindingHandler.html">SvgPathBindingHandler</a></li><li data-name="TaskProcessor"><a href="TaskProcessor.html">TaskProcessor</a></li><li data-name="TerrainData"><a href="TerrainData.html">TerrainData</a></li><li data-name="TerrainMesh"><a href="TerrainMesh.html">TerrainMesh</a></li><li data-name="TerrainProvider"><a href="TerrainProvider.html">TerrainProvider</a></li><li data-name="throttleRequestByServer"><a href="throttleRequestByServer.html">throttleRequestByServer</a></li><li data-name="TileCoordinatesImageryProvider"><a href="TileCoordinatesImageryProvider.html">TileCoordinatesImageryProvider</a></li><li data-name="TileDiscardPolicy"><a href="TileDiscardPolicy.html">TileDiscardPolicy</a></li><li data-name="TileMapServiceImageryProvider"><a href="TileMapServiceImageryProvider.html">TileMapServiceImageryProvider</a></li><li data-name="TileProviderError"><a href="TileProviderError.html">TileProviderError</a></li><li data-name="TilingScheme"><a href="TilingScheme.html">TilingScheme</a></li><li data-name="TimeInterval"><a href="TimeInterval.html">TimeInterval</a></li><li data-name="TimeIntervalCollection"><a href="TimeIntervalCollection.html">TimeIntervalCollection</a></li><li data-name="TimeIntervalCollectionPositionProperty"><a href="TimeIntervalCollectionPositionProperty.html">TimeIntervalCollectionPositionProperty</a></li><li data-name="TimeIntervalCollectionProperty"><a href="TimeIntervalCollectionProperty.html">TimeIntervalCollectionProperty</a></li><li data-name="Timeline"><a href="Timeline.html">Timeline</a></li><li data-name="TimeStandard"><a href="TimeStandard.html">TimeStandard</a></li><li data-name="ToggleButtonViewModel"><a href="ToggleButtonViewModel.html">ToggleButtonViewModel</a></li><li data-name="Transforms"><a href="Transforms.html">Transforms</a></li><li data-name="TridiagonalSystemSolver"><a href="TridiagonalSystemSolver.html">TridiagonalSystemSolver</a></li><li data-name="UrlTemplateImageryProvider"><a href="UrlTemplateImageryProvider.html">UrlTemplateImageryProvider</a></li><li data-name="VelocityOrientationProperty"><a href="VelocityOrientationProperty.html">VelocityOrientationProperty</a></li><li data-name="VertexFormat"><a href="VertexFormat.html">VertexFormat</a></li><li data-name="VerticalOrigin"><a href="VerticalOrigin.html">VerticalOrigin</a></li><li data-name="VideoSynchronizer"><a href="VideoSynchronizer.html">VideoSynchronizer</a></li><li data-name="Viewer"><a href="Viewer.html">Viewer</a></li><li data-name="viewerCesiumInspectorMixin"><a href="viewerCesiumInspectorMixin.html">viewerCesiumInspectorMixin</a></li><li data-name="viewerDragDropMixin"><a href="viewerDragDropMixin.html">viewerDragDropMixin</a></li><li data-name="viewerPerformanceWatchdogMixin"><a href="viewerPerformanceWatchdogMixin.html">viewerPerformanceWatchdogMixin</a></li><li data-name="ViewportQuad"><a href="ViewportQuad.html">ViewportQuad</a></li><li data-name="Visibility"><a href="Visibility.html">Visibility</a></li><li data-name="Visualizer"><a href="Visualizer.html">Visualizer</a></li><li data-name="VRTheWorldTerrainProvider"><a href="VRTheWorldTerrainProvider.html">VRTheWorldTerrainProvider</a></li><li data-name="WallGeometry"><a href="WallGeometry.html">WallGeometry</a></li><li data-name="WallGeometryUpdater"><a href="WallGeometryUpdater.html">WallGeometryUpdater</a></li><li data-name="WallGraphics"><a href="WallGraphics.html">WallGraphics</a></li><li data-name="WallOutlineGeometry"><a href="WallOutlineGeometry.html">WallOutlineGeometry</a></li><li data-name="WebMapServiceImageryProvider"><a href="WebMapServiceImageryProvider.html">WebMapServiceImageryProvider</a></li><li data-name="WebMapTileServiceImageryProvider"><a href="WebMapTileServiceImageryProvider.html">WebMapTileServiceImageryProvider</a></li><li data-name="WebMercatorProjection"><a href="WebMercatorProjection.html">WebMercatorProjection</a></li><li data-name="WebMercatorTilingScheme"><a href="WebMercatorTilingScheme.html">WebMercatorTilingScheme</a></li><li data-name="WindingOrder"><a href="WindingOrder.html">WindingOrder</a></li></ul>
+    </div>
 </div>
-
-<br clear="both">
 
 <script>
 if (window.frameElement) {
@@ -11771,15 +11608,6 @@ if (window.frameElement) {
     ele.href = window.location.href;
     ele.title = 'Pop out';
     document.getElementById('main').appendChild(ele);
-
-    ele = document.createElement('a');
-    ele.className = 'back';
-    ele.href = 'index.html';
-    ele.title = 'Home';
-    ele.target = '_self';
-    document.getElementById('main').appendChild(ele);
-} else {
-    document.getElementById('bkgd').className = 'show-bkgd';
 }
 
 // Set targets on external links.  Sandcastle and GitHub shouldn't be embedded in any iframe.
