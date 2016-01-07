@@ -191,7 +191,9 @@
 
     
     <div class="description">
-        Fills an array of vertices from a heightmap image.  On return, the vertex data is in the order[X, Y, Z, H, U, V], where X, Y, and Z represent the Cartesian position of the vertex, H is theheight above the ellipsoid, and U and V are the texture coordinates.
+        Fills an array of vertices from a heightmap image.  On return, the vertex data is in the order
+[X, Y, Z, H, U, V], where X, Y, and Z represent the Cartesian position of the vertex, H is the
+height above the ellipsoid, and U and V are the texture coordinates.
     </div>
     
 
@@ -293,7 +295,12 @@
 
                 
             
-                The array to use to store computed vertices.                            If options.skirtHeight is 0.0, the array should have                            options.width * options.height * 6 elements.  If                            options.skirtHeight is greater than 0.0, the array should                            have (options.width + 2) * (options.height * 2) * 6                            elements.</td>
+                The array to use to store computed vertices.
+                            If options.skirtHeight is 0.0, the array should have
+                            options.width * options.height * 6 elements.  If
+                            options.skirtHeight is greater than 0.0, the array should
+                            have (options.width + 2) * (options.height * 2) * 6
+                            elements.</td>
         </tr>
 
     
@@ -453,7 +460,9 @@
 
                 
             
-                An rectangle in the native coordinates of the heightmap's projection.  For                a heightmap with a geographic projection, this is degrees.  For the web mercator                projection, this is meters.</td>
+                An rectangle in the native coordinates of the heightmap's projection.  For
+                a heightmap with a geographic projection, this is degrees.  For the web mercator
+                projection, this is meters.</td>
         </tr>
 
     
@@ -523,7 +532,9 @@
 
                 
             
-                The rectangle covered by the heightmap, in geodetic coordinates with north, south, east and                west properties in radians.  Either rectangle or nativeRectangle must be provided.  If both                are provided, they're assumed to be consistent.</td>
+                The rectangle covered by the heightmap, in geodetic coordinates with north, south, east and
+                west properties in radians.  Either rectangle or nativeRectangle must be provided.  If both
+                are provided, they're assumed to be consistent.</td>
         </tr>
 
     
@@ -559,7 +570,8 @@
 
                 
             
-                True if the heightmap uses a <a href="GeographicProjection.html"><code>GeographicProjection</code></a>, or false if it uses                 a <a href="WebMercatorProjection.html"><code>WebMercatorProjection</code></a>.</td>
+                True if the heightmap uses a <a href="GeographicProjection.html"><code>GeographicProjection</code></a>, or false if it uses
+                 a <a href="WebMercatorProjection.html"><code>WebMercatorProjection</code></a>.</td>
         </tr>
 
     
@@ -719,7 +731,9 @@
 
                 
             
-                The factor by which to multiply height samples in order to obtain                the height above the heightOffset, in meters.  The heightOffset is added to the resulting                height after multiplying by the scale.</td>
+                The factor by which to multiply height samples in order to obtain
+                the height above the heightOffset, in meters.  The heightOffset is added to the resulting
+                height after multiplying by the scale.</td>
         </tr>
 
     
@@ -755,7 +769,9 @@
 
                 
             
-                The offset to add to the scaled height to obtain the final                height in meters.  The offset is added after the height sample is multiplied by the                heightScale.</td>
+                The offset to add to the scaled height to obtain the final
+                height in meters.  The offset is added after the height sample is multiplied by the
+                heightScale.</td>
         </tr>
 
     
@@ -791,7 +807,10 @@
 
                 
             
-                The number of elements in the buffer that make up a single height                sample.  This is usually 1, indicating that each element is a separate height sample.  If                it is greater than 1, that number of elements together form the height sample, which is                computed according to the structure.elementMultiplier and structure.isBigEndian properties.</td>
+                The number of elements in the buffer that make up a single height
+                sample.  This is usually 1, indicating that each element is a separate height sample.  If
+                it is greater than 1, that number of elements together form the height sample, which is
+                computed according to the structure.elementMultiplier and structure.isBigEndian properties.</td>
         </tr>
 
     
@@ -827,7 +846,8 @@
 
                 
             
-                The number of elements to skip to get from the first element of                one height to the first element of the next height.</td>
+                The number of elements to skip to get from the first element of
+                one height to the first element of the next height.</td>
         </tr>
 
     
@@ -863,7 +883,12 @@
 
                 
             
-                The multiplier used to compute the height value when the                stride property is greater than 1.  For example, if the stride is 4 and the strideMultiplier                is 256, the height is computed as follows:                `height = buffer[index] + buffer[index + 1] * 256 + buffer[index + 2] * 256 * 256 + buffer[index + 3] * 256 * 256 * 256`                This is assuming that the isBigEndian property is false.  If it is true, the order of the                elements is reversed.</td>
+                The multiplier used to compute the height value when the
+                stride property is greater than 1.  For example, if the stride is 4 and the strideMultiplier
+                is 256, the height is computed as follows:
+                `height = buffer[index] + buffer[index + 1] * 256 + buffer[index + 2] * 256 * 256 + buffer[index + 3] * 256 * 256 * 256`
+                This is assuming that the isBigEndian property is false.  If it is true, the order of the
+                elements is reversed.</td>
         </tr>
 
     
@@ -899,7 +924,9 @@
 
                 
             
-                Indicates endianness of the elements in the buffer when the                 stride property is greater than 1.  If this property is false, the first element is the                 low-order element.  If it is true, the first element is the high-order element.</td>
+                Indicates endianness of the elements in the buffer when the
+                 stride property is greater than 1.  If this property is false, the first element is the
+                 low-order element.  If it is true, the first element is the high-order element.</td>
         </tr>
 
     
@@ -954,7 +981,22 @@
     
         <h5>Example:</h5>
         
-    <pre><code class="language-javascript">var width = 5;var height = 5;var vertices = new Float32Array(width * height * 6);Cesium.HeightmapTessellator.computeVertices({    vertices : vertices,    heightmap : [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0],    width : width,    height : height,    skirtHeight : 0.0,    nativeRectangle : {        west : 10.0,        east : 20.0,        south : 30.0,        north : 40.0    }});</code></pre>
+    <pre><code class="language-javascript">var width = 5;
+var height = 5;
+var vertices = new Float32Array(width * height * 6);
+Cesium.HeightmapTessellator.computeVertices({
+    vertices : vertices,
+    heightmap : [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0],
+    width : width,
+    height : height,
+    skirtHeight : 0.0,
+    nativeRectangle : {
+        west : 10.0,
+        east : 20.0,
+        south : 30.0,
+        north : 40.0
+    }
+});</code></pre>
 
     
 
