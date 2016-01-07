@@ -60,7 +60,8 @@
 
     
     <div class="description">
-        A mesh plus related metadata for a single tile of terrain.  Instances of this type areusually created from raw <a href="TerrainData.html"><code>TerrainData</code></a>.
+        A mesh plus related metadata for a single tile of terrain.  Instances of this type are
+usually created from raw <a href="TerrainData.html"><code>TerrainData</code></a>.
     </div>
     
 
@@ -152,7 +153,10 @@
 
                 
             
-                The vertex data, including positions, texture coordinates, and heights.                      The vertex data is in the order [X, Y, Z, H, U, V], where X, Y, and Z represent                      the Cartesian position of the vertex, H is the height above the ellipsoid, and                      U and V are the texture coordinates.</td>
+                The vertex data, including positions, texture coordinates, and heights.
+                      The vertex data is in the order [X, Y, Z, H, U, V], where X, Y, and Z represent
+                      the Cartesian position of the vertex, H is the height above the ellipsoid, and
+                      U and V are the texture coordinates.</td>
         </tr>
 
     
@@ -315,7 +319,9 @@
 
                 
             
-                The occludee point of the tile, represented in ellipsoid-                    scaled space, and used for horizon culling.  If this point is below the horizon,                    the tile is considered to be entirely below the horizon.</td>
+                The occludee point of the tile, represented in ellipsoid-
+                    scaled space, and used for horizon culling.  If this point is below the horizon,
+                    the tile is considered to be entirely below the horizon.</td>
         </tr>
 
     
@@ -790,7 +796,9 @@
 <dd>
     
     <div class="description">
-        The occludee point of the tile, represented in ellipsoid-scaled space, and used for horizon culling.  If this point is below the horizon,the tile is considered to be entirely below the horizon.
+        The occludee point of the tile, represented in ellipsoid-
+scaled space, and used for horizon culling.  If this point is below the horizon,
+the tile is considered to be entirely below the horizon.
     </div>
     
 
@@ -914,7 +922,9 @@
 <dd>
     
     <div class="description">
-        The number of components in each vertex.  Typically this is 6 for the 6 components[X, Y, Z, H, U, V], but if each vertex has additional data (such as a vertex normal), this valuemay be higher.
+        The number of components in each vertex.  Typically this is 6 for the 6 components
+[X, Y, Z, H, U, V], but if each vertex has additional data (such as a vertex normal), this value
+may be higher.
     </div>
     
 
@@ -976,7 +986,11 @@
 <dd>
     
     <div class="description">
-        The vertex data, including positions, texture coordinates, and heights.The vertex data is in the order [X, Y, Z, H, U, V], where X, Y, and Z representthe Cartesian position of the vertex, H is the height above the ellipsoid, andU and V are the texture coordinates.  The vertex data may have additional attributes after thosementioned above when the <a href="TerrainMesh.html#stride"><code>TerrainMesh#stride</code></a> is greater than 6.
+        The vertex data, including positions, texture coordinates, and heights.
+The vertex data is in the order [X, Y, Z, H, U, V], where X, Y, and Z represent
+the Cartesian position of the vertex, H is the height above the ellipsoid, and
+U and V are the texture coordinates.  The vertex data may have additional attributes after those
+mentioned above when the <a href="TerrainMesh.html#stride"><code>TerrainMesh#stride</code></a> is greater than 6.
     </div>
     
 

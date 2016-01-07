@@ -37,9 +37,9 @@ define('Core/defined',[],function() {
      *      doSomethingElse();
      * }
      */
-    var defined = function(value) {
+    function defined(value) {
         return value !== undefined;
-    };
+    }
 
     return defined;
 });
@@ -89,12 +89,12 @@ define('Core/defaultValue',[
      * @example
      * param = Cesium.defaultValue(param, 'default');
      */
-    var defaultValue = function(a, b) {
+    function defaultValue(a, b) {
         if (a !== undefined) {
             return a;
         }
         return b;
-    };
+    }
 
     /**
      * A frozen empty object that can be used as the default value for options passed as
@@ -104,6 +104,7 @@ define('Core/defaultValue',[
 
     return defaultValue;
 });
+
 /*global define*/
 define('Core/DeveloperError',[
         './defined'
@@ -128,7 +129,7 @@ define('Core/DeveloperError',[
      *
      * @see RuntimeError
      */
-    var DeveloperError = function(message) {
+    function DeveloperError(message) {
         /**
          * 'DeveloperError' indicating that this exception was thrown due to a developer error.
          * @type {String}
@@ -157,7 +158,7 @@ define('Core/DeveloperError',[
          * @readonly
          */
         this.stack = stack;
-    };
+    }
 
     DeveloperError.prototype.toString = function() {
         var str = this.name + ': ' + this.message;
@@ -398,8 +399,7 @@ define('Core/Math',[
     /**
      * Math functions.
      *
-     * @namespace
-     * @alias CesiumMath
+     * @exports CesiumMath
      */
     var CesiumMath = {};
 
@@ -934,11 +934,12 @@ define('Core/Math',[
      *
      * @exception {DeveloperError} A number greater than or equal to 0 is required.
      *
-     * @see {@link http://en.wikipedia.org/wiki/Factorial|Factorial on Wikipedia}
      *
      * @example
      * //Compute 7!, which is equal to 5040
      * var computedFactorial = Cesium.Math.factorial(7);
+     * 
+     * @see {@link http://en.wikipedia.org/wiki/Factorial|Factorial on Wikipedia}
      */
     CesiumMath.factorial = function(n) {
                 if (typeof n !== 'number' || n < 0) {
@@ -1171,7 +1172,7 @@ define('Core/Cartesian3',[
      * @see Cartesian4
      * @see Packable
      */
-    var Cartesian3 = function(x, y, z) {
+    function Cartesian3(x, y, z) {
         /**
          * The X component.
          * @type {Number}
@@ -1192,7 +1193,7 @@ define('Core/Cartesian3',[
          * @default 0.0
          */
         this.z = defaultValue(z, 0.0);
-    };
+    }
 
     /**
      * Converts the provided Spherical into Cartesian3 coordinates.
@@ -2185,7 +2186,7 @@ define('Core/scaleToGeodeticSurface',[
      *
      * @private
      */
-    var scaleToGeodeticSurface = function(cartesian, oneOverRadii, oneOverRadiiSquared, centerToleranceSquared, result) {
+    function scaleToGeodeticSurface(cartesian, oneOverRadii, oneOverRadiiSquared, centerToleranceSquared, result) {
                 if (!defined(cartesian)) {
             throw new DeveloperError('cartesian is required.');
         }
@@ -2283,7 +2284,7 @@ define('Core/scaleToGeodeticSurface',[
         result.y = positionY * yMultiplier;
         result.z = positionZ * zMultiplier;
         return result;
-    };
+    }
 
     return scaleToGeodeticSurface;
 });
@@ -2318,7 +2319,7 @@ define('Core/Cartographic',[
      *
      * @see Ellipsoid
      */
-    var Cartographic = function(longitude, latitude, height) {
+    function Cartographic(longitude, latitude, height) {
         /**
          * The longitude, in radians.
          * @type {Number}
@@ -2339,7 +2340,7 @@ define('Core/Cartographic',[
          * @default 0.0
          */
         this.height = defaultValue(height, 0.0);
-    };
+    }
 
     /**
      * Creates a new Cartographic instance from longitude and latitude
@@ -2666,7 +2667,7 @@ define('Core/Ellipsoid',[
      * @see Ellipsoid.WGS84
      * @see Ellipsoid.UNIT_SPHERE
      */
-    var Ellipsoid = function(x, y, z) {
+    function Ellipsoid(x, y, z) {
         this._radii = undefined;
         this._radiiSquared = undefined;
         this._radiiToTheFourth = undefined;
@@ -2677,7 +2678,7 @@ define('Core/Ellipsoid',[
         this._centerToleranceSquared = undefined;
 
         initialize(this, x, y, z);
-    };
+    }
 
     defineProperties(Ellipsoid.prototype, {
         /**
@@ -2856,7 +2857,6 @@ define('Core/Ellipsoid',[
 
     /**
      * Stores the provided instance into the provided array.
-     * @function
      *
      * @param {Ellipsoid} value The value to pack.
      * @param {Number[]} array The array to pack into.
@@ -3212,7 +3212,7 @@ define('Core/Cartesian2',[
      * @see Cartesian4
      * @see Packable
      */
-    var Cartesian2 = function(x, y) {
+    function Cartesian2(x, y) {
         /**
          * The X component.
          * @type {Number}
@@ -3226,7 +3226,7 @@ define('Core/Cartesian2',[
          * @default 0.0
          */
         this.y = defaultValue(y, 0.0);
-    };
+    }
 
     /**
      * Creates a Cartesian2 instance from x and y coordinates.
@@ -3928,11 +3928,11 @@ define('Core/GeographicProjection',[
      *
      * @see WebMercatorProjection
      */
-    var GeographicProjection = function(ellipsoid) {
+    function GeographicProjection(ellipsoid) {
         this._ellipsoid = defaultValue(ellipsoid, Ellipsoid.WGS84);
         this._semimajorAxis = this._ellipsoid.maximumRadius;
         this._oneOverSemimajorAxis = 1.0 / this._semimajorAxis;
-    };
+    }
 
     defineProperties(GeographicProjection.prototype, {
         /**
@@ -4027,8 +4027,7 @@ define('Core/Intersect',[
      * partially inside the frustum and partially outside (INTERSECTING), or somwhere entirely
      * outside of the frustum's 6 planes (OUTSIDE).
      *
-     * @namespace
-     * @alias Intersect
+     * @exports Intersect
      */
     var Intersect = {
         /**
@@ -4092,7 +4091,7 @@ define('Core/Rectangle',[
      *
      * @see Packable
      */
-    var Rectangle = function(west, south, east, north) {
+    function Rectangle(west, south, east, north) {
         /**
          * The westernmost longitude in radians in the range [-Pi, Pi].
          *
@@ -4124,7 +4123,7 @@ define('Core/Rectangle',[
          * @default 0.0
          */
         this.north = defaultValue(north, 0.0);
-    };
+    }
 
     defineProperties(Rectangle.prototype, {
         /**
@@ -4278,27 +4277,45 @@ define('Core/Rectangle',[
             throw new DeveloperError('cartographics is required.');
         }
         
-        var minLon = Number.MAX_VALUE;
-        var maxLon = -Number.MAX_VALUE;
-        var minLat = Number.MAX_VALUE;
-        var maxLat = -Number.MAX_VALUE;
+        var west = Number.MAX_VALUE;
+        var east = -Number.MAX_VALUE;
+        var westOverIDL = Number.MAX_VALUE;
+        var eastOverIDL = -Number.MAX_VALUE;
+        var south = Number.MAX_VALUE;
+        var north = -Number.MAX_VALUE;
 
         for ( var i = 0, len = cartographics.length; i < len; i++) {
             var position = cartographics[i];
-            minLon = Math.min(minLon, position.longitude);
-            maxLon = Math.max(maxLon, position.longitude);
-            minLat = Math.min(minLat, position.latitude);
-            maxLat = Math.max(maxLat, position.latitude);
+            west = Math.min(west, position.longitude);
+            east = Math.max(east, position.longitude);
+            south = Math.min(south, position.latitude);
+            north = Math.max(north, position.latitude);
+
+            var lonAdjusted = position.longitude >= 0 ?  position.longitude : position.longitude +  CesiumMath.TWO_PI;
+            westOverIDL = Math.min(westOverIDL, lonAdjusted);
+            eastOverIDL = Math.max(eastOverIDL, lonAdjusted);
+        }
+
+        if(east - west > eastOverIDL - westOverIDL) {
+            west = westOverIDL;
+            east = eastOverIDL;
+
+            if (east > CesiumMath.PI) {
+                east = east - CesiumMath.TWO_PI;
+            }
+            if (west > CesiumMath.PI) {
+                west = west - CesiumMath.TWO_PI;
+            }
         }
 
         if (!defined(result)) {
-            return new Rectangle(minLon, minLat, maxLon, maxLat);
+            return new Rectangle(west, south, east, north);
         }
 
-        result.west = minLon;
-        result.south = minLat;
-        result.east = maxLon;
-        result.north = maxLat;
+        result.west = west;
+        result.south = south;
+        result.east = east;
+        result.north = north;
         return result;
     };
 
@@ -4766,7 +4783,7 @@ define('Core/BoundingRectangle',[
      *
      * @see BoundingSphere
      */
-    var BoundingRectangle = function(x, y, width, height) {
+    function BoundingRectangle(x, y, width, height) {
         /**
          * The x coordinate of the rectangle.
          * @type {Number}
@@ -4794,7 +4811,7 @@ define('Core/BoundingRectangle',[
          * @default 0.0
          */
         this.height = defaultValue(height, 0.0);
-    };
+    }
 
     /**
      * Computes a bounding rectangle enclosing the list of 2D points.
@@ -5070,7 +5087,7 @@ define('Core/Interval',[
      * @param {Number} [start=0.0] The beginning of the interval.
      * @param {Number} [stop=0.0] The end of the interval.
      */
-    var Interval = function(start, stop) {
+    function Interval(start, stop) {
         /**
          * The beginning of the interval.
          * @type {Number}
@@ -5083,7 +5100,7 @@ define('Core/Interval',[
          * @default 0.0
          */
         this.stop = defaultValue(stop, 0.0);
-    };
+    }
 
     return Interval;
 });
@@ -5129,7 +5146,7 @@ define('Core/Matrix3',[
      * @see Matrix2
      * @see Matrix4
      */
-    var Matrix3 = function(column0Row0, column1Row0, column2Row0,
+    function Matrix3(column0Row0, column1Row0, column2Row0,
                            column0Row1, column1Row1, column2Row1,
                            column0Row2, column1Row2, column2Row2) {
         this[0] = defaultValue(column0Row0, 0.0);
@@ -5141,7 +5158,7 @@ define('Core/Matrix3',[
         this[6] = defaultValue(column2Row0, 0.0);
         this[7] = defaultValue(column2Row1, 0.0);
         this[8] = defaultValue(column2Row2, 0.0);
-    };
+    }
 
     /**
      * The number of elements used to pack the object into an array.
@@ -6013,12 +6030,13 @@ define('Core/Matrix3',[
      * @param {Matrix3} result The object onto which to store the result.
      * @returns {Matrix3} The modified result parameter.
      *
-     * @see Matrix3.fromScale
-     * @see Matrix3.multiplyByUniformScale
      *
      * @example
      * // Instead of Cesium.Matrix3.multiply(m, Cesium.Matrix3.fromScale(scale), m);
      * Cesium.Matrix3.multiplyByScale(m, scale, m);
+     * 
+     * @see Matrix3.fromScale
+     * @see Matrix3.multiplyByUniformScale
      */
     Matrix3.multiplyByScale = function(matrix, scale, result) {
                 if (!defined(matrix)) {
@@ -6597,7 +6615,7 @@ define('Core/Cartesian4',[
      * @see Cartesian3
      * @see Packable
      */
-    var Cartesian4 = function(x, y, z, w) {
+    function Cartesian4(x, y, z, w) {
         /**
          * The X component.
          * @type {Number}
@@ -6625,7 +6643,7 @@ define('Core/Cartesian4',[
          * @default 0.0
          */
         this.w = defaultValue(w, 0.0);
-    };
+    }
 
     /**
      * Creates a Cartesian4 instance from x, y, z and w coordinates.
@@ -7373,7 +7391,7 @@ define('Core/RuntimeError',[
      *
      * @see DeveloperError
      */
-    var RuntimeError = function(message) {
+    function RuntimeError(message) {
         /**
          * 'RuntimeError' indicating that this exception was thrown due to a runtime error.
          * @type {String}
@@ -7402,8 +7420,7 @@ define('Core/RuntimeError',[
          * @readonly
          */
         this.stack = stack;
-    };
-
+    }
     RuntimeError.prototype.toString = function() {
         var str = this.name + ': ' + this.message;
 
@@ -7466,6 +7483,7 @@ define('Core/Matrix4',[
      * @see Matrix4.fromColumnMajorArray
      * @see Matrix4.fromRowMajorArray
      * @see Matrix4.fromRotationTranslation
+     * @see Matrix4.fromTranslationRotationScale
      * @see Matrix4.fromTranslationQuaternionRotationScale
      * @see Matrix4.fromTranslation
      * @see Matrix4.fromScale
@@ -7480,7 +7498,7 @@ define('Core/Matrix4',[
      * @see Matrix3
      * @see Packable
      */
-    var Matrix4 = function(column0Row0, column1Row0, column2Row0, column3Row0,
+    function Matrix4(column0Row0, column1Row0, column2Row0, column3Row0,
                            column0Row1, column1Row1, column2Row1, column3Row1,
                            column0Row2, column1Row2, column2Row2, column3Row2,
                            column0Row3, column1Row3, column2Row3, column3Row3) {
@@ -7500,7 +7518,7 @@ define('Core/Matrix4',[
         this[13] = defaultValue(column3Row1, 0.0);
         this[14] = defaultValue(column3Row2, 0.0);
         this[15] = defaultValue(column3Row3, 0.0);
-    };
+    }
 
     /**
      * The number of elements used to pack the object into an array.
@@ -7815,6 +7833,21 @@ define('Core/Matrix4',[
         result[15] = 1.0;
 
         return result;
+    };
+
+    /**
+     * Creates a Matrix4 instance from a {@link TranslationRotationScale} instance.
+     *
+     * @param {TranslationRotationScale} translationRotationScale The instance.
+     * @param {Matrix4} [result] The object in which the result will be stored, if undefined a new instance will be created.
+     * @returns {Matrix4} The modified result parameter, or a new Matrix4 instance if one was not provided.
+     */
+    Matrix4.fromTranslationRotationScale = function(translationRotationScale, result) {
+                if (!defined(translationRotationScale)) {
+            throw new DeveloperError('translationRotationScale is required.');
+        }
+        
+        return Matrix4.fromTranslationQuaternionRotationScale(translationRotationScale.translation, translationRotationScale.rotation, translationRotationScale.scale, result);
     };
 
     /**
@@ -9083,12 +9116,13 @@ define('Core/Matrix4',[
      * @param {Matrix4} result The object onto which to store the result.
      * @returns {Matrix4} The modified result parameter.
      *
-     * @see Matrix4.fromUniformScale
-     * @see Matrix4.multiplyByScale
      *
      * @example
      * // Instead of Cesium.Matrix4.multiply(m, Cesium.Matrix4.fromUniformScale(scale), m);
      * Cesium.Matrix4.multiplyByUniformScale(m, scale, m);
+     * 
+     * @see Matrix4.fromUniformScale
+     * @see Matrix4.multiplyByScale
      */
     Matrix4.multiplyByUniformScale = function(matrix, scale, result) {
                 if (!defined(matrix)) {
@@ -9119,12 +9153,13 @@ define('Core/Matrix4',[
      * @param {Matrix4} result The object onto which to store the result.
      * @returns {Matrix4} The modified result parameter.
      *
-     * @see Matrix4.fromScale
-     * @see Matrix4.multiplyByUniformScale
      *
      * @example
      * // Instead of Cesium.Matrix4.multiply(m, Cesium.Matrix4.fromScale(scale), m);
      * Cesium.Matrix4.multiplyByScale(m, scale, m);
+     * 
+     * @see Matrix4.fromScale
+     * @see Matrix4.multiplyByUniformScale
      */
     Matrix4.multiplyByScale = function(matrix, scale, result) {
                 if (!defined(matrix)) {
@@ -10123,7 +10158,7 @@ define('Core/Plane',[
      * // The plane x=0
      * var plane = new Cesium.Plane(Cesium.Cartesian3.UNIT_X, 0.0);
      */
-    var Plane = function(normal, distance) {
+    function Plane(normal, distance) {
                 if (!defined(normal))  {
             throw new DeveloperError('normal is required.');
         }
@@ -10148,7 +10183,7 @@ define('Core/Plane',[
          * @type {Number}
          */
         this.distance = distance;
-    };
+    }
 
     /**
      * Creates a plane from a normal and a point on the plane.
@@ -10299,7 +10334,7 @@ define('Core/BoundingSphere',[
      * @see BoundingRectangle
      * @see Packable
      */
-    var BoundingSphere = function(center, radius) {
+    function BoundingSphere(center, radius) {
         /**
          * The center point of the sphere.
          * @type {Cartesian3}
@@ -10313,7 +10348,7 @@ define('Core/BoundingSphere',[
          * @default 0.0
          */
         this.radius = defaultValue(radius, 0.0);
-    };
+    }
 
     var fromPointsXMin = new Cartesian3();
     var fromPointsYMin = new Cartesian3();
@@ -10580,8 +10615,7 @@ define('Core/BoundingSphere',[
      * @param {BoundingSphere} [result] The object onto which to store the result.
      * @returns {BoundingSphere} The modified result parameter or a new BoundingSphere instance if one was not provided.
      *
-     * @see {@link http://blogs.agi.com/insight3d/index.php/2008/02/04/a-bounding/|Bounding Sphere computation article}
-     *
+     * 
      * @example
      * // Compute the bounding sphere from 3 positions, each specified relative to a center.
      * // In addition to the X, Y, and Z coordinates, the points array contains two additional
@@ -10591,6 +10625,8 @@ define('Core/BoundingSphere',[
      *               4.0, 5.0, 6.0, 0.1, 0.2,
      *               7.0, 8.0, 9.0, 0.1, 0.2];
      * var sphere = Cesium.BoundingSphere.fromVertices(points, center, 5);
+     * 
+     * @see {@link http://blogs.agi.com/insight3d/index.php/2008/02/04/a-bounding/|Bounding Sphere computation article}
      */
     BoundingSphere.fromVertices = function(positions, center, stride, result) {
         if (!defined(result)) {
@@ -11207,6 +11243,7 @@ define('Core/BoundingSphere',[
     for (var n = 0; n < 8; ++n) {
         projectTo2DPositionsScratch[n] = new Cartesian3();
     }
+
     var projectTo2DProjection = new GeographicProjection();
     /**
      * Creates a bounding sphere in 2D from a bounding sphere in 3D world coordinates.
@@ -12034,8 +12071,7 @@ define('Core/Fullscreen',[
     /**
      * Browser-independent functions for working with the standard fullscreen API.
      *
-     * @namespace
-     * @alias Fullscreen
+     * @exports Fullscreen
      *
      * @see {@link http://dvcs.w3.org/hg/fullscreen/raw-file/tip/Overview.html|W3C Fullscreen Living Specification}
      */
@@ -12429,8 +12465,7 @@ define('Core/FeatureDetection',[
      * A set of functions to detect whether the current browser supports
      * various features.
      *
-     * @namespace
-     * @alias FeatureDetection
+     * @exports FeatureDetection
      */
     var FeatureDetection = {
         isChrome : isChrome,
@@ -12511,8 +12546,7 @@ define('Core/ComponentDatatype',[
      * WebGL component datatypes.  Components are intrinsics,
      * which form attributes, which form vertices.
      *
-     * @namespace
-     * @alias ComponentDatatype
+     * @exports ComponentDatatype
      */
     var ComponentDatatype = {
         /**
@@ -12752,8 +12786,7 @@ define('Core/CornerType',[
      * @demo The {@link http://cesiumjs.org/Cesium/Apps/Sandcastle/index.html?src=Corridor.html&label=Geometries|Corridor Demo}
      * demonstrates the three corner types, as used by {@link CorridorGraphics}.
      *
-     * @namespace
-     * @alias CornerType
+     * @exports CornerType
      */
     var CornerType = {
         /**
@@ -12818,8 +12851,7 @@ define('Core/PrimitiveType',[
     /**
      * The type of a geometric primitive, i.e., points, lines, and triangles.
      *
-     * @namespace
-     * @alias PrimitiveType
+     * @exports PrimitiveType
      */
     var PrimitiveType = {
         /**
@@ -12964,7 +12996,7 @@ define('Core/Geometry',[
      *   boundingSphere : Cesium.BoundingSphere.fromVertices(positions)
      * });
      */
-    var Geometry = function(options) {
+    function Geometry(options) {
         options = defaultValue(options, defaultValue.EMPTY_OBJECT);
 
                 if (!defined(options.attributes)) {
@@ -13006,8 +13038,6 @@ define('Core/Geometry',[
          *
          * @default undefined
          *
-         * @see GeometryAttribute
-         * @see VertexFormat
          *
          * @example
          * geometry.attributes.position = new Cesium.GeometryAttribute({
@@ -13015,6 +13045,9 @@ define('Core/Geometry',[
          *   componentsPerAttribute : 3,
          *   values : new Float32Array(0)
          * });
+         * 
+         * @see GeometryAttribute
+         * @see VertexFormat
          */
         this.attributes = options.attributes;
 
@@ -13057,7 +13090,7 @@ define('Core/Geometry',[
          * @private
          */
         this.boundingSphereCV = undefined;
-    };
+    }
 
     /**
      * Computes the number of vertices in a geometry.  The runtime is linear with
@@ -13122,7 +13155,6 @@ define('Core/GeometryAttribute',[
      *
      * @exception {DeveloperError} options.componentsPerAttribute must be between 1 and 4.
      *
-     * @see Geometry
      *
      * @example
      * var geometry = new Cesium.Geometry({
@@ -13139,8 +13171,10 @@ define('Core/GeometryAttribute',[
      *   },
      *   primitiveType : Cesium.PrimitiveType.LINE_LOOP
      * });
+     * 
+     * @see Geometry
      */
-    var GeometryAttribute = function(options) {
+    function GeometryAttribute(options) {
         options = defaultValue(options, defaultValue.EMPTY_OBJECT);
 
                 if (!defined(options.componentDatatype)) {
@@ -13230,7 +13264,7 @@ define('Core/GeometryAttribute',[
          * ]);
          */
         this.values = options.values;
-    };
+    }
 
     return GeometryAttribute;
 });
@@ -13252,7 +13286,7 @@ define('Core/GeometryAttributes',[
      * @alias GeometryAttributes
      * @constructor
      */
-    var GeometryAttributes = function(options) {
+    function GeometryAttributes(options) {
         options = defaultValue(options, defaultValue.EMPTY_OBJECT);
 
         /**
@@ -13326,10 +13360,11 @@ define('Core/GeometryAttributes',[
          * @default undefined
          */
         this.color = options.color;
-    };
+    }
 
     return GeometryAttributes;
 });
+
 /*global define*/
 define('Core/IndexDatatype',[
         '../Renderer/WebGLConstants',
@@ -13349,8 +13384,7 @@ define('Core/IndexDatatype',[
      * Constants for WebGL index datatypes.  These corresponds to the
      * <code>type</code> parameter of {@link http://www.khronos.org/opengles/sdk/docs/man/xhtml/glDrawElements.xml|drawElements}.
      *
-     * @namespace
-     * @alias IndexDatatype
+     * @exports IndexDatatype
      */
     var IndexDatatype = {
         /**
@@ -13504,7 +13538,7 @@ define('Core/AxisAlignedBoundingBox',[
      * @see BoundingSphere
      * @see BoundingRectangle
      */
-    var AxisAlignedBoundingBox = function(minimum, maximum, center) {
+    function AxisAlignedBoundingBox(minimum, maximum, center) {
         /**
          * The minimum point defining the bounding box.
          * @type {Cartesian3}
@@ -13532,7 +13566,7 @@ define('Core/AxisAlignedBoundingBox',[
          * @type {Cartesian3}
          */
         this.center = center;
-    };
+    }
 
     /**
      * Computes an instance of an AxisAlignedBoundingBox. The box is determined by
@@ -13722,8 +13756,7 @@ define('Core/QuadraticRealPolynomial',[
     /**
      * Defines functions for 2nd order polynomial functions of one variable with only real coefficients.
      *
-     * @namespace
-     * @alias QuadraticRealPolynomial
+     * @exports QuadraticRealPolynomial
      */
     var QuadraticRealPolynomial = {};
 
@@ -13858,8 +13891,7 @@ define('Core/CubicRealPolynomial',[
     /**
      * Defines functions for 3rd order polynomial functions of one variable with only real coefficients.
      *
-     * @namespace
-     * @alias CubicRealPolynomial
+     * @exports CubicRealPolynomial
      */
     var CubicRealPolynomial = {};
 
@@ -14099,8 +14131,7 @@ define('Core/QuarticRealPolynomial',[
     /**
      * Defines functions for 4th order polynomial functions of one variable with only real coefficients.
      *
-     * @namespace
-     * @alias QuarticRealPolynomial
+     * @exports QuarticRealPolynomial
      */
     var QuarticRealPolynomial = {};
 
@@ -14429,7 +14460,7 @@ define('Core/Ray',[
      * @param {Cartesian3} [origin=Cartesian3.ZERO] The origin of the ray.
      * @param {Cartesian3} [direction=Cartesian3.ZERO] The direction of the ray.
      */
-    var Ray = function(origin, direction) {
+    function Ray(origin, direction) {
         direction = Cartesian3.clone(defaultValue(direction, Cartesian3.ZERO));
         if (!Cartesian3.equals(direction, Cartesian3.ZERO)) {
             Cartesian3.normalize(direction, direction);
@@ -14447,7 +14478,7 @@ define('Core/Ray',[
          * @type {Cartesian3}
          */
         this.direction = direction;
-    };
+    }
 
     /**
      * Computes the point along the ray given by r(t) = o + t*d,
@@ -14510,8 +14541,7 @@ define('Core/IntersectionTests',[
     /**
      * Functions for computing the intersection between geometries such as rays, planes, triangles, and ellipsoids.
      *
-     * @namespace
-     * @alias IntersectionTests
+     * @exports IntersectionTests
      */
     var IntersectionTests = {};
 
@@ -16127,13 +16157,13 @@ define('Core/binarySearch',[
      *
      * @example
      * // Create a comparator function to search through an array of numbers.
-     * var comparator = function(a, b) {
+     * function comparator(a, b) {
      *     return a - b;
      * };
      * var numbers = [0, 2, 4, 6, 8];
      * var index = Cesium.binarySearch(numbers, 6, comparator); // 3
      */
-    var binarySearch = function(array, itemToFind, comparator) {
+    function binarySearch(array, itemToFind, comparator) {
                 if (!defined(array)) {
             throw new DeveloperError('array is required.');
         }
@@ -16163,7 +16193,7 @@ define('Core/binarySearch',[
             return i;
         }
         return ~(high + 1);
-    };
+    }
 
     /**
      * A function used to compare two items while performing a binary search.
@@ -16183,6 +16213,7 @@ define('Core/binarySearch',[
 
     return binarySearch;
 });
+
 /*global define*/
 define('Core/EarthOrientationParametersSample',[],function() {
     "use strict";
@@ -16201,7 +16232,7 @@ define('Core/EarthOrientationParametersSample',[],function() {
      *
      * @private
      */
-    var EarthOrientationParametersSample = function EarthOrientationParametersSample(xPoleWander, yPoleWander, xPoleOffset, yPoleOffset, ut1MinusUtc) {
+    function EarthOrientationParametersSample(xPoleWander, yPoleWander, xPoleOffset, yPoleOffset, ut1MinusUtc) {
         /**
          * The pole wander about the X axis, in radians.
          * @type {Number}
@@ -16231,10 +16262,11 @@ define('Core/EarthOrientationParametersSample',[],function() {
          * @type {Number}
          */
         this.ut1MinusUtc = ut1MinusUtc;
-    };
+    }
 
     return EarthOrientationParametersSample;
 });
+
 /**
 @license
 sprintf.js from the php.js project - https://github.com/kvz/phpjs
@@ -16395,6 +16427,7 @@ function sprintf () {
     if (!chr) {
       chr = ' ';
     }
+
     var padding = (str.length >= len) ? '' : Array(1 + len - str.length >>> 0).join(chr);
     return leftJustify ? str + padding : padding + str;
   };
@@ -16554,6 +16587,7 @@ function sprintf () {
 
 return sprintf;
 });
+
 /*global define*/
 define('Core/GregorianDate',[],function() {
     "use strict";
@@ -16566,7 +16600,7 @@ define('Core/GregorianDate',[],function() {
      *
      * @see JulianDate#toGregorianDate
      */
-    var GregorianDate = function(year, month, day, hour, minute, second, millisecond, isLeapSecond) {
+    function GregorianDate(year, month, day, hour, minute, second, millisecond, isLeapSecond) {
         /**
          * Gets or sets the year as a whole number.
          * @type {Number}
@@ -16607,10 +16641,11 @@ define('Core/GregorianDate',[],function() {
          * @type {Boolean}
          */
         this.isLeapSecond = isLeapSecond;
-    };
+    }
 
     return GregorianDate;
 });
+
 /*global define*/
 define('Core/isLeapYear',[
         './DeveloperError'
@@ -16653,7 +16688,7 @@ define('Core/LeapSecond',[],function() {
      * @param {JulianDate} [date] A Julian date representing the time of the leap second.
      * @param {Number} [offset] The cumulative number of seconds that TAI is ahead of UTC at the provided date.
      */
-    var LeapSecond = function(date, offset) {
+    function LeapSecond(date, offset) {
         /**
          * Gets or sets the date at which this leap second occurs.
          * @type {JulianDate}
@@ -16666,10 +16701,11 @@ define('Core/LeapSecond',[],function() {
          * @type {Number}
          */
         this.offset = offset;
-    };
+    }
 
     return LeapSecond;
 });
+
 /*global define*/
 define('Core/TimeConstants',[
         './freezeObject'
@@ -16680,8 +16716,7 @@ define('Core/TimeConstants',[
     /**
      * Constants for time conversions like those done by {@link JulianDate}.
      *
-     * @namespace
-     * @alias TimeConstants
+     * @exports TimeConstants
      *
      * @see JulianDate
      *
@@ -16774,8 +16809,7 @@ define('Core/TimeStandard',[
     /**
      * Provides the type of time standards which JulianDate can take as input.
      *
-     * @namespace
-     * @alias TimeStandard
+     * @exports TimeStandard
      *
      * @see JulianDate
      */
@@ -16975,7 +17009,7 @@ define('Core/JulianDate',[
      * @param {Number} secondsOfDay The number of seconds into the current Julian Day Number.  Fractional seconds, negative seconds and seconds greater than a day will be handled correctly.
      * @param {TimeStandard} [timeStandard=TimeStandard.UTC] The time standard in which the first two parameters are defined.
      */
-    var JulianDate = function(julianDayNumber, secondsOfDay, timeStandard) {
+    function JulianDate(julianDayNumber, secondsOfDay, timeStandard) {
         /**
          * Gets or sets the number of whole days.
          * @type {Number}
@@ -17001,7 +17035,7 @@ define('Core/JulianDate',[
         if (timeStandard === TimeStandard.UTC) {
             convertUtcToTai(this);
         }
-    };
+    }
 
     /**
      * Creates a new instance from a JavaScript Date.
@@ -17806,7 +17840,7 @@ define('Core/clone',[
      * @param {Boolean} [deep=false] If true, all properties will be deep cloned recursively.
      * @returns {Object} The cloned object.
      */
-    var clone = function(object, deep) {
+    function clone(object, deep) {
         if (object === null || typeof object !== 'object') {
             return object;
         }
@@ -17825,7 +17859,7 @@ define('Core/clone',[
         }
 
         return result;
-    };
+    }
 
     return clone;
 });
@@ -17847,7 +17881,7 @@ define('Core/parseResponseHeaders',[], function() {
      * 
      * @private
      */
-    var parseResponseHeaders = function(headerString) {
+    function parseResponseHeaders(headerString) {
         var headers = {};
 
         if (!headerString) {
@@ -17869,7 +17903,7 @@ define('Core/parseResponseHeaders',[], function() {
         }
 
         return headers;
-    };
+    }
 
     return parseResponseHeaders;
 });
@@ -17894,7 +17928,7 @@ define('Core/RequestErrorEvent',[
      * @param {String|Object} [responseHeaders] The response headers, represented either as an object literal or as a
      *                        string in the format returned by XMLHttpRequest's getAllResponseHeaders() function.
      */
-    var RequestErrorEvent = function RequestErrorEvent(statusCode, response, responseHeaders) {
+    function RequestErrorEvent(statusCode, response, responseHeaders) {
         /**
          * The HTTP error status code, such as 404.  If the error does not have a particular
          * HTTP code, this property will be undefined.
@@ -17922,7 +17956,7 @@ define('Core/RequestErrorEvent',[
         if (typeof this.responseHeaders === 'string') {
             this.responseHeaders = parseResponseHeaders(this.responseHeaders);
         }
-    };
+    }
 
     /**
      * Creates a string representing this RequestErrorEvent.
@@ -17940,6 +17974,7 @@ define('Core/RequestErrorEvent',[
 
     return RequestErrorEvent;
 });
+
 /*global define*/
 define('Core/loadWithXhr',[
         '../ThirdParty/when',
@@ -17974,12 +18009,6 @@ define('Core/loadWithXhr',[
      * @param {String} [options.overrideMimeType] Overrides the MIME type returned by the server.
      * @returns {Promise.<Object>} a promise that will resolve to the requested data when loaded.
      *
-     * @see loadArrayBuffer
-     * @see loadBlob
-     * @see loadJson
-     * @see loadText
-     * @see {@link http://www.w3.org/TR/cors/|Cross-Origin Resource Sharing}
-     * @see {@link http://wiki.commonjs.org/wiki/Promises/A|CommonJS Promises/A}
      *
      * @example
      * // Load a single URL asynchronously. In real code, you should use loadBlob instead.
@@ -17991,8 +18020,15 @@ define('Core/loadWithXhr',[
      * }).otherwise(function(error) {
      *     // an error occurred
      * });
+     * 
+     * @see loadArrayBuffer
+     * @see loadBlob
+     * @see loadJson
+     * @see loadText
+     * @see {@link http://www.w3.org/TR/cors/|Cross-Origin Resource Sharing}
+     * @see {@link http://wiki.commonjs.org/wiki/Promises/A|CommonJS Promises/A}
      */
-    var loadWithXhr = function(options) {
+    function loadWithXhr(options) {
         options = defaultValue(options, defaultValue.EMPTY_OBJECT);
 
                 if (!defined(options.url)) {
@@ -18012,7 +18048,7 @@ define('Core/loadWithXhr',[
 
             return deferred.promise;
         });
-    };
+    }
 
     var dataUriRegex = /^data:(.*?)(;base64)?,(.*)$/;
 
@@ -18139,9 +18175,6 @@ define('Core/loadText',[
      * @param {Object} [headers] HTTP headers to send with the request.
      * @returns {Promise.<String>} a promise that will resolve to the requested data when loaded.
      *
-     * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest|XMLHttpRequest}
-     * @see {@link http://www.w3.org/TR/cors/|Cross-Origin Resource Sharing}
-     * @see {@link http://wiki.commonjs.org/wiki/Promises/A|CommonJS Promises/A}
      *
      * @example
      * // load text from a URL, setting a custom header
@@ -18152,13 +18185,17 @@ define('Core/loadText',[
      * }).otherwise(function(error) {
      *     // an error occurred
      * });
+     * 
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest|XMLHttpRequest}
+     * @see {@link http://www.w3.org/TR/cors/|Cross-Origin Resource Sharing}
+     * @see {@link http://wiki.commonjs.org/wiki/Promises/A|CommonJS Promises/A}
      */
-    var loadText = function(url, headers) {
+    function loadText(url, headers) {
         return loadWithXhr({
             url : url,
             headers : headers
         });
-    };
+    }
 
     return loadText;
 });
@@ -18197,9 +18234,6 @@ define('Core/loadJson',[
      * if not specified.
      * @returns {Promise.<Object>} a promise that will resolve to the requested data when loaded.
      *
-     * @see loadText
-     * @see {@link http://www.w3.org/TR/cors/|Cross-Origin Resource Sharing}
-     * @see {@link http://wiki.commonjs.org/wiki/Promises/A|CommonJS Promises/A}
      *
      * @example
      * Cesium.loadJson('http://someUrl.com/someJson.txt').then(function(jsonData) {
@@ -18207,8 +18241,12 @@ define('Core/loadJson',[
      * }).otherwise(function(error) {
      *     // an error occurred
      * });
+     * 
+     * @see loadText
+     * @see {@link http://www.w3.org/TR/cors/|Cross-Origin Resource Sharing}
+     * @see {@link http://wiki.commonjs.org/wiki/Promises/A|CommonJS Promises/A}
      */
-    var loadJson = function loadJson(url, headers) {
+    function loadJson(url, headers) {
                 if (!defined(url)) {
             throw new DeveloperError('url is required.');
         }
@@ -18224,7 +18262,7 @@ define('Core/loadJson',[
         return loadText(url, headers).then(function(value) {
             return JSON.parse(value);
         });
-    };
+    }
 
     return loadJson;
 });
@@ -18299,7 +18337,7 @@ define('Core/EarthOrientationParameters',[
      *
      * @private
      */
-    var EarthOrientationParameters = function EarthOrientationParameters(options) {
+    function EarthOrientationParameters(options) {
         options = defaultValue(options, defaultValue.EMPTY_OBJECT);
 
         this._dates = undefined;
@@ -18339,7 +18377,7 @@ define('Core/EarthOrientationParameters',[
                 'samples' : []
             });
         }
-    };
+    }
 
     /**
      * A default {@link EarthOrientationParameters} instance that returns zero for all EOP values.
@@ -18661,8 +18699,7 @@ define('ThirdParty/Uri',[],function() {
 			this.query = c[4];
 			this.fragment = c[5];
 		}
-	};
-
+	}
 	// Initial values on the prototype
 	URI.prototype.scheme    = null;
 	URI.prototype.authority = null;
@@ -18959,7 +18996,7 @@ define('Core/buildModuleUrl',[
      *
      * @private
      */
-    var buildModuleUrl = function(moduleID) {
+    function buildModuleUrl(moduleID) {
         if (!defined(implementation)) {
             //select implementation
             if (defined(require.toUrl)) {
@@ -18979,7 +19016,7 @@ define('Core/buildModuleUrl',[
         a.href = a.href; // IE only absolutizes href on get, not set
 
         return a.href;
-    };
+    }
 
     // exposed for testing
     buildModuleUrl._cesiumScriptRegex = cesiumScriptRegex;
@@ -18994,6 +19031,7 @@ define('Core/buildModuleUrl',[
 
     return buildModuleUrl;
 });
+
 /*global define*/
 define('Core/Iau2006XysSample',[],function() {
     "use strict";
@@ -19010,7 +19048,7 @@ define('Core/Iau2006XysSample',[],function() {
      *
      * @private
      */
-    var Iau2006XysSample = function Iau2006XysSample(x, y, s) {
+    function Iau2006XysSample(x, y, s) {
         /**
          * The X value.
          * @type {Number}
@@ -19028,10 +19066,11 @@ define('Core/Iau2006XysSample',[],function() {
          * @type {Number}
          */
         this.s = s;
-    };
+    }
 
     return Iau2006XysSample;
 });
+
 /*global define*/
 define('Core/Iau2006XysData',[
         '../ThirdParty/when',
@@ -19072,7 +19111,7 @@ define('Core/Iau2006XysData',[
      *
      * @private
      */
-    var Iau2006XysData = function Iau2006XysData(options) {
+    function Iau2006XysData(options) {
         options = defaultValue(options, defaultValue.EMPTY_OBJECT);
 
         this._xysFileUrlTemplate = options.xysFileUrlTemplate;
@@ -19109,7 +19148,7 @@ define('Core/Iau2006XysData',[
         // Allocate scratch arrays for interpolation.
         this._work = new Array(order + 1);
         this._coef = new Array(order + 1);
-    };
+    }
 
     var julianDateScratch = new JulianDate(0, 0.0, TimeStandard.TAI);
 
@@ -19331,7 +19370,7 @@ define('Core/Quaternion',[
      *
      * @see PackableForInterpolation
      */
-    var Quaternion = function(x, y, z, w) {
+    function Quaternion(x, y, z, w) {
         /**
          * The X component.
          * @type {Number}
@@ -19359,7 +19398,7 @@ define('Core/Quaternion',[
          * @default 0.0
          */
         this.w = defaultValue(w, 0.0);
-    };
+    }
 
     var fromAxisAngleScratch = new Cartesian3();
 
@@ -20155,7 +20194,6 @@ define('Core/Quaternion',[
      * @param {Quaternion} result The object onto which to store the result.
      * @returns {Quaternion} The modified result parameter.
      *
-     * @see Quaternion#computeInnerQuadrangle
      *
      * @example
      * // 1. compute the squad interpolation between two quaternions on a curve
@@ -20166,6 +20204,8 @@ define('Core/Quaternion',[
      * // 2. compute the squad interpolation as above but where the first quaternion is a end point.
      * var s1 = Cesium.Quaternion.computeInnerQuadrangle(quaternions[0], quaternions[1], quaternions[2], new Cesium.Quaternion());
      * var q = Cesium.Quaternion.squad(quaternions[0], quaternions[1], quaternions[0], s1, t, new Cesium.Quaternion());
+     * 
+     * @see Quaternion#computeInnerQuadrangle
      */
     Quaternion.squad = function(q0, q1, s0, s1, t, result) {
                 if (!defined(q0) || !defined(q1) || !defined(s0) || !defined(s1)) {
@@ -20391,6 +20431,7 @@ define('Core/Quaternion',[
 
     return Quaternion;
 });
+
 /*global define*/
 define('Core/Transforms',[
         '../ThirdParty/when',
@@ -20435,8 +20476,7 @@ define('Core/Transforms',[
     /**
      * Contains functions for transforming positions to various reference frames.
      *
-     * @namespace
-     * @alias Transforms
+     * @exports Transforms
      */
     var Transforms = {};
 
@@ -20912,15 +20952,16 @@ define('Core/Transforms',[
      *          and evaluation of the transformation between the fixed and ICRF axes will
      *          no longer return undefined for a time inside the interval.
      *
-     * @see Transforms.computeIcrfToFixedMatrix
-     * @see Transforms.computeFixedToIcrfMatrix
-     * @see when
      *
      * @example
      * var interval = new Cesium.TimeInterval(...);
      * when(Cesium.Transforms.preloadIcrfFixed(interval), function() {
      *     // the data is now loaded
      * });
+     * 
+     * @see Transforms.computeIcrfToFixedMatrix
+     * @see Transforms.computeFixedToIcrfMatrix
+     * @see when
      */
     Transforms.preloadIcrfFixed = function(timeInterval) {
         var startDayTT = timeInterval.start.dayNumber;
@@ -20946,7 +20987,6 @@ define('Core/Transforms',[
      * @returns {Matrix3} The rotation matrix, or undefined if the data necessary to do the
      *                   transformation is not yet loaded.
      *
-     * @see Transforms.preloadIcrfFixed
      *
      * @example
      * scene.preRender.addEventListener(function(scene, time) {
@@ -20959,6 +20999,8 @@ define('Core/Transforms',[
      *     camera.lookAtTransform(transform, offset);
      *   }
      * });
+     * 
+     * @see Transforms.preloadIcrfFixed
      */
     Transforms.computeIcrfToFixedMatrix = function(date, result) {
                 if (!defined(date)) {
@@ -20993,7 +21035,6 @@ define('Core/Transforms',[
      * @returns {Matrix3} The rotation matrix, or undefined if the data necessary to do the
      *                   transformation is not yet loaded.
      *
-     * @see Transforms.preloadIcrfFixed
      *
      * @example
      * // Transform a point from the ICRF axes to the Fixed axes.
@@ -21004,6 +21045,8 @@ define('Core/Transforms',[
      * if (Cesium.defined(fixedToIcrf)) {
      *     pointInInertial = Cesium.Matrix3.multiplyByVector(fixedToIcrf, pointInFixed, pointInInertial);
      * }
+     * 
+     * @see Transforms.preloadIcrfFixed
      */
     Transforms.computeFixedToIcrfMatrix = function(date, result) {
                 if (!defined(date)) {
@@ -21246,7 +21289,7 @@ define('Core/EllipsoidTangentPlane',[
      *
      * @exception {DeveloperError} origin must not be at the center of the ellipsoid.
      */
-    var EllipsoidTangentPlane = function(origin, ellipsoid) {
+    function EllipsoidTangentPlane(origin, ellipsoid) {
                 if (!defined(origin)) {
             throw new DeveloperError('origin is required.');
         }
@@ -21266,7 +21309,7 @@ define('Core/EllipsoidTangentPlane',[
 
         var normal = Cartesian3.fromCartesian4(Matrix4.getColumn(eastNorthUp, 2, scratchCart4));
         this._plane = Plane.fromPointNormal(origin, normal);
-    };
+    }
 
     defineProperties(EllipsoidTangentPlane.prototype, {
         /**
@@ -21571,7 +21614,7 @@ define('Core/barycentricCoordinates',[
      *   new Cesium.Cartesian3( 1.0, 0.0, 0.0),
      *   new Cesium.Cartesian3( 0.0, 1.0, 1.0));
      */
-    var barycentricCoordinates = function(point, p0, p1, p2, result) {
+    function barycentricCoordinates(point, p0, p1, p2, result) {
                 if (!defined(point) || !defined(p0) || !defined(p1) || !defined(p2)) {
             throw new DeveloperError('point, p0, p1, and p2 are required.');
         }
@@ -21612,7 +21655,7 @@ define('Core/barycentricCoordinates',[
         result.z = (dot00 * dot12 - dot01 * dot02) * q;
         result.x = 1.0 - result.y - result.z;
         return result;
-    };
+    }
 
     return barycentricCoordinates;
 });
@@ -21647,10 +21690,10 @@ define('Core/pointInsideTriangle',[
      *   new Cesium.Cartesian2(1.0, 0.0),
      *   new Cesium.Cartesian2(0.0, 1.0));
      */
-    var pointInsideTriangle = function(point, p0, p1, p2) {
+    function pointInsideTriangle(point, p0, p1, p2) {
         barycentricCoordinates(point, p0, p1, p2, coords);
         return (coords.x > 0.0) && (coords.y > 0.0) && (coords.z > 0);
-    };
+    }
 
     return pointInsideTriangle;
 });
@@ -21860,7 +21903,7 @@ define('Core/EllipsoidGeodesic',[
      * @param {Cartographic} [end] The final planetodetic point on the path.
      * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid on which the geodesic lies.
      */
-    var EllipsoidGeodesic = function(start, end, ellipsoid) {
+    function EllipsoidGeodesic(start, end, ellipsoid) {
         var e = defaultValue(ellipsoid, Ellipsoid.WGS84);
         this._ellipsoid = e;
         this._start = new Cartographic();
@@ -21875,7 +21918,7 @@ define('Core/EllipsoidGeodesic',[
         if (defined(start) && defined(end)) {
             computeProperties(this, start, end, e);
         }
-    };
+    }
 
     defineProperties(EllipsoidGeodesic.prototype, {
         /**
@@ -22221,9 +22264,6 @@ define('Core/PolylinePipeline',[
      * @returns {Object} An object with a <code>positions</code> property that is an array of positions and a
      * <code>segments</code> property.
      *
-     * @see PolygonPipeline.wrapLongitude
-     * @see Polyline
-     * @see PolylineCollection
      *
      * @example
      * var polylines = new Cesium.PolylineCollection();
@@ -22231,6 +22271,10 @@ define('Core/PolylinePipeline',[
      * var positions = polyline.positions;
      * var modelMatrix = polylines.modelMatrix;
      * var segments = Cesium.PolylinePipeline.wrapLongitude(positions, modelMatrix);
+     * 
+     * @see PolygonPipeline.wrapLongitude
+     * @see Polyline
+     * @see PolylineCollection
      */
     PolylinePipeline.wrapLongitude = function(positions, modelMatrix) {
         var cartesians = [];
@@ -22289,7 +22333,7 @@ define('Core/PolylinePipeline',[
         };
     };
 
-    var removeDuplicatesEpsilon = CesiumMath.EPSILON7;
+    var removeDuplicatesEpsilon = CesiumMath.EPSILON10;
 
     /**
      * Removes adjacent duplicate positions in an array of positions.
@@ -22473,11 +22517,11 @@ define('Core/Queue',[
      * @alias Queue
      * @constructor
      */
-    var Queue = function() {
+    function Queue() {
         this._array = [];
         this._offset = 0;
         this._length = 0;
-    };
+    }
 
     defineProperties(Queue.prototype, {
         /**
@@ -22608,8 +22652,7 @@ define('Core/WindingOrder',[
     /**
      * Winding order defines the order of vertices for a triangle to be considered front-facing.
      *
-     * @namespace
-     * @alias WindingOrder
+     * @exports WindingOrder
      */
     var WindingOrder = {
         /**
@@ -23936,34 +23979,6 @@ define('Core/PolylineVolumeGeometryLibrary',[
         return ((prev.x * next.y) - (prev.y * next.x)) >= 0.0;
     };
 
-    function latLonEquals(c0, c1) {
-        return ((CesiumMath.equalsEpsilon(c0.latitude, c1.latitude, CesiumMath.EPSILON6)) && (CesiumMath.equalsEpsilon(c0.longitude, c1.longitude, CesiumMath.EPSILON6)));
-    }
-    var carto0 = new Cartographic();
-    var carto1 = new Cartographic();
-    PolylineVolumeGeometryLibrary.removeDuplicatesFromPositions = function(positions, ellipsoid) {
-        var length = positions.length;
-        if (length < 2) {
-            return positions.slice(0);
-        }
-
-        var cleanedPositions = [];
-        cleanedPositions.push(positions[0]);
-
-        for (var i = 1; i < length; ++i) {
-            var v0 = positions[i - 1];
-            var v1 = positions[i];
-            var c0 = ellipsoid.cartesianToCartographic(v0, carto0);
-            var c1 = ellipsoid.cartesianToCartographic(v1, carto1);
-
-            if (!latLonEquals(c0, c1)) {
-                cleanedPositions.push(v1); // Shallow copy!
-            }
-        }
-
-        return cleanedPositions;
-    };
-
     var scratchForwardProjection = new Cartesian3();
     var scratchBackwardProjection = new Cartesian3();
 
@@ -24130,6 +24145,7 @@ define('Core/PolylineVolumeOutlineGeometry',[
         './IndexDatatype',
         './Math',
         './PolygonPipeline',
+        './PolylinePipeline',
         './PolylineVolumeGeometryLibrary',
         './PrimitiveType',
         './WindingOrder'
@@ -24150,6 +24166,7 @@ define('Core/PolylineVolumeOutlineGeometry',[
         IndexDatatype,
         CesiumMath,
         PolygonPipeline,
+        PolylinePipeline,
         PolylineVolumeGeometryLibrary,
         PrimitiveType,
         WindingOrder) {
@@ -24242,7 +24259,7 @@ define('Core/PolylineVolumeOutlineGeometry',[
      *   shapePositions : computeCircle(100000.0)
      * });
      */
-    var PolylineVolumeOutlineGeometry = function(options) {
+    function PolylineVolumeOutlineGeometry(options) {
         options = defaultValue(options, defaultValue.EMPTY_OBJECT);
         var positions = options.polylinePositions;
         var shape = options.shapePositions;
@@ -24269,11 +24286,10 @@ define('Core/PolylineVolumeOutlineGeometry',[
          * @type {Number}
          */
         this.packedLength = numComponents + Ellipsoid.packedLength + 2;
-    };
+    }
 
     /**
      * Stores the provided instance into the provided array.
-     * @function
      *
      * @param {PolylineVolumeOutlineGeometry} value The value to pack.
      * @param {Number[]} array The array to pack into.
@@ -24388,7 +24404,7 @@ define('Core/PolylineVolumeOutlineGeometry',[
      */
     PolylineVolumeOutlineGeometry.createGeometry = function(polylineVolumeOutlineGeometry) {
         var positions = polylineVolumeOutlineGeometry._positions;
-        var cleanPositions = PolylineVolumeGeometryLibrary.removeDuplicatesFromPositions(positions, polylineVolumeOutlineGeometry._ellipsoid);
+        var cleanPositions = PolylinePipeline.removeDuplicates(positions);
         var shape2D = polylineVolumeOutlineGeometry._shape;
         shape2D = PolylineVolumeGeometryLibrary.removeDuplicatesFromShape(shape2D);
 
@@ -24407,6 +24423,7 @@ define('Core/PolylineVolumeOutlineGeometry',[
 
     return PolylineVolumeOutlineGeometry;
 });
+
 /*global define*/
 define('Workers/createPolylineVolumeOutlineGeometry',[
         '../Core/defined',
