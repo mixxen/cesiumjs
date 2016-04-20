@@ -20,7 +20,8 @@
  * Portions licensed separately.
  * See https://github.com/AnalyticalGraphicsInc/cesium/blob/master/LICENSE.md for full licensing details.
  */
-(function () {/*global define*/
+(function () {
+/*global define*/
 define('Core/defined',[],function() {
     'use strict';
 
@@ -124,6 +125,7 @@ define('Core/DeveloperError',[
      *
      * @alias DeveloperError
      * @constructor
+     * @extends Error
      *
      * @param {String} [message] The error message for this exception.
      *
@@ -158,6 +160,11 @@ define('Core/DeveloperError',[
          * @readonly
          */
         this.stack = stack;
+    }
+
+    if (defined(Object.create)) {
+        DeveloperError.prototype = Object.create(Error.prototype);
+        DeveloperError.prototype.constructor = DeveloperError;
     }
 
     DeveloperError.prototype.toString = function() {
@@ -6665,6 +6672,7 @@ define('Core/RuntimeError',[
      *
      * @alias RuntimeError
      * @constructor
+     * @extends Error
      *
      * @param {String} [message] The error message for this exception.
      *
@@ -6700,6 +6708,12 @@ define('Core/RuntimeError',[
          */
         this.stack = stack;
     }
+
+    if (defined(Object.create)) {
+        RuntimeError.prototype = Object.create(Error.prototype);
+        RuntimeError.prototype.constructor = RuntimeError;
+    }
+
     RuntimeError.prototype.toString = function() {
         var str = this.name + ': ' + this.message;
 
@@ -23312,6 +23326,7 @@ define('Workers/upsampleQuantizedTerrainMesh',[
 
         var encoding = TerrainEncoding.clone(parameters.encoding);
         var hasVertexNormals = encoding.hasVertexNormals;
+        var exaggeration = parameters.exaggeration;
 
         var vertexCount = 0;
         var quantizedVertexCount = parameters.vertexCountWithoutSkirts;
@@ -23330,7 +23345,7 @@ define('Workers/upsampleQuantizedTerrainMesh',[
         var i, n;
         for (i = 0, n = 0; i < quantizedVertexCount; ++i, n += 2) {
             var texCoords = encoding.decodeTextureCoordinates(parentVertices, i, decodeTexCoordsScratch);
-            height  = encoding.decodeHeight(parentVertices, i);
+            height  = encoding.decodeHeight(parentVertices, i) / exaggeration;
 
             parentUBuffer[i] = CesiumMath.clamp((texCoords.x * maxShort) | 0, 0, maxShort);
             parentVBuffer[i] = CesiumMath.clamp((texCoords.y * maxShort) | 0, 0, maxShort);
