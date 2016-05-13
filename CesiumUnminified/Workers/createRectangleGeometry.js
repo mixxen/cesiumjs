@@ -7317,7 +7317,6 @@ define('Core/Matrix4',[
      * @param {Number} bottom The number of meters below of the camera that will be in view.
      * @param {Number} top The number of meters above of the camera that will be in view.
      * @param {Number} near The distance to the near plane in meters.
-     * @param {Number} far The distance to the far plane in meters.
      * @param {Matrix4} result The object in which the result will be stored.
      * @returns {Matrix4} The modified result parameter.
      */
@@ -12226,7 +12225,7 @@ define('Core/Fullscreen',[
      * If fullscreen mode is not supported by the browser, does nothing.
      *
      * @param {Object} element The HTML element which will be placed into fullscreen mode.
-     * @param {HMDVRDevice} vrDevice The VR device.
+     * @param {HMDVRDevice} [vrDevice] The VR device.
      *
      * @example
      * // Put the entire page into fullscreen.
