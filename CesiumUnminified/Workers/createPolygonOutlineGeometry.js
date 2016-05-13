@@ -6668,7 +6668,6 @@ define('Core/Matrix4',[
      * @param {Number} bottom The number of meters below of the camera that will be in view.
      * @param {Number} top The number of meters above of the camera that will be in view.
      * @param {Number} near The distance to the near plane in meters.
-     * @param {Number} far The distance to the far plane in meters.
      * @param {Matrix4} result The object in which the result will be stored.
      * @returns {Matrix4} The modified result parameter.
      */
@@ -11615,7 +11614,7 @@ define('Core/Fullscreen',[
      * If fullscreen mode is not supported by the browser, does nothing.
      *
      * @param {Object} element The HTML element which will be placed into fullscreen mode.
-     * @param {HMDVRDevice} vrDevice The VR device.
+     * @param {HMDVRDevice} [vrDevice] The VR device.
      *
      * @example
      * // Put the entire page into fullscreen.
@@ -27015,7 +27014,7 @@ define('Core/PolygonOutlineGeometry',[
      * @constructor
      *
      * @param {Object} options Object with the following properties:
-     * @param {Object} options.polygonHierarchy A polygon hierarchy that can include holes.
+     * @param {PolygonHierarchy} options.polygonHierarchy A polygon hierarchy that can include holes.
      * @param {Number} [options.height=0.0] The distance in meters between the polygon and the ellipsoid surface.
      * @param {Number} [options.extrudedHeight] The distance in meters between the polygon's extruded face and the ellipsoid surface.
      * @param {VertexFormat} [options.vertexFormat=VertexFormat.DEFAULT] The vertex attributes to be computed.
@@ -27029,66 +27028,66 @@ define('Core/PolygonOutlineGeometry',[
      * @example
      * // 1. create a polygon outline from points
      * var polygon = new Cesium.PolygonOutlineGeometry({
-     *   polygonHierarchy : {
-     *     positions : Cesium.Cartesian3.fromDegreesArray([
+     *   polygonHierarchy : new Cesium.PolygonHierarchy(
+     *     Cesium.Cartesian3.fromDegreesArray([
      *       -72.0, 40.0,
      *       -70.0, 35.0,
      *       -75.0, 30.0,
      *       -70.0, 30.0,
      *       -68.0, 40.0
      *     ])
-     *   }
+     *   )
      * });
      * var geometry = Cesium.PolygonOutlineGeometry.createGeometry(polygon);
      *
      * // 2. create a nested polygon with holes outline
      * var polygonWithHole = new Cesium.PolygonOutlineGeometry({
-     *   polygonHierarchy : {
-     *     positions : Cesium.Cartesian3.fromDegreesArray([
+     *   polygonHierarchy : new Cesium.PolygonHierarchy(
+     *     Cesium.Cartesian3.fromDegreesArray([
      *       -109.0, 30.0,
      *       -95.0, 30.0,
      *       -95.0, 40.0,
      *       -109.0, 40.0
      *     ]),
-     *     holes : [{
-     *       positions : Cesium.Cartesian3.fromDegreesArray([
+     *     [new Cesium.PolygonHierarchy(
+     *       Cesium.Cartesian3.fromDegreesArray([
      *         -107.0, 31.0,
      *         -107.0, 39.0,
      *         -97.0, 39.0,
      *         -97.0, 31.0
      *       ]),
-     *       holes : [{
-     *         positions : Cesium.Cartesian3.fromDegreesArray([
+     *       [new Cesium.PolygonHierarchy(
+     *         Cesium.Cartesian3.fromDegreesArray([
      *           -105.0, 33.0,
      *           -99.0, 33.0,
      *           -99.0, 37.0,
      *           -105.0, 37.0
      *         ]),
-     *         holes : [{
-     *           positions : Cesium.Cartesian3.fromDegreesArray([
+     *         [new Cesium.PolygonHierarchy(
+     *           Cesium.Cartesian3.fromDegreesArray([
      *             -103.0, 34.0,
      *             -101.0, 34.0,
      *             -101.0, 36.0,
      *             -103.0, 36.0
      *           ])
-     *         }]
-     *       }]
-     *     }]
-     *   }
+     *         )]
+     *       )]
+     *     )]
+     *   )
      * });
      * var geometry = Cesium.PolygonOutlineGeometry.createGeometry(polygonWithHole);
      *
      * // 3. create extruded polygon outline
      * var extrudedPolygon = new Cesium.PolygonOutlineGeometry({
-     *   polygonHierarchy : {
-     *     positions : Cesium.Cartesian3.fromDegreesArray([
+     *   polygonHierarchy : new Cesium.PolygonHierarchy(
+     *     Cesium.Cartesian3.fromDegreesArray([
      *       -72.0, 40.0,
      *       -70.0, 35.0,
      *       -75.0, 30.0,
      *       -70.0, 30.0,
      *       -68.0, 40.0
      *     ])
-     *   },
+     *   ),
      *   extrudedHeight: 300000
      * });
      * var geometry = Cesium.PolygonOutlineGeometry.createGeometry(extrudedPolygon);
@@ -27096,6 +27095,9 @@ define('Core/PolygonOutlineGeometry',[
     function PolygonOutlineGeometry(options) {
                 if (!defined(options) || !defined(options.polygonHierarchy)) {
             throw new DeveloperError('options.polygonHierarchy is required.');
+        }
+        if (defined(options.perPositionHeight) && options.perPositionHeight && defined(options.height)) {
+            throw new DeveloperError('Cannot use both options.perPositionHeight and options.height');
         }
         
         var polygonHierarchy = options.polygonHierarchy;
